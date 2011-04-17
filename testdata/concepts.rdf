@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gbv="http://purl.org/ontology/gbv/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:stw="http://zbw.eu/stw/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:zbwext="http://zbw.eu/namespaces/zbw-extensions/" xml:base="http://zbw.eu/stw/">
+  <rdf:Description rdf:about="../namespaces/zbw-extensions/Descriptor">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="../namespaces/zbw-extensions/Thsys">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="descriptor/17791-0">
+    <rdf:type rdf:resource="../namespaces/zbw-extensions/Descriptor"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="descriptor/15063-1">
+    <rdf:type rdf:resource="../namespaces/zbw-extensions/Descriptor"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="thsys/73338">
+    <rdf:type rdf:resource="../namespaces/zbw-extensions/Thsys"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="thsys/70934">
+    <rdf:type rdf:resource="../namespaces/zbw-extensions/Thsys"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="definedConcept">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  </rdf:Description>
+</rdf:RDF>
