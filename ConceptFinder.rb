@@ -7,12 +7,15 @@ class ConceptFinder
 	def initialize(rdfGraph, log)
 		log.info("identifying concepts")
 
+		@identifiedConcepts = []
 		@rdfGraph = rdfGraph
+
 		findSubclassedConcepts
 		findTypedConcepts
+		findImplicitConcepts
 
-		findImplicitConcepts.each do |solution|
-			puts solution.inspect
+		@identifiedConcepts.each do |concept|
+			puts concept
 		end
 	end
 
@@ -27,7 +30,10 @@ class ConceptFinder
 				RDF.type => :conceptSubClass
 			}
 		})
-		return query.execute(@rdfGraph)
+		
+		query.execute(@rdfGraph).each do |solution|
+			@identifiedConcepts << solution[:concept]
+		end
 	end
 
 	def findTypedConcepts
@@ -36,11 +42,29 @@ class ConceptFinder
 				RDF.type => SKOS_CONCEPT_URI
 			}
 		})
-		return query.execute(@rdfGraph)
+
+		query.execute(@rdfGraph).each do |solution|
+			@identifiedConcepts << solution[:concept]
+		end
 	end
 
 	def findImplicitConcepts
+		queries = createConceptQueries
 
+		queries.each do |query|
+			query.execute(@rdfGraph).each do |solution|
+				@identifiedConcepts << solution[:concept]
+				@identifiedConcepts << solution[:otherConcept]
+			end
+		end
+	end
+
+	def createConceptQueries
+		queries = []
+		queries << RDF::Query.new({:concept => {SKOS.hasTopConcept => :someTopConcept}})
+		queries << RDF::Query.new({:someTopConcept => {SKOS.topConceptOf => :concept}})
+		queries << RDF::Query.new({:concept => {SKOS.broader => :otherConcept}})
+		return queries
 	end
 
 end

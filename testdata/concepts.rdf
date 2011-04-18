@@ -21,4 +21,14 @@
   <rdf:Description rdf:about="definedConcept">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
+	<rdf:Description rdf:about="../stw">
+    <skos:hasTopConcept rdf:resource="thsys/p"/>
+  </rdf:Description>
+	<rdf:Description rdf:about="../stw/testTopConcept">
+    <skos:topConceptOf rdf:resource="thsys/x"/>
+  </rdf:Description>
+	<rdf:Description rdf:about="../stw/a">
+    <skos:broader rdf:resource="thsys/b"/>
+  </rdf:Description>
+
 </rdf:RDF>
