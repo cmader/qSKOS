@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'rdf'
+require 'rdf/ntriples'
 require 'rdf/raptor'
 require 'logger'
 
@@ -12,9 +14,9 @@ class QSKOS
 	def initialize
 		if (paramsValid?)
 			@log = Logger.new(STDOUT)
-			rdfGraph = readFile(ARGV[0])
+			rdfReader = readFile(ARGV[0])
 
-			processGraph(rdfGraph)
+			processGraph(rdfReader)
 		end
 	end
 
@@ -29,12 +31,13 @@ class QSKOS
 	end
 
 	def readFile(fileName)
-		@log.info("reading rdf graph")
-		RDF::Graph.load(fileName)
+		@log.info("opening rdf file")
+		RDF::Reader.open(fileName)
 	end
 
-	def processGraph(rdfGraph)
-		ConceptFinder.new(rdfGraph, @log)
+	def processGraph(rdfReader)
+		conceptFinder = ConceptFinder.new(rdfReader, @log)
+		puts conceptFinder.getAllConcepts.size
 	end
 
 end

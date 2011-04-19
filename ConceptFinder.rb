@@ -4,82 +4,105 @@ class ConceptFinder
 
 	SKOS_CONCEPT_URI = RDF::URI.new("http://www.w3.org/2004/02/skos/core#Concept")
 
-	def initialize(rdfGraph, log)
+	def initialize(rdfReader, log)
 		log.info("identifying concepts")
 
-		@allSolutions = []
-		@rdfGraph = rdfGraph
+		@conceptRelations = [SKOS.related, SKOS.broader, SKOS.narrower, SKOS.broaderTransitive, SKOS.narrowerTransitive,
+			SKOS.mappingRelation, SKOS.broadMatch, SKOS.narrowMatch, SKOS.closeMatch, SKOS.exactMatch]
+		@conceptSubClasses = []
+		@concepts = []
+		@rdfReader = rdfReader
+		@log = log
 
-		findSubclassedConcepts
-		findTypedConcepts
-		findImplicitConcepts
+		findConceptSubClasses
+		log.info("1st pass finished, one pass left")
 
-		getConceptUris
+		log.info("2nd pass")
+		findConcepts
+
+		log.info("concept identification finished")
 	end
 
-	def getConceptUris
-		conceptUris = []
-		@allSolutions.each do |solutions|
-			solutions.each do |solution|
-				conceptUris << solution[:concept]
-
-				if (solution[:otherConcept] != nil)
-					conceptUris << solution[:otherConcept]
-				end
-			end
-		end
-
-		conceptUris.uniq
+	def getAllConcepts
+		@concepts.uniq
 	end
 
 	private
 
-	def findSubclassedConcepts
-		query = RDF::Query.new({
-			:conceptSubClass => {
-				RDFS.subClassOf => SKOS_CONCEPT_URI
-			},
-			:concept => {
-				RDF.type => :conceptSubClass
-			}
-		})
-		
-		@allSolutions << query.execute(@rdfGraph)
-	end
-
-	def findTypedConcepts
-		query = RDF::Query.new({
-			:concept => {
-				RDF.type => SKOS_CONCEPT_URI
-			}
-		})
-
-		@allSolutions << query.execute(@rdfGraph)
-	end
-
-	def findImplicitConcepts
-		queries = createConceptQueries
-
-		queries.each do |query|
-			@allSolutions << query.execute(@rdfGraph)
+	def findConceptSubClasses
+		loopStatements do |statement|
+			if (definesSubClassOfConcept(statement))
+				@conceptSubClasses << statement.subject	
+			end
 		end
 	end
 
-	def createConceptQueries
-		queries = []
-		queries << RDF::Query.new({:concept => {SKOS.hasTopConcept => :someTopConcept}})
-		queries << RDF::Query.new({:someTopConcept => {SKOS.topConceptOf => :concept}})
-		queries << RDF::Query.new({:concept => {SKOS.related => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.broader => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.narrower => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.broaderTransitive => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.narrowerTransitive => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.mappingRelation => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.broadMatch => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.narrowMatch => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.closeMatch => :otherConcept}})
-		queries << RDF::Query.new({:concept => {SKOS.exactMatch => :otherConcept}})
-		return queries
+	def loopStatements
+		i = 1;
+		@rdfReader.each_statement do |statement|
+			if (@totalStatements == nil)
+				outputProcessedTriples(i)
+			else
+				outputPercentage(i)
+			end
+			i += 1
+
+			yield(statement)
+		end
+
+		@totalStatements = i
+		@prevPercentage = 0
+	end
+
+	def outputProcessedTriples(count)
+		if (count % 5000 == 0) 
+			@log.info("processed #{count} triples")
+		end
+	end
+
+	def outputPercentage(count)
+		percentage = Integer((count.fdiv(@totalStatements)) * 100)
+
+		if (percentage % 10 == 0 && percentage > @prevPercentage)
+			@log.info("#{percentage}% finished")
+		
+			@prevPercentage = percentage
+		end
+	end
+
+	def definesSubClassOfConcept(statement)
+		if (statement.predicate == RDFS.subClassOf &&
+				(statement.object == SKOS_CONCEPT_URI || 
+				@conceptSubClasses.include?(statement.object)))
+			return true
+		else
+			return false
+		end
+	end
+
+	def findConcepts
+		loopStatements do |statement|
+			examineStatement(statement)
+		end
+	end
+
+	def examineStatement(statement)
+		if (statement.predicate == RDF.type)
+			processTypeStatement(statement)
+		elsif (statement.predicate == SKOS.hasTopConcept)
+			@concepts << statement.object
+		elsif (statement.predicate == SKOS.topConceptOf)
+			@concepts << statement.subject
+		elsif (@conceptRelations.include?(statement.predicate))
+			@concepts << statement.subject
+			@concepts << statement.object
+		end
+	end
+
+	def processTypeStatement(statement)
+		if (statement.object == SKOS_CONCEPT_URI || @conceptSubClasses.include?(statement.object))
+			@concepts << statement.subject
+		end
 	end
 
 end
