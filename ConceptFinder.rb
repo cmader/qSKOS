@@ -56,7 +56,7 @@ class ConceptFinder
 
 	def outputProcessedTriples(count)
 		if (count % 5000 == 0) 
-			@log.info("processed #{count} triples")
+			@log.info("processed >#{count} triples")
 		end
 	end
 
