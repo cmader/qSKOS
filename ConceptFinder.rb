@@ -7,16 +7,29 @@ class ConceptFinder
 	def initialize(rdfGraph, log)
 		log.info("identifying concepts")
 
-		@identifiedConcepts = []
+		@allSolutions = []
 		@rdfGraph = rdfGraph
 
 		findSubclassedConcepts
 		findTypedConcepts
 		findImplicitConcepts
 
-		@identifiedConcepts.each do |concept|
-			puts concept
+		getConceptUris
+	end
+
+	def getConceptUris
+		conceptUris = []
+		@allSolutions.each do |solutions|
+			solutions.each do |solution|
+				conceptUris << solution[:concept]
+
+				if (solution[:otherConcept] != nil)
+					conceptUris << solution[:otherConcept]
+				end
+			end
 		end
+
+		conceptUris.uniq
 	end
 
 	private
@@ -31,9 +44,7 @@ class ConceptFinder
 			}
 		})
 		
-		query.execute(@rdfGraph).each do |solution|
-			@identifiedConcepts << solution[:concept]
-		end
+		@allSolutions << query.execute(@rdfGraph)
 	end
 
 	def findTypedConcepts
@@ -43,19 +54,14 @@ class ConceptFinder
 			}
 		})
 
-		query.execute(@rdfGraph).each do |solution|
-			@identifiedConcepts << solution[:concept]
-		end
+		@allSolutions << query.execute(@rdfGraph)
 	end
 
 	def findImplicitConcepts
 		queries = createConceptQueries
 
 		queries.each do |query|
-			query.execute(@rdfGraph).each do |solution|
-				@identifiedConcepts << solution[:concept]
-				@identifiedConcepts << solution[:otherConcept]
-			end
+			@allSolutions << query.execute(@rdfGraph)
 		end
 	end
 
@@ -63,7 +69,16 @@ class ConceptFinder
 		queries = []
 		queries << RDF::Query.new({:concept => {SKOS.hasTopConcept => :someTopConcept}})
 		queries << RDF::Query.new({:someTopConcept => {SKOS.topConceptOf => :concept}})
+		queries << RDF::Query.new({:concept => {SKOS.related => :otherConcept}})
 		queries << RDF::Query.new({:concept => {SKOS.broader => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.narrower => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.broaderTransitive => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.narrowerTransitive => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.mappingRelation => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.broadMatch => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.narrowMatch => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.closeMatch => :otherConcept}})
+		queries << RDF::Query.new({:concept => {SKOS.exactMatch => :otherConcept}})
 		return queries
 	end
 

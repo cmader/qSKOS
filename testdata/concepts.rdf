@@ -30,5 +30,4 @@
 	<rdf:Description rdf:about="../stw/a">
     <skos:broader rdf:resource="thsys/b"/>
   </rdf:Description>
-
 </rdf:RDF>
