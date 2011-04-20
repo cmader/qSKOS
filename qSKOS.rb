@@ -41,6 +41,7 @@ class QSKOS
 
 	def processGraph(loggingRdfReader)
 		conceptFinder = ConceptFinder.new(loggingRdfReader, @log)
+		@statInfo << "number of triples: #{loggingRdfReader.totalStatements}";
 		allConcepts = conceptFinder.getAllConcepts
 		@statInfo << "number of concepts: #{allConcepts.size}";
 

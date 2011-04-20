@@ -1,5 +1,7 @@
 class LoggingRdfReader
 
+	attr_reader :totalStatements
+
 	def initialize(rdfReader, log)
 		@rdfReader = rdfReader
 		@log = log
