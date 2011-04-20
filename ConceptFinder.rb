@@ -1,17 +1,15 @@
-require 'rdf'
-
 class ConceptFinder
 
 	SKOS_CONCEPT_URI = RDF::URI.new("http://www.w3.org/2004/02/skos/core#Concept")
 
-	def initialize(rdfReader, log)
+	def initialize(loggingRdfReader, log)
 		log.info("identifying concepts")
 
 		@conceptRelations = [SKOS.related, SKOS.broader, SKOS.narrower, SKOS.broaderTransitive, SKOS.narrowerTransitive,
 			SKOS.mappingRelation, SKOS.broadMatch, SKOS.narrowMatch, SKOS.closeMatch, SKOS.exactMatch]
 		@conceptSubClasses = []
 		@concepts = []
-		@rdfReader = rdfReader
+		@reader = loggingRdfReader
 		@log = log
 
 		findConceptSubClasses
@@ -30,43 +28,10 @@ class ConceptFinder
 	private
 
 	def findConceptSubClasses
-		loopStatements do |statement|
+		@reader.loopStatements do |statement|
 			if (definesSubClassOfConcept(statement))
 				@conceptSubClasses << statement.subject	
 			end
-		end
-	end
-
-	def loopStatements
-		i = 1;
-		@rdfReader.each_statement do |statement|
-			if (@totalStatements == nil)
-				outputProcessedTriples(i)
-			else
-				outputPercentage(i)
-			end
-			i += 1
-
-			yield(statement)
-		end
-
-		@totalStatements = i
-		@prevPercentage = 0
-	end
-
-	def outputProcessedTriples(count)
-		if (count % 5000 == 0) 
-			@log.info("processed >#{count} triples")
-		end
-	end
-
-	def outputPercentage(count)
-		percentage = Integer((count.fdiv(@totalStatements)) * 100)
-
-		if (percentage % 10 == 0 && percentage > @prevPercentage)
-			@log.info("#{percentage}% finished")
-		
-			@prevPercentage = percentage
 		end
 	end
 
@@ -81,7 +46,7 @@ class ConceptFinder
 	end
 
 	def findConcepts
-		loopStatements do |statement|
+		@reader.loopStatements do |statement|
 			examineStatement(statement)
 		end
 	end

@@ -6,6 +6,8 @@ require 'rdf/raptor'
 require 'logger'
 
 require_relative 'ConceptFinder'
+require_relative 'LooseConceptFinder'
+require_relative 'LoggingRdfReader'
 
 include RDF
 
@@ -13,10 +15,12 @@ class QSKOS
 
 	def initialize
 		if (paramsValid?)
+			@statInfo = []
 			@log = Logger.new(STDOUT)
-			rdfReader = readFile(ARGV[0])
+			loggingRdfReader = readFile(ARGV[0])
 
-			processGraph(rdfReader)
+			processGraph(loggingRdfReader)
+			outputStatInfo
 		end
 	end
 
@@ -32,12 +36,22 @@ class QSKOS
 
 	def readFile(fileName)
 		@log.info("opening rdf file")
-		RDF::Reader.open(fileName)
+		LoggingRdfReader.new(RDF::Reader.open(fileName), @log)
 	end
 
-	def processGraph(rdfReader)
-		conceptFinder = ConceptFinder.new(rdfReader, @log)
-		puts conceptFinder.getAllConcepts.size
+	def processGraph(loggingRdfReader)
+		conceptFinder = ConceptFinder.new(loggingRdfReader, @log)
+		allConcepts = conceptFinder.getAllConcepts
+		@statInfo << "number of concepts: #{allConcepts.size}";
+
+		looseConceptFinder = LooseConceptFinder.new(loggingRdfReader, @log, allConcepts)
+		@statInfo << "number of loose concepts: #{looseConceptFinder.getLooseConcepts.size}";
+	end
+
+	def outputStatInfo
+		@statInfo.each do |line|
+			puts line
+		end
 	end
 
 end
