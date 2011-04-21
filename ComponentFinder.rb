@@ -3,7 +3,7 @@ require_relative 'LoggingRdfReader'
 
 class ComponentFinder
 
-	def initialize(loggingRdfReader, log, allConcepts)
+	def initialize(loggingRdfReader, log, allConcepts, writeGraphToDisk=false)
 		log.info("identifying weakly connected components")
 
 		@reader = loggingRdfReader
@@ -12,6 +12,9 @@ class ComponentFinder
 		@allConcepts = allConcepts
 
 		populateGraph
+		if (writeGraphToDisk)
+			outputToFile
+		end
 	end
 
 	def getComponents
@@ -24,6 +27,16 @@ class ComponentFinder
 	def populateGraph
 		addAllConceptsAsVertices
 		constructEdges
+	end
+
+	def outputToFile
+		@iGraph.write_graph_gml(File.open("out.gml", 'w'))
+
+		indexFile = File.new('vertices.txt', 'w')
+		@iGraph.vertices.each_index do |index|
+			indexFile.puts("#{index}, '#{@iGraph.vertices[index].to_s}'")
+		end
+		indexFile.close
 	end
 
 	def addAllConceptsAsVertices
@@ -48,14 +61,10 @@ class ComponentFinder
 
 	def addToGraph(statement)
 		allVertices = @iGraph.vertices
-		if (!allVertices.include?(statement.subject.to_s))
-			@iGraph.add_vertex(statement.subject)
-		end
+		@iGraph.add_vertex(statement.subject)
 
 		if (statement.object.resource?)
-			if (!allVertices.include?(statement.object.to_s))
-				@iGraph.add_vertex(statement.object)
-			end
+			@iGraph.add_vertex(statement.object)
 			@iGraph.add_edge(statement.subject.to_s, statement.object.to_s)
 		end
 	end

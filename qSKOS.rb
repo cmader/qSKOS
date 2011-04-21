@@ -62,9 +62,9 @@ class QSKOS
 	end
 
 	def findComponents(allConcepts)
-		componentFinder = ComponentFinder.new(@loggingRdfReader, @log, allConcepts)
+		componentFinder = ComponentFinder.new(@loggingRdfReader, @log, allConcepts, true)
 		components = componentFinder.getComponents
-		@statInfo << "number of unconnected components: #{componentFinder.getComponents.size}";
+		@statInfo << "number of unconnected components: #{components.size}";
 
 		components.each_index do |componentIndex|
 			@statInfo << "vertices in component #{componentIndex}: #{components[componentIndex].vcount}";
