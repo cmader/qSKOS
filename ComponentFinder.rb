@@ -7,14 +7,16 @@ class ComponentFinder
 		log.info("identifying weakly connected components")
 
 		@reader = loggingRdfReader
+		@log = log
 		@iGraph = IGraph.new([], false)
 		@allConcepts = allConcepts
 
 		populateGraph
 	end
 
-	def getComponentCount
-		@iGraph.decompose(0).size
+	def getComponents
+		@log.info("decomposing")
+		@iGraph.decompose(0)
 	end
 
 	private 
@@ -25,12 +27,14 @@ class ComponentFinder
 	end
 
 	def addAllConceptsAsVertices
+		@log.info("initializing graph")
 		@allConcepts.each do |concept|
 			@iGraph.add_vertex(concept.to_s)
 		end
 	end
 
 	def constructEdges
+		@log.info("constructing edges")
 		@reader.loopStatements do |statement|
 			if (isSkosPredicate(statement.predicate))
 				addToGraph(statement)

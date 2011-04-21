@@ -18,9 +18,10 @@ class QSKOS
 		if (paramsValid?)
 			@statInfo = []
 			@log = Logger.new(STDOUT)
-			loggingRdfReader = readFile(ARGV[0])
+		
+			readFile(ARGV[0])
+			processGraph()
 
-			processGraph(loggingRdfReader)
 			outputStatInfo
 		end
 	end
@@ -37,22 +38,37 @@ class QSKOS
 
 	def readFile(fileName)
 		@log.info("opening rdf file")
-		LoggingRdfReader.new(RDF::Reader.open(fileName), @log)
+		@loggingRdfReader = LoggingRdfReader.new(RDF::Reader.open(fileName), @log)
 	end
 
-	def processGraph(loggingRdfReader)
-		conceptFinder = ConceptFinder.new(loggingRdfReader, @log)
-		@statInfo << "number of triples: #{loggingRdfReader.totalStatements}";
+	def processGraph()
+		allConcepts = findAllConcepts
+		#findLooseConcepts(allConcepts)
+		findComponents(allConcepts)
+	end
+
+	def findAllConcepts
+		conceptFinder = ConceptFinder.new(@loggingRdfReader, @log)
+		@statInfo << "number of triples: #{@loggingRdfReader.totalStatements}";
 		allConcepts = conceptFinder.getAllConcepts
 		@statInfo << "number of concepts: #{allConcepts.size}";
 
-		#Loose Concepts
-		#looseConceptFinder = LooseConceptFinder.new(loggingRdfReader, @log, allConcepts)
-		#@statInfo << "number of loose concepts: #{looseConceptFinder.getLooseConcepts.size}";
+		return allConcepts
+	end
 
-		#Weakly connected components
-		componentFinder = ComponentFinder.new(loggingRdfReader, @log, allConcepts)
-		@statInfo << "number of unconnected components: #{componentFinder.getComponentCount}";
+	def findLooseConcepts(allConcepts)
+		looseConceptFinder = LooseConceptFinder.new(@loggingRdfReader, @log, allConcepts)
+		@statInfo << "number of loose concepts: #{looseConceptFinder.getLooseConcepts.size}";
+	end
+
+	def findComponents(allConcepts)
+		componentFinder = ComponentFinder.new(@loggingRdfReader, @log, allConcepts)
+		components = componentFinder.getComponents
+		@statInfo << "number of unconnected components: #{componentFinder.getComponents.size}";
+
+		components.each_index do |componentIndex|
+			@statInfo << "vertices in component #{componentIndex}: #{components[componentIndex].vcount}";
+		end
 	end
 
 	def outputStatInfo
