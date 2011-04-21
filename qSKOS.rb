@@ -8,6 +8,7 @@ require 'logger'
 require_relative 'ConceptFinder'
 require_relative 'LooseConceptFinder'
 require_relative 'LoggingRdfReader'
+require_relative 'ComponentFinder'
 
 include RDF
 
@@ -45,8 +46,13 @@ class QSKOS
 		allConcepts = conceptFinder.getAllConcepts
 		@statInfo << "number of concepts: #{allConcepts.size}";
 
-		looseConceptFinder = LooseConceptFinder.new(loggingRdfReader, @log, allConcepts)
-		@statInfo << "number of loose concepts: #{looseConceptFinder.getLooseConcepts.size}";
+		#Loose Concepts
+		#looseConceptFinder = LooseConceptFinder.new(loggingRdfReader, @log, allConcepts)
+		#@statInfo << "number of loose concepts: #{looseConceptFinder.getLooseConcepts.size}";
+
+		#Weakly connected components
+		componentFinder = ComponentFinder.new(loggingRdfReader, @log, allConcepts)
+		@statInfo << "number of unconnected components: #{componentFinder.getComponentCount}";
 	end
 
 	def outputStatInfo

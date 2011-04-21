@@ -22,7 +22,7 @@ class LoggingRdfReader
 			yield(statement)
 		end
 
-		@totalStatements = i
+		@totalStatements = i-1
 	end
 
 	private
