@@ -24,4 +24,11 @@
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel xml:lang="en">concept E</skos:prefLabel>
   </rdf:Description>
+	<rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#note">
+    <skos:definition xml:lang="en">A general note, for any purpose.</skos:definition>
+  </rdf:Description>
+	<rdf:Description rdf:about="../namespaces/zbw-extensions/indexedItem">
+    <skos:definition xml:lang="en">The concept is used as an index term or subject 
+    for the resource.</skos:definition>
+  </rdf:Description>
 </rdf:RDF>

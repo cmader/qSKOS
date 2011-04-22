@@ -49,24 +49,48 @@ class ComponentFinder
 	def constructEdges
 		@log.info("constructing edges")
 		@reader.loopStatements do |statement|
-			if (isSkosPredicate(statement.predicate))
+			if (inSkosNamespace?(statement.predicate) && !inSkosNamespace?(statement.subject))
 				addToGraph(statement)
 			end
 		end
 	end
 
-	def isSkosPredicate(predicate)
-		return predicate.to_s.include?("skos")
+	def inSkosNamespace?(predicate)
+		return predicate.to_uri.start_with?(SKOS.to_uri)
 	end
 
 	def addToGraph(statement)
-		allVertices = @iGraph.vertices
-		@iGraph.add_vertex(statement.subject)
-
-		if (statement.object.resource?)
-			@iGraph.add_vertex(statement.object)
+		begin
+			addNodeToGraph(statement)
 			@iGraph.add_edge(statement.subject.to_s, statement.object.to_s)
+		rescue Exception
+			#@log.info("skipping triple #{statement}")
 		end
+	end
+
+	# at least subject or object must already be contained in the graph (i.e. is a concept 
+	# or a resource connected to a concept)
+	def addNodeToGraph(statement)
+		subjectInGraph = @iGraph.vertices.include?(statement.subject.to_s)
+		objectInGraph = @iGraph.vertices.include?(statement.object.to_s)
+
+		if (!subjectInGraph && !objectInGraph)
+			raise InvalidStatementException.new
+		elsif (!subjectInGraph)
+			@iGraph.add_vertex(statement.subject)
+		elsif (!objectInGraph)
+			if (statement.object.resource?)
+				@iGraph.add_vertex(statement.object)
+			else
+				raise IgnoredStatementException
+			end
+		end
+	end
+
+	class InvalidStatementException < Exception
+	end
+
+	class IgnoredStatementException < Exception
 	end
 
 end
