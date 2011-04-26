@@ -9,6 +9,7 @@ require_relative 'ConceptFinder'
 require_relative 'LooseConceptFinder'
 require_relative 'LoggingRdfReader'
 require_relative 'ComponentFinder'
+require_relative 'CycleFinder'
 
 include RDF
 
@@ -44,7 +45,8 @@ class QSKOS
 	def processGraph()
 		allConcepts = findAllConcepts
 		#findLooseConcepts(allConcepts)
-		findComponents(allConcepts)
+		#findComponents(allConcepts)
+		findCycles(allConcepts)
 	end
 
 	def findAllConcepts
@@ -69,6 +71,10 @@ class QSKOS
 		components.each_index do |componentIndex|
 			@statInfo << "vertices in component #{componentIndex}: #{components[componentIndex].vcount}";
 		end
+	end
+
+	def findCycles(allConcepts)
+		cycleFinder = CycleFinder.new(@loggingRdfReader, @log, allConcepts)
 	end
 
 	def outputStatInfo

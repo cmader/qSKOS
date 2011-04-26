@@ -7,7 +7,7 @@ class ComponentFinder
 		log.info("identifying weakly connected components")
 		
 		@log = log
-		@graph = GraphBuilder.new(loggingRdfReader, log, allConcepts).graph
+		@graph = GraphBuilder.new(loggingRdfReader, log, allConcepts).graphs[0]
 
 		if (writeGraphToDisk)
 			outputToFile
