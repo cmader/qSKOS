@@ -1,3 +1,5 @@
+require 'igraph'
+
 require_relative 'LoggingRdfReader'
 require_relative 'GraphBuilder'
 
@@ -7,7 +9,9 @@ class ComponentFinder
 		log.info("identifying weakly connected components")
 		
 		@log = log
-		@graph = GraphBuilder.new(loggingRdfReader, log, allConcepts).graphs[0]
+		@graph =  GraphBuilder.new(loggingRdfReader, log, allConcepts) do
+			IGraph.new([], true)
+		end.graphs[0]
 
 		if (writeGraphToDisk)
 			outputToFile
@@ -16,7 +20,7 @@ class ComponentFinder
 
 	def getComponents
 		@log.info("decomposing")
-		@graph.decompose(0)
+		@graph.decompose(IGraph::WEAK)
 	end
 
 	private 

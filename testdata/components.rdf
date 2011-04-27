@@ -24,6 +24,31 @@
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel xml:lang="en">concept E</skos:prefLabel>
   </rdf:Description>
+	<rdf:Description rdf:about="conceptF">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">concept F</skos:prefLabel>
+		<skos:broader rdf:resource="conceptH"/>
+  </rdf:Description>
+	<rdf:Description rdf:about="conceptG">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">concept G</skos:prefLabel>
+		<skos:broader rdf:resource="conceptF"/>
+  </rdf:Description>
+	<rdf:Description rdf:about="conceptH">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">concept H</skos:prefLabel>
+		<skos:broader rdf:resource="conceptG"/>
+  </rdf:Description>
+	<rdf:Description rdf:about="conceptI">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">concept G</skos:prefLabel>
+		<skos:broader rdf:resource="conceptJ"/>
+  </rdf:Description>
+	<rdf:Description rdf:about="conceptJ">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">concept H</skos:prefLabel>
+		<skos:broader rdf:resource="conceptI"/>
+  </rdf:Description>
 	<rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#note">
     <skos:definition xml:lang="en">A general note, for any purpose.</skos:definition>
   </rdf:Description>

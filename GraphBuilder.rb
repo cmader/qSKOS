@@ -1,17 +1,16 @@
-require 'igraph'
 require_relative 'LoggingRdfReader'
 
 class GraphBuilder
 
 	attr_reader :graphs
 
-	def initialize(loggingRdfReader, log, allConcepts, constrainToPredicates = [[]])
+	def initialize(loggingRdfReader, log, allConcepts, constrainToPredicates = [[]], &graphInitialization)
 		@reader = loggingRdfReader
 		@log = log
 		@allConcepts = allConcepts
 		@constrainToPredicates = constrainToPredicates
 
-		@graphs = Array.new(constrainToPredicates.size, IGraph.new([], false))
+		@graphs = Array.new(constrainToPredicates.size, yield)
 		populateGraphs
 	end
 
@@ -76,10 +75,10 @@ class GraphBuilder
 		if (!subjectInGraph && !objectInGraph)
 			raise InvalidStatementException.new
 		elsif (!subjectInGraph)
-			graph.add_vertex(statement.subject)
+			graph.add_vertex(statement.subject.to_s)
 		elsif (!objectInGraph)
 			if (statement.object.resource?)
-				graph.add_vertex(statement.object)
+				graph.add_vertex(statement.object.to_s)
 			else
 				raise IgnoredStatementException
 			end
