@@ -1,14 +1,17 @@
 require_relative 'LoggingRdfReader'
+require_relative 'SKOSUtils'
 
 class GraphBuilder
 
 	attr_reader :graphs
 
-	def initialize(loggingRdfReader, log, allConcepts, constrainToPredicates = [[]], &graphInitialization)
+	def initialize(loggingRdfReader, log, allConcepts, 
+		constrainToPredicates = [[]], includeInverseProperties = false, &graphInitialization)
 		@reader = loggingRdfReader
 		@log = log
 		@allConcepts = allConcepts
 		@constrainToPredicates = constrainToPredicates
+		@includeInverseProperties = includeInverseProperties
 
 		@graphs = Array.new(constrainToPredicates.size, yield)
 		populateGraphs
@@ -34,27 +37,54 @@ class GraphBuilder
 	def constructEdges
 		@log.info("constructing edges")
 		@reader.loopStatements do |statement|
-			if (inSkosNamespace?(statement.predicate) && !inSkosNamespace?(statement.subject))
-				identifyGraphsToReceivePredicate(statement.predicate).each do |graph|
+			if isValidStatement(statement)
+				routeStatementToGraph(statement) do |graph, statement|
 					addToGraph(graph, statement)
 				end
 			end
 		end
 	end
 
-	def inSkosNamespace?(predicate)
-		return predicate.to_uri.start_with?(SKOS.to_uri)
+	def isValidStatement(statement)
+		inSkosNamespace?(statement.predicate) && !inSkosNamespace?(statement.subject)
 	end
 
-	def identifyGraphsToReceivePredicate(predicate)
-		graphsReceivingPredicate = []
+	def inSkosNamespace?(predicate)
+		predicate.to_uri.start_with?(SKOS.to_uri)
+	end
+
+	def routeStatementToGraph(statement)
 		@constrainToPredicates.each_index do |predicateListIndex|
 			predicateList = @constrainToPredicates[predicateListIndex]
-			if (predicateList.empty? || predicateList.include?(predicate))
-				graphsReceivingPredicate << @graphs[predicateListIndex]
-			end			
+	
+			if allowedByList?(predicateList, statement.predicate)
+				yield(@graphs[predicateListIndex], statement)
+			elsif includeInvertedStatement?(predicateList, statement.predicate)
+				yield(@graphs[predicateListIndex], invertStatement(statement))
+			end	
 		end
-		return graphsReceivingPredicate
+	end
+
+	def allowedByList?(predicateList, predicate)
+		predicateList.empty? || predicateList.include?(predicate)
+	end
+
+	def includeInvertedStatement?(predicateList, predicate)
+		if @includeInverseProperties
+			begin			
+				inverseProperty = SKOSUtils.instance.getInverseProperty(predicate)
+				return predicateList.include?(inverseProperty)
+			rescue Exception
+				return false
+			end
+		end
+		false
+	end
+
+	def invertStatement(statement)
+		newSubject = statement.object
+		newObject = statement.subject
+		Statement.new(newSubject, SKOSUtils.instance.getInverseProperty(statement.predicate), newObject)
 	end
 
 	def addToGraph(graph, statement)

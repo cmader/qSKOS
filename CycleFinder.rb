@@ -11,26 +11,30 @@ class CycleFinder
 
 		@graphsPredicateConstrains = [
 			[SKOS.broader] 
-#			[SKOS.narrower, SKOS.narrowerTransitive]
 		]
 
 		buildGraphs
-		identifyCycles
+	end
+
+	def getCycles
+		@log.info("processing graph(s)")
+
+		allCycles = []
+		@graphs.each do |graph|
+			graph.cycles.each do |cycle|
+				allCycles << cycle
+			end
+		end
+		allCycles
 	end
 
 	private
 
 	def buildGraphs
 		@log.info("building #{@graphsPredicateConstrains.size} graph(s)")
-		@graphs = GraphBuilder.new(@reader, @log, @allConcepts, @graphsPredicateConstrains) do
+		@graphs = GraphBuilder.new(@reader, @log, @allConcepts, @graphsPredicateConstrains, true) do
 			DirectedAdjacencyGraph.new
 		end.graphs
-	end
-
-	def identifyCycles
-		@graphs.each do |graph|
-			puts graph.cycles.size
-		end
 	end
 
 end
