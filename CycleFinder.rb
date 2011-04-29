@@ -10,7 +10,8 @@ class CycleFinder
 		@allConcepts = allConcepts
 
 		@graphsPredicateConstrains = [
-			[SKOS.broader] 
+			[SKOS.broader, SKOS.broaderTransitive],
+			[SKOS.broadMatch]
 		]
 
 		buildGraphs

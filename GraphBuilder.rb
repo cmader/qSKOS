@@ -6,14 +6,16 @@ class GraphBuilder
 	attr_reader :graphs
 
 	def initialize(loggingRdfReader, log, allConcepts, 
-		constrainToPredicates = [[]], includeInverseProperties = false, &graphInitialization)
+		constrainToPredicates = [[]], includeInverseProperties = false)
 		@reader = loggingRdfReader
 		@log = log
 		@allConcepts = allConcepts
 		@constrainToPredicates = constrainToPredicates
 		@includeInverseProperties = includeInverseProperties
 
-		@graphs = Array.new(constrainToPredicates.size, yield)
+		@graphs = Array.new(constrainToPredicates.size) do |index|
+			yield
+		end
 		populateGraphs
 	end
 
@@ -56,7 +58,7 @@ class GraphBuilder
 	def routeStatementToGraph(statement)
 		@constrainToPredicates.each_index do |predicateListIndex|
 			predicateList = @constrainToPredicates[predicateListIndex]
-	
+
 			if allowedByList?(predicateList, statement.predicate)
 				yield(@graphs[predicateListIndex], statement)
 			elsif includeInvertedStatement?(predicateList, statement.predicate)

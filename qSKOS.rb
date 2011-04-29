@@ -75,7 +75,8 @@ class QSKOS
 
 	def findCycles(allConcepts)
 		cycleFinder = CycleFinder.new(@loggingRdfReader, @log, allConcepts)
-		@statInfo << "number of minimal cycles: #{cycleFinder.getCycles.size}";
+		allCycles = cycleFinder.getCycles
+		@statInfo << "number of minimal cycles: #{allCycles.size}";
 	end
 
 	def outputStatInfo
