@@ -14,6 +14,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="descriptor/15063-1">
     <rdf:type rdf:resource="../namespaces/zbw-extensions/Descriptor"/>
+		<owl:sameAs rdf:resource="http://bla.bla.org"/>
   </rdf:Description>
   <rdf:Description rdf:about="thsys/73338">
     <rdf:type rdf:resource="../namespaces/zbw-extensions/Thsys"/>

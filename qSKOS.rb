@@ -10,6 +10,7 @@ require_relative 'LooseConceptFinder'
 require_relative 'LoggingRdfReader'
 require_relative 'ComponentFinder'
 require_relative 'CycleFinder'
+require_relative 'ConceptLinkFinder'
 
 include RDF
 
@@ -46,7 +47,8 @@ class QSKOS
 		allConcepts = findAllConcepts
 		#findLooseConcepts(allConcepts)
 		#findComponents(allConcepts)
-		findCycles(allConcepts)
+		#findCycles(allConcepts)
+		getExtLinkDegree(allConcepts)
 	end
 
 	def findAllConcepts
@@ -77,6 +79,10 @@ class QSKOS
 		cycleFinder = CycleFinder.new(@loggingRdfReader, @log, allConcepts)
 		allCycles = cycleFinder.getCycles
 		@statInfo << "number of minimal cycles: #{allCycles.size}";
+	end
+
+	def getExtLinkDegree(allConcepts)
+		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
 	end
 
 	def outputStatInfo
