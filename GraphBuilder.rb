@@ -48,7 +48,7 @@ class GraphBuilder
 	end
 
 	def isValidStatement(statement)
-		SKOSUtils.instance.inSkosNamespace?(statement.predicate) && !inSkosNamespace?(statement.subject)
+		SKOSUtils.instance.inSkosNamespace?(statement.predicate) && !SKOSUtils.instance.inSkosNamespace?(statement.subject)
 	end
 
 	def routeStatementToGraph(statement)
