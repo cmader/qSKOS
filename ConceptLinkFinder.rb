@@ -8,6 +8,7 @@ class ConceptLinkFinder
 		@reader = loggingRdfReader
 		@allConcepts = allConcepts
 
+		# holds the concept -> resource mappings
 		@conceptResources = {}
 		findLinks
 	end
@@ -17,15 +18,15 @@ class ConceptLinkFinder
 	def findLinks
 		@reader.loopStatements do |statement|
 			if @allConcepts.include?(statement.subject.to_s) && 
-				!SKOSUtils.instance.inSkosNamespace?(statement.object) &&
-				statement.object.resource?
+				statement.object.resource? &&
+				!SKOSUtils.instance.inSkosNamespace?(statement.object)
 
-				addResourceToHash(statement.subject.to_s, statement.object)
+				addResourceToConcept(statement.subject.to_s, statement.object)
 			end
 		end
 	end
 
-	def addResourceToHash(conceptUri, resource)
+	def addResourceToConcept(conceptUri, resource)
 		if @conceptResources[conceptUri] == nil
 			@conceptResources[conceptUri] = []
 		end

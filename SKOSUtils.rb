@@ -4,8 +4,11 @@ class SKOSUtils
 
 	include Singleton
 
-	def inSkosNamespace?(predicate)
-		predicate.to_uri.start_with?(SKOS.to_uri)
+	def inSkosNamespace?(resource)
+		if 	!resource.node? && (resource.resource? || resource.uri?)
+			return resource.to_uri.start_with?(SKOS.to_uri)
+		end
+		false
 	end
 
 end
