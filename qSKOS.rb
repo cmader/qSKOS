@@ -78,11 +78,13 @@ class QSKOS
 	def findCycles(allConcepts)
 		cycleFinder = CycleFinder.new(@loggingRdfReader, @log, allConcepts)
 		allCycles = cycleFinder.getCycles
-		@statInfo << "number of minimal cycles: #{allCycles.size}";
+		@statInfo << "number of minimum cycles: #{allCycles.size}";
 	end
 
 	def getExtLinkDegree(allConcepts)
 		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
+		extLinkCount = extLinkFinder.getExternalLinks.size
+		@statInfo << "number of external links: #{extLinkCount}";
 	end
 
 	def outputStatInfo

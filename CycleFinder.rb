@@ -4,7 +4,7 @@ include RGL
 class CycleFinder
 
 	def initialize(loggingRdfReader, log, allConcepts)
-		log.info("identifying minimal cycles")
+		log.info("identifying minimum cycles")
 		@log = log
 		@reader = loggingRdfReader
 		@allConcepts = allConcepts

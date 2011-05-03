@@ -10,7 +10,20 @@ class ConceptLinkFinder
 
 		# holds the concept -> resource mappings
 		@conceptResources = {}
+
+		# holds linked resources on a different hosts
+		@hostMismatches = {}
+
 		findLinks
+		identifyExternalLinks
+
+		#dumpConceptResources
+	end
+
+	# this is not exactly true; however, we suppose either subject or object of
+	# a triple involving a concept to NOT redefine or enhance an existing concept
+	def getExternalLinks
+		@hostMismatches.values
 	end
 
 	private
@@ -21,7 +34,7 @@ class ConceptLinkFinder
 				statement.object.resource? &&
 				!SKOSUtils.instance.inSkosNamespace?(statement.object)
 
-				addResourceToConcept(statement.subject.to_s, statement.object)
+				addResourceToConcept(statement.subject, statement.object)
 			end
 		end
 	end
@@ -31,6 +44,28 @@ class ConceptLinkFinder
 			@conceptResources[conceptUri] = []
 		end
 		@conceptResources[conceptUri] << resource
+	end
+
+	def identifyExternalLinks
+		@conceptResources.keys.each do |key|
+			@conceptResources[key].each do |value|
+				if key.host != value.host
+					@hostMismatches[key] = [] if !@hostMismatches.key?(key)
+					@hostMismatches[key] << value
+				end
+			end
+		end
+	end
+
+	def dumpConceptResources
+		@conceptResources.keys.each do |key|
+			puts "concept: #{key}"
+			@conceptResources[key].each do |value|
+				puts "resource: #{value}"
+				puts value.host
+			end
+			puts "==="
+		end
 	end
 
 end
