@@ -11,6 +11,7 @@ require_relative 'LoggingRdfReader'
 require_relative 'ComponentFinder'
 require_relative 'CycleFinder'
 require_relative 'ConceptLinkFinder'
+require_relative 'LinkChecker'
 
 include RDF
 
@@ -48,7 +49,8 @@ class QSKOS
 		#findLooseConcepts(allConcepts)
 		#findComponents(allConcepts)
 		#findCycles(allConcepts)
-		getExtLinkDegree(allConcepts)
+		#getExtLinkDegree(allConcepts)
+		checkLinks
 	end
 
 	def findAllConcepts
@@ -85,6 +87,10 @@ class QSKOS
 		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
 		extLinkCount = extLinkFinder.getExternalLinks.size
 		@statInfo << "number of external links: #{extLinkCount}, avg. external links per concept: #{extLinkCount.size.fdiv(allConcepts.size).round(3)}";
+	end
+
+	def checkLinks
+		linkChecker = LinkChecker.new(@loggingRdfReader, @log)
 	end
 
 	def outputStatInfo

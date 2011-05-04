@@ -3,8 +3,9 @@ require_relative 'SKOSUtils'
 class ConceptLinkFinder
 
 	def initialize(loggingRdfReader, log, allConcepts)
-		log.info("identifying concept links")
+		log.info("collecting concept links")
 
+		@log = log
 		@reader = loggingRdfReader
 		@allConcepts = allConcepts
 
@@ -15,14 +16,14 @@ class ConceptLinkFinder
 		@hostMismatches = {}
 
 		findLinks
-		identifyExternalLinks
-
 		#dumpConceptResources
 	end
 
 	# this is not exactly true; however, we suppose either subject or object of
 	# a triple involving a concept to NOT redefine or enhance an existing concept
 	def getExternalLinks
+		@log.info("identifying external links")
+		identifyExternalLinks
 		@hostMismatches.values
 	end
 
