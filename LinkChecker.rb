@@ -4,18 +4,18 @@ class LinkChecker
 
 	include RDF
 
-	def initialize(loggingRdfReader, log)
+	attr_reader :checkedURIs, :dereferencableURIs
+
+	def initialize(loggingRdfReader, log, logCheckedURIs = false)
 		@reader = loggingRdfReader
 		@log = log
+		@logCheckedURIs = logCheckedURIs
+
 		@checkedURIs = []
 		@dereferencableURIs = []
 		@dereferencer = URIDereferencer.new
 
 		iterateAll
-	end
-
-	def getDereferencableURIPercentage
-		@dereferencableURIs.size.fdiv(@checkedURIs.size).round(3)
 	end
 
 	private
@@ -58,9 +58,13 @@ class LinkChecker
 	end
 
 	def dereferenceURI(uri)
-		@log.info("checking #{uri}")
+		@log.info("checking #{uri}") if @logCheckedURIs
 		
-		@dereferencableURIs << uri if @dereferencer.dereferencable?(uri)
+		if @dereferencer.dereferencable?(uri)
+			@dereferencableURIs << uri 
+		elsif @logCheckedURIs
+			@log.info("failed")
+		end		
 	end
 
 end

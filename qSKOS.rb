@@ -90,7 +90,13 @@ class QSKOS
 	end
 
 	def checkLinks
-		linkChecker = LinkChecker.new(@loggingRdfReader, @log)
+		linkChecker = LinkChecker.new(@loggingRdfReader, @log, true)
+		checkedURIs = linkChecker.checkedURIs
+		derefURIs = linkChecker.dereferencableURIs
+		percentage = derefURIs.size.fdiv(checkedURIs.size).round(5) * 100
+
+		@statInfo << "#{derefURIs.size} of #{checkedURIs.size} URIs dereferencable"
+		@statInfo << "percentage of available link targets: #{percentage}"
 	end
 
 	def outputStatInfo
