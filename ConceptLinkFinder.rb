@@ -62,7 +62,6 @@ class ConceptLinkFinder
 			puts "concept: #{key}"
 			@conceptResources[key].each do |value|
 				puts "resource: #{value}"
-				puts value.host
 			end
 			puts "==="
 		end

@@ -84,7 +84,7 @@ class QSKOS
 	def getExtLinkDegree(allConcepts)
 		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
 		extLinkCount = extLinkFinder.getExternalLinks.size
-		@statInfo << "number of external links: #{extLinkCount}";
+		@statInfo << "number of external links: #{extLinkCount}, avg. external links per concept: #{extLinkCount.size.fdiv(allConcepts.size).round(3)}";
 	end
 
 	def outputStatInfo
