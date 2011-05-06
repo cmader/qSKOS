@@ -50,7 +50,7 @@ class QSKOS
 		#findComponents(allConcepts)
 		#findCycles(allConcepts)
 		getExtLinkDegree(allConcepts)
-		#checkLinks
+		checkLinks
 	end
 
 	def findAllConcepts

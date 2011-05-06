@@ -1,4 +1,5 @@
 require 'net/http'
+require_relative 'UnhandledHTTPResponseException'
 
 class URIDereferencer
 
@@ -13,12 +14,14 @@ class URIDereferencer
 		case response.code
 		when "200"
 			return true
+=begin
 		when "404"
 			return false
+=end
 		when "301", "303"
 			return redirectedUriDereferencable?(uri, URI.parse(response["location"]))
 		else
-			raise UnhandledHTTPResponseException.new
+			raise UnhandledHTTPResponseException.new(response.code)
 		end
 		return false
 	end
@@ -29,9 +32,6 @@ class URIDereferencer
 		else
 			return false
 		end
-	end
-
-	class UnhandledHTTPResponseException < Exception
 	end
 
 end

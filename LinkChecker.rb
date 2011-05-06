@@ -1,4 +1,5 @@
 require_relative 'URIDereferencer'
+require_relative 'UnhandledHTTPResponseException'
 
 class LinkChecker
 
@@ -59,12 +60,16 @@ class LinkChecker
 
 	def dereferenceURI(uri)
 		@log.info("checking #{uri}") if @logCheckedURIs
-		
-		if @dereferencer.dereferencable?(uri)
-			@dereferencableURIs << uri 
-		elsif @logCheckedURIs
-			@log.info("failed")
-		end		
+
+		begin		
+			if @dereferencer.dereferencable?(uri)
+				@dereferencableURIs << uri 
+			elsif @logCheckedURIs
+				@log.info("failed")
+			end		
+		rescue UnhandledHTTPResponseException => e
+			@log.error("unhandled http response: #{e.code}")
+		end
 	end
 
 end
