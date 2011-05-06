@@ -3,6 +3,7 @@ require_relative 'SKOSUtils'
 class ConceptLinkFinder
 
 	def initialize(loggingRdfReader, log, allConcepts)
+
 		log.info("collecting concept links")
 
 		@log = log
@@ -33,6 +34,7 @@ class ConceptLinkFinder
 		@reader.loopStatements do |statement|
 			if @allConcepts.include?(statement.subject.to_s) && 
 				statement.object.resource? &&
+				!statement.object.node? &&
 				!SKOSUtils.instance.inSkosNamespace?(statement.object)
 
 				addResourceToConcept(statement.subject, statement.object)

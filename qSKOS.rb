@@ -49,8 +49,8 @@ class QSKOS
 		#findLooseConcepts(allConcepts)
 		#findComponents(allConcepts)
 		#findCycles(allConcepts)
-		#getExtLinkDegree(allConcepts)
-		checkLinks
+		getExtLinkDegree(allConcepts)
+		#checkLinks
 	end
 
 	def findAllConcepts
@@ -86,7 +86,7 @@ class QSKOS
 	def getExtLinkDegree(allConcepts)
 		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
 		extLinkCount = extLinkFinder.getExternalLinks.size
-		@statInfo << "number of external links: #{extLinkCount}, avg. external links per concept: #{extLinkCount.size.fdiv(allConcepts.size).round(3)}";
+		@statInfo << "number of external links: #{extLinkCount}, avg. external links per concept: #{extLinkCount.fdiv(allConcepts.size).round(3)}";
 	end
 
 	def checkLinks
