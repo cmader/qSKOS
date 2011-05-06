@@ -14,11 +14,9 @@ class URIDereferencer
 		case response.code
 		when "200"
 			return true
-=begin
 		when "404"
 			return false
-=end
-		when "301", "303"
+		when "301", "302", "303"
 			return redirectedUriDereferencable?(uri, URI.parse(response["location"]))
 		else
 			raise UnhandledHTTPResponseException.new(response.code)
