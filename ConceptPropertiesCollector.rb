@@ -21,6 +21,7 @@ class ConceptPropertiesCollector
 	private
 
 	def countProperties
+		@log.info("identifying documentation and deprecated properties")
 		@docPropertiesCount = 0
 		@deprPropertiesCount = 0
 		@conceptsWithProperties.values.each do |properties|
