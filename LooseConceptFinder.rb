@@ -32,7 +32,7 @@ class LooseConceptFinder
 	end
 
 	def isSkosPredicate(predicate)
-		return predicate.to_s.include?("skos")
+		return SKOSUtils.instance.inSkosNamespace?(predicate)
 	end
 
 end

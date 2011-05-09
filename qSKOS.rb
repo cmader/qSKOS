@@ -12,6 +12,7 @@ require_relative 'ComponentFinder'
 require_relative 'CycleFinder'
 require_relative 'ConceptLinkFinder'
 require_relative 'LinkChecker'
+require_relative 'ConceptPropertiesCollector'
 
 include RDF
 
@@ -49,8 +50,9 @@ class QSKOS
 		#findLooseConcepts(allConcepts)
 		#findComponents(allConcepts)
 		#findCycles(allConcepts)
-		getExtLinkDegree(allConcepts)
-		checkLinks
+		#getExtLinkDegree(allConcepts)
+		#checkLinks
+		getDocumentationAndDeprecatedCoverage(allConcepts)
 	end
 
 	def findAllConcepts
@@ -87,6 +89,15 @@ class QSKOS
 		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
 		extLinkCount = extLinkFinder.getExternalLinks.size
 		@statInfo << "number of external links: #{extLinkCount}, avg. external links per concept: #{extLinkCount.fdiv(allConcepts.size).round(3)}";
+	end
+
+	def getDocumentationAndDeprecatedCoverage(allConcepts)
+		propCollector = ConceptPropertiesCollector.new(@loggingRdfReader, @log, allConcepts)
+		docPropCount = propCollector.docPropertiesCount
+		@statInfo << "total documentation properties: #{docPropCount}, avg. documentation properties per concept: #{docPropCount.fdiv(allConcepts.size).round(3)}";
+
+		depPropCount = propCollector.deprPropertiesCount
+		@statInfo << "total deprecated properties: #{depPropCount}, avg. documentation properties per concept: #{depPropCount.fdiv(allConcepts.size).round(3)}";
 	end
 
 	def checkLinks

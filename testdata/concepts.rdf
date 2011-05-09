@@ -36,5 +36,6 @@
   </rdf:Description>
 	<rdf:Description rdf:about="../stw/a">
     <skos:broader rdf:resource="thsys/b"/>
+		<skos:editorialNote>editorial Note</skos:editorialNote>
   </rdf:Description>
 </rdf:RDF>
