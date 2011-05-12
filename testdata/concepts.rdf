@@ -41,4 +41,9 @@
 	<rdf:Description rdf:about="http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000000977068">
 		<skos:broader rdf:resource="thsys/b"/>
 	</rdf:Description>
+	<rdf:Description rdf:about="urn:uuid:1D8765A9-0981-0001-F311-1B9A17001BA8:AEN">
+		<rdf:type rdf:resource="http://semantic-web.at/ontologies/csw.owl#FreeConcept"/>
+		<skos:prefLabel xml:lang="en">Expert Approval needed</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Expertenfreigabe erforderlich</skos:prefLabel>
+	</rdf:Description>
 </rdf:RDF>

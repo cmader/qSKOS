@@ -39,10 +39,12 @@ class LinkChecker
 	end
 
 	def checkURI(uri)
-		uri = stripHashPortion(uri)
-		if (!hasBeenChecked(uri))
-			dereferenceURI(uri)
-			@checkedURIs << uri
+		if (uri.scheme != "urn")
+			uri = stripHashPortion(uri)
+			if (!hasBeenChecked(uri))
+				dereferenceURI(uri)
+				@checkedURIs << uri
+			end
 		end
 	end
 
