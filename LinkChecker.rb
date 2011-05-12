@@ -1,5 +1,6 @@
 require_relative 'URIDereferencer'
 require_relative 'UnhandledHTTPResponseException'
+require_relative 'NoResponseUriFoundException'
 
 class LinkChecker
 
@@ -67,8 +68,12 @@ class LinkChecker
 			elsif @logCheckedURIs
 				@log.info("failed")
 			end		
-		rescue UnhandledHTTPResponseException => e
-			@log.error("unhandled http response: #{e.code}")
+		rescue UnhandledHTTPResponseException => unhandledExc
+			@log.error("unhandled http response: #{unhandledExc.code}")
+		rescue NoResponseUriFoundException => uriExc
+			@log.error("cannot determine respose uri for '#{uriExc.uri}'");
+		rescue Exception => exc
+			@log.error("error dereferencing uri '#{uri}'; #{exc}");
 		end
 	end
 

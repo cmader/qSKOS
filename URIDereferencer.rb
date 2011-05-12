@@ -4,8 +4,12 @@ require_relative 'UnhandledHTTPResponseException'
 class URIDereferencer
 
 	def dereferencable?(uri)
-		response = Net::HTTP.get_response(uri)
-		return validResponse?(uri, response)
+		if uri.respond_to?('request_uri')
+			response = Net::HTTP.get_response(uri)
+			return validResponse?(uri, response)
+		else
+			raise NoResponseUriFoundException.new(uri)
+		end
 	end
 
 	private
@@ -26,10 +30,18 @@ class URIDereferencer
 
 	def	redirectedUriDereferencable?(origUri, redirUri)
 		if origUri != redirUri
+			if redirUri.to_s.start_with?("/")
+				redirUri = getUriFromRelativePath(origUri, redirUri)
+			end
 			return dereferencable?(redirUri)
 		else
 			return false
 		end
+	end
+
+	def getUriFromRelativePath(origUri, relPath)
+		origUri.path=(relPath.to_s)
+		return origUri
 	end
 
 end

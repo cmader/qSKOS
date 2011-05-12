@@ -46,13 +46,13 @@ class QSKOS
 	end
 
 	def processGraph()
-		allConcepts = findAllConcepts
+		#allConcepts = findAllConcepts
 		#findLooseConcepts(allConcepts)
 		#findComponents(allConcepts)
 		#findCycles(allConcepts)
 		#getExtLinkDegree(allConcepts)
-		#checkLinks
-		getDocumentationAndDeprecatedCoverage(allConcepts)
+		checkLinks
+		#getDocumentationAndDeprecatedCoverage(allConcepts)
 	end
 
 	def findAllConcepts
