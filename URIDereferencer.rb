@@ -15,17 +15,18 @@ class URIDereferencer
 	private
 
 	def validResponse?(uri, response)
-		case response.code
-		when "200"
-			return true
-		when "404"
-			return false
-		when "301", "302", "303"
-			return redirectedUriDereferencable?(uri, URI.parse(response["location"]))
+		if response.code.start_with?("4") || response.code.start_with?("5")
+			return false;
 		else
-			raise UnhandledHTTPResponseException.new(response.code)
+			case response.code
+			when "200"
+				return true
+			when "301", "302", "303"
+				return redirectedUriDereferencable?(uri, URI.parse(response["location"]))
+			else
+				raise UnhandledHTTPResponseException.new(response.code)
+			end
 		end
-		return false
 	end
 
 	def	redirectedUriDereferencable?(origUri, redirUri)
