@@ -13,6 +13,7 @@ require_relative 'CycleFinder'
 require_relative 'ConceptLinkFinder'
 require_relative 'LinkChecker'
 require_relative 'ConceptPropertiesCollector'
+require_relative 'UnknownTermsChecker'
 
 include RDF
 
@@ -51,8 +52,9 @@ class QSKOS
 		#findComponents(allConcepts)
 		#findCycles(allConcepts)
 		#getExtLinkDegree(allConcepts)
-		checkLinks
+		#checkLinks
 		#getDocumentationAndDeprecatedCoverage(allConcepts)
+		checkForUnknownSKOSTerms
 	end
 
 	def findAllConcepts
@@ -108,6 +110,10 @@ class QSKOS
 
 		@statInfo << "#{derefURIs.size} of #{checkedURIs.size} URIs dereferencable"
 		@statInfo << "percentage of available link targets: #{percentage}"
+	end
+
+	def checkForUnknownSKOSTerms
+		unknownTermChecker = UnknownTermsChecker.new(@loggingRdfReader, @log)
 	end
 
 	def outputStatInfo
