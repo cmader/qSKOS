@@ -13,7 +13,7 @@ require_relative 'CycleFinder'
 require_relative 'ConceptLinkFinder'
 require_relative 'LinkChecker'
 require_relative 'ConceptPropertiesCollector'
-require_relative 'UnknownTermsChecker'
+require_relative 'InvalidSKOSTermsChecker'
 
 include RDF
 
@@ -54,7 +54,7 @@ class QSKOS
 		#getExtLinkDegree(allConcepts)
 		#checkLinks
 		#getDocumentationAndDeprecatedCoverage(allConcepts)
-		checkForUnknownSKOSTerms
+		checkForInvalidSKOSTerms
 	end
 
 	def findAllConcepts
@@ -112,8 +112,11 @@ class QSKOS
 		@statInfo << "percentage of available link targets: #{percentage}"
 	end
 
-	def checkForUnknownSKOSTerms
-		unknownTermChecker = UnknownTermsChecker.new(@loggingRdfReader, @log)
+	def checkForInvalidSKOSTerms
+		invalidSKOSTermsChecker = InvalidSKOSTermsChecker.new(@loggingRdfReader, @log)
+		invalidTermsCount = invalidSKOSTermsChecker.getInvalidTerms.size
+
+		@statInfo << "#{invalidTermsCount} invalid SKOS terms found" if invalidTermsCount > 0
 	end
 
 	def outputStatInfo
