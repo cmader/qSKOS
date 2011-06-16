@@ -1,4 +1,5 @@
 require_relative 'LoggingRdfReader'
+require_relative 'SKOSUtils'
 
 class LooseConceptFinder
 

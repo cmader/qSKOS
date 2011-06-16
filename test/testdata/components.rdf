@@ -83,4 +83,7 @@
     <skos:definition xml:lang="en">The concept is used as an index term or subject 
     for the resource.</skos:definition>
   </rdf:Description>
+	<rdf:Description rdf:about="conceptP">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	</rdf:Description>
 </rdf:RDF>
