@@ -14,5 +14,5 @@ group :development do
   gem "rdf-raptor", ">= 0"
   gem "logger", ">= 0"
   gem "rgl", ">= 0"
-#  gem "igraph", ">= 0"
+  gem "igraph", ">= 0"
 end

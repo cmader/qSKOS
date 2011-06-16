@@ -2,7 +2,7 @@ require 'helper'
 require 'logger'
 require 'qSKOS'
 
-class TestFindConcepts < Test::Unit::TestCase
+class TestLooseConcepts < Test::Unit::TestCase
 
   def test_countLooseConcepts
 		QSKOS.init("test/testdata/concepts.rdf", Logger.new(STDOUT))

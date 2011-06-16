@@ -1,6 +1,6 @@
 = qSKOS
 
-Description goes here.
+Quality assessment tool for SKOS vocabularies.
 
 == Contributing to qSKOS
  
