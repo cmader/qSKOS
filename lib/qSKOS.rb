@@ -64,7 +64,7 @@ module QSKOS
 		allCycles
 	end
 
-	def QSKOS.getExtLinkDegree(allConcepts)
+	def QSKOS.getExternalLinks(allConcepts)
 		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
 
 		externalLinks = extLinkFinder.getExternalLinks 

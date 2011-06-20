@@ -48,3 +48,5 @@ pkg
 #*.rbc
 #
 Gemfile.lock
+out.gml
+vertices.txt

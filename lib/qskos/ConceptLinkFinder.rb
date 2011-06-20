@@ -20,8 +20,6 @@ class ConceptLinkFinder
 		#dumpConceptResources
 	end
 
-	# this is not exactly true; however, we suppose either subject or object of
-	# a triple involving a concept to NOT redefine or enhance an existing concept
 	def getExternalLinks
 		@log.info("identifying external links")
 		identifyExternalLinks
