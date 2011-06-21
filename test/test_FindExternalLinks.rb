@@ -15,7 +15,7 @@ class TestFindExternalLinks < Test::Unit::TestCase
 		QSKOS.init("test/testdata/concepts.rdf", Logger.new(STDOUT))
 		allConcepts = QSKOS.findAllConcepts
 		extLinks = QSKOS.getExternalLinks(allConcepts)
-		assert_equal(extLinks.size, 0)
+		assert_equal(extLinks.size, 1)
   end
 
 end
