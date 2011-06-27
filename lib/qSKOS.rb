@@ -91,7 +91,7 @@ module QSKOS
 		@log.info("#{derefURIs.size} of #{checkedURIs.size} URIs dereferencable")
 		@log.info("percentage of available link targets: #{percentage}")
 
-		yield(checkedURIs, derefURIs)
+		[checkedURIs, derefURIs]
 	end
 
 	def QSKOS.getInvalidSKOSTerms

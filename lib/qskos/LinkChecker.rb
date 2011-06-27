@@ -5,6 +5,7 @@ require_relative 'NoResponseUriFoundException'
 class LinkChecker
 
 	include RDF
+	include URI
 
 	attr_reader :checkedURIs, :dereferencableURIs
 
@@ -39,7 +40,7 @@ class LinkChecker
 	end
 
 	def checkURI(uri)
-		if (uri.scheme != "urn")
+		if (uri.scheme == "http")
 			uri = stripHashPortion(uri)
 			if (!hasBeenChecked(uri))
 				dereferenceURI(uri)
@@ -52,7 +53,7 @@ class LinkChecker
 		hashPos = uri.to_s.rindex('#')
 		if hashPos != nil
 			newUri = uri.to_s[0..hashPos-1]
-			uri = URI.new(newUri)
+			uri = URI.parse(newUri)
 		end
 		return uri
 	end
