@@ -97,8 +97,8 @@ module QSKOS
 	def QSKOS.getInvalidSKOSTerms
 		invalidSKOSTermsChecker = InvalidSKOSTermsChecker.new(@loggingRdfReader, @log)
 
-		invalidTerms = invalidSKOSTermsChecker.getInvalidTerms.size
-		@statInfo << "#{invalidTermsCount} invalid SKOS terms found" if invalidTerms.size > 0
+		invalidTerms = invalidSKOSTermsChecker.getInvalidTerms
+		@log.info("#{invalidTerms.size} invalid SKOS terms found") if invalidTerms.size > 0
 
 		invalidTerms
 	end

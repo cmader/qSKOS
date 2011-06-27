@@ -28,5 +28,4 @@ class TestDereferenceLinks < Test::Unit::TestCase
 		assert_equal(failed.size, 5)
   end
 
-
 end
