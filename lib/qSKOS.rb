@@ -74,7 +74,7 @@ module QSKOS
 	end
 
 	def QSKOS.getPropertyPartitions(allConcepts)
-		propCollector = ConceptPropertiesCollector.new(@loggingRdfReader, @log, allConcepts)
+		propCollector = ConceptPropertiesCollector.new(@loggingRdfReader, @log)
 
 		docStatements = propCollector.docPropertyStatements
 		@log.info("avg. documentation properties per concept: #{docStatements.size.fdiv(allConcepts.size).round(3)}")

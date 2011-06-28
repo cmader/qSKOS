@@ -20,14 +20,14 @@ class ConceptPropertiesCollector
 
 	def collectConceptProperties
 		@reader.loopStatements do |statement|
-			if isSkosPredicate(statement.predicate) do
+			if isSkosPredicate(statement.predicate)
 				@docPropertyStatements << statement if @documentationProperties.include?(statement.predicate)
 			end
 		end
 	end
 
 	def isSkosPredicate(predicate)
-		return SKOSUtils.instance.inSkosNamespace?(predicate)
+		SKOSUtils.instance.inSkosNamespace?(predicate)
 	end
 
 end
