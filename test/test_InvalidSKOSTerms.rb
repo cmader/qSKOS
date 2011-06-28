@@ -2,20 +2,28 @@ require 'helper'
 require 'logger'
 require 'qSKOS'
 
-class TestInvalidSKOSTerms < Test::Unit::TestCase
+class TestInvalidTerms < Test::Unit::TestCase
 
-  def test_invalidSKOSTerms_1
+  def test_invalidTerms_1
 		QSKOS.init("test/testdata/components.rdf", Logger.new(STDOUT))
-		invalidTerms = QSKOS.getInvalidSKOSTerms
+
+		invalidTerms = QSKOS.getInvalidTerms
+		unknownTerms = invalidTerms.first
+		deprecatedTerms = invalidTerms.last
 		
-		assert_equal(invalidTerms.size, 0)
+		assert_equal(unknownTerms.size, 0)
+		assert_equal(deprecatedTerms.size, 0)
   end
 
-  def test_invalidSKOSTerms_2
+  def test_invalidTerms_2
 		QSKOS.init("test/testdata/concepts.rdf", Logger.new(STDOUT))
-		invalidTerms = QSKOS.getInvalidSKOSTerms
 
-		assert_equal(invalidTerms.size, 1)
+		invalidTerms = QSKOS.getInvalidTerms
+		unknownTerms = invalidTerms.first
+		deprecatedTerms = invalidTerms.last
+
+		assert_equal(unknownTerms.size, 2)
+		assert_equal(deprecatedTerms.size, 1)
   end
 
 end

@@ -30,6 +30,7 @@
   </rdf:Description>
 	<rdf:Description rdf:about="../stw">
     <skos:hasTopConcept rdf:resource="thsys/p"/>
+		<skos:altSymbol>deprecated</skos:altSymbol>
   </rdf:Description>
 	<rdf:Description rdf:about="../stw/testTopConcept">
     <skos:topConceptOf rdf:resource="thsys/x"/>
@@ -38,6 +39,7 @@
     <skos:broader rdf:resource="thsys/b"/>
 		<skos:editorialNote>editorial Note</skos:editorialNote>
 		<skos:blabla>blubb</skos:blabla>
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#InventedConcept"/>
   </rdf:Description>
 	<rdf:Description rdf:about="http://rdf.freebase.com/ns/guid.9202a8c04000641f8000000000977068">
 		<skos:broader rdf:resource="thsys/b"/>

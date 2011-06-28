@@ -16,7 +16,7 @@ module QSKOS
 	autoload :ConceptLinkFinder, 'qskos/ConceptLinkFinder'
 	autoload :LinkChecker, 'qskos/LinkChecker'
 	autoload :ConceptPropertiesCollector, 'qskos/ConceptPropertiesCollector'
-	autoload :InvalidSKOSTermsChecker, 'qskos/InvalidSKOSTermsChecker'
+	autoload :TermsChecker, 'qskos/TermsChecker'
 
 	def QSKOS.init(rdfFileName, log)
 		@log = log
@@ -73,13 +73,13 @@ module QSKOS
 		externalLinks
 	end
 
-	def QSKOS.getDeprecatedPropertiesCount(allConcepts)
+	def QSKOS.getPropertyPartitions(allConcepts)
 		propCollector = ConceptPropertiesCollector.new(@loggingRdfReader, @log, allConcepts)
 
-		depPropCount = propCollector.deprPropertiesCount
-		@log.info("total deprecated properties: #{depPropCount}, avg. documentation properties per concept: #{depPropCount.fdiv(allConcepts.size).round(3)}")
+		docStatements = propCollector.docPropertyStatements
+		@log.info("avg. documentation properties per concept: #{docStatements.size.fdiv(allConcepts.size).round(3)}")
 
-		depPropCount
+		[docStatements]
 	end
 
 	def QSKOS.checkLinks
@@ -94,13 +94,16 @@ module QSKOS
 		[checkedURIs, derefURIs]
 	end
 
-	def QSKOS.getInvalidSKOSTerms
-		invalidSKOSTermsChecker = InvalidSKOSTermsChecker.new(@loggingRdfReader, @log)
+	def QSKOS.getInvalidTerms
+		termsChecker = TermsChecker.new(@loggingRdfReader, @log)
 
-		invalidTerms = invalidSKOSTermsChecker.getInvalidTerms
-		@log.info("#{invalidTerms.size} invalid SKOS terms found") if invalidTerms.size > 0
+		invalidTerms = termsChecker.getInvalidTerms
+		unknownTermStatements = invalidTerms.first
+		deprecatedTermStatements = invalidTerms.last
 
-		invalidTerms
+		@log.info("#{invalidTerms.size} invalid SKOS terms found; #{unknownTermStatements.size} unknown terms, #{deprecatedTermStatements.size} deprecated terms") if invalidTerms.size > 0
+
+		[unknownTermStatements, deprecatedTermStatements]
 	end
 
 	private

@@ -1,8 +1,8 @@
 class ConceptPropertiesCollector
 
-	attr_reader :docPropertiesCount, :deprPropertiesCount
+	attr_reader :docPropertyStatements
 
-	def initialize(loggingRdfReader, log, allConcepts)
+	def initialize(loggingRdfReader, log)
 		log.info("collecting concept properties")
 
 		@reader = loggingRdfReader
@@ -10,39 +10,18 @@ class ConceptPropertiesCollector
 
 		@documentationProperties = [SKOS.note, SKOS.changeNote, SKOS.definition, SKOS.editorialNote,
 			SKOS.example, SKOS.historyNote, SKOS.scopeNote]
-		@deprecatedProperties =  [SKOS.symbol, SKOS.prefSymbol, SKOS.altSymbol, SKOS.CollectableProperty,
-	    SKOS.subject, SKOS.isSubjectOf, SKOS.primarySubject, SKOS.isPrimarySubjectOf, SKOS.subjectIndicator]
 
-		initConceptsWithPropertiesHash(allConcepts)
+		@docPropertyStatements = []
+
 		collectConceptProperties
-		countProperties
 	end
 
 	private
 
-	def countProperties
-		@log.info("identifying documentation and deprecated properties")
-		@docPropertiesCount = 0
-		@deprPropertiesCount = 0
-		@conceptsWithProperties.values.each do |properties|
-			properties.each do |property|
-				@docPropertiesCount += 1 if @documentationProperties.include?(property)
-				@deprPropertiesCount += 1 if @deprecatedProperties.include?(property)
-			end	
-		end
-	end
-
-	def initConceptsWithPropertiesHash(allConcepts)
-		@conceptsWithProperties = {}
-		allConcepts.each do |concept|
-			@conceptsWithProperties[concept] = []
-		end
-	end
-
 	def collectConceptProperties
 		@reader.loopStatements do |statement|
-			if isSkosPredicate(statement.predicate) && @conceptsWithProperties.keys.include?(statement.subject)
-				@conceptsWithProperties[statement.subject] << statement.predicate
+			if isSkosPredicate(statement.predicate) do
+				@docPropertyStatements << statement if @documentationProperties.include?(statement.predicate)
 			end
 		end
 	end
