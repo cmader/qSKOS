@@ -8,6 +8,8 @@ include RDF
 
 module QSKOS
 
+	attr_writer :rankingSparqlEndpoints
+
 	autoload :ConceptFinder, 'qskos/ConceptFinder'
 	autoload :LooseConceptFinder, 'qskos/LooseConceptFinder'
 	autoload :LoggingRdfReader, 'qskos/LoggingRdfReader'
@@ -17,9 +19,11 @@ module QSKOS
 	autoload :LinkChecker, 'qskos/LinkChecker'
 	autoload :ConceptPropertiesCollector, 'qskos/ConceptPropertiesCollector'
 	autoload :TermsChecker, 'qskos/TermsChecker'
+	autoload :ConceptRanker, 'qskos/ConceptRanker'
 
 	def QSKOS.init(rdfFileName, log)
 		@log = log
+		@rankingSparqlEndpoints = []
 
 		readFile(rdfFileName)
 	end
@@ -104,6 +108,14 @@ module QSKOS
 		@log.info("#{invalidTerms.size} invalid SKOS terms found; #{unknownTermStatements.size} unknown terms, #{deprecatedTermStatements.size} deprecated terms") if invalidTerms.size > 0
 
 		[unknownTermStatements, deprecatedTermStatements]
+	end
+
+	def QSKOS.rankConcepts(allConcepts, sparqlEndpoint = nil)
+		@rankingSparqlEndpoints = [sparqlEndpoint] unless sparqlEndpoint.nil?
+		rankedConcepts = ConceptRanker.new(@log, @rankingSparqlEndpoints).rankConcepts(allConcepts)
+
+		@log.info("concepts ranked")
+		rankedConcepts
 	end
 
 	private

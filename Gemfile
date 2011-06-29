@@ -15,4 +15,5 @@ group :development do
   gem "logger", ">= 0"
   gem "rgl", ">= 0"
   gem "igraph", ">= 0"
+	gem "sparql-client", ">= 0"
 end
