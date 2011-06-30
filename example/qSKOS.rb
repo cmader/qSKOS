@@ -25,7 +25,7 @@ class QSKOSExample
 
 	def processVocabulary
 		allConcepts = QSKOS.findAllConcepts
-		rankedConcepts = QSKOS.rankConcepts(allConcepts.first(20), "http://sparql.sindice.com/sparql")
+		rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
 		dumpFirstRankedConcepts(rankedConcepts)
 	end
 
