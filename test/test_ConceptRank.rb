@@ -10,9 +10,14 @@ class TestConceptRank < Test::Unit::TestCase
 		foundConcepts = QSKOS.findAllConcepts
 		rankedConcepts = QSKOS.rankConcepts(foundConcepts, @sindiceSparqlEndpoint)
 
-puts rankedConcepts
-
-		#TODO: add assertion
+		rankedConcepts.each_key do |key|
+			case key.to_s
+				when "http://dbpedia.org/resource/Michael_Jackson"
+					assert_equal(rankedConcepts[key][:hosts].size, 10)
+				when "http://zbw.eu/stw/descriptor/13845-2"
+					assert_equal(rankedConcepts[key][:conceptIsObjectTripleCount], 1)
+			end
+		end
 	end
 
 	def setup

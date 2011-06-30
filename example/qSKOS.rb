@@ -25,7 +25,15 @@ class QSKOSExample
 
 	def processVocabulary
 		allConcepts = QSKOS.findAllConcepts
-		QSKOS.findLooseConcepts(allConcepts)
+		rankedConcepts = QSKOS.rankConcepts(allConcepts.first(20), "http://sparql.sindice.com/sparql")
+		dumpFirstRankedConcepts(rankedConcepts)
+	end
+
+	def dumpFirstRankedConcepts(rankedConcepts)
+		sorted = rankedConcepts.to_a.sort do |x, y|
+			y.last[:hosts].size <=> x.last[:hosts].size
+		end
+		puts sorted.first(10).to_s
 	end
 
 end

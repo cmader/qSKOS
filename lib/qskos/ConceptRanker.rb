@@ -5,6 +5,7 @@ include SPARQL
 class ConceptRanker
 
 	def initialize(log, sparqlEndpoints)
+		@log = log
 		@clients = []
 		@rankedConcepts = Hash.new({})
 
@@ -27,6 +28,8 @@ class ConceptRanker
 	private
 
 	def rankConcept(concept, client)
+		@log.info("ranking concept '#{concept.to_s}'")
+
 		inLinkResult = client.query("SELECT distinct ?s WHERE { ?s ?p <#{concept.to_s}> . FILTER(regex(str(?s), \"http://.*\")) }")
 
 		@rankedConcepts[concept] = {
