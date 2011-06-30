@@ -6,6 +6,7 @@ class ConceptRanker
 
 	def initialize(log, sparqlEndpoints)
 		@clients = []
+		@rankedConcepts = Hash.new({})
 
 		sparqlEndpoints.each do |endpoint|
 			@clients << Client.new(endpoint)
@@ -19,19 +20,31 @@ class ConceptRanker
 				rankConcept(concept, client)
 			end
 		end
+
+		@rankedConcepts
 	end
 
 	private
 
 	def rankConcept(concept, client)
-		query = client.select.distinct.where([:s, :p, concept])
+		inLinkResult = client.query("SELECT distinct ?s WHERE { ?s ?p <#{concept.to_s}> . FILTER(regex(str(?s), \"http://.*\")) }")
 
-puts query.inspect
-puts query.result.size
+		@rankedConcepts[concept] = {
+			:conceptIsObjectTripleCount => inLinkResult.size,
+			:hosts => getDistinctHosts(inLinkResult, concept.host)}
 
-		query.each_solution do |solution|
-			puts solution
+		@rankedConcepts
+	end
+
+	def getDistinctHosts(inLinkResult, conceptHost)
+		hosts = []
+		inLinkResult.each do |solution|
+			resultResourceHost = solution[:s].host
+
+			hosts << resultResourceHost unless resultResourceHost == conceptHost
 		end
+
+		hosts.uniq
 	end
 
 end

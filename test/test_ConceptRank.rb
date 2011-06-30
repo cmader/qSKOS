@@ -10,6 +10,8 @@ class TestConceptRank < Test::Unit::TestCase
 		foundConcepts = QSKOS.findAllConcepts
 		rankedConcepts = QSKOS.rankConcepts(foundConcepts, @sindiceSparqlEndpoint)
 
+puts rankedConcepts
+
 		#TODO: add assertion
 	end
 

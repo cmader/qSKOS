@@ -12,4 +12,7 @@
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:narrower rdf:resource="http://dbpedia.org/resource/Michael_Jackson"/>
   </rdf:Description>
+	<rdf:Description rdf:about="http://zbw.eu/stw/descriptor/13845-2">
+    <skos:narrower rdf:resource="http://zbw.eu/stw/descriptor/11994-2"/>
+  </rdf:Description>
 </rdf:RDF>
