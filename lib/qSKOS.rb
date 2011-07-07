@@ -81,7 +81,7 @@ module QSKOS
 		propCollector = ConceptPropertiesCollector.new(@loggingRdfReader, @log)
 
 		docStatements = propCollector.docPropertyStatements
-		@log.info("avg. documentation properties per concept: #{docStatements.size.fdiv(allConcepts.size).round(3)}")
+		@log.info("total documentation properties: #{docStatements.size}, avg. per concept: #{docStatements.size.fdiv(allConcepts.size).round(3)}")
 
 		[docStatements]
 	end

@@ -30,7 +30,8 @@ class QSKOSExample
 		#QSKOS.findComponents(allConcepts)
 		#QSKOS.findCycles(allConcepts)
 		#QSKOS.getExternalLinks(allConcepts).first(100)
-		QSKOS.checkLinks
+		#QSKOS.checkLinks
+		QSKOS.getPropertyPartitions(allConcepts)
 
 		#rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
 		#dumpFirstRankedConcepts(rankedConcepts)

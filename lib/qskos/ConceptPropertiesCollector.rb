@@ -1,3 +1,5 @@
+require_relative 'SKOSUtils'
+
 class ConceptPropertiesCollector
 
 	attr_reader :docPropertyStatements
