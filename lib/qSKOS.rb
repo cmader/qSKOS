@@ -72,7 +72,7 @@ module QSKOS
 		extLinkFinder = ConceptLinkFinder.new(@loggingRdfReader, @log, allConcepts)
 
 		externalLinks = extLinkFinder.getExternalLinks 
-		@log.info("number of external links: #{externalLinks.size}, avg. external links per concept: #{externalLinks.size.fdiv(allConcepts.size).round(3)}")
+		@log.info("number of external links (unique/total): #{externalLinks.uniq.size}/#{externalLinks.size}, avg. external links per concept: #{externalLinks.size.fdiv(allConcepts.size).round(3)}")
 
 		externalLinks
 	end

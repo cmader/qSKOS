@@ -28,7 +28,9 @@ class QSKOSExample
 		
 		#QSKOS.findLooseConcepts(allConcepts)
 		#QSKOS.findComponents(allConcepts)
-		QSKOS.findCycles(allConcepts)
+		#QSKOS.findCycles(allConcepts)
+		#QSKOS.getExternalLinks(allConcepts).first(100)
+		QSKOS.checkLinks
 
 		#rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
 		#dumpFirstRankedConcepts(rankedConcepts)
