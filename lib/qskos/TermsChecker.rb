@@ -1,3 +1,5 @@
+require_relative 'SKOSUtils'
+
 class TermsChecker
 
 	def initialize(loggingRdfReader, log)

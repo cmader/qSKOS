@@ -105,7 +105,7 @@ module QSKOS
 		unknownTermStatements = invalidTerms.first
 		deprecatedTermStatements = invalidTerms.last
 
-		@log.info("#{invalidTerms.size} invalid SKOS terms found; #{unknownTermStatements.size} unknown terms, #{deprecatedTermStatements.size} deprecated terms") if invalidTerms.size > 0
+		@log.info("#{unknownTermStatements.size} unknown terms, #{deprecatedTermStatements.size} deprecated terms") if invalidTerms.size > 0
 
 		[unknownTermStatements, deprecatedTermStatements]
 	end
