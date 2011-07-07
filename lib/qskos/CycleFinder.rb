@@ -1,4 +1,6 @@
 require 'rgl/adjacency'
+require_relative 'GraphBuilder'
+
 include RGL
 
 class CycleFinder
