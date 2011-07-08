@@ -24,15 +24,15 @@ class QSKOSExample
 	end
 
 	def processVocabulary
-		#allConcepts = QSKOS.findAllConcepts
+		allConcepts = QSKOS.findAllConcepts
 		
 		#QSKOS.findLooseConcepts(allConcepts)
 		#QSKOS.findComponents(allConcepts)
 		#QSKOS.findCycles(allConcepts)
 		#QSKOS.getExternalLinks(allConcepts).first(100)
-		#QSKOS.checkLinks
+		QSKOS.checkLinks
 		#QSKOS.getPropertyPartitions(allConcepts)
-		QSKOS.getInvalidTerms
+		#QSKOS.getInvalidTerms
 
 		#rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
 		#dumpFirstRankedConcepts(rankedConcepts)
