@@ -114,7 +114,13 @@ module QSKOS
 		@rankingSparqlEndpoints = [sparqlEndpoint] unless sparqlEndpoint.nil?
 		rankedConcepts = ConceptRanker.new(@log, @rankingSparqlEndpoints).rankConcepts(allConcepts)
 
-		@log.info("concepts ranked")
+		rankSum = 0
+		rankedConcepts.each do |rankedConcept|
+			rankSum = rankSum + rankedConcept.last[:hosts].size
+		end
+		avgRank = rankSum.fdiv(allConcepts.size).round(3)
+
+		@log.info("concepts ranked; avg. #{avgRank}")
 		rankedConcepts
 	end
 
