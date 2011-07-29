@@ -8,8 +8,8 @@ class TestInvalidTerms < Test::Unit::TestCase
 		QSKOS.init("test/testdata/components.rdf", Logger.new(STDOUT))
 
 		invalidTerms = QSKOS.getInvalidTerms
-		unknownTerms = invalidTerms.first
-		deprecatedTerms = invalidTerms.last
+		unknownTerms = invalidTerms[:unknownTermStatements]
+		deprecatedTerms = invalidTerms[:deprecatedTermStatements]
 		
 		assert_equal(unknownTerms.size, 0)
 		assert_equal(deprecatedTerms.size, 0)
@@ -19,8 +19,8 @@ class TestInvalidTerms < Test::Unit::TestCase
 		QSKOS.init("test/testdata/concepts.rdf", Logger.new(STDOUT))
 
 		invalidTerms = QSKOS.getInvalidTerms
-		unknownTerms = invalidTerms.first
-		deprecatedTerms = invalidTerms.last
+		unknownTerms = invalidTerms[:unknownTermStatements]
+		deprecatedTerms = invalidTerms[:deprecatedTermStatements]
 
 		assert_equal(unknownTerms.size, 2)
 		assert_equal(deprecatedTerms.size, 1)

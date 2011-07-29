@@ -27,7 +27,7 @@ class LanguageCollector
 		conceptLanguageCoverageRatio
 	end
 
-	def getAvgLanguageCoverage
+	def getAvgLanguageRatio
 		ratioSum = 0;
 		getCoverageRatioPerConcept.values.cycle(1) do |ratio|
 			ratioSum += ratio
@@ -43,6 +43,10 @@ class LanguageCollector
 		end
 
 		fullCoverageConcepts
+	end
+
+	def getFullCoverageRatio
+		getFullCoverageConcepts.size.fdiv(@allConcepts.size)
 	end
 
 	private

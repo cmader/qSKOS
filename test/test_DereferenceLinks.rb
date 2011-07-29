@@ -8,8 +8,8 @@ class TestDereferenceLinks < Test::Unit::TestCase
 		QSKOS.init("test/testdata/components.rdf", Logger.new(STDOUT))
 		
 		linkCheckResult = QSKOS.checkLinks 
-		checkedUris = linkCheckResult.first
-		dereferencableUris = linkCheckResult.last
+		checkedUris = linkCheckResult[:checkedURIs]
+		dereferencableUris = linkCheckResult[:derefURIs]
 		
 		assert_equal(checkedUris.size, 1)
 		assert_equal(dereferencableUris.size, 1)
@@ -19,8 +19,8 @@ class TestDereferenceLinks < Test::Unit::TestCase
 		QSKOS.init("test/testdata/concepts.rdf", Logger.new(STDOUT))
 
 		linkCheckResult = QSKOS.checkLinks 
-		checkedUris = linkCheckResult.first
-		dereferencableUris = linkCheckResult.last
+		checkedUris = linkCheckResult[:checkedURIs]
+		dereferencableUris = linkCheckResult[:derefURIs]
 		failed = checkedUris - dereferencableUris
 
 		assert_equal(checkedUris.size, 19)

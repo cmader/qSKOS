@@ -8,7 +8,7 @@ class TestPropertyPartitions < Test::Unit::TestCase
 		QSKOS.init("test/testdata/components.rdf", Logger.new(STDOUT))
 	
 		allConcepts = QSKOS.findAllConcepts
-		docPropertyStatements = QSKOS.getPropertyPartitions(allConcepts).first
+		docPropertyStatements = QSKOS.getPropertyPartitions(allConcepts)[:docStatements]
 		
 		assert_equal(docPropertyStatements.size, 2)
   end
@@ -17,7 +17,7 @@ class TestPropertyPartitions < Test::Unit::TestCase
 		QSKOS.init("test/testdata/concepts.rdf", Logger.new(STDOUT))
 
 		allConcepts = QSKOS.findAllConcepts
-		docPropertyStatements = QSKOS.getPropertyPartitions(allConcepts).first
+		docPropertyStatements = QSKOS.getPropertyPartitions(allConcepts)[:docStatements]
 
 		assert_equal(docPropertyStatements.size, 1)
   end

@@ -84,7 +84,7 @@ module QSKOS
 		docStatements = propCollector.docPropertyStatements
 		@log.info("total documentation properties: #{docStatements.size}, avg. per concept: #{docStatements.size.fdiv(allConcepts.size).round(3)}")
 
-		[docStatements]
+		{:docStatements => docStatements}
 	end
 
 	def QSKOS.checkLinks
@@ -96,7 +96,7 @@ module QSKOS
 		@log.info("#{derefURIs.size} of #{checkedURIs.size} URIs dereferencable")
 		@log.info("percentage of available link targets: #{percentage}")
 
-		[checkedURIs, derefURIs]
+		{:checkedURIs => checkedURIs, :derefURIs => derefURIs}
 	end
 
 	def QSKOS.getInvalidTerms
@@ -108,7 +108,7 @@ module QSKOS
 
 		@log.info("#{unknownTermStatements.size} unknown terms, #{deprecatedTermStatements.size} deprecated terms") if invalidTerms.size > 0
 
-		[unknownTermStatements, deprecatedTermStatements]
+		{:unknownTermStatements => unknownTermStatements, :deprecatedTermStatements => deprecatedTermStatements}
 	end
 
 	def QSKOS.rankConcepts(allConcepts, sparqlEndpoint = nil)
@@ -129,10 +129,11 @@ module QSKOS
 		langCollector = LanguageCollector.new(@loggingRdfReader, @log, allConcepts)
 
 		coverageRatioPerConcept = langCollector.getCoverageRatioPerConcept
-		avgCoverage = langCollector.getAvgLanguageCoverage
+		avgRatio = langCollector.getAvgLanguageRatio
 		fullCoverageConcepts = langCollector.getFullCoverageConcepts
+		fullCoverageRatio =	langCollector.getFullCoverageRatio
 
-		[coverageRatioPerConcept, avgCoverage, fullCoverageConcepts]
+		{:coverageRatioPerConcept => coverageRatioPerConcept, :avgRatio => avgRatio, :fullCoverageConcepts => fullCoverageConcepts, :fullCoverageRatio => fullCoverageRatio}
 	end
 
 	private

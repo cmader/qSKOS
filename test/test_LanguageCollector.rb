@@ -10,9 +10,9 @@ class TestLanguageCollector < Test::Unit::TestCase
 		allConcepts = QSKOS.findAllConcepts
 		langCov = QSKOS.getLanguageCoverage(allConcepts)
 		
-		assert_equal(langCov[0].keys.size, 14)
-		assert_operator(langCov[1], :>, 0.5)
-		assert_equal(langCov[2].size, 1)
+		assert_equal(langCov[:coverageRatioPerConcept].keys.size, 14)
+		assert_operator(langCov[:avgRatio], :>, 0.5)
+		assert_equal(langCov[:fullCoverageConcepts].size, 1)
   end
 
 end
