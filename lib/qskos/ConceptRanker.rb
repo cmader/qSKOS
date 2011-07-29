@@ -7,7 +7,7 @@ class ConceptRanker
 	def initialize(log, sparqlEndpoints)
 		@log = log
 		@clients = []
-		@rankedConcepts = Hash.new({})
+		@rankedConcepts = {}
 
 		sparqlEndpoints.each do |endpoint|
 			@clients << Client.new(endpoint)

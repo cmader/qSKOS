@@ -20,6 +20,7 @@ module QSKOS
 	autoload :ConceptPropertiesCollector, 'qskos/ConceptPropertiesCollector'
 	autoload :TermsChecker, 'qskos/TermsChecker'
 	autoload :ConceptRanker, 'qskos/ConceptRanker'
+	autoload :LanguageCollector, 'qskos/LanguageCollector'
 
 	def QSKOS.init(rdfFileName, log)
 		@log = log
@@ -122,6 +123,16 @@ module QSKOS
 
 		@log.info("concepts ranked; avg. #{avgRank}")
 		rankedConcepts
+	end
+
+	def QSKOS.getLanguageCoverage(allConcepts)
+		langCollector = LanguageCollector.new(@loggingRdfReader, @log, allConcepts)
+
+		coverageRatioPerConcept = langCollector.getCoverageRatioPerConcept
+		avgCoverage = langCollector.getAvgLanguageCoverage
+		fullCoverageConcepts = langCollector.getFullCoverageConcepts
+
+		[coverageRatioPerConcept, avgCoverage, fullCoverageConcepts]
 	end
 
 	private

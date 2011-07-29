@@ -34,8 +34,11 @@ class QSKOSExample
 		#QSKOS.getPropertyPartitions(allConcepts)
 		#QSKOS.getInvalidTerms
 
-		rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
-		dumpFirstRankedConcepts(rankedConcepts)
+		#rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
+		#dumpFirstRankedConcepts(rankedConcepts)
+
+		QSKOS.getLanguageCoverage(allConcepts)
+
 	end
 
 	def dumpFirstRankedConcepts(rankedConcepts)
