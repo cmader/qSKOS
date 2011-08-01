@@ -2,7 +2,7 @@
 coverage
 
 # rdoc generated
-rdoc
+doc
 
 # yard generated
 .yardoc
