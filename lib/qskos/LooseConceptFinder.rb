@@ -1,6 +1,10 @@
 require_relative 'LoggingRdfReader'
 require_relative 'SKOSUtils'
 
+=begin rdoc
+Generates a list of SKOS concepts (identified by URI) that don't have any SKOS relationships to other concepts.
+=end
+
 class LooseConceptFinder
 
 	def initialize(loggingRdfReader, log, allConcepts)

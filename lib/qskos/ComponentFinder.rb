@@ -3,6 +3,10 @@ require 'igraph'
 require_relative 'LoggingRdfReader'
 require_relative 'GraphBuilder'
 
+=begin rdoc
+Finds weakly connected components in a SKOS RDF graph, i.e. components that aren't connected to the rest of the graph using SKOS properties
+=end
+
 class ComponentFinder
 
 	def initialize(loggingRdfReader, log, allConcepts, writeGraphToDisk=false)

@@ -1,3 +1,7 @@
+=begin rdoc
+Reads triples from an RDF reader and identifies all SKOS concepts that are explicitly or implicitly defined.
+=end
+
 class ConceptFinder
 
 	SKOS_CONCEPT_URI = RDF::URI.new("http://www.w3.org/2004/02/skos/core#Concept")

@@ -3,6 +3,10 @@ require_relative 'GraphBuilder'
 
 include RGL
 
+=begin rdoc
+Finds cycles in SKOS graphs using the hierarchical properties broader, broaderTransitive, broadMatch and their respective inverse properties.
+=end
+
 class CycleFinder
 
 	def initialize(loggingRdfReader, log, allConcepts)
