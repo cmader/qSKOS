@@ -7,6 +7,7 @@ class LanguageCollector
 		@log = log
 		@allConcepts = allConcepts
 		@nonConceptLanguages = []
+
 		@conceptLanguages = Hash.new do |hash, key|
 			hash[key] = []
 		end
@@ -15,8 +16,12 @@ class LanguageCollector
 		removeDuplicates
 	end
 
+	def getAllLanguages
+		@conceptLanguages.values.flatten.uniq
+	end
+
 	def getCoverageRatioPerConcept
-		differentLanguages = @conceptLanguages.values.uniq
+		differentLanguages = getAllLanguages
 		conceptLanguageCoverageRatio = {}
 
 		@conceptLanguages.each do |key, value|
@@ -46,7 +51,7 @@ class LanguageCollector
 	end
 
 	def getFullCoverageRatio
-		getFullCoverageConcepts.size.fdiv(@allConcepts.size)
+		getFullCoverageConcepts.size.fdiv(@conceptLanguages.keys.size)
 	end
 
 	private

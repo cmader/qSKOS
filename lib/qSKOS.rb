@@ -132,8 +132,9 @@ module QSKOS
 		avgRatio = langCollector.getAvgLanguageRatio
 		fullCoverageConcepts = langCollector.getFullCoverageConcepts
 		fullCoverageRatio =	langCollector.getFullCoverageRatio
+		allLanguages = langCollector.getAllLanguages
 
-		{:coverageRatioPerConcept => coverageRatioPerConcept, :avgRatio => avgRatio, :fullCoverageConcepts => fullCoverageConcepts, :fullCoverageRatio => fullCoverageRatio}
+		{:coverageRatioPerConcept => coverageRatioPerConcept, :fullCoverageConcepts => fullCoverageConcepts, :avgRatio => avgRatio, :fullCoverageRatio => fullCoverageRatio, :allLanguages => allLanguages}
 	end
 
 	private
