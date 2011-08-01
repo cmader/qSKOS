@@ -21,6 +21,7 @@ module QSKOS
 	autoload :TermsChecker, 'qskos/TermsChecker'
 	autoload :ConceptRanker, 'qskos/ConceptRanker'
 	autoload :LanguageCollector, 'qskos/LanguageCollector'
+	autoload :AmbiguousLabelFinder, 'qskos/AmbiguousLabelFinder'
 
 	def QSKOS.init(rdfFileName, log)
 		@log = log
@@ -135,6 +136,10 @@ module QSKOS
 		allLanguages = langCollector.getAllLanguages
 
 		{:coverageRatioPerConcept => coverageRatioPerConcept, :fullCoverageConcepts => fullCoverageConcepts, :avgRatio => avgRatio, :fullCoverageRatio => fullCoverageRatio, :allLanguages => allLanguages}
+	end
+
+	def QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
+		AmbiguousLabelFinder.new(@loggingRdfReader, @log, allConcepts).getAmbiguouslyLabeledConcepts
 	end
 
 	private
