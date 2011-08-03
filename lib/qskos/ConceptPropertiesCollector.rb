@@ -30,7 +30,7 @@ class ConceptPropertiesCollector
 	end
 
 	def hasHumanReadableLabel(statement)
-		(statement.object.literal? && statement.object.language != nil) || @labels.include?(statement.predicate)
+		(statement.object.literal? && statement.object.language != nil) || @labels.include?(statement.predicate) || @documentationProperties.include?(statement.predicate)
 	end
 
 end
