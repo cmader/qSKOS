@@ -2,7 +2,7 @@ require_relative 'SKOSUtils'
 
 class ConceptPropertiesCollector
 
-	attr_reader :docPropertyStatements
+	attr_reader :docPropertyStatements, :docHumanReadableLabels
 
 	def initialize(loggingRdfReader, log)
 		log.info("collecting concept properties")
@@ -10,10 +10,12 @@ class ConceptPropertiesCollector
 		@reader = loggingRdfReader
 		@log = log
 
+		@labels = [SKOS.prefLabel, SKOS.altLabel, SKOS.hiddenLabel, RDFS.label]
 		@documentationProperties = [SKOS.note, SKOS.changeNote, SKOS.definition, SKOS.editorialNote,
 			SKOS.example, SKOS.historyNote, SKOS.scopeNote]
 
 		@docPropertyStatements = []
+		@docHumanReadableLabels = []
 
 		collectConceptProperties
 	end
@@ -22,14 +24,13 @@ class ConceptPropertiesCollector
 
 	def collectConceptProperties
 		@reader.loopStatements do |statement|
-			if isSkosPredicate(statement.predicate)
-				@docPropertyStatements << statement if @documentationProperties.include?(statement.predicate)
-			end
+			@docPropertyStatements << statement if @documentationProperties.include?(statement.predicate)
+			@docHumanReadableLabels << statement if hasHumanReadableLabel(statement)
 		end
 	end
 
-	def isSkosPredicate(predicate)
-		SKOSUtils.instance.inSkosNamespace?(predicate)
+	def hasHumanReadableLabel(statement)
+		(statement.object.literal? && statement.object.language != nil) || @labels.include?(statement.predicate)
 	end
 
 end
