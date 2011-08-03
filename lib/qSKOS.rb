@@ -85,7 +85,10 @@ module QSKOS
 		docStatements = propCollector.docPropertyStatements
 		@log.info("total documentation properties: #{docStatements.size}, avg. per concept: #{docStatements.size.fdiv(allConcepts.size).round(3)}")
 
-		{:docStatements => docStatements}
+		humanReadableLabels = propCollector.humanReadableLabels
+		@log.info("contains human readable labels: #{humanReadableLabels.empty?}")
+
+		{:docStatements => docStatements, :humanReadableLabels => humanReadableLabels}
 	end
 
 	def QSKOS.checkLinks
