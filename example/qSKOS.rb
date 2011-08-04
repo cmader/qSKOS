@@ -31,14 +31,14 @@ class QSKOSExample
 		#QSKOS.findCycles(allConcepts)
 		#QSKOS.getExternalLinks(allConcepts).first(100)
 		#QSKOS.checkLinks
-		#QSKOS.getPropertyPartitions(allConcepts)
+puts		QSKOS.getPropertyPartitions(allConcepts)[:humanReadableLabels]
 		#QSKOS.getInvalidTerms
 
 		#rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
 		#dumpFirstRankedConcepts(rankedConcepts)
 
 		#QSKOS.getLanguageCoverage(allConcepts)
-		puts QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
+		#QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
 
 	end
 

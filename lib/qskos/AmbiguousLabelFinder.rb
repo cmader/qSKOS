@@ -32,7 +32,7 @@ class AmbiguousLabelFinder
 				prefLabels = labelLists[:prefLabel]
 
 				ret[concept][:prefLabel] = prefLabels if prefLabels.size > 1
-				ret[concept][:notDisjoint] = labelLists.values.flatten.uniq if !listsDisjoint(labelLists)
+				ret[concept][:notDisjoint] = findDuplicates(labelLists) if !listsDisjoint?(labelLists)
 			end
 		end
 
@@ -54,8 +54,19 @@ class AmbiguousLabelFinder
 		@conceptLabels[concept][object.language][label].uniq!
 	end
 
-	def listsDisjoint(lists)
+	def listsDisjoint?(lists)
 		lists.values.flatten.size == lists.values.flatten.uniq.size
+	end
+
+	def findDuplicates(lists)
+		allValues = lists.values.flatten
+
+		duplicates = []
+		allValues.each do |value|
+			duplicates << value if allValues.count(value) > 1
+		end
+
+		duplicates.uniq
 	end
 
 end
