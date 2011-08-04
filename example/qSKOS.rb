@@ -38,7 +38,7 @@ class QSKOSExample
 		#dumpFirstRankedConcepts(rankedConcepts)
 
 		#QSKOS.getLanguageCoverage(allConcepts)
-		puts QSKOS.getAmbiguousLabels(allConcepts)
+		puts QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
 
 	end
 

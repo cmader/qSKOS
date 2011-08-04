@@ -24,17 +24,15 @@ class AmbiguousLabelFinder
 
 	def getAmbiguouslyLabeledConcepts
 		ret = Hash.new do |hash1, concept|
-			hash1[concept] = Hash.new do |hash2, label|
-				hash2[label] = []
-			end
+			hash1[concept] = {}
 		end
 
 		@conceptLabels.each_pair do |concept, language|
 			language.each_pair do |langSymbol, labelLists|
-				labelLists.each_pair do |label, entries|
-					ret[concept][label] << entries if entries.size > 1
-				end
-				ret[concept][:notDisjoint] << labelLists.values.uniq if !listsDisjoint(labelLists)
+				prefLabels = labelLists[:prefLabel]
+
+				ret[concept][:prefLabel] = prefLabels if prefLabels.size > 1
+				ret[concept][:notDisjoint] = labelLists.values.flatten.uniq if !listsDisjoint(labelLists)
 			end
 		end
 
@@ -57,7 +55,7 @@ class AmbiguousLabelFinder
 	end
 
 	def listsDisjoint(lists)
-		lists.values.size == lists.values.uniq.size
+		lists.values.flatten.size == lists.values.flatten.uniq.size
 	end
 
 end

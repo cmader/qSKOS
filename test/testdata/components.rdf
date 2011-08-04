@@ -20,11 +20,14 @@
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel xml:lang="en">concept D</skos:prefLabel>
 		<skos:altLabel xml:lang="en">notion D</skos:altLabel>
+		<skos:altLabel xml:lang="en">someother alternative label for concept D</skos:altLabel>
 		<skos:narrower rdf:resource="conceptE"/>
   </rdf:Description>
 	<rdf:Description rdf:about="conceptE">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel xml:lang="en">concept E</skos:prefLabel>
+		<skos:altLabel xml:lang="en">konzept E</skos:altLabel>
+		<skos:hiddenLabel xml:lang="de">konzept E</skos:hiddenLabel>
   </rdf:Description>
 	<rdf:Description rdf:about="conceptF">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
