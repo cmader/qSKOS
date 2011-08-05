@@ -4,22 +4,10 @@ Finds conflicting label definitions such as multiple (e.g. prefLabel) label defi
 
 class AmbiguousLabelFinder
 
-	def initialize(loggingRdfReader, log, allConcepts)
-		log.info("collecting SKOS labels")
+	def initialize(loggingRdfReader, log, conceptLabels)
+		log.info("finding ambiguous labels")
 
-		@reader = loggingRdfReader
-		@allConcepts = allConcepts
-
-		@disjointLabels = {SKOS.prefLabel => :prefLabel, SKOS.altLabel => :altLabel, SKOS.hiddenLabel => :hiddenLabel}
-		@conceptLabels = Hash.new do |hash1, concept|
-			hash1[concept] = Hash.new do |hash2, language|
-				hash2[language] = Hash.new do |hash3, label|
-					hash3[label] = []
-				end
-			end
-		end
-
-		collectLabels
+		@conceptLabels = conceptLabels
 	end
 
 	def getAmbiguouslyLabeledConcepts
@@ -40,19 +28,6 @@ class AmbiguousLabelFinder
 	end
 
 	private
-
-	def collectLabels
-		@reader.loopStatements do |statement|
-			if @allConcepts.include?(statement.subject) && @disjointLabels.keys.include?(statement.predicate)
-				addLabel(statement.subject, @disjointLabels[statement.predicate], statement.object)
-			end
-		end
-	end
-
-	def addLabel(concept, label, object)
-		@conceptLabels[concept][object.language][label] << object.value
-		@conceptLabels[concept][object.language][label].uniq!
-	end
 
 	def listsDisjoint?(lists)
 		lists.values.flatten.size == lists.values.flatten.uniq.size

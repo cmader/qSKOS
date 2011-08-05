@@ -22,6 +22,8 @@ module QSKOS
 	autoload :ConceptRanker, 'qskos/ConceptRanker'
 	autoload :LanguageCollector, 'qskos/LanguageCollector'
 	autoload :AmbiguousLabelFinder, 'qskos/AmbiguousLabelFinder'
+	autoload :ConceptLabelFinder, 'qskos/ConceptLabelFinder'
+	autoload :UnconnectedRelatedConceptsFinder, 'qskos/UnconnectedRelatedConceptsFinder'
 
 	def QSKOS.init(rdfFileName, log)
 		@log = log
@@ -142,7 +144,13 @@ module QSKOS
 	end
 
 	def QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
-		AmbiguousLabelFinder.new(@loggingRdfReader, @log, allConcepts).getAmbiguouslyLabeledConcepts
+		conceptLabels = ConceptLabelFinder.new(@loggingRdfReader, @log, allConcepts).conceptLabels
+		AmbiguousLabelFinder.new(@loggingRdfReader, @log, conceptLabels).getAmbiguouslyLabeledConcepts
+	end
+
+	def QSKOS.getUnconnectedRelatedConcepts(allConcepts)
+		conceptLabels = ConceptLabelFinder.new(@loggingRdfReader, @log, allConcepts).conceptLabels
+		UnconnectedRelatedConceptsFinder.new(@loggingRdfReader, @log, conceptLabels)
 	end
 
 	private

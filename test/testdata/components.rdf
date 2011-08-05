@@ -56,6 +56,7 @@
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel xml:lang="en">concept J</skos:prefLabel>
 		<skos:altLabel xml:lang="en">concept J</skos:altLabel>
+		<skos:altLabel xml:lang="en">concept H</skos:altLabel>
 		<skos:broader rdf:resource="conceptI"/>
   </rdf:Description>
 	<rdf:Description rdf:about="conceptK">
@@ -74,6 +75,7 @@
 		<skos:prefLabel xml:lang="en">concept M</skos:prefLabel>
 		<skos:prefLabel xml:lang="de">Konzept M</skos:prefLabel>
 		<skos:prefLabel xml:lang="fr">concept M</skos:prefLabel>
+		<skos:prefLabel>konzept E</skos:prefLabel>
   </rdf:Description>
 	<rdf:Description rdf:about="conceptN">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
