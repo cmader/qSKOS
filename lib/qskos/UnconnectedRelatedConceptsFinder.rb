@@ -1,15 +1,16 @@
 class UnconnectedRelatedConceptsFinder
 
+	attr_reader :unconnectedRelatedConcepts
+
 	def initialize(loggingRdfReader, log, conceptLabels)
 		log.info("finding semantically related unconnected concepts")
 
+		@reader = loggingRdfReader
 		@conceptLabels = conceptLabels
 		@relatedConcepts = []
 
 		identifyMatches
-
-puts @relatedConcepts
-
+		checkConnectivity
 	end
 
 	private
@@ -48,8 +49,17 @@ puts @relatedConcepts
 	def compareLabelValues(concept1, labels1, concept2, labels2)
 		labels1.each do |label1Value|
 			labels2.each do |label2Value|
-				@relatedConcepts << [concept1, concept2, [label1Value, label2Value].uniq] if similar?(label1Value, label2Value)
+				addToRelatedConcepts(ConceptSimilarity.new(concept1, concept2, [label1Value, label2Value].uniq)) if similar?(label1Value, label2Value)
 			end
+		end
+	end
+
+	def addToRelatedConcepts(conceptSimilarity)
+		index = @relatedConcepts.index(conceptSimilarity)
+		if index == nil
+			@relatedConcepts << conceptSimilarity
+		else
+			@relatedConcepts[index].appendValue(conceptSimilarity.value)
 		end
 	end
 
@@ -58,6 +68,39 @@ puts @relatedConcepts
 		label1 == label2
 	end
 
+	def checkConnectivity
+		@unconnectedRelatedConcepts = @relatedConcepts.clone
+
+		@reader.loopStatements do |statement|
+			if statement.subject.resource? && statement.object.resource?
+				@unconnectedRelatedConcepts.delete(ConceptSimilarity.new(statement.subject, statement.object))
+			end
+		end
+	end
+
 end
 
+class ConceptSimilarity
 
+	attr_reader :concept1, :concept2, :value
+
+	def initialize(concept1, concept2, value = nil)
+		@concept1 = concept1
+		@concept2 = concept2
+		@value = [value]
+	end
+
+	def ==(other)
+		(concept1 == other.concept1 && concept2 == other.concept2) ||
+		(concept1 == other.concept2 && concept2 == other.concept1)
+	end
+
+	def to_s
+		"#{concept1}, #{concept2}, #{value}"
+	end
+
+	def appendValue(value)
+		@value << value
+		@value.flatten!.uniq!
+	end
+end

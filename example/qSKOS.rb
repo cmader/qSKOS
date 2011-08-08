@@ -39,7 +39,7 @@ class QSKOSExample
 
 		#QSKOS.getLanguageCoverage(allConcepts)
 		#QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
-QSKOS.getUnconnectedRelatedConcepts(allConcepts)
+puts QSKOS.getUnconnectedRelatedConcepts(allConcepts)
 	end
 
 	def dumpFirstRankedConcepts(rankedConcepts)
