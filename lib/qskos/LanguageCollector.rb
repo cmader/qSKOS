@@ -1,7 +1,5 @@
 class LanguageCollector
 
-	attr_reader :literalsWithoutLangTag
-
 	def initialize(loggingRdfReader, log, allConcepts)
 		log.info("collecting literal languages")
 
@@ -9,8 +7,6 @@ class LanguageCollector
 		@log = log
 		@allConcepts = allConcepts
 		@nonConceptLanguages = []
-		@literalCount = 0
-		@literalsWithoutLangTag = []
 
 		@conceptLanguages = Hash.new do |hash, key|
 			hash[key] = []
@@ -58,30 +54,17 @@ class LanguageCollector
 		getFullCoverageConcepts.size.fdiv(@conceptLanguages.keys.size)
 	end
 
-	def getLanguageTaggedLiteralsRatio
-		(@literalCount - @literalsWithoutLangTag.size).fdiv(@literalCount)
-	end
-
 	private
 
 	def collectLanguageLiterals
 		@reader.loopStatements do |statement|
-			if statement.object.literal?
-				@literalCount += 1
+			if statement.object.literal? && statement.object.language?
 				processStatement(statement)
 			end
 		end
 	end
 
 	def processStatement(statement)
-		if statement.object.language?
-			processLanguageTaggedStatement(statement)
-		else
-			@literalsWithoutLangTag << statement.object
-		end
-	end
-
-	def processLanguageTaggedStatement(statement)
 		if @allConcepts.include?(statement.subject)
 			@conceptLanguages[statement.subject] << statement.object.language
 		else				

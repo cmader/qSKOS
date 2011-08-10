@@ -17,7 +17,7 @@ module QSKOS
 	autoload :CycleFinder, 'qskos/CycleFinder'
 	autoload :ConceptLinkFinder, 'qskos/ConceptLinkFinder'
 	autoload :LinkChecker, 'qskos/LinkChecker'
-	autoload :ConceptPropertiesCollector, 'qskos/ConceptPropertiesCollector'
+	autoload :PropertyPartitionsFinder, 'qskos/PropertyPartitionsFinder'
 	autoload :TermsChecker, 'qskos/TermsChecker'
 	autoload :ConceptRanker, 'qskos/ConceptRanker'
 	autoload :LanguageCollector, 'qskos/LanguageCollector'
@@ -82,15 +82,12 @@ module QSKOS
 	end
 
 	def QSKOS.getPropertyPartitions(allConcepts)
-		propCollector = ConceptPropertiesCollector.new(@loggingRdfReader, @log)
+		propCollector = PropertyPartitionsFinder.new(@loggingRdfReader, @log)
 
 		docStatements = propCollector.docPropertyStatements
 		@log.info("total documentation properties: #{docStatements.size}, avg. per concept: #{docStatements.size.fdiv(allConcepts.size).round(3)}")
 
-		humanReadableLabels = propCollector.humanReadableLabels
-		@log.info("contains human readable labels: #{humanReadableLabels.empty?}")
-
-		{:docStatements => docStatements, :humanReadableLabels => humanReadableLabels}
+		{:docStatements => docStatements}
 	end
 
 	def QSKOS.checkLinks
@@ -139,10 +136,8 @@ module QSKOS
 		fullCoverageConcepts = langCollector.getFullCoverageConcepts
 		fullCoverageRatio =	langCollector.getFullCoverageRatio
 		allLanguages = langCollector.getAllLanguages
-		literalsWithoutLangTag = langCollector.literalsWithoutLangTag 
-		languageTaggedLiteralsRatio = langCollector.getLanguageTaggedLiteralsRatio
 
-		{:coverageRatioPerConcept => coverageRatioPerConcept, :fullCoverageConcepts => fullCoverageConcepts, :avgRatio => avgRatio, :fullCoverageRatio => fullCoverageRatio, :allLanguages => allLanguages, :literalsWithoutLangTag => literalsWithoutLangTag, :languageTaggedLiteralsRatio => languageTaggedLiteralsRatio}
+		{:coverageRatioPerConcept => coverageRatioPerConcept, :fullCoverageConcepts => fullCoverageConcepts, :avgRatio => avgRatio, :fullCoverageRatio => fullCoverageRatio, :allLanguages => allLanguages}
 	end
 
 	def QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
@@ -153,6 +148,11 @@ module QSKOS
 	def QSKOS.getUnconnectedRelatedConcepts(allConcepts)
 		conceptLabels = ConceptLabelFinder.new(@loggingRdfReader, @log, allConcepts).conceptLabels
 		UnconnectedRelatedConceptsFinder.new(@loggingRdfReader, @log, conceptLabels).unconnectedRelatedConcepts
+	end
+
+	def QSKOS.getLanguageTagSupport
+		propCollector = PropertyPartitionsFinder.new(@loggingRdfReader, @log)
+		propCollector.naturalLanguageLiteralsWithoutLangTag
 	end
 
 	private
