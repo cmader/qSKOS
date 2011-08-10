@@ -139,8 +139,10 @@ module QSKOS
 		fullCoverageConcepts = langCollector.getFullCoverageConcepts
 		fullCoverageRatio =	langCollector.getFullCoverageRatio
 		allLanguages = langCollector.getAllLanguages
+		literalsWithoutLangTag = langCollector.literalsWithoutLangTag 
+		languageTaggedLiteralsRatio = langCollector.getLanguageTaggedLiteralsRatio
 
-		{:coverageRatioPerConcept => coverageRatioPerConcept, :fullCoverageConcepts => fullCoverageConcepts, :avgRatio => avgRatio, :fullCoverageRatio => fullCoverageRatio, :allLanguages => allLanguages}
+		{:coverageRatioPerConcept => coverageRatioPerConcept, :fullCoverageConcepts => fullCoverageConcepts, :avgRatio => avgRatio, :fullCoverageRatio => fullCoverageRatio, :allLanguages => allLanguages, :literalsWithoutLangTag => literalsWithoutLangTag, :languageTaggedLiteralsRatio => languageTaggedLiteralsRatio}
 	end
 
 	def QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)

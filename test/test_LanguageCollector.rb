@@ -12,6 +12,7 @@ class TestLanguageCollector < Test::Unit::TestCase
 		
 		assert_equal(langCov[:coverageRatioPerConcept].keys.size, 14)
 		assert_equal(langCov[:fullCoverageConcepts].size, 1)
+		assert_equal(langCov[:literalsWithoutLangTag].size, 3)
   end
 
 end
