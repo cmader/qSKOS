@@ -2,7 +2,7 @@ require_relative 'SKOSUtils'
 
 class PropertyPartitionsFinder
 
-	attr_reader :docPropertyStatements, :naturalLanguageLiteralsWithoutLangTag
+	attr_reader :docPropertyStatements, :naturalLanguageLiteralsWithoutLangTag, :naturalLanguageLiteralCount
 
 	def initialize(loggingRdfReader, log)
 		log.info("collecting concept properties")
@@ -13,10 +13,11 @@ class PropertyPartitionsFinder
 		@labels = [SKOS.prefLabel, SKOS.altLabel, SKOS.hiddenLabel]
 		@documentationProperties = [SKOS.note, SKOS.changeNote, SKOS.definition, SKOS.editorialNote,
 			SKOS.example, SKOS.historyNote, SKOS.scopeNote]
-		@naturalLanguageProperties = @labels + @documentationProperties
+		@naturalLanguageProperties = @labels + @documentationProperties + [RDFS.label, DC.title]
 
 		@docPropertyStatements = []
 		@naturalLanguageLiteralsWithoutLangTag = []
+		@naturalLanguageLiteralCount = 0
 
 		identifyPartitions
 	end
@@ -25,8 +26,19 @@ class PropertyPartitionsFinder
 
 	def identifyPartitions
 		@reader.loopStatements do |statement|
-			@docPropertyStatements << statement if @documentationProperties.include?(statement.predicate)
-			@naturalLanguageLiteralsWithoutLangTag << statement.object if isNaturalLanguage(statement.predicate) && hasNoLangTag(statement.object)
+			checkDocumentationProperty(statement)	
+			checkNaturalLanguage(statement)
+		end
+	end
+
+	def checkDocumentationProperty(statement)
+		@docPropertyStatements << statement if @documentationProperties.include?(statement.predicate)
+	end
+
+	def checkNaturalLanguage(statement)
+		if isNaturalLanguage(statement.predicate)
+			@naturalLanguageLiteralCount += 1
+			@naturalLanguageLiteralsWithoutLangTag << statement.object if hasNoLangTag(statement.object)
 		end
 	end
 

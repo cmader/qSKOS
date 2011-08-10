@@ -32,7 +32,7 @@ class ConceptPropertiesCollector < Test::Unit::TestCase
 		allConcepts = QSKOS.findAllConcepts
 		untaggedLiterals = QSKOS.getLanguageTagSupport
 
-		assert_equal(untaggedLiterals.size, 3)
+		assert_equal(untaggedLiterals[:naturalLanguageLiteralsWithoutLangTag].size, 3)
 	end
 
 end

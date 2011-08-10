@@ -152,7 +152,10 @@ module QSKOS
 
 	def QSKOS.getLanguageTagSupport
 		propCollector = PropertyPartitionsFinder.new(@loggingRdfReader, @log)
-		propCollector.naturalLanguageLiteralsWithoutLangTag
+		untagged = propCollector.naturalLanguageLiteralsWithoutLangTag
+		natLangLitCnt = propCollector.naturalLanguageLiteralCount
+
+		{:naturalLanguageLiteralsWithoutLangTag => untagged, :ratio => untagged.size.fdiv(natLangLitCnt)}
 	end
 
 	private
