@@ -37,10 +37,10 @@ class QSKOSExample
 		#rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
 		#dumpFirstRankedConcepts(rankedConcepts)
 
-QSKOS.getLanguageTagSupport
+#QSKOS.getLanguageTagSupport
 
 		#QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
-		#QSKOS.getUnconnectedRelatedConcepts(allConcepts)
+puts QSKOS.getUnconnectedRelatedConcepts(allConcepts)
 	end
 
 	def dumpFirstRankedConcepts(rankedConcepts)

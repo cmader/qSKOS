@@ -1,6 +1,6 @@
 class UnconnectedRelatedConceptsFinder
 
-	attr_reader :unconnectedRelatedConcepts
+	attr_reader :unconnectedRelatedConcepts, :relatedConcepts
 
 	def initialize(loggingRdfReader, log, conceptLabels)
 		log.info("finding semantically related unconnected concepts")

@@ -147,7 +147,8 @@ module QSKOS
 
 	def QSKOS.getUnconnectedRelatedConcepts(allConcepts)
 		conceptLabels = ConceptLabelFinder.new(@loggingRdfReader, @log, allConcepts).conceptLabels
-		UnconnectedRelatedConceptsFinder.new(@loggingRdfReader, @log, conceptLabels).unconnectedRelatedConcepts
+		relatedConceptsFinder = UnconnectedRelatedConceptsFinder.new(@loggingRdfReader, @log, conceptLabels)
+		{:unconnectedRelatedConcepts => relatedConceptsFinder.unconnectedRelatedConcepts, :relatedConcepts => relatedConceptsFinder.relatedConcepts}
 	end
 
 	def QSKOS.getLanguageTagSupport

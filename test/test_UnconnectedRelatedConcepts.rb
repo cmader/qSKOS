@@ -8,9 +8,13 @@ class TestUnconnectedRelatedConcepts < Test::Unit::TestCase
 		QSKOS.init("test/testdata/components.rdf", Logger.new(STDOUT))
 	
 		allConcepts = QSKOS.findAllConcepts
-		result =  QSKOS.getUnconnectedRelatedConcepts(allConcepts)
+		relatedConcepts = QSKOS.getUnconnectedRelatedConcepts(allConcepts)
+
+		unconnectedRelatedConcepts = relatedConcepts[:unconnectedRelatedConcepts]
+		identicallyLabeledConcepts = relatedConcepts[:relatedConcepts]
 		
-		assert_equal(result.size, 2)
+		assert_equal(unconnectedRelatedConcepts.size, 2)
+		assert_equal(identicallyLabeledConcepts.size, 3)
   end
 
 end
