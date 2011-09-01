@@ -65,7 +65,7 @@ class UnconnectedRelatedConceptsFinder
 
 	def similar?(label1, label2)
 		# up to now, two labels are treated as similar if they are identical
-		label1 == label2
+		label1.downcase == label2.downcase
 	end
 
 	def checkConnectivity
