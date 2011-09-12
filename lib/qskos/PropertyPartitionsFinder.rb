@@ -47,7 +47,7 @@ class PropertyPartitionsFinder
 	end
 
 	def hasNoLangTag(object)
-		object.literal? && !object.language?
+		object.plain? && !object.language?
 	end
 
 end

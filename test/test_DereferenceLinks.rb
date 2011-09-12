@@ -24,8 +24,8 @@ class TestDereferenceLinks < Test::Unit::TestCase
 		failed = checkedUris - dereferencableUris
 
 		assert_equal(checkedUris.size, 19)
-		assert_equal(dereferencableUris.size, 14)
-		assert_equal(failed.size, 5)
+		assert_equal(dereferencableUris.size, 13)
+		assert_equal(failed.size, 6)
   end
 
 end

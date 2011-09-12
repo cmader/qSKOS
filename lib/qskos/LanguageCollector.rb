@@ -54,6 +54,21 @@ class LanguageCollector
 		getFullCoverageConcepts.size.fdiv(@conceptLanguages.keys.size)
 	end
 
+	def getLanguageDistribution
+		# collects concepts with one/two/three/.../n language(s) defined
+		langDistribution = Hash.new do |hash, key|
+			hash[key] = []
+		end
+
+		getAllLanguages.each_index do |index|
+			@conceptLanguages.each do |concept, languages|
+				langDistribution[index + 1] << concept if languages.size == index + 1
+			end
+		end
+
+		langDistribution
+	end
+
 	private
 
 	def collectLanguageLiterals

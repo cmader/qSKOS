@@ -13,7 +13,7 @@ class ComponentFinder
 		log.info("identifying weakly connected components")
 		
 		@log = log
-		@graph =  GraphBuilder.new(loggingRdfReader, log, allConcepts) do
+		@graph = GraphBuilder.new(loggingRdfReader, log, allConcepts) do
 			IGraph.new([], true)
 		end.graphs[0]
 
