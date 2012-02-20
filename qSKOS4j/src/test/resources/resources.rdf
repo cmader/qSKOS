@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:myonto="http://localhost/myonto#">
+
+	<rdf:Description rdf:about="someresource">
+		<owl:seeAlso rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+		<owl:seeAlso rdf:resource="http://dbpedia.org/resource/Category:Unassessed_Jamaica_articles"/>
+	</rdf:Description>
+
+	<!-- non-http resources test OK -->
+	<rdf:Description rdf:about="http://localhost/myonto#res1">
+		<foaf:mbox rdf:resource="mailto:tmin@noc.soton.ac.uk"/>
+	</rdf:Description>
+
+	<!-- non-http resources test ERROR -->
+	<rdf:Description rdf:about="urn:example:animal:ferret:nose">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	</rdf:Description>
+
+	<!-- should be ok -->
+	<rdf:Description rdf:about="http://dbpedia.org/resource/Category:Judges_of_the_United_States_Court_of_International_Trade">
+		<skos:prefLabel>test</skos:prefLabel>
+	</rdf:Description>
+
+</rdf:RDF>

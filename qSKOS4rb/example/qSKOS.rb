@@ -26,10 +26,10 @@ class QSKOSExample
 	def processVocabulary
 		allConcepts = QSKOS.findAllConcepts
 		
-		#QSKOS.findLooseConcepts(allConcepts)
+puts		QSKOS.findLooseConcepts(allConcepts)
+		#QSKOS.findComponents(allConcepts)
 
-=begin		
-QSKOS.findComponents(allConcepts)
+=begin
 cycles = QSKOS.findCycles(allConcepts)
 cycles.each do |cycle|
 	puts cycle
@@ -37,17 +37,20 @@ cycles.each do |cycle|
 end
 =end
 
-		#QSKOS.getExternalLinks(allConcepts).first(100)
+		#QSKOS.getExternalLinks(allConcepts)
 		#QSKOS.checkLinks
+
 		#QSKOS.getPropertyPartitions(allConcepts)[:humanReadableLabels]
 		#QSKOS.getInvalidTerms
 
 		#rankedConcepts = QSKOS.rankConcepts(allConcepts, "http://sparql.sindice.com/sparql")
 		#dumpFirstRankedConcepts(rankedConcepts)
 
-puts QSKOS.getLanguageTagSupport
-puts "="
-puts QSKOS.getLanguageCoverage(allConcepts)
+		#QSKOS.getLanguageTagSupport
+#langcoverage = QSKOS.getLanguageCoverage(allConcepts)
+#puts "avgRatio: #{langcoverage[:avgRatio]}"
+#puts "fullCoverageRatio: #{langcoverage[:fullCoverageRatio]}"
+
 
 		#QSKOS.getAmbiguouslyLabeledConcepts(allConcepts)
 		#QSKOS.getUnconnectedRelatedConcepts(allConcepts)

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+	
+	<!-- Case 1; error -->
+	<rdf:Description rdf:about="conceptA">
+		<skos:broader rdf:resource="conceptB"/>
+  </rdf:Description>
+
+	<!-- Case 2; error -->
+	<rdf:Description rdf:about="conceptC">
+		<skos:narrower rdf:resource="conceptD"/>
+  </rdf:Description>
+
+	<!-- Case 3; ok -->
+	<rdf:Description rdf:about="conceptE">
+		<skos:topConceptOf rdf:resource="conceptF"/>
+  </rdf:Description>
+
+	<rdf:Description rdf:about="conceptF">
+		<skos:hasTopConcept rdf:resource="conceptE"/>		
+  </rdf:Description>
+
+	<!-- Case 4; error -->
+	<rdf:Description rdf:about="conceptG">
+		<skos:broaderTransitive rdf:resource="conceptH"/>
+  </rdf:Description>
+
+	<!-- Case 5; error -->
+	<rdf:Description rdf:about="conceptI">
+		<skos:narrowerTransitive rdf:resource="conceptJ"/>
+	</rdf:Description>
+
+	<!-- Case 6; ok -->
+	<rdf:Description rdf:about="conceptK">
+		<skos:narrowMatch rdf:resource="conceptL"/>
+  </rdf:Description>
+
+	<rdf:Description rdf:about="conceptL">
+		<skos:broadMatch rdf:resource="conceptK"/>
+  </rdf:Description>
+
+	<!-- Case 5; error -->
+	<rdf:Description rdf:about="conceptM">
+		<skos:related rdf:resource="conceptN"/>
+	</rdf:Description>
+
+	<!-- Case 6; error -->
+	<rdf:Description rdf:about="conceptO">
+		<skos:relatedMatch rdf:resource="conceptP"/>
+	</rdf:Description>
+
+	<!-- Case 7; ok -->
+	<rdf:Description rdf:about="conceptQ">
+		<skos:related rdf:resource="conceptR"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptR">
+		<skos:related rdf:resource="conceptQ"/>
+	</rdf:Description>
+
+</rdf:RDF>

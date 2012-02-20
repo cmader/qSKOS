@@ -30,7 +30,7 @@ class ComponentFinder
 	private 
 
 	def outputToFile
-		@graph.write_graph_gml(File.open("out.gml", 'w'))
+		@graph.write_graph_graphml(File.open("out.graphml", 'w'))
 
 		indexFile = File.new('vertices.txt', 'w')
 		@graph.vertices.each_index do |index|

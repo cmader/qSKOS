@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:myonto="http://localhost/myonto#">
+	
+	<!-- Case 1, error -->
+	<rdf:Description rdf:about="conceptA">
+		<skos:broader rdf:resource="conceptB"/>
+		<skos:related rdf:resource="conceptB"/>
+  </rdf:Description>
+
+	<!-- Case 2, error -->
+	<rdf:Description rdf:about="conceptC">
+		<skos:narrowerTransitive rdf:resource="conceptD"/>
+		<skos:related rdf:resource="conceptD"/>
+  </rdf:Description>
+
+	<!-- Case 3, error -->
+	<rdf:Description rdf:about="conceptE">
+		<skos:broadMatch rdf:resource="conceptF"/>
+  </rdf:Description>
+
+	<rdf:Description rdf:about="conceptF">
+		<skos:related rdf:resource="conceptE"/>
+	</rdf:Description>
+
+	<!-- Case 4, error -->
+	<rdf:Description rdf:about="conceptG">
+    <skos:broaderTransitive rdf:resource="conceptH"/>
+		<skos:relatedMatch rdf:resource="conceptH"/>
+	</rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:void="http://rdfs.org/ns/void#" xmlns:ex="http://ex.ex.com/bla#">
+	
+	<rdf:Description rdf:about="conceptA">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:symbol>symbol</skos:symbol>
+		<skos:prefSymbol>prefSymbol</skos:prefSymbol>
+		<skos:altSymbol>altSymbol</skos:altSymbol>
+		<skos:CollectableProperty>CollectableProperty</skos:CollectableProperty>
+		<skos:subject rdf:resource="someSubject"/>
+		<skos:isSubjectOf rdf:resource="someResource"/>
+		<skos:primarySubject rdf:resource="primarySubject"/>
+		<skos:isPrimarySubjectOf rdf:resource="someOtherResource"/>
+		<skos:subjectIndicator>subjectIndicator</skos:subjectIndicator>
+  </rdf:Description>
+
+	<rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#NotExistingResource">
+		<rdfs:comment xml:lang="en">References a non existing resource in the SKOS namespace</rdfs:comment>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptB">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:fantasyProperty>This property would be nice</skos:fantasyProperty>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptB">
+		<rdfs:seeAlso rdf:resource="http://www.w3.org/2004/02/skos/core#OtherNotExistingResource"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptB">
+		<skos:notation>1.2.3</skos:notation>
+		<ex:size rdf:datatype="http://www.w3.org/2001/XMLSchema#int">123</ex:size>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptScheme">
+		<void:vocabulary rdf:resource="http://www.w3.org/2004/02/skos/core#"/>
+	</rdf:Description>
+	
+</rdf:RDF>

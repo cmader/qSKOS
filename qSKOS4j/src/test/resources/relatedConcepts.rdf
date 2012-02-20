@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+	<rdf:Description rdf:about="http://aims.fao.org/aos/agrovoc/c_1736">
+		      <prefLabel xmlns="http://www.w3.org/2008/05/skos-xl#" rdf:resource="http://aims.fao.org/aos/agrovoc/xl_it_1299500494489"/>
+		      <skos:prefLabel xml:lang="it">Coix lachryma jobi</skos:prefLabel>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="http://aims.fao.org/aos/agrovoc/c_5245">
+		      <prefLabel xmlns="http://www.w3.org/2008/05/skos-xl#" rdf:resource="http://aims.fao.org/aos/agrovoc/xl_it_1299490529269"/>
+		      <skos:prefLabel xml:lang="it">Mammiferi nocivi</skos:prefLabel>
+	</rdf:Description>
+
+</rdf:RDF>

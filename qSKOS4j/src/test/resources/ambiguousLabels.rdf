@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+	
+	<!-- Error, prefLabel defined multiple times in same language -->
+	<rdf:Description rdf:about="conceptA">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>		
+		<skos:prefLabel>Concept A</skos:prefLabel>
+		<skos:prefLabel>Concept A, ambiguous</skos:prefLabel>
+  </rdf:Description>
+
+	<!-- Error, prefLabel defined multiple times in same language -->
+	<rdf:Description rdf:about="conceptA2">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>		
+		<skos:prefLabel xml:lang="fr">Concept A2</skos:prefLabel>
+		<skos:prefLabel xml:lang="fr">Concept A2, ambiguous</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Konzept A2</skos:prefLabel>
+  </rdf:Description>
+
+	<!-- Ok, prefLabels have different language tag -->
+	<rdf:Description rdf:about="conceptB">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel>Concept B</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Konzept B</skos:prefLabel>
+	</rdf:Description>
+
+	<!-- OK, prefLabels have different language tag -->
+	<rdf:Description rdf:about="conceptC">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">Concept C</skos:prefLabel>
+		<skos:prefLabel xml:lang="de">Konzept C</skos:prefLabel>
+	</rdf:Description>
+
+	<!-- Error, prefLabel, altLabel and hiddenLabel must be pairwise disjoint -->	
+	<rdf:Description rdf:about="conceptD">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel>Concept D</skos:prefLabel>
+		<skos:altLabel>Concept D</skos:altLabel>
+		<skos:hiddenLabel>Concept D</skos:hiddenLabel>
+	</rdf:Description>
+
+	<!-- OK, prefLabel and altLabel have different language tag -->
+	<rdf:Description rdf:about="conceptE">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel>Concept E</skos:prefLabel>
+		<skos:altLabel xml:lang="en">Concept E</skos:altLabel>
+	</rdf:Description>
+
+	<!-- Error, prefLabel and hiddenLabel must be pairwise disjoint -->
+	<rdf:Description rdf:about="conceptF">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">Concept F</skos:prefLabel>
+		<skos:hiddenLabel xml:lang="en">Concept F</skos:hiddenLabel>
+	</rdf:Description>
+
+</rdf:RDF>

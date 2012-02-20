@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:myonto="http://localhost/myonto#">
+
+<!-- S27:	skos:related is disjoint with the property skos:broaderTransitive. (and skos:narrowerTransitive) -->
+
+<!-- case 1; error -->
+<rdf:Description rdf:about="1">
+	<skos:broader rdf:resource="2"/>
+	<skos:related rdf:resource="2"/>
+</rdf:Description>
+
+<!-- case 2; error -->
+<rdf:Description rdf:about="3">
+	<skos:broaderTransitive rdf:resource="4"/>
+	<skos:related rdf:resource="4"/>
+</rdf:Description>
+
+<!-- case 3; error -->
+<rdf:Description rdf:about="5">
+	<skos:broader rdf:resource="6"/>
+	<skos:related rdf:resource="7"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="6">
+	<skos:broader rdf:resource="7"/>
+</rdf:Description>
+
+<!-- case 4; error -->
+<rdf:Description rdf:about="8">
+	<skos:narrower rdf:resource="9"/>
+	<skos:related rdf:resource="10"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="9">
+	<skos:narrower rdf:resource="10"/>
+</rdf:Description>
+
+<!-- case 5; ok -->
+<rdf:Description rdf:about="11">
+	<skos:related rdf:resource="12"/>
+	<skos:narrower rdf:resource="13"/>
+</rdf:Description>
+
+<!-- case 6; ok -->
+<rdf:Description rdf:about="14">
+	<skos:broader rdf:resource="16"/>
+	<skos:related rdf:resource="17"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="17">
+	<skos:broader rdf:resource="16"/>
+</rdf:Description>
+
+<!-- case 7, error;
+	This includes two cycles! It should produce an error because of the broader chain 
+	connecting 26 with 27 but	no stack overflow -->
+<rdf:Description rdf:about="26">
+	<skos:broader rdf:resource="28"/>
+	<skos:related rdf:resource="27"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="27">
+	<skos:broader rdf:resource="29"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="28">
+	<skos:broader rdf:resource="30"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="29">
+	<skos:broader rdf:resource="28"/>
+	<skos:broader rdf:resource="27"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="30">
+	<skos:broader rdf:resource="29"/>
+</rdf:Description>
+
+<!-- S46:	skos:exactMatch is disjoint with each of the properties skos:broadMatch and skos:relatedMatch.-->
+
+<!-- case 8; error -->
+<rdf:Description rdf:about="17">
+	<skos:exactMatch rdf:resource="18"/>
+	<skos:broadMatch rdf:resource="18"/>
+</rdf:Description>
+
+<!-- case 9; error -->
+<rdf:Description rdf:about="19">
+	<skos:exactMatch rdf:resource="20"/>
+	<skos:relatedMatch rdf:resource="20"/>
+</rdf:Description>
+
+<!-- case 10; error -->
+<rdf:Description rdf:about="21">
+	<skos:exactMatch rdf:resource="22"/>
+	<skos:narrowMatch rdf:resource="22"/>
+</rdf:Description>
+
+<!-- case 11; ok -->
+<rdf:Description rdf:about="23">
+	<skos:broadMatch rdf:resource="24"/>
+	<skos:relatedMatch rdf:resource="24"/>
+</rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:myonto="http://localhost/myonto#">
+
+	<!-- Case 1; error -->
+	<rdf:Description rdf:about="conceptSchemeA">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+		<skos:hasTopConcept rdf:resource="resourceA"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="resourceA">
+		<skos:inScheme rdf:resource="conceptSchemeA"/>
+		<skos:broader rdf:resource="broaderResource"/>
+	</rdf:Description>
+
+	<!-- Case 2; error -->
+	<rdf:Description rdf:about="resourceB">
+		<skos:topConceptOf rdf:resource="conceptSchemeB"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="resourceC">
+		<skos:narrower rdf:resource="resourceB"/>
+	</rdf:Description>
+
+	<!-- Case 3; ok -->
+	<rdf:Description rdf:about="resourceD">
+		<skos:topConceptOf rdf:resource="conceptSchemeC"/>
+	</rdf:Description>
+
+	<!-- Case 4; error -->
+	<rdf:Description rdf:about="resourceE">
+		<skos:topConceptOf rdf:resource="conceptSchemeB"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="resourceF">
+		<skos:narrowerTransitive rdf:resource="resourceE"/>
+	</rdf:Description>
+
+	<!-- Case 5; error -->
+	<rdf:Description rdf:about="resourceG">
+		<skos:topConceptOf rdf:resource="conceptSchemeB"/>
+		<skos:broaderTransitive rdf:resource="resourceE"/>
+	</rdf:Description>
+
+</rdf:RDF>

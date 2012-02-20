@@ -1,0 +1,195 @@
+package at.ac.univie.mminf.qskos4j.criteria;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.openrdf.OpenRDFException;
+import org.openrdf.model.Value;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
+import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
+import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+
+public class ResourceAvailabilityChecker extends Criterion {
+	
+	private final Logger logger = LoggerFactory.getLogger(ResourceAvailabilityChecker.class);
+	private final String NO_CONTENT_TYPE = "n/a";
+	private final int DEREFERENCE_DELAY_MILLIS = 3000;
+	
+	public Map<URL, String> urlAvailability;
+	private Set<URI> httpURIs;
+	private Set<String> invalidResources;
+	
+	public ResourceAvailabilityChecker(VocabRepository vocabRepository) {
+		super(vocabRepository);
+	}
+	
+	public Map<URL, String> checkResourceAvailability(Float randomSubsetSize_percent) 
+		throws OpenRDFException 
+	{
+		urlAvailability = new HashMap<URL, String>();
+		httpURIs = new HashSet<URI>();
+		invalidResources = new HashSet<String>();
+		
+		findAllHttpURLs();
+		dereferenceURIs(randomSubsetSize_percent);
+				
+		return urlAvailability;
+	}
+	
+	public Set<String> findInvalidResources(Float randomSubsetSize_percent)
+		throws OpenRDFException
+	{
+		if (invalidResources == null) {
+			checkResourceAvailability(randomSubsetSize_percent);
+		}
+		
+		return invalidResources;
+	}
+	
+	public Set<String> findNonHttpResources() throws OpenRDFException 
+	{
+		TupleQueryResult result = queryRepository(createNonHttpUriQuery());
+		return createNonHttpUriSet(result);
+	}
+	
+	private String createNonHttpUriQuery() {
+		return "SELECT DISTINCT ?iri WHERE " +
+			"{" +
+				"?iri ?p ?obj ." +
+				"FILTER isIRI(?iri)"+ 
+			"}";
+	}
+	
+	private Set<String> createNonHttpUriSet(TupleQueryResult result)
+		throws OpenRDFException
+	{
+		Set<String> nonHttpURIs = new HashSet<String>();
+		
+		while (result.hasNext()) {
+			Value iri = result.next().getValue("iri");
+			String iriValue = iri.stringValue().toLowerCase();
+			if (!iriValue.contains("http://") && !iriValue.contains("https://")) {
+				nonHttpURIs.add(iri.stringValue());
+			}
+		}
+		
+		return nonHttpURIs;
+	}
+	
+	private void findAllHttpURLs() 
+		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	{
+		TupleQueryResult result = queryRepository(createIRIQuery());
+		
+		while (result.hasNext()) {
+			Value iri = result.next().getValue("iri");
+			addToUrlList(iri);
+		}
+		logger.info("found " +httpURIs.size()+ " http URIs");
+	}
+	
+	private void addToUrlList(Value iri) {
+		try {
+			URI uri = new URI(iri.stringValue());
+
+			if (uri.getScheme().startsWith("http")) {
+				httpURIs.add(pruneFragment(uri));
+			}
+		} 
+		catch (URISyntaxException e) {
+			invalidResources.add(iri.toString());
+		}
+	}
+		
+	private URI pruneFragment(URI uri) throws URISyntaxException 
+	{
+		if (uri.getFragment() != null) {
+			int hashIndex = uri.toString().indexOf("#");
+			return new URI(uri.toString().substring(0, hashIndex));
+		}
+		return uri;
+	}
+	
+	private String createIRIQuery() {
+		return "SELECT DISTINCT ?iri "+
+		"FROM <" +vocabRepository.getVocabContext()+ "> "+
+		"WHERE {{{?s ?p ?iri .} UNION "+
+			"{?iri ?p ?o .} UNION "+
+			"{?s ?iri ?p .}} "+
+			"FILTER isIRI(?iri)}";
+	}
+
+	private void dereferenceURIs(Float randomSubsetSize_percent) 
+	{
+		Set<URI> urisToBeDereferenced = collectUrisToBeDereferenced(randomSubsetSize_percent);
+		Iterator<URI> it = getMonitoredIterator(urisToBeDereferenced);
+		
+		int i = 1;
+		while (it.hasNext()) {
+			URI uri = it.next();
+			
+			logger.debug("processing link " +i+ " of "+urisToBeDereferenced.size());
+			i++;
+			
+			// delay to avoid flooding the vocabulary host  
+			try {
+				Thread.sleep(DEREFERENCE_DELAY_MILLIS);
+			} 
+			catch (InterruptedException e) {
+				// ignore this exception
+			}
+			
+			addToResults(uri);
+		}
+	}
+	
+	private Set<URI> collectUrisToBeDereferenced(Float randomSubsetSize_percent) {
+		if (randomSubsetSize_percent == null) {
+			return httpURIs;
+		}
+		return createRandomSubset(httpURIs, randomSubsetSize_percent);
+	}
+	
+	private void addToResults(URI uri) {
+		try {
+			addToAvailabilityMap(uri.toURL());
+		} 
+		catch (MalformedURLException e) {
+			invalidResources.add(uri.toString());
+		}
+	}
+	
+	private void addToAvailabilityMap(URL url) {
+		UrlDereferencer dereferencer = new UrlDereferencer();		
+		
+		String contentType;
+		try {
+			contentType = dereferencer.getContentType(url);
+		}
+		catch (UrlNotDereferencableException e) {
+			contentType = null;
+			logger.debug("url not dereferencable: " +url.toString());
+		} 
+		catch (NoContentTypeProvidedException e) {
+			contentType = NO_CONTENT_TYPE;
+			logger.debug("no content type in response header for " +url.toString());
+		}
+
+		urlAvailability.put(url, contentType);
+	}
+}
