@@ -1,6 +1,28 @@
 = qSKOS
 
+== About
+
 qSKOS is a quality assessment tool for SKOS vocabularies. Based on a well-defined catalog of quality criteria, it can create reports about to what degree these criteria are fulfilled by a passed SKOS vocabulary. The tool can be packaged as a jar file to allow integration into existing applications or used as a command line application.
+
+== Usage
+
+=== Building qSKOS
+The tool can be built and tested using [Maven](http://maven.apache.org/). 
+
+=== Command-line Interaction
+To perform a command-line analysis of a SKOS vocabulary, the `VocEvaluate` class can be used. `VocEvaluate` is also intended to demonstrate programmatic use of qSKOS.
+
+=== Programmatic Use
+The place to start using the qSKOS tool in custom applications is the `QSkos` class. It serves as some kind of facade to simplify usage: Every criterion has a corresponding public method in the `QSkos` class that returns the evaluation results.
+
+== Historical Node
+qSKOS started at this very place as a ruby gem. The complete source code, including documentation and evaluation results can be found in the qSKOS4rb directory. However, a java reimplementation of the tool has been performed, featuring an extended set of well thought-out quality criteria and an improved performance. Thus, the ruby code is now discontinued and will exist only for historical reasons.
+
+== TODOs
+
+* provide full catalog of checked criteria
+* prodived javadoc
+* extend this README file to cover the tool in more detail
 
 == Contributing to qSKOS
  
