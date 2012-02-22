@@ -17,6 +17,7 @@ public class AmbiguousLabelTest extends QSkosTestCase {
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA2"));
 		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptB"));
 		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptC"));
+		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptG"));
 	}
 	
 	@Test 

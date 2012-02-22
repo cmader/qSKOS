@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gbv="http://purl.org/ontology/gbv/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:stw="http://zbw.eu/stw/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:zbwext="http://zbw.eu/namespaces/zbw-extensions/" xmlns:mesh="http://www.nlm.nih.gov/mesh/2006#" xml:base="http://zbw.eu/stw/">
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gbv="http://purl.org/ontology/gbv/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:stw="http://zbw.eu/stw/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:zbwext="http://zbw.eu/namespaces/zbw-extensions/" xml:base="http://zbw.eu/stw/">
   <rdf:Description rdf:about="../namespaces/zbw-extensions/Descriptor">
     <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
@@ -53,26 +53,6 @@
 		<rdf:type rdf:resource="http://semantic-web.at/ontologies/csw.owl#FreeConcept"/>
 		<skos:prefLabel xml:lang="en">Expert Approval needed</skos:prefLabel>
 		<skos:prefLabel xml:lang="de">Expertenfreigabe erforderlich</skos:prefLabel>
-	</rdf:Description>
-
-	<rdf:Description rdf:about="http://www.nlm.nih.gov/mesh/2006#D000002"
-		  mesh:activeMeSHYear="2006"
-		  mesh:dateCreated="1999-01-01"
-		  mesh:dateEstablished="1991-01-01"
-		  mesh:dateRevised="2005-06-30"
-		  mesh:recordAuthorizer="sjn"
-		  mesh:recordMaintainer="ssb"
-		  mesh:recordOriginator="NLM"
-		  skos:annotation="TN 111 for eff on insects
-		"
-		  skos:historyNote="Insecticides (1966-1971)"
-		  skos:prefLabel="Temefos"
-		  skos:scopeNote="An organothiophosphate insecticide.
-		  ">
-		<mesh:historyNote>96; was ABATE 1972-95 (see under INSECTICIDES, ORGANOTHIOPHOSPHATE 1972-90)
-		</mesh:historyNote>
-		<mesh:publicMeSHNote>96; was ABATE 1972-95 (see under INSECTICIDES, ORGANOTHIOPHOSPHATE 1972-90)
-		</mesh:publicMeSHNote>
 	</rdf:Description>
 
 </rdf:RDF>

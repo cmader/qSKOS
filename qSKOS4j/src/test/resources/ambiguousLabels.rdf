@@ -30,6 +30,10 @@
 		<skos:prefLabel xml:lang="de">Konzept C</skos:prefLabel>
 	</rdf:Description>
 
+	<!-- OK, only one prefLabel -->
+	<rdf:Description rdf:about="conceptG"
+		skos:prefLabel="Concept G"/>
+
 	<!-- Error, prefLabel, altLabel and hiddenLabel must be pairwise disjoint -->	
 	<rdf:Description rdf:about="conceptD">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>

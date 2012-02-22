@@ -69,7 +69,7 @@ public class VocEvaluate {
 		try {
 			setupQSkos();
 			
-			/*System.out.println("-- Graph-based criteria --");
+			System.out.println("-- Graph-based criteria --");
 			findConcepts();
 			findComponents();
 			findCycles();
@@ -83,13 +83,13 @@ public class VocEvaluate {
 			System.out.println("-- Linked Data criteria --");
 			getExternalLinkAverage();
 			findNonHttpResources();
-			//checkResourceAvailability();
-			//analyzeConceptsRank();
+			checkResourceAvailability();
+			analyzeConceptsRank();
 			
 			System.out.println("-- SKOS-specific criteria --");
-			checkSkosReferenceIntegrity();*/
+			checkSkosReferenceIntegrity();
 			findIllegalTerms();
-			/*findDeprecatedProperties();
+			findDeprecatedProperties();
 			findConceptSchemesWithoutTopConcept();
 			findTopConceptsHavingBroaderConcept();
 			
@@ -100,7 +100,7 @@ public class VocEvaluate {
 			
 			System.out.println("-- Other criteria --");
 			findDocumentationCoverage();
-			findRelatedConcepts();*/
+			findRelatedConcepts();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

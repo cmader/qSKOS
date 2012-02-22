@@ -141,6 +141,7 @@ public class ConceptFinder extends Criterion {
 		
 		while (result.hasNext()) {
 			Value concept = result.next().getValue("concept");
+			
 			if (concept instanceof URI) {
 				ret.add((URI) concept);
 			}

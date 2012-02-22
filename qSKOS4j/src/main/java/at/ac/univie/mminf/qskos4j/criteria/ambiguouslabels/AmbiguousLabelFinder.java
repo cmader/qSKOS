@@ -38,14 +38,17 @@ public class AmbiguousLabelFinder extends Criterion {
 	
 	private String createNotUniquePrefLabelsQuery() {
 		return SparqlPrefix.SKOS +
-			"SELECT ?concept ?prefLabel "+
-			"{?concept skos:prefLabel ?prefLabel . "+
+			"SELECT ?concept ?prefLabel WHERE "+
+			"{" +
+				"?concept skos:prefLabel ?prefLabel . " +
 				"{"+
-					"SELECT ?concept "+
-					"{?concept skos:prefLabel ?prefLabel .} "+
+					"SELECT ?concept WHERE " +
+					"{"+
+						"?concept skos:prefLabel ?somePrefLabel . " +
+					"}" +
 					"GROUP BY ?concept "+
-					"HAVING (COUNT(?prefLabel) > 1)"+ 
-				"}"+
+					"HAVING (COUNT(?somePrefLabel) > 1)" +
+				"}" +
 			"}";
 	}
 	
@@ -59,6 +62,9 @@ public class AmbiguousLabelFinder extends Criterion {
 			BindingSet queryResult = result.next();
 			URI concept = (URI) queryResult.getValue("concept");
 			Literal prefLabel = (Literal) queryResult.getValue("prefLabel"); 
+			
+			//System.out.println("concept: " +concept.stringValue()+ ", label: " +prefLabel.stringValue());
+			
 			String lang = prefLabel.getLanguage();
 			lang = lang == null ? "" : lang;
 			
