@@ -27,7 +27,7 @@ public class VocEvaluate {
 	private QSkos qskos;
 	
 	private boolean checkArgs(String[] args) {
-		if (args.length < 1 || args.length > 3) {
+		if (args.length < 1 || args.length > 4) {
 			return false;
 		}
 		
@@ -71,7 +71,7 @@ public class VocEvaluate {
 			
 			System.out.println("-- Graph-based criteria --");
 			findConcepts();
-			findComponents();
+			/*findComponents();
 			findCycles();
 			
 			System.out.println("-- Structure-centric criteria --");
@@ -100,7 +100,7 @@ public class VocEvaluate {
 			
 			System.out.println("-- Other criteria --");
 			findDocumentationCoverage();
-			findRelatedConcepts();
+			findRelatedConcepts();*/
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -316,14 +316,18 @@ public class VocEvaluate {
 	public static void main(String[] args) {
 		VocEvaluate instance = new VocEvaluate();
 		
-		System.out.println("classpath: " +System.getProperty("java.class.path"));
-		
 		if (instance.checkArgs(args)) {
 			instance.evaluate();
 		}
 		else {
 			System.out.println("Usage: VocEvaluate vocabFilename [-hPublishingHost] [-aAuthoritativeUriSubstring] [-sPercentage]" +
-				"\n\t" +
+				"\nDescription:\n" +
+				"To achieve more accurate metrics (e.g, to find external links), parameter -h or -a can be passed"+
+				"\n  " +
+				"-h: Provide the name of the vocabulary's original host. Will be guessed if missing."+
+				"\n  " +
+				"-a: Provide a substring that is common for all resources in the scope of the provided vocabulary"+
+				"\n\n  " +
 				"-s: use a random sample subset of the given percentage of the vocabulary data");
 		}						
 	}

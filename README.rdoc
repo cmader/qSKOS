@@ -11,8 +11,7 @@ The tool can be built and tested using {Maven}[http://maven.apache.org/].
 
 * clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
 * change to qSKOS4j directory
-* create the jar file: <tt>mvn clean package</tt>, wait for tests and build to complete
-	Two jar files are now located in the +target/+ directory: one contains just the qSKOS code, the other one additionally contains all dependencies (suffix is one-jar). It is intended to provide a method to check SKOS vocabularies from the command-line.
+* create the jar file: <tt>mvn clean package</tt>, wait for tests and build to complete. Two jar files are now located in the +target/+ directory: one contains just the qSKOS code, the other one additionally contains all dependencies (suffix is one-jar). It is intended to provide a method to check SKOS vocabularies from the command-line.
 
 === Command-line Interaction
 To perform a command-line analysis of a SKOS vocabulary, the +VocEvaluate+ class can be used. +VocEvaluate+ is also intended to demonstrate programmatic use of qSKOS.
