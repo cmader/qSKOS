@@ -2,7 +2,13 @@
 
 == About
 
-qSKOS is a quality assessment tool for SKOS vocabularies. Based on a well-defined catalog of quality criteria, it can create reports about to what degree these criteria are fulfilled by a passed SKOS vocabulary. The tool can be packaged as a jar file to allow integration into existing applications or used as a command line application.
+qSKOS is a quality assessment tool for SKOS vocabularies. Based on a well-defined {catalog of quality criteria}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies], it can create reports about to what degree these criteria are fulfilled by a passed SKOS vocabulary. The tool can be packaged as a jar file to allow integration into existing applications or used as a command line application.
+
+== Resources
+
+* The catalog of quality criteria qSKOS checks against, is published {here}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies].
+
+* 
 
 == Usage
 

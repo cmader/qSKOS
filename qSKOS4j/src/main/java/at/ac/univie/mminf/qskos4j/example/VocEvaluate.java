@@ -71,7 +71,7 @@ public class VocEvaluate {
 			
 			System.out.println("-- Graph-based criteria --");
 			findConcepts();
-			/*findComponents();
+			findComponents();
 			findCycles();
 			
 			System.out.println("-- Structure-centric criteria --");
@@ -100,7 +100,7 @@ public class VocEvaluate {
 			
 			System.out.println("-- Other criteria --");
 			findDocumentationCoverage();
-			findRelatedConcepts();*/
+			findRelatedConcepts();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

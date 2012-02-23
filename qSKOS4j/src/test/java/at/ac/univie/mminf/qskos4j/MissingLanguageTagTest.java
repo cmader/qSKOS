@@ -31,6 +31,6 @@ public class MissingLanguageTagTest extends QSkosTestCase {
 	@Test
 	public void testMissingLangTagCount_2() throws RepositoryException {
 		Map<String, Set<Resource>> missingLangTags = qSkosDeprecatedAndIllegal.findMissingLanguageTags();
-		Assert.assertEquals(6, missingLangTags.size());
+		Assert.assertEquals(7, missingLangTags.size());
 	}
 }
