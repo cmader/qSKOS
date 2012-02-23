@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class UrlDereferencer {
 
 	private final Logger logger = LoggerFactory.getLogger(UrlDereferencer.class);
-	private final int CONNECTION_TIMOUT_MILLIS = 60000;
+	private final int HTTP_GET_TIMOUT_MILLIS = 60000;
 	
 	public String getContentType(URL url) 
 		throws UrlNotDereferencableException, NoContentTypeProvidedException
@@ -54,7 +54,8 @@ public class UrlDereferencer {
 	private AbstractHttpClient createParmeterizedHttpClient() {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpParams params = httpClient.getParams();
-		params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_TIMOUT_MILLIS);
+		params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, HTTP_GET_TIMOUT_MILLIS);
+		params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, HTTP_GET_TIMOUT_MILLIS);
 		
 		return httpClient;
 	}

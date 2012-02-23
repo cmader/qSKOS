@@ -120,7 +120,7 @@ public class VocEvaluate {
 		Set<URI> concepts = qskos.getInvolvedConcepts();
 		System.out.println("total concepts: " +concepts.size());
 		
-		if (publishingHost != null) {
+		if (publishingHost != null || authoritativeUriSubstring != null) {
 			System.out.println("authoritative concepts: " +qskos.getAuthoritativeConcepts().size());
 		}
 		
