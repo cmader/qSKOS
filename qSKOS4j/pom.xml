@@ -29,11 +29,6 @@
   	</dependency>
   	<dependency>
   		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-rio-rdfxml</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
   		<artifactId>sesame-queryparser-sparql</artifactId>
   		<version>${sesame.version}</version>
   	</dependency>
@@ -49,6 +44,11 @@
   		<version>4.1.2</version>
   		<type>jar</type>
   		<scope>compile</scope>
+  	</dependency>
+	<dependency>
+  		<groupId>org.openrdf.sesame</groupId>
+  		<artifactId>sesame-rio-rdfxml</artifactId>
+  		<version>${sesame.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.openrdf.sesame</groupId>
@@ -93,6 +93,7 @@
 			<artifactId>maven-source-plugin</artifactId>
 			<version>2.1.2</version>
 		</plugin>
+		
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-jar-plugin</artifactId>
@@ -100,17 +101,29 @@
 				<archive>
 					<manifest>
 						<mainClass>at.ac.univie.mminf.qskos4j.example.VocEvaluate</mainClass>
-           				<packageName>at.ac.univie.mminf.qskos4j.example</packageName>
-         			</manifest>
-         			<manifestEntries>
-           				<mode>development</mode>
-           				<url>${pom.url}</url>
-         			</manifestEntries>
-       			</archive>
-         	</configuration>
-     	</plugin>
+					</manifest>
+				</archive>
+			</configuration>
+		</plugin>
+		<plugin>
+			<groupId>org.dstovall</groupId>
+			<artifactId>onejar-maven-plugin</artifactId>
+			<executions>
+				<execution>
+					<goals>
+						<goal>one-jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
 	</plugins>
   </build>
+  <pluginRepositories>
+	<pluginRepository>
+		<id>onejar-maven-plugin.googlecode.com</id>
+		<url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+	</pluginRepository>
+  </pluginRepositories>
   <repositories>  
   	<repository>
       <id>openrdf</id>

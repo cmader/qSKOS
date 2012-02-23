@@ -315,6 +315,9 @@ public class VocEvaluate {
 	
 	public static void main(String[] args) {
 		VocEvaluate instance = new VocEvaluate();
+		
+		System.out.println("classpath: " +System.getProperty("java.class.path"));
+		
 		if (instance.checkArgs(args)) {
 			instance.evaluate();
 		}
