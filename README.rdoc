@@ -9,6 +9,11 @@ qSKOS is a quality assessment tool for SKOS vocabularies. Based on a well-define
 === Building qSKOS
 The tool can be built and tested using {Maven}[http://maven.apache.org/]. 
 
+* clone the project: +git clone git@github.com:cmader/qSKOS.git+
+* change to qSKOS4j directory
+* create the jar file: +mvn package+, wait for tests and build to complete
+* 
+
 === Command-line Interaction
 To perform a command-line analysis of a SKOS vocabulary, the +VocEvaluate+ class can be used. +VocEvaluate+ is also intended to demonstrate programmatic use of qSKOS.
 

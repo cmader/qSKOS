@@ -1,15 +1,25 @@
 package at.ac.univie.mminf.qskos4j;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
 public class ConceptRankTest extends QSkosTestCase {
 
+	private QSkos qSkosRankConcepts;
+	
+	@Before
+	public void setUp() throws OpenRDFException, IOException {
+		qSkosRankConcepts = setUpInstance("rankConcepts.rdf");
+	}
+	
 	@Test
 	public void testConceptRank() {
 		qSkosRankConcepts.addSparqlEndPoint("http://sparql.sindice.com/sparql");

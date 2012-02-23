@@ -1,14 +1,24 @@
 package at.ac.univie.mminf.qskos4j;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
 public class AmbiguousLabelTest extends QSkosTestCase {
 
+	private QSkos qSkosAmbiguousLabels;
+	
+	@Before
+	public void setUp() throws OpenRDFException, IOException {
+		qSkosAmbiguousLabels = setUpInstance("ambiguousLabels.rdf");
+	}
+	
 	@Test
 	public void testUniquePrefLabels() {
 		Map<URI, Set<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotUniquePrefLabels();

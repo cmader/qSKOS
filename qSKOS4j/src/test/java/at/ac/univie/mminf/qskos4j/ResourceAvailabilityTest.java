@@ -1,5 +1,6 @@
 package at.ac.univie.mminf.qskos4j;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +8,23 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.openrdf.OpenRDFException;
 import org.openrdf.repository.RepositoryException;
 
 public class ResourceAvailabilityTest extends QSkosTestCase {
 
 	private List<URL> availableURLs, notAvailableURLs;
+	
+	private QSkos qSkosComponents, qSkosConcepts, qSkosExtResources;
+	
+	@Before
+	public void setUp() throws OpenRDFException, IOException {
+		qSkosComponents = setUpInstance("components.rdf");
+		qSkosConcepts = setUpInstance("concepts.rdf");
+		qSkosExtResources = setUpInstance("resources.rdf");
+	}
 	
 	@Test
 	public void testComponentsResourceAvailability() throws RepositoryException {
