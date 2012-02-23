@@ -324,7 +324,7 @@ public class QSkos {
 		return (Float) invokeMethod(
 			docCovChecker, 
 			"getAverageDocumentationCoverageRatio",
-			getAuthoritativeConcepts());
+			getInvolvedConcepts());
 	}
 	
 	public List<URI> findConceptSchemesWithoutTopConcept() {
