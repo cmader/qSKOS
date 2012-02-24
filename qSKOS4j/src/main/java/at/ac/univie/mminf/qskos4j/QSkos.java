@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.xml.crypto.NoSuchMechanismException;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
@@ -63,21 +64,21 @@ public class QSkos {
 	private Set<URI> involvedConcepts, authoritativeConcepts;
 	
 	public QSkos(File rdfFile) 
-		throws RepositoryException, RDFParseException, IOException
+		throws OpenRDFException, IOException
 	{
 		this(rdfFile, null, null);
 	}
 	
 	public QSkos(File rdfFile,
 		RDFFormat dataFormat) 
-		throws RepositoryException, RDFParseException, IOException
+		throws OpenRDFException, IOException
 	{
 		this(rdfFile, null, dataFormat);
 	}
 	
 	public QSkos(File rdfFile,
 		String baseURI)	
-		throws RepositoryException, RDFParseException, IOException
+		throws OpenRDFException, IOException
 	{
 		this(rdfFile, baseURI, null);
 	}
