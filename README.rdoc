@@ -25,15 +25,13 @@ qSKOS has been reimplemented in Java for performance reasons and supersedes the 
 
 The +QSkos+ class serves as facade for calculating all criteria. For each criterion it provides a corresponding public method. Please read the Javadoc for further infos. Here is an example:
 
-=
-// instantiation
-qskos = new QSkos(new File("stw.rdf"));
-qskos.setPublishingHost("zbw.eu");
+  // instantiation
+  qskos = new QSkos(new File("stw.rdf"));
+  qskos.setPublishingHost("zbw.eu");
 
-// the fun part
-qskos.findComponents();
-qskos.findRedundantAssociativeRelations();
-END
+  // the fun part
+  qskos.findComponents();
+  qskos.findRedundantAssociativeRelations();
 
 == Contributors
 
