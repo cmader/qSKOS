@@ -2,55 +2,49 @@
 
 == About
 
-qSKOS is a quality assessment tool for SKOS vocabularies. Based on a well-defined {catalog of quality criteria}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies], it can create reports about to what degree these criteria are fulfilled by a passed SKOS vocabulary. The tool can be packaged as a jar file to allow integration into existing applications or used as a command line application.
+qSKOS is a quality assessment tool for SKOS vocabularies. It can be used as command-line tool or API and is based on a set of well-defined {quality criteria}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies]. For a given SKOS vocabulary, it creates reports for each quality criterion.
 
-== Resources
+qSKOS has been reimplemented in Java for performance reasons and supersedes the {previous Ruby implementation}[https://github.com/cmader/qSKOS4rb]. The motivation and methodology for this work has been presented at the {NKOS 2011 workshop}[http://www.comp.glam.ac.uk/pages/research/hypermedia/nkos/nkos2011/presentations/mader_nkos.pdf]. An initial evaluation of existing thesauri against these criteria is available {here}(https://github.com/cmader/qSKOS4rb/raw/master/results/qskos_results.ods).
 
-* The catalog of quality criteria qSKOS checks against, is published {here}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies].
+== Building qSKOS
 
-* 
+* Verify that Java v.1.6 or greater is installed: <tt>javac -version</tt>
+* Make sure Maven v.3.0 or greater is installed: <tt>mvn -v</tt>
+* Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
+* Build and package the qSKOS jar files: <tt>mvn clean package</tt>, wait for tests and build to complete
+* Two jar files are now located in the +target/+ directory:
+** <tt>qSKOS4J-[version].one-jar.jar</tt>: the _executable_ jar file containing all dependencies
+** <tt>qSKOS4J-[version].jar</tt>: the qSKOS library to include your application's classpath
 
-== Usage
+== Using the qSKOS command line tool
 
-=== Building qSKOS
-The tool can be built and tested using {Maven}[http://maven.apache.org/]. 
+* Run the tool using <tt>java -jar qSKOS4j-[version].one-jar.jar</tt>
+* Follow the usage instructions
 
-* clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
-* change to qSKOS4j directory
-* create the jar file: <tt>mvn clean package</tt>, wait for tests and build to complete. Two jar files are now located in the +target/+ directory: one contains just the qSKOS code, the other one additionally contains all dependencies (suffix is one-jar). It is intended to provide a method to check SKOS vocabularies from the command-line.
+== Using the qSKOS API
 
-=== Command-line Interaction
-To perform a command-line analysis of a SKOS vocabulary, the +VocEvaluate+ class can be used. +VocEvaluate+ is also intended to demonstrate programmatic use of qSKOS.
-The jar file suffixed with +one-jar+ has +VocEvaluate+ configured as main class, so the usage is simply as follows:
+The +QSkos+ class serves as facade for calculating all criteria. For each criterion it provides a corresponding public method. Please read the Javadoc for further infos. Here is an example:
 
-* change to the +qSKOS4j/target/+ directory
-* run the tool using <tt>java -jar qSKOS4J-[whatever version].one-jar.jar</tt>
-* usage instructions are displayed. For the time being, please ignore classloader warnings, they will be fixed soon.
+<tt>
+// instantiation
+qskos = new QSkos(new File("stw.rdf"));
+qskos.setPublishingHost("zbw.eu");
 
-=== Programmatic Use
-The place to start using the qSKOS tool in custom applications is the +QSkos+ class. It serves as some kind of facade to simplify usage: Every criterion has a corresponding public method in the +QSkos+ class that returns the evaluation results.
+// the fun part
+qskos.findComponents();
+qskos.findRedundantAssociativeRelations();
+</tt>
 
-== Historical Note
-qSKOS started at this very place as a ruby gem. The complete source code, including documentation and evaluation results can be found in the qSKOS4rb directory. However, a java reimplementation of the tool has been performed, featuring an extended set of well thought-out quality criteria and an improved performance. Thus, the ruby code is now discontinued and will exist only for historical reasons.
+== Contributors
 
-== TODOs
+* Christian Mader ([@cmader](https://github.com/cmader))
+* Bernhard Haslhofer ([@behas](https://github.com/behas))
 
-* Provide full catalog of checked criteria
-* Provide javadoc
-* Extend this README file to cover the tool in more detail
+How can I contribute?
 
-== Contributing to qSKOS
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+* Fork, add and/or improve, and send merge requests
+* File issues and/or feature requests
 
 == Copyright
 
-Copyright (c) 2011 cmader. See LICENSE.txt for
-further details.
-
+Copyright (c) 2011, 2012 Christian Mader. See LICENSE.txt for details
