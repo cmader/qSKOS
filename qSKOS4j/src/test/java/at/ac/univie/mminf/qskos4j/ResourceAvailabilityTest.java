@@ -17,33 +17,12 @@ public class ResourceAvailabilityTest extends QSkosTestCase {
 
 	private List<URL> availableURLs, notAvailableURLs;
 	
-	private QSkos qSkosComponents, qSkosConcepts, qSkosExtResources;
+	private QSkos qSkosConcepts, qSkosExtResources;
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosComponents = setUpInstance("components.rdf");
 		qSkosConcepts = setUpInstance("concepts.rdf");
 		qSkosExtResources = setUpInstance("resources.rdf");
-	}
-	
-	@Test
-	public void testComponentsResourceAvailability() throws RepositoryException {
-		Map<URL, String> resourceAvailability = qSkosComponents.checkResourceAvailability();
-		generateAvailabilityLists(resourceAvailability);
-		
-		Assert.assertEquals(30, resourceAvailability.keySet().size());
-		Assert.assertEquals(5, availableURLs.size());
-		Assert.assertEquals(25, notAvailableURLs.size());
-	}
-	
-	@Test
-	public void testConceptsResourceAvailability() throws RepositoryException {	
-		Map<URL, String> resourceAvailability = qSkosConcepts.checkResourceAvailability();
-		generateAvailabilityLists(resourceAvailability);
-		
-		Assert.assertEquals(21, resourceAvailability.keySet().size());		
-		Assert.assertEquals(16, availableURLs.size());
-		Assert.assertEquals(5, notAvailableURLs.size());
 	}
 	
 	@Test
@@ -51,7 +30,9 @@ public class ResourceAvailabilityTest extends QSkosTestCase {
 		Map<URL, String> resourceAvailability = qSkosExtResources.checkResourceAvailability();
 		generateAvailabilityLists(resourceAvailability);
 		
+		Assert.assertEquals(8, resourceAvailability.keySet().size());
 		Assert.assertEquals(7, availableURLs.size());
+		Assert.assertEquals(1, notAvailableURLs.size());
 	}
 	
 	private void generateAvailabilityLists(Map<URL, String> resourceAvailability) {
