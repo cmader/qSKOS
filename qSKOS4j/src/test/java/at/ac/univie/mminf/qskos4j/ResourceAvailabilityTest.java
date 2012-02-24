@@ -23,6 +23,7 @@ public class ResourceAvailabilityTest extends QSkosTestCase {
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosConcepts = setUpInstance("concepts.rdf");
 		qSkosExtResources = setUpInstance("resources.rdf");
+		qSkosExtResources.setUrlDereferencingDelay(0);
 	}
 	
 	@Test

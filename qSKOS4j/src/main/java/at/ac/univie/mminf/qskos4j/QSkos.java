@@ -60,6 +60,7 @@ public class QSkos {
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
 	private String publishingHost, authoritativeUriSubstring;
+	private Integer urlDereferencingDelay;
 	
 	private Set<URI> involvedConcepts, authoritativeConcepts;
 	
@@ -199,7 +200,8 @@ public class QSkos {
 		return (Map<URL, String>) invokeMethod(
 			resourceAvailabilityChecker, 
 			"checkResourceAvailability",
-			(Integer) null);
+			(Integer) null,
+			urlDereferencingDelay);
 	}
 	
 	public Map<URL, String> checkResourceAvailability(Float randomSubsetSize_percent) 
@@ -209,7 +211,8 @@ public class QSkos {
 		return (Map<URL, String>) invokeMethod(
 			resourceAvailabilityChecker, 
 			"checkResourceAvailability",
-			randomSubsetSize_percent);
+			randomSubsetSize_percent,
+			urlDereferencingDelay);
 	}
 	
 	public Set<String> findInvalidResources(Float randomSubsetSize_percent) {
@@ -218,7 +221,8 @@ public class QSkos {
 		return (Set<String>) invokeMethod(
 			resourceAvailabilityChecker, 
 			"findInvalidResources",
-			randomSubsetSize_percent);
+			randomSubsetSize_percent,
+			urlDereferencingDelay);
 	}
 		
 	public Set<String> findNonHttpResources() {
@@ -391,6 +395,10 @@ public class QSkos {
 	
 	public void setAuthoritativeUriSubstring(String authoritativeUriSubstring) {
 		this.authoritativeUriSubstring = authoritativeUriSubstring;
+	}
+	
+	public void setUrlDereferencingDelay(int delayMillis) {
+		urlDereferencingDelay = delayMillis;
 	}
 		
 }

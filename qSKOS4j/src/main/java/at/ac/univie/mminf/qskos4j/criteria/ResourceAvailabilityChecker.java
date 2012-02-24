@@ -28,22 +28,23 @@ public class ResourceAvailabilityChecker extends Criterion {
 	
 	private final Logger logger = LoggerFactory.getLogger(ResourceAvailabilityChecker.class);
 	private final String NO_CONTENT_TYPE = "n/a";
-	private final int DEREFERENCE_DELAY_MILLIS = 3000;
 	
-	public Map<URL, String> urlAvailability;
-	private Set<URI> httpURIs;
-	private Set<String> invalidResources;
+	private Map<URL, String> urlAvailability = new HashMap<URL, String>();
+	private Set<URI> httpURIs = new HashSet<URI>();
+	private Set<String> invalidResources = new HashSet<String>();
+	private Integer urlDereferencingDelayMillis = 3000;
 	
 	public ResourceAvailabilityChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public Map<URL, String> checkResourceAvailability(Float randomSubsetSize_percent) 
-		throws OpenRDFException 
+	public Map<URL, String> checkResourceAvailability(
+		Float randomSubsetSize_percent,
+		Integer urlDereferencingDelayMillis) throws OpenRDFException 
 	{
-		urlAvailability = new HashMap<URL, String>();
-		httpURIs = new HashSet<URI>();
-		invalidResources = new HashSet<String>();
+		if (urlDereferencingDelayMillis != null) {
+			this.urlDereferencingDelayMillis = urlDereferencingDelayMillis;
+		}
 		
 		findAllHttpURLs();
 		dereferenceURIs(randomSubsetSize_percent);
@@ -51,11 +52,12 @@ public class ResourceAvailabilityChecker extends Criterion {
 		return urlAvailability;
 	}
 	
-	public Set<String> findInvalidResources(Float randomSubsetSize_percent)
-		throws OpenRDFException
+	public Set<String> findInvalidResources(
+		Float randomSubsetSize_percent,
+		Integer urlDereferencingDelayMillis) throws OpenRDFException
 	{
 		if (invalidResources == null) {
-			checkResourceAvailability(randomSubsetSize_percent);
+			checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelayMillis);
 		}
 		
 		return invalidResources;
@@ -148,7 +150,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 			
 			// delay to avoid flooding the vocabulary host  
 			try {
-				Thread.sleep(DEREFERENCE_DELAY_MILLIS);
+				Thread.sleep(urlDereferencingDelayMillis);
 			} 
 			catch (InterruptedException e) {
 				// ignore this exception
