@@ -4,7 +4,7 @@
 
 qSKOS is a quality assessment tool for SKOS vocabularies. It can be used as command-line tool or API and is based on a set of well-defined {quality criteria}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies]. For a given SKOS vocabulary, it creates reports for each quality criterion.
 
-qSKOS has been reimplemented in Java for performance reasons and supersedes the {previous Ruby implementation}[https://github.com/cmader/qSKOS4rb]. The motivation and methodology for this work has been presented at the {NKOS 2011 workshop}[http://www.comp.glam.ac.uk/pages/research/hypermedia/nkos/nkos2011/presentations/mader_nkos.pdf]. An initial evaluation of existing thesauri against these criteria is available {here}(https://github.com/cmader/qSKOS4rb/raw/master/results/qskos_results.ods).
+qSKOS has been reimplemented in Java for performance reasons and supersedes the {previous Ruby implementation}[https://github.com/cmader/qSKOS4rb]. The motivation and methodology for this work has been presented at the {NKOS 2011 workshop}[http://www.comp.glam.ac.uk/pages/research/hypermedia/nkos/nkos2011/presentations/mader_nkos.pdf]. An initial evaluation of existing thesauri against these criteria is available {here}[https://github.com/cmader/qSKOS4rb/raw/master/results/qskos_results.ods].
 
 == Building qSKOS
 
@@ -13,8 +13,8 @@ qSKOS has been reimplemented in Java for performance reasons and supersedes the 
 * Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
 * Build and package the qSKOS jar files: <tt>mvn clean package</tt>, wait for tests and build to complete
 * Two jar files are now located in the +target/+ directory:
-** <tt>qSKOS4J-[version].one-jar.jar</tt>: the _executable_ jar file containing all dependencies
-** <tt>qSKOS4J-[version].jar</tt>: the qSKOS library to include your application's classpath
+  * <tt>qSKOS4J-[version].one-jar.jar</tt>: the _executable_ jar file containing all dependencies
+  * <tt>qSKOS4J-[version].jar</tt>: the qSKOS library to include your application's classpath
 
 == Using the qSKOS command line tool
 
@@ -25,7 +25,7 @@ qSKOS has been reimplemented in Java for performance reasons and supersedes the 
 
 The +QSkos+ class serves as facade for calculating all criteria. For each criterion it provides a corresponding public method. Please read the Javadoc for further infos. Here is an example:
 
-<tt>
+=
 // instantiation
 qskos = new QSkos(new File("stw.rdf"));
 qskos.setPublishingHost("zbw.eu");
@@ -33,12 +33,12 @@ qskos.setPublishingHost("zbw.eu");
 // the fun part
 qskos.findComponents();
 qskos.findRedundantAssociativeRelations();
-</tt>
+END
 
 == Contributors
 
-* Christian Mader ([@cmader](https://github.com/cmader))
-* Bernhard Haslhofer ([@behas](https://github.com/behas))
+* Christian Mader ({@cmader}[https://github.com/cmader])
+* Bernhard Haslhofer ({@behas}[https://github.com/behas])
 
 How can I contribute?
 
