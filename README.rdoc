@@ -13,12 +13,12 @@ qSKOS has been reimplemented in Java for performance reasons and supersedes the 
 * Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
 * Build and package the qSKOS jar files: <tt>mvn clean package</tt>, wait for tests and build to complete
 * Two jar files are now located in the +target/+ directory:
-  * <tt>qSKOS4J-[version].one-jar.jar</tt>: the _executable_ jar file containing all dependencies
-  * <tt>qSKOS4J-[version].jar</tt>: the qSKOS library to include your application's classpath
+  * <tt>qSKOS-[version].one-jar.jar</tt>: the _executable_ jar file containing all dependencies
+  * <tt>qSKOS-[version].jar</tt>: the qSKOS library to include your application's classpath
 
 == Using the qSKOS command line tool
 
-* Run the tool using <tt>java -jar qSKOS4j-[version].one-jar.jar</tt>
+* Run the tool using <tt>java -jar qSKOS-[version].one-jar.jar</tt>
 * Follow the usage instructions
 
 == Using the qSKOS API
