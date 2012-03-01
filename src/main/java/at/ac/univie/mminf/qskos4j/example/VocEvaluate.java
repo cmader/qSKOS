@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.example;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +23,7 @@ public class VocEvaluate {
 						 PUBLISHING_HOST_PARAM = "-h",
 						 AUTH_URI_PARAM = "-a";
 	
-	private String vocabFilename, publishingHost, authoritativeUriSubstring;
+	private String vocabFilenameOrUrl, publishingHost, authoritativeUriSubstring;
 	private Float randomSubsetSize_percent;
 	private QSkos qskos;
 	
@@ -31,7 +32,7 @@ public class VocEvaluate {
 			return false;
 		}
 		
-		vocabFilename = args[0];
+		vocabFilenameOrUrl = args[0];
 		
 		for (int i = 1; i < args.length; i++) {
 			String parameter = args[i];
@@ -108,12 +109,19 @@ public class VocEvaluate {
 	}
 	
 	private void setupQSkos() throws Exception {
-		qskos = new QSkos(new File(vocabFilename));
+		try {
+			new URL(vocabFilenameOrUrl);
+			qskos = new QSkos(vocabFilenameOrUrl);	
+		}
+		catch (MalformedURLException e) {
+			qskos = new QSkos(new File(vocabFilenameOrUrl));	
+		}
+		
 		qskos.setPublishingHost(publishingHost);
 		qskos.setAuthoritativeUriSubstring(authoritativeUriSubstring);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
 		
-		System.out.println("evaluating vocab: " +vocabFilename);
+		System.out.println("evaluating vocab: " +vocabFilenameOrUrl);
 	}
 	
 	private void findConcepts() {
@@ -320,9 +328,9 @@ public class VocEvaluate {
 			instance.evaluate();
 		}
 		else {
-			System.out.println("Usage: VocEvaluate vocabFilename [-hPublishingHost] [-aAuthoritativeUriSubstring] [-sPercentage]" +
+			System.out.println("Parameters: vocabFilename [-hPublishingHost] [-aAuthoritativeUriSubstring] [-sPercentage]" +
 				"\nDescription:\n" +
-				"To achieve more accurate metrics (e.g, to find external links), parameter -h or -a can be passed"+
+				"To achieve more accurate metrics (e.g, to find external links), parameters -h or -a can be passed"+
 				"\n  " +
 				"-h: Provide the name of the vocabulary's original host. Will be guessed if missing."+
 				"\n  " +

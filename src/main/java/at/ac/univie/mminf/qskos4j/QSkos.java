@@ -83,6 +83,11 @@ public class QSkos {
 	{
 		this(rdfFile, baseURI, null);
 	}
+	
+	public QSkos(String queryEndpointUrl) {
+		vocabRepository = new VocabRepository(queryEndpointUrl);
+		initCriteria();
+	}
 
 	public QSkos(File rdfFile,
 		String baseURI,
@@ -90,8 +95,12 @@ public class QSkos {
 		throws RepositoryException, RDFParseException, IOException 
 	{
 		vocabRepository = new VocabRepository(rdfFile, baseURI, dataFormat);
-		extractPublishingHost(baseURI);
 		
+		extractPublishingHost(baseURI);
+		initCriteria();
+	}
+	
+	private void initCriteria() {
 		skosTermsChecker = new SkosTermsChecker(vocabRepository);
 		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
 		hierarchyAnalyer = new HierarchyAnalyzer(vocabRepository);

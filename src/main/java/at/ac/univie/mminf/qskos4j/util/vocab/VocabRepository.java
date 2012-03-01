@@ -10,6 +10,7 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.repository.sparql.SPARQLRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.sail.memory.MemoryStore;
@@ -22,6 +23,7 @@ public class VocabRepository {
 	private final String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
 	private Repository repository;
 	private File rdfFile;
+	private String queryEndpointUrl;
 	
 	public VocabRepository(
 		File rdfFile,
@@ -30,8 +32,14 @@ public class VocabRepository {
 	{
 		this.rdfFile = rdfFile;
 		
-		createRepository();
+		createRepositoryForFile();
 		addSkosAndUserData(rdfFile, baseURI, dataFormat);
+	}
+	
+	public VocabRepository(String queryEndpointUrl)
+	{
+		this.queryEndpointUrl = queryEndpointUrl;		
+		repository = new SPARQLRepository(queryEndpointUrl);
 	}
 		
 	public Repository getRepository() {
@@ -39,10 +47,17 @@ public class VocabRepository {
 	}
 	
 	public URI getVocabContext() {
-		return new URIImpl(VOCAB_DEFAULT_URL + rdfFile.getName());
+		if (rdfFile != null) {
+			return new URIImpl(VOCAB_DEFAULT_URL + rdfFile.getName());
+		}
+		if (queryEndpointUrl != null) {
+			return new URIImpl(queryEndpointUrl);
+		}
+		
+		throw new IllegalArgumentException("no vocabulary file or sparql endpoint given");
 	}
 	
-	private void createRepository() throws RepositoryException {
+	private void createRepositoryForFile() throws RepositoryException {
 		File tempDir = new File(createDataDirName());
 		repository = new SailRepository(new MemoryStore(tempDir));
 		repository.initialize();
