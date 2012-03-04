@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
@@ -38,7 +39,7 @@ public class RelatedConceptsFinder extends Criterion {
 	}
 	
 	public Set<RelatedConcepts> findRelatedConcepts(Set<URI> concepts) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException
+		throws OpenRDFException
 	{
 		if (allRelatedConcepts == null) {
 			generateConceptsLabelMap(concepts);
@@ -48,7 +49,7 @@ public class RelatedConceptsFinder extends Criterion {
 	}
 	
 	private void generateConceptsLabelMap(Set<URI> concepts) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+		throws OpenRDFException
 	{
 		conceptLabels = new HashMap<URI, Set<SkosLabel>>();
 		

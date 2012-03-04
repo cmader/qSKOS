@@ -21,7 +21,7 @@ public class SolitaryTransitiveRelationsTest extends QSkosTestCase {
 	}
 
 	@Test
-	public void testSolitaryTransitiveRelationsCount() {
+	public void testSolitaryTransitiveRelationsCount() throws OpenRDFException {
 		Set<Pair<URI>> solitaryTransitiveRelations = 
 			qSkosSolitaryTransitiveRelations.findSolitaryTransitiveRelations();
 		Assert.assertEquals(2, solitaryTransitiveRelations.size());

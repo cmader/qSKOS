@@ -1,6 +1,9 @@
 package at.ac.univie.mminf.qskos4j.example;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,67 +11,112 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.criteria.ExternalResourcesFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 
 public class VocEvaluate {
-
-	private final String SUBSET_SIZE_PARAM = "-s",
-						 PUBLISHING_HOST_PARAM = "-h",
-						 AUTH_URI_PARAM = "-a";
 	
-	private String vocabFilename, publishingHost, authoritativeUriSubstring;
+	private final Logger logger = LoggerFactory.getLogger(VocEvaluate.class);
+	
+	@Parameter(description = "vocabularyfile")
+	private List<String> vocabFilenames;
+	
+	@Parameter(names = {"-h", "--publishing-host"}, description = "Publishing host")
+	private String publishingHost;
+	
+	@Parameter(names = {"-a", "--auth-uri-substring"}, description = "Authoritative URI substring")
+	private String authoritativeUriSubstring;
+	
+	@Parameter(names = {"-s", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
 	private Float randomSubsetSize_percent;
+
+	@Parameter(names = {"-l", "--list-measures"}, description = "Output a list of all available measures")
+	private boolean outputMeasures;
+	
+	@Parameter(names = {"-m", "--use-measures"}, description = "Comma-separated list of measures to perform")
+	private String selectedCriteria;
+	
 	private QSkos qskos;
 	
-	private boolean checkArgs(String[] args) {
-		if (args.length < 1 || args.length > 4) {
-			return false;
-		}
+	public static void main(String[] args) {
+		VocEvaluate instance = new VocEvaluate();
+		JCommander jCommander = new JCommander(instance);
 		
-		vocabFilename = args[0];
-		
-		for (int i = 1; i < args.length; i++) {
-			String parameter = args[i];
-			
-			if (parameter.toLowerCase().startsWith(SUBSET_SIZE_PARAM)) {
-				extractSubsetPercentage(parameter);
-			}
-			else if (parameter.toLowerCase().contains(PUBLISHING_HOST_PARAM)) {
-				publishingHost = extractParamValue(PUBLISHING_HOST_PARAM, parameter);
-			}
-			else if (parameter.toLowerCase().contains(AUTH_URI_PARAM)) {
-				authoritativeUriSubstring = extractParamValue(AUTH_URI_PARAM, parameter);
-			}
+		try {
+			jCommander.parse(args);
+			instance.listMeasuresOrEvaluate();
 		}
-		return true;
+		catch (ParameterException e) {
+			jCommander.usage();
+		}
 	}
 	
-	private void extractSubsetPercentage(String parameterString) {
-		String percentageSubString = extractParamValue(SUBSET_SIZE_PARAM, parameterString);
-		
-		try  {
-			randomSubsetSize_percent = Float.parseFloat(percentageSubString);
+	private void listMeasuresOrEvaluate() {
+		if (outputMeasures) {
+			outputMeasuresDescription();
 		}
-		catch (NumberFormatException e) {
-			randomSubsetSize_percent = null;
-		}	
+		else {
+			checkVocabFilenameGiven();
+			evaluate();
+		}
 	}
 	
-	private String extractParamValue(String paramIdentifier, String allParams) {
-		int subsetSizeIndex = allParams.indexOf(paramIdentifier) + paramIdentifier.length();
-		return allParams.substring(subsetSizeIndex);
+	private void checkVocabFilenameGiven() throws ParameterException
+	{
+		if (vocabFilenames == null) {
+			throw new ParameterException("No vocabulary file given");
+		}		
 	}
 	
 	private void evaluate() {
-		try {
+		try {		
 			setupQSkos();
+			performMeasures();
+		} 
+		catch (IOException ioException) {
+			System.out.println("Error reading vocabulary file: " +ioException.getMessage());
+		}
+		catch (OpenRDFException rdfException) {
+			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
+		}
+	}
+	
+	private void outputMeasuresDescription() {
+		System.out.println("id\t\tname\n--\t\t----");
+		for (CriterionDescription critDesc : CriterionDescription.values()) {
+			System.out.println(critDesc.getId() +"\t\t"+ critDesc.getName());
+		}
+	}
+	
+	private void performMeasures() {
+		for (CriterionDescription criterion : extractCriteria()) {
+			System.out.println("--- " +criterion.getName());
+			String qSkosMethodName = criterion.getQSkosMethodName(); 
 			
+			try {
+				Object result = invokeQSkosMethod(qSkosMethodName);
+				outputReport(result);
+			}
+			catch (Exception e) {
+				logger.error("error invoking method " +qSkosMethodName);
+			}
+		}
+	}	
+		/*	
 			System.out.println("-- Graph-based criteria --");
 			findConcepts();
 			findComponents();
@@ -101,19 +149,42 @@ public class VocEvaluate {
 			System.out.println("-- Other criteria --");
 			findDocumentationCoverage();
 			findRelatedConcepts();
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
+		*/
+	
+	
+	private List<CriterionDescription> extractCriteria() {
+		List<CriterionDescription> criteria = new ArrayList<CriterionDescription>();
+		
+		StringTokenizer tokenizer = new StringTokenizer(selectedCriteria, ",");
+		while (tokenizer.hasMoreElements()) {
+			criteria.add(CriterionDescription.findById(tokenizer.nextToken()));
+		}
+		
+		return criteria;
+	}
+	
+	private Object invokeQSkosMethod(String methodName) throws Exception {
+		for (Method method : qskos.getClass().getMethods()) {
+			if (method.getName().equals(methodName)) {
+				return method.invoke(qskos);
+			}
+		}
+		throw new NoSuchMethodException();
+	}
+	
+	private void outputReport(Object result) {
+		if (result instanceof Collection) {
+			System.out.println("count: " +((Collection<?>) result).size());
 		}
 	}
 	
-	private void setupQSkos() throws Exception {
-		qskos = new QSkos(new File(vocabFilename));
+	private void setupQSkos() throws OpenRDFException, IOException {
+		qskos = new QSkos(new File(vocabFilenames.get(0)));
 		qskos.setPublishingHost(publishingHost);
 		qskos.setAuthoritativeUriSubstring(authoritativeUriSubstring);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
 		
-		System.out.println("evaluating vocab: " +vocabFilename);
+		System.out.println("evaluating vocab: " +vocabFilenames.get(0));
 	}
 	
 	private void findConcepts() {
@@ -228,7 +299,7 @@ public class VocEvaluate {
 	}
 	
 	private void getIncompleteLanguageCoverage() {
-		Map<URI, Set<String>> incompleteLangCov = qskos.getIncompleteLanguageCoverage();
+		Map<Resource, Set<String>> incompleteLangCov = qskos.getIncompleteLanguageCoverage();
 		System.out.println("Concepts With Incomplete Language Coverage: " +incompleteLangCov.size());
 		
 		/*
@@ -311,25 +382,6 @@ public class VocEvaluate {
 		System.out.println("Link Target Unavailability");
 		System.out.println("available: " +availableCount);
 		System.out.println("not available: "+notAvailableCount);
-	}
-	
-	public static void main(String[] args) {
-		VocEvaluate instance = new VocEvaluate();
-		
-		if (instance.checkArgs(args)) {
-			instance.evaluate();
-		}
-		else {
-			System.out.println("Usage: VocEvaluate vocabFilename [-hPublishingHost] [-aAuthoritativeUriSubstring] [-sPercentage]" +
-				"\nDescription:\n" +
-				"To achieve more accurate metrics (e.g, to find external links), parameter -h or -a can be passed"+
-				"\n  " +
-				"-h: Provide the name of the vocabulary's original host. Will be guessed if missing."+
-				"\n  " +
-				"-a: Provide a substring that is common for all resources in the scope of the provided vocabulary"+
-				"\n\n  " +
-				"-s: use a random sample subset of the given percentage of the vocabulary data");
-		}						
 	}
 	
 	private void dumpAvgConceptRank(Map<URI, Set<URI>> rankedConcepts)

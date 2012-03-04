@@ -9,6 +9,7 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
@@ -41,8 +42,7 @@ public class HierarchyAnalyzer extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public List<Set<URI>> findCycleContainingComponents()
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public List<Set<URI>> findCycleContainingComponents() throws OpenRDFException 
 	{
 		if (hierarchyGraph == null) {
 			TupleQueryResult broaderResult = findTriples(HierarchyStyle.BROADER);
@@ -55,8 +55,7 @@ public class HierarchyAnalyzer extends Criterion {
 		return cycleContainingComponents;
 	}
 	
-	public void exportCycleContainingComponents(Writer[] writers) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public void exportCycleContainingComponents(Writer[] writers) throws OpenRDFException 
 	{
 		if (cycleContainingComponents == null) {
 			findCycleContainingComponents();

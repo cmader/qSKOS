@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
-import org.openrdf.repository.RepositoryException;
 
 public class MissingLanguageTagTest extends QSkosTestCase {
 
@@ -23,13 +22,13 @@ public class MissingLanguageTagTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testMissingLangTagCount_1() throws RepositoryException {
+	public void testMissingLangTagCount_1() throws OpenRDFException {
 		Map<String, Set<Resource>> missingLangTags = qSkosComponents.findMissingLanguageTags();
 		Assert.assertEquals(2, missingLangTags.size());
 	}
 	
 	@Test
-	public void testMissingLangTagCount_2() throws RepositoryException {
+	public void testMissingLangTagCount_2() throws OpenRDFException {
 		Map<String, Set<Resource>> missingLangTags = qSkosDeprecatedAndIllegal.findMissingLanguageTags();
 		Assert.assertEquals(7, missingLangTags.size());
 	}

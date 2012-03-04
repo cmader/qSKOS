@@ -5,12 +5,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
 
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -22,8 +21,7 @@ public class RedundantAssociativeRelationsFinder extends Criterion {
 		super(vocabRepository);
 	}
 
-	public Map<URI, Set<Pair<URI>>> findRedundantAssociativeRelations() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public Map<URI, Set<Pair<URI>>> findRedundantAssociativeRelations() throws OpenRDFException 
 	{
 		Map<URI, Set<Pair<URI>>> redundantAssociativeRelations = new HashMap<URI, Set<Pair<URI>>>();
 		
@@ -33,8 +31,7 @@ public class RedundantAssociativeRelationsFinder extends Criterion {
 		return redundantAssociativeRelations;
 	}
 	
-	public Map<URI, Set<Pair<URI>>> findNotAssociatedSiblings()
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public Map<URI, Set<Pair<URI>>> findNotAssociatedSiblings() throws OpenRDFException 
 	{
 		Map<URI, Set<Pair<URI>>> notAssociatedSiblings = new HashMap<URI, Set<Pair<URI>>>();
 		

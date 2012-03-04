@@ -5,13 +5,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
 
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -24,8 +23,7 @@ public class SkosTermsChecker extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public Map<URI, Set<URI>> findDeprecatedProperties() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public Map<URI, Set<URI>> findDeprecatedProperties() throws OpenRDFException 
 	{
 		if (deprecatedProperties == null) {
 			TupleQueryResult result = queryRepository(createDeprecatedPropertiesQuery());
@@ -73,8 +71,7 @@ public class SkosTermsChecker extends Criterion {
 		}
 	}
 	
-	public Map<URI, Set<URI>> findIllegalTerms() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public Map<URI, Set<URI>> findIllegalTerms() throws OpenRDFException 
 	{
 		if (illegalTerms == null) {
 			TupleQueryResult result = queryRepository(createIllegalTermsQuery());

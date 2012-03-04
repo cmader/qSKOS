@@ -18,7 +18,7 @@ public class DocumentationCoverageTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testAverageDocumentationCoverageRatio() {
+	public void testAverageDocumentationCoverageRatio() throws OpenRDFException {
 		qSkosDocumentedConcepts.setPublishingHost("mminf.univie.ac.at");
 		float avgDocCoverage = qSkosDocumentedConcepts.getAverageDocumentationCoverageRatio();
 		

@@ -21,7 +21,7 @@ public class ConceptRankTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testConceptRank() {
+	public void testConceptRank() throws OpenRDFException {
 		qSkosRankConcepts.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
 		qSkosRankConcepts.setPublishingHost("dbpedia.org");

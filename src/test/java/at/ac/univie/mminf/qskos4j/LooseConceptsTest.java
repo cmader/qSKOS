@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
 
 public class LooseConceptsTest extends QSkosTestCase {
 
@@ -22,13 +21,13 @@ public class LooseConceptsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testConceptsLooseConceptCount() throws RepositoryException {
+	public void testConceptsLooseConceptCount() throws OpenRDFException {
 		Set<URI> looseConcepts = qSkosConcepts.findLooseConcepts();
 		Assert.assertEquals(5, looseConcepts.size());		
 	}
 	
 	@Test
-	public void testComponentsLooseConceptCount() throws RepositoryException {
+	public void testComponentsLooseConceptCount() throws OpenRDFException {
 		Set<URI> looseConcepts = qSkosComponents.findLooseConcepts(); 
 		Assert.assertEquals(2, looseConcepts.size());		
 	}

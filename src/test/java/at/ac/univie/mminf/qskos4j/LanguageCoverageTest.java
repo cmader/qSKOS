@@ -10,8 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
+import org.openrdf.model.Resource;
 
 public class LanguageCoverageTest extends QSkosTestCase {
 
@@ -24,17 +23,17 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	
 	@Test
 	public void testIncompleteLanguageCoverageCount() 
-		throws RepositoryException 
+		throws OpenRDFException 
 	{
-		Map<URI, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
+		Map<Resource, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
 		Assert.assertEquals(13, incompleteLangCoverage.size());		
 	}
 	
 	@Test
 	public void testExistResourcesNotHavingEnglishLabels() 
-		throws RepositoryException 
+		throws OpenRDFException 
 	{
-		Map<URI, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
+		Map<Resource, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
 		
 		boolean englishTagFound = false;
 		for (Set<String> missingLanguages : incompleteLangCoverage.values()) {
@@ -47,12 +46,12 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	
 	@Test
 	public void testResourcesMissingOnlyFrenchLabelsCount() 
-		throws RepositoryException
+		throws OpenRDFException
 	{
-		Map<URI, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
+		Map<Resource, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
 
-		List<URI> foundResources = new ArrayList<URI>();
-		for (URI resource : incompleteLangCoverage.keySet()) {
+		List<Resource> foundResources = new ArrayList<Resource>();
+		for (Resource resource : incompleteLangCoverage.keySet()) {
 			Set<String> missingLanguages = incompleteLangCoverage.get(resource);
 			if (missingLanguages.size() == 1 && missingLanguages.contains("fr")) {
 				foundResources.add(resource);

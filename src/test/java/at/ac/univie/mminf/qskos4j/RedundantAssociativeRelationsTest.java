@@ -23,7 +23,7 @@ public class RedundantAssociativeRelationsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testRedundantAssociativeRelationsCount() {
+	public void testRedundantAssociativeRelationsCount() throws OpenRDFException {
 		Map<URI, Set<Pair<URI>>> redAssRels = qSkosRedundantAssociativeRelations.
 			findRedundantAssociativeRelations();
 		
@@ -31,7 +31,7 @@ public class RedundantAssociativeRelationsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testNotAssociatedSiblingsCount() {
+	public void testNotAssociatedSiblingsCount() throws OpenRDFException {
 		Map<URI, Set<Pair<URI>>> redAssRels = qSkosRedundantAssociativeRelations.
 			findNotAssociatedSiblings();
 		
