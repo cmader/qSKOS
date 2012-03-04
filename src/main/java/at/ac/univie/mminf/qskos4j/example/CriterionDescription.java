@@ -6,6 +6,7 @@ enum CriterionDescription {
 	AUTHORITATIVE_CONCPETS("ac", "Authoritative Concepts", "Finds all authoritative concepts in the vocabulary", "getAuthoritativeConcepts"),
 	LOOSE_CONCEPTS("lc", "Loose Concepts", "Finds all loose concepts", "findLooseConcepts"),
 	WEAKLY_CONNECTED_COMPONENTS("wcc", "Weakly Connected Components", "Finds all weakly connected components", "findComponents"),
+	HIERARCHICAL_CYCLES("hc", "Hierarchical Cycles", "Finds all cycle containing components", "findHierarchicalCycles"),
 	
 	NULL_DESC("", "", "", "");
 	

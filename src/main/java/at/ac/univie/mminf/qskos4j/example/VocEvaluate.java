@@ -96,9 +96,10 @@ public class VocEvaluate {
 	}
 	
 	private void outputMeasuresDescription() {
-		System.out.println("[ID]\t\t[Name]\t\t\t[Description]");
+		String formatString = "%4s\t%-30s\t%s\n"; 
+		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
 		for (CriterionDescription critDesc : CriterionDescription.values()) {
-			System.out.println(critDesc.getId() +"\t\t"+ critDesc.getName());
+			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
 		}
 	}
 	
@@ -205,35 +206,7 @@ public class VocEvaluate {
 		
 		System.out.println("evaluating vocab: " +vocabFilenames.get(0));
 	}
-	
-	private void findConcepts() {
-		Set<URI> concepts = qskos.getInvolvedConcepts();
-		System.out.println("total concepts: " +concepts.size());
 		
-		if (publishingHost != null || authoritativeUriSubstring != null) {
-			System.out.println("authoritative concepts: " +qskos.getAuthoritativeConcepts().size());
-		}
-		
-		Set<URI> looseConcepts = qskos.findLooseConcepts();
-		System.out.println("loose concepts: " +looseConcepts.size());
-	}
-	
-	private void findComponents() {
-		List<Set<URI>> components = qskos.findComponents();
-		
-		long componentCount = 0;
-		for (Set<URI> component : components) {
-			componentCount += component.size() > 1 ? 1 : 0;
-		}
-		
-		System.out.println("Weakly Connected Components: " +componentCount);
-	}
-	
-	private void findCycles() {
-		List<Set<URI>> cycleSets = qskos.findHierarchicalCycles();
-		System.out.println("Hierarchical Cycles Containing Components: " +cycleSets.size());
-	}
-	
 	private void findRedundantAssocicativeRelations() {
 		Map<URI, Set<Pair<URI>>> redAssRels = qskos.findRedundantAssociativeRelations();
 		dumpPairMap(redAssRels);
