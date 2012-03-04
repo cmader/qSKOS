@@ -96,7 +96,7 @@ public class VocEvaluate {
 	}
 	
 	private void outputMeasuresDescription() {
-		System.out.println("id\t\tname\n--\t\t----");
+		System.out.println("[ID]\t\t[Name]\t\t\t[Description]");
 		for (CriterionDescription critDesc : CriterionDescription.values()) {
 			System.out.println(critDesc.getId() +"\t\t"+ critDesc.getName());
 		}
@@ -109,10 +109,15 @@ public class VocEvaluate {
 			
 			try {
 				Object result = invokeQSkosMethod(qSkosMethodName);
-				outputReport(result);
+				outputReport(result, criterion);
 			}
 			catch (Exception e) {
-				logger.error("error invoking method " +qSkosMethodName);
+				String message = e.getMessage();
+				if (e instanceof InvocationTargetException) {
+					message = ((InvocationTargetException) e).getTargetException().getMessage();
+				}
+				
+				logger.error("error invoking method: " +message);
 			}
 		}
 	}	
@@ -172,10 +177,24 @@ public class VocEvaluate {
 		throw new NoSuchMethodException();
 	}
 	
-	private void outputReport(Object result) {
-		if (result instanceof Collection) {
+	@SuppressWarnings("unchecked")
+	private void outputReport(Object result, CriterionDescription critDesc) {
+		if (critDesc == CriterionDescription.WEAKLY_CONNECTED_COMPONENTS) {
+			outputWccReport((Collection<Collection<URI>>) result);
+		}
+		else if (result instanceof Collection) {
 			System.out.println("count: " +((Collection<?>) result).size());
 		}
+	}
+	
+	private void outputWccReport(Collection<Collection<URI>> result) {
+		long componentCount = 0;
+		
+		for (Collection<URI> component : result) {
+			componentCount += component.size() > 1 ? 1 : 0;
+		}
+		
+		System.out.println("count: " +componentCount);
 	}
 	
 	private void setupQSkos() throws OpenRDFException, IOException {
