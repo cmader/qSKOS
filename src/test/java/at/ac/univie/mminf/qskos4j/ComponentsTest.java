@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
 
 public class ComponentsTest extends QSkosTestCase {
 	
@@ -22,7 +21,7 @@ public class ComponentsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testComponentCount() throws RepositoryException {
+	public void testComponentCount() throws OpenRDFException {
 		long conceptCount = qSkosComponents.getInvolvedConcepts().size();
 		
 		List<Set<URI>> components = qSkosComponents.findComponents();

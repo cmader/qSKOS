@@ -24,7 +24,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testRelatedConceptsCount_1() {
+	public void testRelatedConceptsCount_1() throws OpenRDFException {
 		Set<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts();
 		
 		Assert.assertEquals(2, allRelatedConcepts.size());
@@ -32,7 +32,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	}
 
 	@Test
-	public void testNotDirectlyConnectedRelatedConceptsCount() {
+	public void testNotDirectlyConnectedRelatedConceptsCount() throws OpenRDFException {
 		Set<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts();
 		
 		long notDirectlyConnectedConceptsCount = 0;
@@ -58,7 +58,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testRelatedConceptsCount_2() {
+	public void testRelatedConceptsCount_2() throws OpenRDFException {
 		Assert.assertEquals(0, qSkosRelatedConcepts.findRelatedConcepts().size());
 	}
 }

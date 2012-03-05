@@ -11,7 +11,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.repository.RepositoryException;
 
 public class ResourceAvailabilityTest extends QSkosTestCase {
 
@@ -27,7 +26,7 @@ public class ResourceAvailabilityTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testResourceAvailability() throws RepositoryException {	
+	public void testResourceAvailability() throws OpenRDFException {	
 		Map<URL, String> resourceAvailability = qSkosExtResources.checkResourceAvailability();
 		generateAvailabilityLists(resourceAvailability);
 		
@@ -51,14 +50,14 @@ public class ResourceAvailabilityTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testConceptsNonHttpUriCount() {
+	public void testConceptsNonHttpUriCount() throws OpenRDFException {
 		Assert.assertEquals(
 			1,
 			qSkosConcepts.findNonHttpResources().size());
 	}
 
 	@Test
-	public void testResourcesNonHttpUriCount() {
+	public void testResourcesNonHttpUriCount() throws OpenRDFException {
 		Assert.assertEquals(
 			2, 
 			qSkosExtResources.findNonHttpResources().size());

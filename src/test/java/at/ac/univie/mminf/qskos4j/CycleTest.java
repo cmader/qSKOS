@@ -7,7 +7,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.repository.RepositoryException;
 
 public class CycleTest extends QSkosTestCase {
 
@@ -20,12 +19,12 @@ public class CycleTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testComponentsCycleCount() throws RepositoryException {
+	public void testComponentsCycleCount() throws OpenRDFException {
 		Assert.assertEquals(3, qSkosComponents.findHierarchicalCycles().size());
 	}
 	
 	@Test
-	public void testCycleCount() throws RepositoryException {
+	public void testCycleCount() throws OpenRDFException {
 		Assert.assertEquals(2, qSkosCycles.findHierarchicalCycles().size());		
 	}
 	

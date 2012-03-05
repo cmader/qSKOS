@@ -28,7 +28,7 @@ public class StatisticsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testConceptCount_1() 
+	public void testConceptCount_1() throws OpenRDFException
 	{
 		Set<URI> involvedConcepts = qSkosConcepts.getInvolvedConcepts();
 		Assert.assertEquals(10, involvedConcepts.size());
@@ -42,14 +42,14 @@ public class StatisticsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testConceptsCount_2() 
+	public void testConceptsCount_2() throws OpenRDFException
 	{
 		Set<URI> involvedConcepts = qSkosComponents.getInvolvedConcepts(); 
 		Assert.assertEquals(21, involvedConcepts.size());		
 	}
 	
 	@Test 
-	public void testAuthoritativeConceptsCount()
+	public void testAuthoritativeConceptsCount() throws OpenRDFException
 	{
 		qSkosConcepts.setPublishingHost("zbw.eu");
 		Set<URI> authoritativeConcepts = qSkosConcepts.getAuthoritativeConcepts();

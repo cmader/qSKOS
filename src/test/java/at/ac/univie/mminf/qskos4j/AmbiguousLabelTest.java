@@ -20,7 +20,7 @@ public class AmbiguousLabelTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testUniquePrefLabels() {
+	public void testUniquePrefLabels() throws OpenRDFException {
 		Map<URI, Set<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotUniquePrefLabels();
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA"));
@@ -31,7 +31,7 @@ public class AmbiguousLabelTest extends QSkosTestCase {
 	}
 	
 	@Test 
-	public void testDisjointLabels() {
+	public void testDisjointLabels() throws OpenRDFException {
 		Map<URI, Set<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotDisjointLabels();
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptD"));

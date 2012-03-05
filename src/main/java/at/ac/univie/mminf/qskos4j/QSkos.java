@@ -3,7 +3,6 @@ package at.ac.univie.mminf.qskos4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
@@ -11,8 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.crypto.NoSuchMechanismException;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -44,12 +41,11 @@ import at.ac.univie.mminf.qskos4j.util.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-@SuppressWarnings("unchecked")
 public class QSkos {
 
 	private Set<String> sparqlEndPoints = new HashSet<String>();
 	
-	private ResourceAvailabilityChecker resourceAvailabilityChecker;
+	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
 	private SkosTermsChecker skosTermsChecker;
 	private HierarchyAnalyzer hierarchyAnalyer;
 	private ConceptFinder conceptFinder;
@@ -135,263 +131,161 @@ public class QSkos {
 		}		
 	}
 	
-	public Set<URI> getInvolvedConcepts()
+	public Set<URI> getInvolvedConcepts() throws OpenRDFException
 	{
 		if (involvedConcepts == null) {
-			involvedConcepts = (Set<URI>) invokeMethod(
-				conceptFinder, 
-				"getInvolvedConcepts", 
-				false); 
+			involvedConcepts = conceptFinder.getInvolvedConcepts(false);
 		}
 		
 		return involvedConcepts;
 	}
 	
-	public Set<URI> getAuthoritativeConcepts() {
+	public Set<URI> getAuthoritativeConcepts() throws OpenRDFException {
 		if (authoritativeConcepts == null) {		
-			authoritativeConcepts = (Set<URI>) invokeMethod(
-				conceptFinder, 
-				"getAuthoritativeConcepts",
-				publishingHost,
-				authoritativeUriSubstring);
+			authoritativeConcepts = conceptFinder.getAuthoritativeConcepts(publishingHost, authoritativeUriSubstring);
 		}
 		
 		return authoritativeConcepts;
 	}
 		
-	public Set<URI> findLooseConcepts()
+	public Set<URI> findLooseConcepts() throws OpenRDFException
 	{
-		return (Set<URI>) invokeMethod(
-			conceptFinder, 
-			"getInvolvedConcepts", 
-			true);
+		return conceptFinder.getInvolvedConcepts(true);
 	}
 	
-	public List<Set<URI>> findComponents() {
-		return (List<Set<URI>>) invokeMethod(
-			componentFinder,
-			"findComponents");
+	public List<Set<URI>> findComponents() throws OpenRDFException {
+		return componentFinder.findComponents();
 	}
 	
-	public void exportComponentsAsDOT(Writer[] writers) {
-		invokeMethod(
-			componentFinder,
-			"exportComponents", (Object) writers);
+	public void exportComponentsAsDOT(Writer[] writers) throws OpenRDFException {
+		componentFinder.exportComponents(writers);
 	}
 	
-	public List<Set<URI>> findHierarchicalCycles() {
-		return (List<Set<URI>>) invokeMethod(
-			hierarchyAnalyer,
-			"findCycleContainingComponents");
+	public List<Set<URI>> findHierarchicalCycles() throws OpenRDFException {
+		return hierarchyAnalyer.findCycleContainingComponents();
 	}
 
-	public void exportHierarchicalCyclesAsDOT(Writer[] writers) {
-		invokeMethod(
-			hierarchyAnalyer,
-			"exportCycleContainingComponents", (Object) writers);
+	public void exportHierarchicalCyclesAsDOT(Writer[] writers) throws OpenRDFException {
+		hierarchyAnalyer.exportCycleContainingComponents(writers);
 	}
 
-	public Map<URI, List<URL>> findExternalResources() {
-		ExternalResourcesFinder extResourcesFinder = 
-			new ExternalResourcesFinder(vocabRepository);
+	public Map<URI, List<URL>> findExternalResources() throws OpenRDFException {
+		ExternalResourcesFinder extResourcesFinder = new ExternalResourcesFinder(vocabRepository);
+		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
-			
-		return (Map<URI, List<URL>>) invokeMethod(
-			extResourcesFinder, 
-			"findExternalResourcesForConcepts", 
-			getInvolvedConcepts(),
-			publishingHost);
+		return extResourcesFinder.findExternalResourcesForConcepts(getInvolvedConcepts(), publishingHost);
 	}
 	
-	public Map<URL, String> checkResourceAvailability() {
+	public Map<URL, String> checkResourceAvailability() throws OpenRDFException {
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		
-		return (Map<URL, String>) invokeMethod(
-			resourceAvailabilityChecker, 
-			"checkResourceAvailability",
-			(Integer) null,
-			urlDereferencingDelay);
+		return resourceAvailabilityChecker.checkResourceAvailability(null, urlDereferencingDelay);
 	}
 	
-	public Map<URL, String> checkResourceAvailability(Float randomSubsetSize_percent) 
+	public Map<URL, String> checkResourceAvailability(Float randomSubsetSize_percent) throws OpenRDFException 
 	{
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		
-		return (Map<URL, String>) invokeMethod(
-			resourceAvailabilityChecker, 
-			"checkResourceAvailability",
-			randomSubsetSize_percent,
-			urlDereferencingDelay);
+		return resourceAvailabilityChecker.checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelay);
 	}
 	
-	public Set<String> findInvalidResources(Float randomSubsetSize_percent) {
+	public Set<String> findInvalidResources(Float randomSubsetSize_percent) throws OpenRDFException {
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		
-		return (Set<String>) invokeMethod(
-			resourceAvailabilityChecker, 
-			"findInvalidResources",
-			randomSubsetSize_percent,
-			urlDereferencingDelay);
+		return resourceAvailabilityChecker.findInvalidResources(randomSubsetSize_percent, urlDereferencingDelay);
 	}
 		
-	public Set<String> findNonHttpResources() {
+	public Set<String> findNonHttpResources() throws OpenRDFException {
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		
-		return (Set<String>) invokeMethod(
-			resourceAvailabilityChecker, 
-			"findNonHttpResources");	
+		return resourceAvailabilityChecker.findNonHttpResources();
 	}
 	
-	public Map<URI, Set<URI>> findDeprecatedProperties() {
-		return (Map<URI, Set<URI>>) invokeMethod(
-			skosTermsChecker, 
-			"findDeprecatedProperties");		
+	public Map<URI, Set<URI>> findDeprecatedProperties() throws OpenRDFException {
+		return skosTermsChecker.findDeprecatedProperties();
 	}
 	
-	public Map<URI, Set<URI>> findIllegalTerms() {
-		return (Map<URI, Set<URI>>) invokeMethod(
-			skosTermsChecker, 
-			"findIllegalTerms");				
+	public Map<URI, Set<URI>> findIllegalTerms() throws OpenRDFException {
+		return skosTermsChecker.findIllegalTerms();
 	}
 	
-	public Map<String, Set<Resource>> findMissingLanguageTags() {
-		return (Map<String, Set<Resource>>) invokeMethod(
-			new LanguageTagChecker(vocabRepository), 
-			"findMissingLanguageTags");						
+	public Map<String, Set<Resource>> findMissingLanguageTags() throws OpenRDFException {
+		return new LanguageTagChecker(vocabRepository).findMissingLanguageTags();
 	}
 	
-	public Map<URI, Set<String>> getIncompleteLanguageCoverage() {
+	public Map<Resource, Set<String>> getIncompleteLanguageCoverage() throws OpenRDFException {
 		languageCoverageChecker.setProgressMonitor(progressMonitor);
-		
-		return (Map<URI, Set<String>>) invokeMethod(
-			languageCoverageChecker, 
-			"getIncompleteLanguageCoverage",
-			getInvolvedConcepts());		
+		return languageCoverageChecker.getIncompleteLanguageCoverage(getInvolvedConcepts());
 	}
 	
-	public Map<URI, Set<String>> findNotUniquePrefLabels() {
-		return (Map<URI, Set<String>>) invokeMethod(
-			new AmbiguousLabelFinder(vocabRepository), 
-			"findNotUniquePrefLabels");
+	public Map<URI, Set<String>> findNotUniquePrefLabels() throws OpenRDFException {
+		return new AmbiguousLabelFinder(vocabRepository).findNotUniquePrefLabels();
 	}
 	
-	public Map<URI, Set<String>> findNotDisjointLabels() {
-		return (Map<URI, Set<String>>) invokeMethod(
-			new AmbiguousLabelFinder(vocabRepository), 
-			"findNotDisjointLabels");
+	public Map<URI, Set<String>> findNotDisjointLabels() throws OpenRDFException {
+		return new AmbiguousLabelFinder(vocabRepository).findNotDisjointLabels();
 	}
 	
-	public Map<URI, Set<Pair<URI>>> findRedundantAssociativeRelations() {
-		return (Map<URI, Set<Pair<URI>>>) invokeMethod(
-			redundantAssociativeRelationsFinder, 
-			"findRedundantAssociativeRelations");
+	public Map<URI, Set<Pair<URI>>> findRedundantAssociativeRelations() throws OpenRDFException {
+		return redundantAssociativeRelationsFinder.findRedundantAssociativeRelations();
 	}
 	
-	public Map<URI, Set<Pair<URI>>> findNotAssociatedSiblings() {
-		return (Map<URI, Set<Pair<URI>>>) invokeMethod(
-			redundantAssociativeRelationsFinder, 
-			"findNotAssociatedSiblings");
+	public Map<URI, Set<Pair<URI>>> findNotAssociatedSiblings() throws OpenRDFException {
+		return redundantAssociativeRelationsFinder.findNotAssociatedSiblings();
 	}
 	
-	public Set<RelatedConcepts> findRelatedConcepts() {
+	public Set<RelatedConcepts> findRelatedConcepts() throws OpenRDFException {
 		RelatedConceptsFinder relatedConceptsFinder = new RelatedConceptsFinder(vocabRepository);
 		relatedConceptsFinder.setProgressMonitor(progressMonitor);
-		
-		return (Set<RelatedConcepts>) invokeMethod(
-				relatedConceptsFinder, 
-			"findRelatedConcepts",
-			getInvolvedConcepts());
+		return relatedConceptsFinder.findRelatedConcepts(getInvolvedConcepts());
 	}
 	
-	public Map<URI, Set<URI>> analyzeConceptsRank(Float randomSubsetSize_percent) 
+	public Map<URI, Set<URI>> analyzeConceptsRank(Float randomSubsetSize_percent) throws OpenRDFException 
 	{
 		ConceptRanker conceptRanker = new ConceptRanker(
 			vocabRepository, 
 			sparqlEndPoints);
 		conceptRanker.setProgressMonitor(progressMonitor);
-
-		return (Map<URI, Set<URI>>) invokeMethod(
-			conceptRanker, 
-			"analyzeConceptsRank",
-			getAuthoritativeConcepts(),
-			randomSubsetSize_percent);
+		return conceptRanker.analyzeConceptsRank(getAuthoritativeConcepts(), randomSubsetSize_percent);
 	}
 	
-	public Map<Pair<URI>, String> findOmittedInverseRelations() {
-		return (Map<Pair<URI>, String>) invokeMethod(
-			new InverseRelationsChecker(vocabRepository), 
-			"findOmittedInverseRelations");
+	public Map<Pair<URI>, String> findOmittedInverseRelations() throws OpenRDFException {
+		return new InverseRelationsChecker(vocabRepository).findOmittedInverseRelations();
 	}
 	
-	public Set<Pair<URI>> findSolitaryTransitiveRelations() {
-		return (Set<Pair<URI>>) invokeMethod(
-			new SolitaryTransitiveRelationsFinder(vocabRepository), 
-			"findSolitaryTransitiveRelations");		
+	public Set<Pair<URI>> findSolitaryTransitiveRelations() throws OpenRDFException {
+		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolitaryTransitiveRelations();
 	}
 	
-	public float getAverageDocumentationCoverageRatio() 
+	public float getAverageDocumentationCoverageRatio() throws OpenRDFException 
 	{
 		DocumentationCoverageChecker docCovChecker = 
 			new DocumentationCoverageChecker(vocabRepository);
 		docCovChecker.setProgressMonitor(progressMonitor);
-		
-		return (Float) invokeMethod(
-			docCovChecker, 
-			"getAverageDocumentationCoverageRatio",
-			getInvolvedConcepts());
+		return docCovChecker.getAverageDocumentationCoverageRatio(getInvolvedConcepts());
 	}
 	
-	public List<URI> findConceptSchemesWithoutTopConcept() {
-		return (List<URI>) invokeMethod(
-			new ConceptSchemeChecker(vocabRepository), 
-			"findConceptSchemesWithoutTopConcept");	
+	public List<URI> findConceptSchemesWithoutTopConcept() throws OpenRDFException {
+		return new ConceptSchemeChecker(vocabRepository).findConceptSchemesWithoutTopConcept();
 	}
 	
-	public List<URI> findTopConceptsHavingBroaderConcept() {
-		return (List<URI>) invokeMethod(
-			new ConceptSchemeChecker(vocabRepository), 
-			"findTopConceptsHavingBroaderConcept");
+	public List<URI> findTopConceptsHavingBroaderConcept() throws OpenRDFException {
+		return new ConceptSchemeChecker(vocabRepository).findTopConceptsHavingBroaderConcept();
 	}
 	
-	public Collection<Pair<URI>> findAssociativeVsHierarchicalClashes() {
+	public Collection<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
 		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = 
 			new SkosReferenceIntegrityChecker(vocabRepository);
 		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
-		
-		return (Collection<Pair<URI>>) invokeMethod(
-			skosReferenceIntegrityChecker, 
-			"findAssociativeVsHierarchicalClashes");
+		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes();
 	}
 	
-	public Collection<Pair<URI>> findExactVsAssociativeMappingClashes() {
-		return (Collection<Pair<URI>>) invokeMethod(
-			new SkosReferenceIntegrityChecker(vocabRepository), 
-			"findExactVsAssociativeMappingClashes");
+	public Collection<Pair<URI>> findExactVsAssociativeMappingClashes() throws OpenRDFException {
+		return new SkosReferenceIntegrityChecker(vocabRepository).findExactVsAssociativeMappingClashes();
 	}
 	
-	public Set<Pair<URI>> findAmbiguousRelations() {
-		return (Set<Pair<URI>>) invokeMethod(
-			new AmbiguousRelationsFinder(vocabRepository), 
-			"findAmbiguousRelations");
+	public Set<Pair<URI>> findAmbiguousRelations() throws OpenRDFException {
+		return new AmbiguousRelationsFinder(vocabRepository).findAmbiguousRelations();
 	}
 	
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;
-	}
-	
-	private <T> Object invokeMethod(T criterion, String methodName, Object... args) {
-		try {
-			for (Method method :  criterion.getClass().getMethods()) {
-				if (method.getName().equals(methodName)) {
-					return method.invoke(criterion, args);
-				}
-			}
-			throw new NoSuchMechanismException("Method '" +methodName+ 
-				"' not found in class '" +criterion.getClass().getName()+ "'");
-		} 
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 	
 	public void addSparqlEndPoint(String endpointUrl) {

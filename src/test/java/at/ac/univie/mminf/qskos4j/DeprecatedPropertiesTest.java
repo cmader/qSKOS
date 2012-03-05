@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
 
 public class DeprecatedPropertiesTest extends QSkosTestCase {
 	
@@ -23,13 +22,13 @@ public class DeprecatedPropertiesTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testDeprecatedPropertiesCount_1() throws RepositoryException {
+	public void testDeprecatedPropertiesCount_1() throws OpenRDFException {
 		Map<URI, Set<URI>> deprecatedTerms = qSkosConcepts.findDeprecatedProperties();
 		Assert.assertEquals(1, deprecatedTerms.size());
 	}
 
 	@Test
-	public void testDeprecatedPropertiesCount_2() throws RepositoryException {
+	public void testDeprecatedPropertiesCount_2() throws OpenRDFException {
 		Map<URI, Set<URI>> deprecatedTerms = qSkosDeprecatedAndIllegal.findDeprecatedProperties();
 		Assert.assertEquals(9, deprecatedTerms.size());
 	}

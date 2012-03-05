@@ -22,6 +22,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 public abstract class Criterion {
 
 	protected VocabRepository vocabRepository;
+	
 	private IProgressMonitor progressMonitor;
 	private RepositoryConnection connection;
 	
@@ -85,7 +86,7 @@ public abstract class Criterion {
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;
 	}
-	
+		
 	private class MonitoredIterator<T> implements Iterator<T> {
 
 		private Iterator<T> delegate;

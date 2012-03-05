@@ -18,7 +18,7 @@ public class HierarchicalAndAssociativeRelationsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testBothHierarchicallyAndAssociativelyRelatedConceps() {
+	public void testBothHierarchicallyAndAssociativelyRelatedConceps() throws OpenRDFException {
 		Assert.assertEquals(
 			4, 
 			qSkosHierarchicalAndAssociativeRelations.findAmbiguousRelations().size()

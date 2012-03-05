@@ -22,7 +22,7 @@ public class OmittedInverseRelationsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testMissingInverseRelationsCount() {
+	public void testMissingInverseRelationsCount() throws OpenRDFException {
 		Map<Pair<URI>, String> missingRelations = qSkosOmittedInverseRelations.findOmittedInverseRelations();
 		Assert.assertEquals(6, missingRelations.size());
 	}

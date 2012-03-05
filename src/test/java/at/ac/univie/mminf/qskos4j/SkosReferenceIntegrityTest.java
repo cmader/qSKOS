@@ -21,13 +21,13 @@ public class SkosReferenceIntegrityTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testAssociativeVsHierarchicalClashes() {
+	public void testAssociativeVsHierarchicalClashes() throws OpenRDFException {
 		Collection<Pair<URI>> assHierClashes = qSkosReferenceIntegrityRelations.findAssociativeVsHierarchicalClashes();
 		Assert.assertEquals(5, assHierClashes.size());
 	}
 	
 	@Test
-	public void testExactVsAssociativeMappingClashes() {
+	public void testExactVsAssociativeMappingClashes() throws OpenRDFException {
 		Collection<Pair<URI>> exAssClashes = qSkosReferenceIntegrityRelations.findExactVsAssociativeMappingClashes();
 		Assert.assertEquals(3, exAssClashes.size());
 	}

@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
 
 public class ExternalResourcesTest extends QSkosTestCase {
 
@@ -24,13 +23,13 @@ public class ExternalResourcesTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testComponentsExternalLinkCount() throws RepositoryException {
+	public void testComponentsExternalLinkCount() throws OpenRDFException {
 		Map<URI, List<URL>> extLinks = qSkosComponents.findExternalResources();
 		Assert.assertEquals(0, mapEntriesCount(extLinks));
 	}
 	
 	@Test
-	public void testConceptsExternalLinkCount() throws RepositoryException {	
+	public void testConceptsExternalLinkCount() throws OpenRDFException {	
 		Map<URI, List<URL>> extLinks = qSkosConcepts.findExternalResources();
 		Assert.assertEquals(2, mapEntriesCount(extLinks));		
 	}

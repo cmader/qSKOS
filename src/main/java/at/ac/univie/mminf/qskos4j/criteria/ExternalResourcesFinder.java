@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
@@ -37,8 +38,7 @@ public class ExternalResourcesFinder extends Criterion {
 	
 	public Map<URI, List<URL>> findExternalResourcesForConcepts(
 		Set<URI> concepts,
-		String publishingHost) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+		String publishingHost) throws OpenRDFException 
 	{
 		resourcesForConcept = new HashMap<URI, List<URL>>();
 		this.publishingHost = publishingHost;
@@ -52,8 +52,7 @@ public class ExternalResourcesFinder extends Criterion {
 		return resourcesForConcept;
 	}
 	
-	private void findResourcesForConcepts(Set<URI> concepts) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	private void findResourcesForConcepts(Set<URI> concepts) throws OpenRDFException 
 	{
 		Iterator<URI> conceptIt = getMonitoredIterator("finding resources", concepts);
 		

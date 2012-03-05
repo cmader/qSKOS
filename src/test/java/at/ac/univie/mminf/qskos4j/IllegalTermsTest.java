@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
 
 public class IllegalTermsTest extends QSkosTestCase {
 
@@ -22,7 +21,7 @@ public class IllegalTermsTest extends QSkosTestCase {
 	}
 		
 	@Test
-	public void testIllegalTermsCount() throws RepositoryException {
+	public void testIllegalTermsCount() throws OpenRDFException {
 		Map<URI, Set<URI>> deprecatedTerms = qSkosDeprecatedAndIllegal.findIllegalTerms();
 		Assert.assertEquals(12, deprecatedTerms.size());
 	}

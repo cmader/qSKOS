@@ -5,13 +5,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
 
 import at.ac.univie.mminf.qskos4j.criteria.Criterion;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -25,8 +24,7 @@ public class AmbiguousLabelFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public Map<URI, Set<String>> findNotUniquePrefLabels() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public Map<URI, Set<String>> findNotUniquePrefLabels() throws OpenRDFException 
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Set<String>>();
 		
@@ -87,8 +85,7 @@ public class AmbiguousLabelFinder extends Criterion {
 		ambiguousLabels.add(prefLabel.stringValue());
 	}
 	
-	public Map<URI, Set<String>> findNotDisjointLabels() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public Map<URI, Set<String>> findNotDisjointLabels() throws OpenRDFException 
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Set<String>>();
 		

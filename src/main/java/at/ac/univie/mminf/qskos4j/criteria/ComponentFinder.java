@@ -4,11 +4,10 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.transform.TransformerConfigurationException;
-
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
@@ -17,7 +16,6 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
-import org.xml.sax.SAXException;
 
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
@@ -37,8 +35,7 @@ public class ComponentFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public List<Set<URI>> findComponents() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	public List<Set<URI>> findComponents() throws OpenRDFException 
 	{
 		if (graph == null) {
 			TupleQueryResult result = findTriples();
@@ -48,8 +45,7 @@ public class ComponentFinder extends Criterion {
 		return connectedSets;
 	}
 	
-	public void exportComponents(Writer[] writers) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException, TransformerConfigurationException, SAXException
+	public void exportComponents(Writer[] writers) throws OpenRDFException
 	{	
 		if (connectedSets == null) {
 			findComponents();
