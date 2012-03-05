@@ -74,6 +74,14 @@ public class VocEvaluate {
 			evaluate();
 		}
 	}
+
+	private void outputMeasuresDescription() {
+		String formatString = "%4s\t%-35s\t%s\n"; 
+		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
+		for (CriterionDescription critDesc : CriterionDescription.values()) {
+			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
+		}
+	}
 	
 	private void checkVocabFilenameGiven() throws ParameterException
 	{
@@ -95,14 +103,17 @@ public class VocEvaluate {
 		}
 	}
 	
-	private void outputMeasuresDescription() {
-		String formatString = "%4s\t%-30s\t%s\n"; 
-		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
-		for (CriterionDescription critDesc : CriterionDescription.values()) {
-			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
-		}
+	private void setupQSkos() throws OpenRDFException, IOException {
+		qskos = new QSkos(new File(vocabFilenames.get(0)));
+		qskos.setPublishingHost(publishingHost);
+		qskos.setAuthoritativeUriSubstring(authoritativeUriSubstring);
+		qskos.setProgressMonitor(new LoggingProgressMonitor());
+		qskos.setSubsetSize(randomSubsetSize_percent);
+		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
+		
+		System.out.println("evaluating vocab: " +vocabFilenames.get(0));
 	}
-	
+
 	private void performMeasures() {
 		for (CriterionDescription criterion : extractCriteria()) {
 			System.out.println("--- " +criterion.getName());
@@ -180,12 +191,43 @@ public class VocEvaluate {
 	
 	@SuppressWarnings("unchecked")
 	private void outputReport(Object result, CriterionDescription critDesc) {
-		if (critDesc == CriterionDescription.WEAKLY_CONNECTED_COMPONENTS) {
+		switch (critDesc) {
+		
+		case WEAKLY_CONNECTED_COMPONENTS:
 			outputWccReport((Collection<Collection<URI>>) result);
-		}
-		else if (result instanceof Collection) {
-			System.out.println("count: " +((Collection<?>) result).size());
-		}
+			break;
+			
+		case REDUNDANT_ASSOCIATIVE_RELATIONS:
+			outputRarReport((Map<URI, Set<Pair<URI>>>) result);
+			break;
+			
+		case HIERARCHICALLY_AND_ASSOCIATIVELY_RELATED_CONCEPTS:
+		case SOLELY_TRANSITIVELY_RELATED_CONCEPTS:
+			outputSetOfPairsReport((Set<Pair<URI>>) result);
+			break;
+			
+		case UNIDIRECTIONALLY_RELATED_CONCEPTS:
+			outputSetOfPairsReport(((Map<Pair<URI>, String>) result).keySet());
+			break;
+			
+		case CONCEPT_EXT_LINK_AVG:
+			outputCelaReport((Map<URI, List<URL>>) result);
+			break;
+			
+		case LINK_TARGET_AVAILABILITY:
+			outputLtaReport((Map<URL, String>) result);
+			break;
+			
+		case AVG_CONCEPT_INDEGREE:
+			outputAciReport((Map<URI, Set<URI>>) result);
+			break;
+			
+		case HTTP_URI_SCHEME_VIOLATION:
+		case ASS_VS_HIER_RELATION_CLASHES:
+		case EXACT_VS_ASS_MAPPING_CLASHES:
+		default:
+			outputStandardReport(result);
+		}		
 	}
 	
 	private void outputWccReport(Collection<Collection<URI>> result) {
@@ -198,73 +240,76 @@ public class VocEvaluate {
 		System.out.println("count: " +componentCount);
 	}
 	
-	private void setupQSkos() throws OpenRDFException, IOException {
-		qskos = new QSkos(new File(vocabFilenames.get(0)));
-		qskos.setPublishingHost(publishingHost);
-		qskos.setAuthoritativeUriSubstring(authoritativeUriSubstring);
-		qskos.setProgressMonitor(new LoggingProgressMonitor());
+	private void outputRarReport(Map<URI, Set<Pair<URI>>> result) {
+		long pairCount = 0;
 		
-		System.out.println("evaluating vocab: " +vocabFilenames.get(0));
-	}
-		
-	private void findRedundantAssocicativeRelations() {
-		Map<URI, Set<Pair<URI>>> redAssRels = qskos.findRedundantAssociativeRelations();
-		dumpPairMap(redAssRels);
+		if (!result.isEmpty()) {			
+			for (Set<Pair<URI>> pairs : result.values()) {
+				pairCount += pairs.size();
+			}
+			System.out.println("pair count: " +pairCount);
+		}
 		
 		Set<URI> involvedConcepts = new HashSet<URI>();
-		for (Set<Pair<URI>> conceptPairs : redAssRels.values()) {
+		for (Set<Pair<URI>> conceptPairs : result.values()) {
 			involvedConcepts.addAll(getDistinctConceptsFromPairs(conceptPairs));	
 		}
 		
-		System.out.println("concepts involved in redundant associative relations: "+involvedConcepts.size());
+		System.out.println("concept count: "+involvedConcepts.size());
 	}
 	
-	private void findAmbiguousRelations() {
-		Set<Pair<URI>> ambiguousRelations = qskos.findAmbiguousRelations();
-		
-		Set<URI> distinctConcepts = getDistinctConceptsFromPairs(ambiguousRelations);
-		System.out.println("Hierarchically and Associatively Related Concepts: " +distinctConcepts.size());
+	private void outputSetOfPairsReport(Set<Pair<URI>> result) {
+		Set<URI> distinctConcepts = getDistinctConceptsFromPairs(result);
+		System.out.println("concept count: " +distinctConcepts.size());		
 	}
-	
-	private void findOmittedInverseRelations() {
-		Map<Pair<URI>, String> omittedInverseRelations = qskos.findOmittedInverseRelations();
-		//System.out.println("omitted inverse relations: " +omittedInverseRelations.size());
 		
-		Set<URI> distinctConcepts = getDistinctConceptsFromPairs(omittedInverseRelations.keySet());
-		System.out.println("Unidirectionally Related Concepts: " +distinctConcepts.size());		
-	}
-	
-	private void findSolitaryTransitiveRelations() {
-		Set<Pair<URI>> solitaryTransitiveRelations = qskos.findSolitaryTransitiveRelations();
-		//System.out.println("solitary transitive relations: " +solitaryTransitiveRelations.size());
-		
-		Set<URI> distinctConcepts = getDistinctConceptsFromPairs(solitaryTransitiveRelations);
-		System.out.println("Solely Transitively Related Concepts: " +distinctConcepts.size());
-	}
-	
-	private void getExternalLinkAverage() {
-		Map<URI, List<URL>> extResources = qskos.findExternalResources();
-		
+	private void outputCelaReport(Map<URI, List<URL>> result) {
 		List<URL> allExtUrls = new ArrayList<URL>();
-		for (List<URL> extUrls : extResources.values()) {
+		for (List<URL> extUrls : result.values()) {
 			allExtUrls.addAll(extUrls);
 		}
 		
-		float extLinkAvg = (float) allExtUrls.size() / (float) extResources.keySet().size();
-		System.out.println("Concept External Link Average: " +extLinkAvg);
+		float extLinkAvg = (float) allExtUrls.size() / (float) result.keySet().size();
+		System.out.println("value: " +extLinkAvg);
 	}
 	
-	private void findNonHttpResources() {
-		Set<String> nonHttpResources = qskos.findNonHttpResources();
-		System.out.println("HTTP URI Scheme Violation: "+nonHttpResources.size());				
+	private void outputLtaReport(Map<URL, String> result) {
+		long availableCount = 0, notAvailableCount = 0;
+		
+		for (URL url : result.keySet()) {
+			String contentType = result.get(url);
+			if (contentType == null) {
+				notAvailableCount++;
+				System.out.println(url.toString());
+			}
+			else {
+				availableCount++;
+			}
+		}
+		
+		if (randomSubsetSize_percent != null) {
+			availableCount *= 100 / randomSubsetSize_percent;
+			notAvailableCount *= 100 / randomSubsetSize_percent;
+		}
+		
+		System.out.println("available: " +availableCount);
+		System.out.println("not available: "+notAvailableCount);
 	}
 	
-	private void analyzeConceptsRank() {
-		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
-		Map<URI, Set<URI>> rankedConcepts = qskos.analyzeConceptsRank(randomSubsetSize_percent);
-		dumpAvgConceptRank(rankedConcepts);
+	private void outputAciReport(Map<URI, Set<URI>> result) {
+		long referencingResourcesCount = 0;
+		
+		float avgConceptRank = 0;
+		if (result.size() != 0) {
+			avgConceptRank = (float) referencingResourcesCount / (float) result.size();
+		}
+		System.out.println("value: " +avgConceptRank);
 	}
 	
+	private void outputStandardReport(Object result) {
+		System.out.println("count: " +((Collection<?>) result).size());
+	}
+		
 	private void findIllegalTerms() {
 		Map<URI, Set<URI>> illegalTerms = qskos.findIllegalTerms();
 		System.out.println("illegal SKOS terms: " +illegalTerms.size());
@@ -327,13 +372,6 @@ public class VocEvaluate {
 		System.out.println("Concept Documentation Coverage Ratio: " +avgDocCovRatio);
 
 	}
-	
-	private void checkSkosReferenceIntegrity() {
-		Collection<Pair<URI>> assHierClashes = qskos.findAssociativeVsHierarchicalClashes();
-		System.out.println("associative vs. hierarchical relation clashes: " +assHierClashes.size());
-		Collection<Pair<URI>> exAssMapClashes = qskos.findExactVsAssociativeMappingClashes();
-		System.out.println("exact vs. associative mapping clashes: " +exAssMapClashes.size());
-	}
 		
 	private void checkResourceAvailability() {
 		Map<URL, String> resourceAvailability = qskos.checkResourceAvailability(randomSubsetSize_percent);
@@ -350,78 +388,5 @@ public class VocEvaluate {
 		
 		return distinctConcepts;
 	}
-	
-	private void dumpAvailableResources(Map<URL, String> resourceAvailability)
-	{
-		long availableCount = 0, notAvailableCount = 0;
 		
-		for (URL url : resourceAvailability.keySet()) {
-			String contentType = resourceAvailability.get(url);
-			if (contentType == null) {
-				notAvailableCount++;
-				System.out.println(url.toString());
-			}
-			else {
-				availableCount++;
-			}
-		}
-		
-		if (randomSubsetSize_percent != null) {
-			availableCount *= 100 / randomSubsetSize_percent;
-			notAvailableCount *= 100 / randomSubsetSize_percent;
-		}
-		
-		System.out.println("Link Target Unavailability");
-		System.out.println("available: " +availableCount);
-		System.out.println("not available: "+notAvailableCount);
-	}
-	
-	private void dumpAvgConceptRank(Map<URI, Set<URI>> rankedConcepts)
-	{
-		long referencingResourcesCount = 0;
-		/*
-		for (Set<URI> referencingResources : rankedConcepts.values()) {
-			referencingResourcesCount += referencingResources.size();
-			if (!referencingResources.isEmpty()) {
-				int i = 0;
-				for (URI resource : referencingResources) {
-					if (i < 10) {
-						System.out.println(resource.stringValue());
-					}
-					else {
-						System.out.println("...");
-						break;
-					}
-					i++;
-				}
-			}
-		}*/
-		
-		float avgConceptRank = 0;
-		if (rankedConcepts.size() != 0) {
-			avgConceptRank = (float) referencingResourcesCount / (float) rankedConcepts.size();
-		}
-		System.out.println("Average Concept In-degree: " +avgConceptRank);
-	}
-	
-	private static void dumpPairMap(Map<URI, Set<Pair<URI>>> map) {
-		System.out.println("Redundant Associative Relations Count:");
-		if (map.isEmpty()) {
-			System.out.println("empty");
-		}
-		else {
-			/*
-			URI firstKey = map.keySet().iterator().next();
-			System.out.println(firstKey);
-			System.out.println(map.get(firstKey));
-			*/
-			
-			long results = 0;
-			for (Set<Pair<URI>> pairs : map.values()) {
-				results += pairs.size();
-			}
-			System.out.println("pair count: " +results);
-		}
-	}
-
 }

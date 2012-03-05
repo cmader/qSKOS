@@ -57,6 +57,7 @@ public class QSkos {
 	private IProgressMonitor progressMonitor;
 	private String publishingHost, authoritativeUriSubstring;
 	private Integer urlDereferencingDelay;
+	private Float randomSubsetSize_percent;
 	
 	private Set<URI> involvedConcepts, authoritativeConcepts;
 	
@@ -176,12 +177,7 @@ public class QSkos {
 		return extResourcesFinder.findExternalResourcesForConcepts(getInvolvedConcepts(), publishingHost);
 	}
 	
-	public Map<URL, String> checkResourceAvailability() throws OpenRDFException {
-		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		return resourceAvailabilityChecker.checkResourceAvailability(null, urlDereferencingDelay);
-	}
-	
-	public Map<URL, String> checkResourceAvailability(Float randomSubsetSize_percent) throws OpenRDFException 
+	public Map<URL, String> checkResourceAvailability() throws OpenRDFException 
 	{
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
 		return resourceAvailabilityChecker.checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelay);
@@ -236,7 +232,7 @@ public class QSkos {
 		return relatedConceptsFinder.findRelatedConcepts(getInvolvedConcepts());
 	}
 	
-	public Map<URI, Set<URI>> analyzeConceptsRank(Float randomSubsetSize_percent) throws OpenRDFException 
+	public Map<URI, Set<URI>> analyzeConceptsRank() throws OpenRDFException 
 	{
 		ConceptRanker conceptRanker = new ConceptRanker(
 			vocabRepository, 
@@ -302,6 +298,10 @@ public class QSkos {
 	
 	public void setUrlDereferencingDelay(int delayMillis) {
 		urlDereferencingDelay = delayMillis;
+	}
+	
+	public void setSubsetSize(Float subsetSizePercent) {
+		randomSubsetSize_percent = subsetSizePercent;
 	}
 		
 }
