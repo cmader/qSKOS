@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -19,14 +20,12 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.util.Pair;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
-
-import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.criteria.ExternalResourcesFinder;
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
-import at.ac.univie.mminf.qskos4j.util.Pair;
 
 public class VocEvaluate {
 	
@@ -35,7 +34,7 @@ public class VocEvaluate {
 	@Parameter(description = "vocabularyfile")
 	private List<String> vocabFilenames;
 	
-	@Parameter(names = {"-h", "--publishing-host"}, description = "Publishing host")
+	@Parameter(names = {"-h", "--publishing-host"}, description = "Name of publishing host")
 	private String publishingHost;
 	
 	@Parameter(names = {"-a", "--auth-uri-substring"}, description = "Authoritative URI substring")
@@ -44,10 +43,10 @@ public class VocEvaluate {
 	@Parameter(names = {"-s", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
 	private Float randomSubsetSize_percent;
 
-	@Parameter(names = {"-l", "--list-measures"}, description = "Output a list of all available measures")
-	private boolean outputMeasures;
+	@Parameter(names = {"-l", "--list-measures"}, description = "Output a list of all available measure IDs")
+	private Boolean outputMeasures;
 	
-	@Parameter(names = {"-m", "--use-measures"}, description = "Comma-separated list of measures to perform")
+	@Parameter(names = {"-m", "--use-measures"}, description = "Comma-separated list of measure IDs to perform")
 	private String selectedCriteria;
 	
 	private QSkos qskos;
@@ -66,7 +65,7 @@ public class VocEvaluate {
 	}
 	
 	private void listMeasuresOrEvaluate() {
-		if (outputMeasures) {
+		if (outputMeasures != null && outputMeasures == true) {
 			outputMeasuresDescription();
 		}
 		else {
@@ -76,7 +75,7 @@ public class VocEvaluate {
 	}
 
 	private void outputMeasuresDescription() {
-		String formatString = "%4s\t%-35s\t%s\n"; 
+		String formatString = "%4s\t%-50s\t%s\n"; 
 		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
 		for (CriterionDescription critDesc : CriterionDescription.values()) {
 			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
@@ -133,48 +132,18 @@ public class VocEvaluate {
 			}
 		}
 	}	
-		/*	
-			System.out.println("-- Graph-based criteria --");
-			findConcepts();
-			findComponents();
-			findCycles();
-			
-			System.out.println("-- Structure-centric criteria --");
-			findRedundantAssocicativeRelations();
-			findAmbiguousRelations();
-			findOmittedInverseRelations();
-			findSolitaryTransitiveRelations();
-			
-			System.out.println("-- Linked Data criteria --");
-			getExternalLinkAverage();
-			findNonHttpResources();
-			checkResourceAvailability();
-			analyzeConceptsRank();
-			
-			System.out.println("-- SKOS-specific criteria --");
-			checkSkosReferenceIntegrity();
-			findIllegalTerms();
-			findDeprecatedProperties();
-			findConceptSchemesWithoutTopConcept();
-			findTopConceptsHavingBroaderConcept();
-			
-			System.out.println("-- Labeling issues --");
-			findMissingLangTags();
-			getIncompleteLanguageCoverage();
-			findAmbiguouslyLabeledConcepts();
-			
-			System.out.println("-- Other criteria --");
-			findDocumentationCoverage();
-			findRelatedConcepts();
-		*/
-	
 	
 	private List<CriterionDescription> extractCriteria() {
 		List<CriterionDescription> criteria = new ArrayList<CriterionDescription>();
 		
-		StringTokenizer tokenizer = new StringTokenizer(selectedCriteria, ",");
-		while (tokenizer.hasMoreElements()) {
-			criteria.add(CriterionDescription.findById(tokenizer.nextToken()));
+		if (selectedCriteria == null) {
+			criteria = Arrays.asList(CriterionDescription.values());
+		}
+		else {		
+			StringTokenizer tokenizer = new StringTokenizer(selectedCriteria, ",");
+			while (tokenizer.hasMoreElements()) {
+				criteria.add(CriterionDescription.findById(tokenizer.nextToken()));
+			}
 		}
 		
 		return criteria;
@@ -239,6 +208,8 @@ public class VocEvaluate {
 		case EXACT_VS_ASS_MAPPING_CLASHES:
 		case OMITTED_TOP_CONCEPTS:
 		case TOP_CONCEPTS_HAVING_BROADER:
+		case SEM_RELATED_CONCEPTS:
+		case AVG_DOC_COVERAGE:
 		default:
 			outputStandardReport(result);
 		}		
@@ -321,25 +292,14 @@ public class VocEvaluate {
 	}
 	
 	private void outputStandardReport(Object result) {
-		System.out.println("count: " +((Collection<?>) result).size());
+		if (result instanceof Collection) {
+			System.out.println("count: " +((Collection<?>) result).size());
+		}
+		else if (result instanceof Number) {
+			System.out.println("value: " +result.toString());
+		}
 	}
-			
-	private void findRelatedConcepts() {
-		Set<RelatedConcepts> relatedConcepts = qskos.findRelatedConcepts();
-		System.out.println("Unconnected Potentially Semantically Related Concepts: " +relatedConcepts.size());
-	}
-	
-	private void findDocumentationCoverage() {
-		float avgDocCovRatio = qskos.getAverageDocumentationCoverageRatio();
-		System.out.println("Concept Documentation Coverage Ratio: " +avgDocCovRatio);
-
-	}
-		
-	private void checkResourceAvailability() {
-		Map<URL, String> resourceAvailability = qskos.checkResourceAvailability(randomSubsetSize_percent);
-		dumpAvailableResources(resourceAvailability);
-	}
-	
+						
 	private Set<URI> getDistinctConceptsFromPairs(Set<Pair<URI>> pairs) {
 		Set<URI> distinctConcepts = new HashSet<URI>();
 		

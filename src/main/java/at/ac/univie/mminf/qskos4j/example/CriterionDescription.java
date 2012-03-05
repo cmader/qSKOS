@@ -82,11 +82,11 @@ enum CriterionDescription {
 		"Top Concepts Having Broader Concepts",
 		"Finds top concepts internal to the vocabulary hierarchy tree",
 		"findTopConceptsHavingBroaderConcept"),
+	
 	MISSING_LANG_TAGS("mlt",
 		"Language Tag Support",
 		"Finds missing language tags of text literals",
 		"findMissingLanguageTags"),
-	
 	CONCEPTS_INCOMPLETE_LANG_COVERAGE("cilc",	
 		"Concepts With Incomplete Language Coverage",
 		"Finds concepts lacking description in languages that are present for other concepts",
@@ -100,6 +100,14 @@ enum CriterionDescription {
 		"Finds concepts with identical entries for different label types",
 		"findNotDisjointLabels"),
 		
+	SEM_RELATED_CONCEPTS("src",	
+		"Potentially Semantically Related Concepts",
+		"Finds concepts with similar (identical) labels",
+		"findRelatedConcepts"),
+	AVG_DOC_COVERAGE("adc",
+		"Concept Documentation Coverage Ratio",
+		"Calculates average use of documentation properties per concept",
+		"getAverageDocumentationCoverageRatio"),
 		
 	NULL_DESC("", "", "", "");
 	

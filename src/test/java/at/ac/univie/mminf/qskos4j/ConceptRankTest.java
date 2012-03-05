@@ -25,7 +25,7 @@ public class ConceptRankTest extends QSkosTestCase {
 		qSkosRankConcepts.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
 		qSkosRankConcepts.setPublishingHost("dbpedia.org");
-		Map<URI, Set<URI>> conceptRank = qSkosRankConcepts.analyzeConceptsRank(null);
+		Map<URI, Set<URI>> conceptRank = qSkosRankConcepts.analyzeConceptsRank();
 		for (URI concept : conceptRank.keySet()) {
 			if (concept.stringValue().equals("http://dbpedia.org/resource/Michael_Jackson")) 
 			{
