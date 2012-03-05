@@ -75,7 +75,7 @@ public class VocEvaluate {
 	}
 
 	private void outputMeasuresDescription() {
-		String formatString = "%4s\t%-50s\t%s\n"; 
+		String formatString = "%4s\t%-50s\t%-20s\n"; 
 		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
 		for (CriterionDescription critDesc : CriterionDescription.values()) {
 			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
@@ -210,6 +210,7 @@ public class VocEvaluate {
 		case TOP_CONCEPTS_HAVING_BROADER:
 		case SEM_RELATED_CONCEPTS:
 		case AVG_DOC_COVERAGE:
+		case LEXICAL_RELATIONS_COUNT:
 		default:
 			outputStandardReport(result);
 		}		

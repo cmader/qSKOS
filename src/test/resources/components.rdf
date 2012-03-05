@@ -98,7 +98,12 @@
   </rdf:Description>
 	<rdf:Description rdf:about="conceptP">
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<myonto:myPrefLabel>customPrefLabel</myonto:myPrefLabel>
 	</rdf:Description>
+
+	<rdf:Description rdf:about="http://localhost/myonto#myPrefLabel">
+		<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+  </rdf:Description>
 
 	<!-- 2 more tricky components -->
 	<rdf:Description rdf:about="descriptor/1">

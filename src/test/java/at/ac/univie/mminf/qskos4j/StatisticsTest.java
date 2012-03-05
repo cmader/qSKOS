@@ -55,4 +55,10 @@ public class StatisticsTest extends QSkosTestCase {
 		Set<URI> authoritativeConcepts = qSkosConcepts.getAuthoritativeConcepts();
 		Assert.assertEquals(9, authoritativeConcepts.size());
 	}
+	
+	@Test
+	public void testLexicalRelationsCount() throws OpenRDFException
+	{
+		Assert.assertEquals(29, qSkosComponents.findLexicalRelationsCount());
+	}
 }
