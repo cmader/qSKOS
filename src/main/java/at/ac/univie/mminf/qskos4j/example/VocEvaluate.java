@@ -222,9 +222,23 @@ public class VocEvaluate {
 			outputAciReport((Map<URI, Set<URI>>) result);
 			break;
 			
+		case ILLEGAL_TERMS:
+		case DEPRECATED_PROP_USAGE:
+		case MISSING_LANG_TAGS:
+			outputStandardReport(((Map<URI, Set<URI>>) result).keySet());
+			break;
+			
+		case CONCEPTS_INCOMPLETE_LANG_COVERAGE:
+		case AMBIGUOUS_PREFLABELED_CONCEPTS:
+		case NOT_DISJOINT_LABELED_CONCEPTS:
+			outputStandardReport(((Map<Resource, Set<String>>) result).keySet());
+			break;
+			
 		case HTTP_URI_SCHEME_VIOLATION:
 		case ASS_VS_HIER_RELATION_CLASHES:
 		case EXACT_VS_ASS_MAPPING_CLASHES:
+		case OMITTED_TOP_CONCEPTS:
+		case TOP_CONCEPTS_HAVING_BROADER:
 		default:
 			outputStandardReport(result);
 		}		
@@ -309,62 +323,10 @@ public class VocEvaluate {
 	private void outputStandardReport(Object result) {
 		System.out.println("count: " +((Collection<?>) result).size());
 	}
-		
-	private void findIllegalTerms() {
-		Map<URI, Set<URI>> illegalTerms = qskos.findIllegalTerms();
-		System.out.println("illegal SKOS terms: " +illegalTerms.size());
-	}
-	
-	private void findDeprecatedProperties() {
-		Map<URI, Set<URI>> deprProps = qskos.findDeprecatedProperties();
-		System.out.println("Deprecated property usage: " +deprProps.size());
-	}
-	
-	private void findConceptSchemesWithoutTopConcept() {
-		List<URI> conceptSchemes = qskos.findConceptSchemesWithoutTopConcept();
-		System.out.println("Omitted Top Concepts: " +conceptSchemes.size());
-	}
-	
-	private void findTopConceptsHavingBroaderConcept() {
-		List<URI> topConcepts = qskos.findTopConceptsHavingBroaderConcept();
-		System.out.println("Top Concepts Having Broader Concepts: " +topConcepts.size());	
-	}
-	
-	private void findMissingLangTags() {
-		Map<String, Set<Resource>> missingLangTags = qskos.findMissingLanguageTags();
-		System.out.println("Language Tag Support: " +missingLangTags.keySet().size());
-	}
-	
-	private void getIncompleteLanguageCoverage() {
-		Map<Resource, Set<String>> incompleteLangCov = qskos.getIncompleteLanguageCoverage();
-		System.out.println("Concepts With Incomplete Language Coverage: " +incompleteLangCov.size());
-		
-		/*
-		Set<URI> conceptsMissingSpecificLanguage = new HashSet<URI>();
-		
-		for (URI concept : incompleteLangCov.keySet()) {
-			Set<String> missingLangs = incompleteLangCov.get(concept);
 			
-			if (missingLangs.contains("en")) {
-				conceptsMissingSpecificLanguage.add(concept);
-			}
-		}
-		
-		System.out.println("concepts missing english description: " +conceptsMissingSpecificLanguage.size());
-		*/
-	}
-	
 	private void findRelatedConcepts() {
 		Set<RelatedConcepts> relatedConcepts = qskos.findRelatedConcepts();
 		System.out.println("Unconnected Potentially Semantically Related Concepts: " +relatedConcepts.size());
-	}
-	
-	private void findAmbiguouslyLabeledConcepts() {
-		Map<URI, Set<String>> nonUniqPrefLabels = qskos.findNotUniquePrefLabels();
-		System.out.println("not unique preflabels: " +nonUniqPrefLabels.size());
-		
-		Map<URI, Set<String>> notDisjointLabels = qskos.findNotDisjointLabels();
-		System.out.println("not disjoint labels: " +notDisjointLabels.size());
 	}
 	
 	private void findDocumentationCoverage() {
