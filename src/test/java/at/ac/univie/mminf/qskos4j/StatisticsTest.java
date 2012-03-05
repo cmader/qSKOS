@@ -38,7 +38,7 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test
 	public void testTripleCount_2() throws RepositoryException {
 		long tripleCount = qSkosComponents.getTripleCount();
-		Assert.assertEquals(71, tripleCount);
+		Assert.assertEquals(73, tripleCount);
 	}
 	
 	@Test

@@ -24,7 +24,7 @@ public class MissingLanguageTagTest extends QSkosTestCase {
 	@Test
 	public void testMissingLangTagCount_1() throws OpenRDFException {
 		Map<String, Set<Resource>> missingLangTags = qSkosComponents.findMissingLanguageTags();
-		Assert.assertEquals(2, missingLangTags.size());
+		Assert.assertEquals(3, missingLangTags.size());
 	}
 	
 	@Test
