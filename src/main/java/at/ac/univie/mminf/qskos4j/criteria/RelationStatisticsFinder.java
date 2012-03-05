@@ -10,27 +10,27 @@ import org.openrdf.query.TupleQueryResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class LexicalRelationsFinder extends Criterion {
+public class RelationStatisticsFinder extends Criterion {
 
-	private long relationsCount = 0;
-	
-	public LexicalRelationsFinder(VocabRepository vocabRepository) {
+	public RelationStatisticsFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
 	public long findLexicalRelationsCount(Set<URI> allConcepts) 
 		throws OpenRDFException
-	{		
+	{	
+		long relationsCount = 0; 
+		
 		for (URI concept : allConcepts) {
 			TupleQueryResult result = queryRepository(createLexicalLabelQuery(concept));
-			addToRelationsCount(result);
+			relationsCount += countResults(result);
 		}
 		
 		return relationsCount;
 	}
 	
 	private String createLexicalLabelQuery(URI concept) {
-		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT ?labelType ?value WHERE {" +
 				"<" +concept.stringValue()+ "> ?labelType ?value ." +
 				"{?labelType rdfs:subPropertyOf* skos:prefLabel}" +
@@ -40,13 +40,32 @@ public class LexicalRelationsFinder extends Criterion {
 				"{?labelType rdfs:subPropertyOf* skos:hiddenLabel}" +
 			"}";	
 	}
-	
-	private void addToRelationsCount(TupleQueryResult result) throws QueryEvaluationException 
+			
+	private long countResults(TupleQueryResult result) throws QueryEvaluationException 
 	{
+		long count = 0;
+		
 		while (result.hasNext()) {
-			relationsCount++;
+			count++;
 			result.next();
-		}	
+		}
+		
+		return count;
+	}
+	
+	public long findSemanticRelations() 
+		throws OpenRDFException
+	{
+		TupleQueryResult result = queryRepository(createSemanticRelationsQuery());
+		return countResults(result);
 	}
 
+	private String createSemanticRelationsQuery() {
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
+			"SELECT * WHERE {" +
+				"?concept ?relationType ?otherConcept ."+
+				"?relationType rdfs:subPropertyOf* skos:semanticRelation ."+
+			"}";	
+	}
+	
 }

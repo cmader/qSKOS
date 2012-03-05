@@ -211,6 +211,7 @@ public class VocEvaluate {
 		case SEM_RELATED_CONCEPTS:
 		case AVG_DOC_COVERAGE:
 		case LEXICAL_RELATIONS_COUNT:
+		case SEMANTIC_RELATIONS_COUNT:
 		default:
 			outputStandardReport(result);
 		}		

@@ -29,7 +29,7 @@ import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
 import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageCoverageChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageTagChecker;
-import at.ac.univie.mminf.qskos4j.criteria.LexicalRelationsFinder;
+import at.ac.univie.mminf.qskos4j.criteria.RelationStatisticsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.RedundantAssociativeRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ResourceAvailabilityChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SkosReferenceIntegrityChecker;
@@ -157,7 +157,12 @@ public class QSkos {
 	
 	public long findLexicalRelationsCount() throws OpenRDFException
 	{
-		return new LexicalRelationsFinder(vocabRepository).findLexicalRelationsCount(getInvolvedConcepts());
+		return new RelationStatisticsFinder(vocabRepository).findLexicalRelationsCount(getInvolvedConcepts());
+	}
+	
+	public long findSemanticRelations() throws OpenRDFException
+	{
+		return new RelationStatisticsFinder(vocabRepository).findSemanticRelations();
 	}
 	
 	public List<Set<URI>> findComponents() throws OpenRDFException {

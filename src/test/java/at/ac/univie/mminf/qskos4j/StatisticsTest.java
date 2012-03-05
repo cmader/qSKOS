@@ -61,4 +61,11 @@ public class StatisticsTest extends QSkosTestCase {
 	{
 		Assert.assertEquals(29, qSkosComponents.findLexicalRelationsCount());
 	}
+	
+	@Test
+	public void testSemanticRelationsCount() throws OpenRDFException
+	{
+		Assert.assertEquals(18, qSkosComponents.findSemanticRelations());
+	}
+	
 }
