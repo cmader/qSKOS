@@ -160,9 +160,19 @@ public class QSkos {
 		return new RelationStatisticsFinder(vocabRepository).findLexicalRelationsCount(getInvolvedConcepts());
 	}
 	
-	public long findSemanticRelations() throws OpenRDFException
+	public long findSemanticRelationsCount() throws OpenRDFException
 	{
-		return new RelationStatisticsFinder(vocabRepository).findSemanticRelations();
+		return new RelationStatisticsFinder(vocabRepository).findSemanticRelationsCount();
+	}
+	
+	public long findAggregationRelations() throws OpenRDFException
+	{
+		return new RelationStatisticsFinder(vocabRepository).findAggregationRelationsCount();
+	}
+	
+	public long findConceptSchemeCount() throws OpenRDFException
+	{
+		return new RelationStatisticsFinder(vocabRepository).findConceptSchemeCount();
 	}
 	
 	public List<Set<URI>> findComponents() throws OpenRDFException {

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:myonto="http://localhost/myonto#">
+
+	<rdf:Description rdf:about="conceptScheme1">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptScheme2">
+		<skos:hasTopConcept rdf:resource="someConcept"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptScheme3">
+		<rdf:type rdf:resource="http://localhost/myonto#myConceptScheme"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptScheme4">
+	</rdf:Description>
+
+	<rdf:Description rdf:about="conceptScheme5">
+		<myonto:myHasTopConcept rdf:resource="anotherConcept"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="collection1">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="collection2">
+		<skos:hasMember rdf:resource="someConcept"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="orderedCollection">
+		<skos:memberList rdf:resource="someList"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="http://localhost/myonto#myConceptScheme">
+		<rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+  </rdf:Description>
+
+	<rdf:Description rdf:about="http://localhost/myonto#myHasTopConcept">
+		<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept"/>
+  </rdf:Description>
+
+	<rdf:Description rdf:about="someConcept">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:topConceptOf rdf:resource="conceptScheme1"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="anotherConcept">
+		<skos:inScheme rdf:resource="conceptScheme4"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="someList">
+		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+	</rdf:Description>
+
+</rdf:RDF>

@@ -13,12 +13,13 @@ import org.openrdf.repository.RepositoryException;
 
 public class StatisticsTest extends QSkosTestCase {
 	
-	private QSkos qSkosConcepts, qSkosComponents;
+	private QSkos qSkosConcepts, qSkosComponents, qSkosAggregations;
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosConcepts = setUpInstance("concepts.rdf");
 		qSkosComponents = setUpInstance("components.rdf");
+		qSkosAggregations = setUpInstance("aggregations.rdf");
 	}
 	
 	@Test
@@ -65,7 +66,19 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test
 	public void testSemanticRelationsCount() throws OpenRDFException
 	{
-		Assert.assertEquals(18, qSkosComponents.findSemanticRelations());
+		Assert.assertEquals(18, qSkosComponents.findSemanticRelationsCount());
+	}
+	
+	@Test
+	public void testAggregationRelationsCount() throws OpenRDFException
+	{
+		Assert.assertEquals(6, qSkosAggregations.findAggregationRelations());
+	}
+	
+	@Test
+	public void testConceptSchemeCount() throws OpenRDFException
+	{
+		Assert.assertEquals(5, qSkosAggregations.findConceptSchemeCount());
 	}
 	
 }

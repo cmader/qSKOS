@@ -53,7 +53,7 @@ public class RelationStatisticsFinder extends Criterion {
 		return count;
 	}
 	
-	public long findSemanticRelations() 
+	public long findSemanticRelationsCount() 
 		throws OpenRDFException
 	{
 		TupleQueryResult result = queryRepository(createSemanticRelationsQuery());
@@ -68,4 +68,50 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";	
 	}
 	
+	public long findAggregationRelationsCount() 
+		throws OpenRDFException
+	{
+		TupleQueryResult result = queryRepository(createAggregationRelationsQuery());
+		return countResults(result);
+	}
+	
+	private String createAggregationRelationsQuery() {
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
+			"SELECT * WHERE {" +
+				"?res1 ?relationType ?res2 ."+
+				"{?relationType rdfs:subPropertyOf* skos:topConceptOf}" +
+				"UNION" +
+				"{?relationType rdfs:subPropertyOf* skos:hasTopConcept}" +
+				"UNION" +
+				"{?relationType rdfs:subPropertyOf* skos:inScheme}"+
+				"UNION" +
+				"{?relationType rdfs:subPropertyOf* skos:member}"+
+				"UNION" +
+				"{?relationType rdfs:subPropertyOf* skos:memberList}"+
+			"}";
+	}
+	
+	public long findConceptSchemeCount() 
+		throws OpenRDFException
+	{
+		TupleQueryResult result = queryRepository(createConceptSchemeQuery());		
+		return countResults(result);
+	}
+	
+	private String createConceptSchemeQuery() {
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.RDF +
+			"SELECT DISTINCT ?conceptScheme WHERE {" +
+				"{?conceptScheme rdf:type/rdfs:subClassOf* skos:ConceptScheme}" +
+				"UNION" +
+				"{?conceptScheme ?hasTopConcept ?concept . ?hasTopConcept rdfs:subPropertyOf* skos:hasTopConcept}" +
+				"UNION" +
+				"{?concept ?topConceptOf ?conceptScheme . ?topConceptOf rdfs:subPropertyOf* skos:topConceptOf}" +
+				"UNION" +
+				"{?concept ?inScheme ?conceptScheme . ?inScheme rdfs:subPropertyOf* skos:inScheme}"+
+			"}";	
+	}
+	
+	public long findCollectionCount() {
+		return 0;
+	}
 }

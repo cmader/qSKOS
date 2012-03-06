@@ -75,7 +75,7 @@ public class VocEvaluate {
 	}
 
 	private void outputMeasuresDescription() {
-		String formatString = "%4s\t%-50s\t%-20s\n"; 
+		String formatString = "%4s\t%-55s\t%-50s\n"; 
 		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
 		for (CriterionDescription critDesc : CriterionDescription.values()) {
 			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());

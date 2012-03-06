@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.example;
 
 enum CriterionDescription {
 
+	// Statistics
 	TOTAL_CONCEPTS("c", 
 		"All Concepts", 
 		"Finds all SKOS concepts involved in the vocabulary", 
@@ -17,8 +18,17 @@ enum CriterionDescription {
 	SEMANTIC_RELATIONS_COUNT("sr",
 		"Semantic Relations Count",
 		"Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",
-		"findSemanticRelations"),
+		"findSemanticRelationsCount"),
+	AGGREGATION_RELATIONS_COUNT("ar",
+		"Aggregation Relations Count",
+		"Finds the number of statements relating resources to ConceptSchemes or Collections",
+		"findAggregationRelations"),
+	CONCEPT_SCHEME_COUNT("cs",
+		"Concept Scheme Count",
+		"Finds the number of involved ConceptSchemes",
+		"findConceptSchemeCount"),
 	
+	// Graph-based measures
 	LOOSE_CONCEPTS("lc", 
 		"Loose Concepts", 
 		"Finds all loose concepts as defined in https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC1_Relative_Number_of_Loose_Concepts", 
@@ -32,6 +42,7 @@ enum CriterionDescription {
 		"Finds all cycle containing components, for additional information see https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC3_Cyclic_Hierarchical_Relations", 
 		"findHierarchicalCycles"),
 	
+	// Structure-related measures
 	REDUNDANT_ASSOCIATIVE_RELATIONS("rar", 
 		"Redundant Associative Relations", 
 		"Two concepts are sibling, but also connected by an associative relation", 
@@ -49,6 +60,7 @@ enum CriterionDescription {
 		"Concepts only related by skos:broaderTransitive or skos:narrowerTransitive, see https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC_ST4_Solely_Transitively_Related_Concepts",
 		"findSolitaryTransitiveRelations"),	
 	
+	// Linked Data related measures
 	CONCEPT_EXT_LINK_AVG("cela",
 		"Concept External Link Average",
 		"Average count of each concept's links to external resources",
@@ -66,6 +78,7 @@ enum CriterionDescription {
 		"Average number of other datasets referencing concepts of the vocabulary",
 		"analyzeConceptsRank"),
 	
+	// SKOS related measures	
 	ASS_VS_HIER_RELATION_CLASHES("ahrc",
 		"Associative vs. Hierarchical Relation Clashes",
 		"Covers condition S27 from the SKOS reference document",
@@ -91,6 +104,7 @@ enum CriterionDescription {
 		"Finds top concepts internal to the vocabulary hierarchy tree",
 		"findTopConceptsHavingBroaderConcept"),
 	
+	// Labeling issues	
 	MISSING_LANG_TAGS("mlt",
 		"Language Tag Support",
 		"Finds missing language tags of text literals",
@@ -108,6 +122,7 @@ enum CriterionDescription {
 		"Finds concepts with identical entries for different label types",
 		"findNotDisjointLabels"),
 		
+	// Other measures	
 	SEM_RELATED_CONCEPTS("src",	
 		"Potentially Semantically Related Concepts",
 		"Finds concepts with similar (identical) labels",
