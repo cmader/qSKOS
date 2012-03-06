@@ -18,6 +18,7 @@ import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -73,7 +74,7 @@ public class ConceptRanker extends Criterion {
 			return authoritativeConcepts;
 		}
 		else {
-			return createRandomSubset(authoritativeConcepts, randomSubsetSize_percent);
+			return new RandomSubSet<URI>(authoritativeConcepts, randomSubsetSize_percent);
 		}
 	}
 	

@@ -19,6 +19,7 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
@@ -165,7 +166,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 		if (randomSubsetSize_percent == null) {
 			return httpURIs;
 		}
-		return createRandomSubset(httpURIs, randomSubsetSize_percent);
+		return new RandomSubSet<URI>(httpURIs, randomSubsetSize_percent);
 	}
 	
 	private void addToResults(URI uri) {
