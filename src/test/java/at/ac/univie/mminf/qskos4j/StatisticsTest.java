@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -25,7 +24,7 @@ public class StatisticsTest extends QSkosTestCase {
 	
 	@Test
 	public void testTripleCount_1() throws RepositoryException {
-		long tripleCount = qSkosConcepts.getTripleCount();
+		long tripleCount = qSkosConcepts.getTripleCount().getData();
 		Assert.assertEquals(20, tripleCount);		
 	}
 	
@@ -39,7 +38,7 @@ public class StatisticsTest extends QSkosTestCase {
 
 	@Test
 	public void testTripleCount_2() throws RepositoryException {
-		long tripleCount = qSkosComponents.getTripleCount();
+		long tripleCount = qSkosComponents.getTripleCount().getData();
 		Assert.assertEquals(73, tripleCount);
 	}
 	
@@ -54,7 +53,7 @@ public class StatisticsTest extends QSkosTestCase {
 	public void testAuthoritativeConceptsCount() throws OpenRDFException
 	{
 		qSkosConcepts.setPublishingHost("zbw.eu");
-		Set<URI> authoritativeConcepts = qSkosConcepts.getAuthoritativeConcepts();
+		Collection<URI> authoritativeConcepts = qSkosConcepts.findAuthoritativeConcepts().getData();
 		Assert.assertEquals(9, authoritativeConcepts.size());
 	}
 	

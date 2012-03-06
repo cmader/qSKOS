@@ -29,8 +29,8 @@ import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
 import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageCoverageChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageTagChecker;
-import at.ac.univie.mminf.qskos4j.criteria.RelationStatisticsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.RedundantAssociativeRelationsFinder;
+import at.ac.univie.mminf.qskos4j.criteria.RelationStatisticsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ResourceAvailabilityChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SkosReferenceIntegrityChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SkosTermsChecker;
@@ -38,7 +38,8 @@ import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
-import at.ac.univie.mminf.qskos4j.result.UriCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
@@ -62,8 +63,7 @@ public class QSkos {
 	private Integer urlDereferencingDelay;
 	private Float randomSubsetSize_percent;
 	
-	private UriCollectionResult involvedConcepts;
-	private Set<URI> authoritativeConcepts;
+	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
 	
 	public QSkos(File rdfFile) 
 		throws OpenRDFException, IOException
@@ -127,18 +127,18 @@ public class QSkos {
 		}
 	}
 	
-	public long getTripleCount() 
+	public NumberResult<Long> getTripleCount() 
 	{
 		try {
 			URI vocabContext = vocabRepository.getVocabContext();
-			return vocabRepository.getRepository().getConnection().size(vocabContext);
+			return new NumberResult<Long>(vocabRepository.getRepository().getConnection().size(vocabContext));
 		} 
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}		
 	}
 	
-	public UriCollectionResult findInvolvedConcepts() throws OpenRDFException
+	public CollectionResult<URI> findInvolvedConcepts() throws OpenRDFException
 	{
 		if (involvedConcepts == null) {
 			involvedConcepts = conceptFinder.getInvolvedConcepts(false);
@@ -147,7 +147,7 @@ public class QSkos {
 		return involvedConcepts;
 	}
 	
-	public Set<URI> getAuthoritativeConcepts() throws OpenRDFException {
+	public CollectionResult<URI> findAuthoritativeConcepts() throws OpenRDFException {
 		if (authoritativeConcepts == null) {		
 			authoritativeConcepts = conceptFinder.getAuthoritativeConcepts(publishingHost, authoritativeUriSubstring);
 		}
@@ -155,37 +155,37 @@ public class QSkos {
 		return authoritativeConcepts;
 	}
 		
-	public UriCollectionResult findLooseConcepts() throws OpenRDFException
+	public CollectionResult<URI> findLooseConcepts() throws OpenRDFException
 	{
 		return conceptFinder.getInvolvedConcepts(true);
 	}
 	
-	public long findLexicalRelationsCount() throws OpenRDFException
+	public NumberResult<Long> findLexicalRelationsCount() throws OpenRDFException
 	{
 		return new RelationStatisticsFinder(vocabRepository).findLexicalRelationsCount(findInvolvedConcepts().getData());
 	}
 	
-	public long findSemanticRelationsCount() throws OpenRDFException
+	public NumberResult<Long> findSemanticRelationsCount() throws OpenRDFException
 	{
 		return new RelationStatisticsFinder(vocabRepository).findSemanticRelationsCount();
 	}
 	
-	public long findAggregationRelations() throws OpenRDFException
+	public NumberResult<Long> findAggregationRelations() throws OpenRDFException
 	{
 		return new RelationStatisticsFinder(vocabRepository).findAggregationRelationsCount();
 	}
 	
-	public long findConceptSchemeCount() throws OpenRDFException
+	public NumberResult<Long> findConceptSchemeCount() throws OpenRDFException
 	{
 		return new RelationStatisticsFinder(vocabRepository).findConceptSchemeCount();
 	}
 	
-	public long findCollectionCount() throws OpenRDFException
+	public NumberResult<Long> findCollectionCount() throws OpenRDFException
 	{
 		return new RelationStatisticsFinder(vocabRepository).findCollectionCount();
 	}
 	
-	public List<Set<URI>> findComponents() throws OpenRDFException {
+	public WccResult findComponents() throws OpenRDFException {
 		return componentFinder.findComponents();
 	}
 	
@@ -193,7 +193,7 @@ public class QSkos {
 		componentFinder.exportComponents(writers);
 	}
 	
-	public List<Set<URI>> findHierarchicalCycles() throws OpenRDFException {
+	public CollectionResult<Collection<URI>> findHierarchicalCycles() throws OpenRDFException {
 		return hierarchyAnalyer.findCycleContainingComponents();
 	}
 
@@ -214,12 +214,12 @@ public class QSkos {
 		return resourceAvailabilityChecker.checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelay);
 	}
 	
-	public Set<String> findInvalidResources(Float randomSubsetSize_percent) throws OpenRDFException {
+	public CollectionResult<String> findInvalidResources(Float randomSubsetSize_percent) throws OpenRDFException {
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
 		return resourceAvailabilityChecker.findInvalidResources(randomSubsetSize_percent, urlDereferencingDelay);
 	}
 		
-	public Set<String> findNonHttpResources() throws OpenRDFException {
+	public CollectionResult<String> findNonHttpResources() throws OpenRDFException {
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
 		return resourceAvailabilityChecker.findNonHttpResources();
 	}
@@ -257,7 +257,7 @@ public class QSkos {
 		return redundantAssociativeRelationsFinder.findNotAssociatedSiblings();
 	}
 	
-	public Set<RelatedConcepts> findRelatedConcepts() throws OpenRDFException {
+	public CollectionResult<RelatedConcepts> findRelatedConcepts() throws OpenRDFException {
 		RelatedConceptsFinder relatedConceptsFinder = new RelatedConceptsFinder(vocabRepository);
 		relatedConceptsFinder.setProgressMonitor(progressMonitor);
 		return relatedConceptsFinder.findRelatedConcepts(findInvolvedConcepts().getData());
@@ -269,18 +269,18 @@ public class QSkos {
 			vocabRepository, 
 			sparqlEndPoints);
 		conceptRanker.setProgressMonitor(progressMonitor);
-		return conceptRanker.analyzeConceptsRank(getAuthoritativeConcepts(), randomSubsetSize_percent);
+		return conceptRanker.analyzeConceptsRank(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
 	}
 	
 	public Map<Pair<URI>, String> findOmittedInverseRelations() throws OpenRDFException {
 		return new InverseRelationsChecker(vocabRepository).findOmittedInverseRelations();
 	}
 	
-	public Set<Pair<URI>> findSolitaryTransitiveRelations() throws OpenRDFException {
+	public CollectionResult<Pair<URI>> findSolitaryTransitiveRelations() throws OpenRDFException {
 		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolitaryTransitiveRelations();
 	}
 	
-	public float getAverageDocumentationCoverageRatio() throws OpenRDFException 
+	public NumberResult<Float> getAverageDocumentationCoverageRatio() throws OpenRDFException 
 	{
 		DocumentationCoverageChecker docCovChecker = 
 			new DocumentationCoverageChecker(vocabRepository);
@@ -288,26 +288,26 @@ public class QSkos {
 		return docCovChecker.getAverageDocumentationCoverageRatio(findInvolvedConcepts().getData());
 	}
 	
-	public List<URI> findConceptSchemesWithoutTopConcept() throws OpenRDFException {
+	public CollectionResult<URI> findConceptSchemesWithoutTopConcept() throws OpenRDFException {
 		return new ConceptSchemeChecker(vocabRepository).findConceptSchemesWithoutTopConcept();
 	}
 	
-	public List<URI> findTopConceptsHavingBroaderConcept() throws OpenRDFException {
+	public CollectionResult<URI> findTopConceptsHavingBroaderConcept() throws OpenRDFException {
 		return new ConceptSchemeChecker(vocabRepository).findTopConceptsHavingBroaderConcept();
 	}
 	
-	public Collection<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
+	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
 		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = 
 			new SkosReferenceIntegrityChecker(vocabRepository);
 		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
 		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes();
 	}
 	
-	public Collection<Pair<URI>> findExactVsAssociativeMappingClashes() throws OpenRDFException {
+	public CollectionResult<Pair<URI>> findExactVsAssociativeMappingClashes() throws OpenRDFException {
 		return new SkosReferenceIntegrityChecker(vocabRepository).findExactVsAssociativeMappingClashes();
 	}
 	
-	public Set<Pair<URI>> findAmbiguousRelations() throws OpenRDFException {
+	public CollectionResult<Pair<URI>> findAmbiguousRelations() throws OpenRDFException {
 		return new AmbiguousRelationsFinder(vocabRepository).findAmbiguousRelations();
 	}
 	

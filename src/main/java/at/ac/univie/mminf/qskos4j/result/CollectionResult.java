@@ -2,11 +2,9 @@ package at.ac.univie.mminf.qskos4j.result;
 
 import java.util.Collection;
 
-import org.openrdf.model.URI;
+public class CollectionResult<T> extends Result<Collection<T>> {
 
-public class UriCollectionResult extends Result<Collection<URI>> {
-
-	public UriCollectionResult(Collection<URI> data) {
+	public CollectionResult(Collection<T> data) {
 		super(data);
 	}
 

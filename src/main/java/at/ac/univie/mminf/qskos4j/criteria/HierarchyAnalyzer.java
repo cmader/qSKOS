@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -36,13 +38,13 @@ public class HierarchyAnalyzer extends Criterion {
 	private final String skosNarrowerProperties = "skos:narrower, skos:narrowerTransitive, skos:narrowMatch";	
 
 	private DirectedGraph<URI, NamedEdge> hierarchyGraph;
-	private List<Set<URI>> cycleContainingComponents;
+	private Collection<Collection<URI>> cycleContainingComponents;
 	
 	public HierarchyAnalyzer(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public List<Set<URI>> findCycleContainingComponents() throws OpenRDFException 
+	public CollectionResult<Collection<URI>> findCycleContainingComponents() throws OpenRDFException 
 	{
 		if (hierarchyGraph == null) {
 			TupleQueryResult broaderResult = findTriples(HierarchyStyle.BROADER);
@@ -52,7 +54,7 @@ public class HierarchyAnalyzer extends Criterion {
 		
 		Set<URI> nodesInCycles = new CycleDetector<URI, NamedEdge>(hierarchyGraph).findCycles();
 		cycleContainingComponents = trackNodesInCycles(nodesInCycles);
-		return cycleContainingComponents;
+		return new CollectionResult<Collection<URI>>(cycleContainingComponents);
 	}
 	
 	public void exportCycleContainingComponents(Writer[] writers) throws OpenRDFException 
@@ -133,9 +135,9 @@ public class HierarchyAnalyzer extends Criterion {
 		}
 	}
 		
-	private List<Set<URI>> trackNodesInCycles(Set<URI> nodesInCycles) 
+	private Collection<Collection<URI>> trackNodesInCycles(Set<URI> nodesInCycles) 
 	{
-		List<Set<URI>> ret = new ArrayList<Set<URI>>();
+		Collection<Collection<URI>> ret = new ArrayList<Collection<URI>>();
 		List<Set<URI>> stronglyConnectedSets =
 			new StrongConnectivityInspector<URI, NamedEdge>(hierarchyGraph).stronglyConnectedSets();
 		

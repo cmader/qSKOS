@@ -7,6 +7,7 @@ import org.openrdf.model.URI;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
+import at.ac.univie.mminf.qskos4j.result.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -16,7 +17,7 @@ public class RelationStatisticsFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public long findLexicalRelationsCount(Collection<URI> allConcepts) 
+	public NumberResult<Long> findLexicalRelationsCount(Collection<URI> allConcepts) 
 		throws OpenRDFException
 	{	
 		long relationsCount = 0; 
@@ -26,7 +27,7 @@ public class RelationStatisticsFinder extends Criterion {
 			relationsCount += countResults(result);
 		}
 		
-		return relationsCount;
+		return new NumberResult<Long>(relationsCount);
 	}
 	
 	private String createLexicalLabelQuery(URI concept) {
@@ -53,11 +54,11 @@ public class RelationStatisticsFinder extends Criterion {
 		return count;
 	}
 	
-	public long findSemanticRelationsCount() 
+	public NumberResult<Long> findSemanticRelationsCount() 
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createSemanticRelationsQuery());
-		return countResults(result);
+		return new NumberResult<Long>(countResults(result));
 	}
 
 	private String createSemanticRelationsQuery() {
@@ -68,10 +69,10 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";	
 	}
 	
-	public long findAggregationRelationsCount() throws OpenRDFException
+	public NumberResult<Long> findAggregationRelationsCount() throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createAggregationRelationsQuery());
-		return countResults(result);
+		return new NumberResult<Long>(countResults(result));
 	}
 	
 	private String createAggregationRelationsQuery() {
@@ -90,10 +91,10 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";
 	}
 	
-	public long findConceptSchemeCount() throws OpenRDFException
+	public NumberResult<Long> findConceptSchemeCount() throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createConceptSchemeQuery());		
-		return countResults(result);
+		return new NumberResult<Long>(countResults(result));
 	}
 	
 	private String createConceptSchemeQuery() {
@@ -109,10 +110,10 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";	
 	}
 	
-	public long findCollectionCount() throws OpenRDFException
+	public NumberResult<Long> findCollectionCount() throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createCollectionsQuery());
-		return countResults(result);
+		return new NumberResult<Long>(countResults(result));
 	}
 	
 	private String createCollectionsQuery() {

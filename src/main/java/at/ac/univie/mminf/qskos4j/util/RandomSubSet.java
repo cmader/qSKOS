@@ -2,19 +2,19 @@ package at.ac.univie.mminf.qskos4j.util;
 
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class RandomSubSet<T> extends AbstractSet<T>{
 
-	private Set<T> subset;
+	private Collection<T> subset;
 	private List<T> origElements;
 	private int subsetElementCount;
 	
-	public RandomSubSet(Set<T> origSet, float randomSubsetSize_percent) 
+	public RandomSubSet(Collection<T> origSet, float randomSubsetSize_percent) 
 	{
 		origElements = new ArrayList<T>(origSet);	
 		subsetElementCount = (int) ((float) (origSet.size() * randomSubsetSize_percent) / (float) 100);

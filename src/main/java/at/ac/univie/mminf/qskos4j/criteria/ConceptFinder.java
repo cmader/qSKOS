@@ -9,7 +9,7 @@ import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.UriCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -33,7 +33,7 @@ public class ConceptFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public UriCollectionResult getInvolvedConcepts(boolean onlyLooseConcepts) 
+	public CollectionResult<URI> getInvolvedConcepts(boolean onlyLooseConcepts) 
 		throws OpenRDFException 
 	{
 		this.onlyLooseConcepts = onlyLooseConcepts;
@@ -45,10 +45,10 @@ public class ConceptFinder extends Criterion {
 			involvedConcepts = foundConcepts;  
 		}
 		
-		return new UriCollectionResult(foundConcepts);
+		return new CollectionResult<URI>(foundConcepts);
 	}
 	
-	public Set<URI> getAuthoritativeConcepts(
+	public CollectionResult<URI> getAuthoritativeConcepts(
 		String publishingHost,
 		String authoritativeUriSubstring) throws OpenRDFException
 	{
@@ -63,7 +63,7 @@ public class ConceptFinder extends Criterion {
 				authoritativeUriSubstring);
 		}
 		
-		return authoritativeConcepts;
+		return new CollectionResult<URI>(authoritativeConcepts);
 	}
 	
 	private void extractAuthoritativeConceptsFromInvolved(

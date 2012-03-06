@@ -3,6 +3,10 @@ package at.ac.univie.mminf.qskos4j.example;
 enum CriterionDescription {
 
 	// Statistics
+	TRIPLE_COUNT("tc",
+		"Triple Count",
+		"Counts all triples of the vocabulary",
+		"getTripleCount"),
 	TOTAL_CONCEPTS("c", 
 		"All Concepts", 
 		"Finds all SKOS concepts involved in the vocabulary", 
@@ -10,7 +14,7 @@ enum CriterionDescription {
 	AUTHORITATIVE_CONCEPTS("ac", 
 		"Authoritative Concepts", 
 		"Finds all authoritative concepts in the vocabulary", 
-		"getAuthoritativeConcepts"),
+		"findAuthoritativeConcepts"),
 	LEXICAL_RELATIONS_COUNT("lr",
 		"Lexical Relations Count",
 		"Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",

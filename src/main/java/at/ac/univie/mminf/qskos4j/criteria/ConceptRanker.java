@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,7 +27,7 @@ public class ConceptRanker extends Criterion {
 
 	private final Logger logger = LoggerFactory.getLogger(ConceptRanker.class);
 	
-	private Set<URI> authoritativeConcepts;
+	private Collection<URI> authoritativeConcepts;
 	private Set<SPARQLRepository> sparqlEndpoints;
 	private Map<URI, Set<URI>> conceptsRank = new HashMap<URI, Set<URI>>();
 	
@@ -52,7 +53,7 @@ public class ConceptRanker extends Criterion {
 	}
 	
 	public Map<URI, Set<URI>> analyzeConceptsRank(
-		Set<URI> authoritativeConcepts,
+		Collection<URI> authoritativeConcepts,
 		Float randomSubsetSize_percent) throws OpenRDFException
 	{
 		this.authoritativeConcepts = authoritativeConcepts;
@@ -69,7 +70,7 @@ public class ConceptRanker extends Criterion {
 		return conceptsRank;
 	}
 	
-	private Set<URI> getRankedConcepts(Float randomSubsetSize_percent) {
+	private Collection<URI> getRankedConcepts(Float randomSubsetSize_percent) {
 		if (randomSubsetSize_percent == null) {
 			return authoritativeConcepts;
 		}
