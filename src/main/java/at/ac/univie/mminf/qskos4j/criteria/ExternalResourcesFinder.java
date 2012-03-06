@@ -3,12 +3,12 @@ package at.ac.univie.mminf.qskos4j.criteria;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -38,7 +38,7 @@ public class ExternalResourcesFinder extends Criterion {
 	}
 	
 	public Map<URI, List<URL>> findExternalResourcesForConcepts(
-		Set<URI> concepts,
+		Collection<URI> concepts,
 		String publishingHost) throws OpenRDFException 
 	{
 		resourcesForConcept = new HashMap<URI, List<URL>>();
@@ -53,7 +53,7 @@ public class ExternalResourcesFinder extends Criterion {
 		return resourcesForConcept;
 	}
 	
-	private void findResourcesForConcepts(Set<URI> concepts) throws OpenRDFException 
+	private void findResourcesForConcepts(Collection<URI> concepts) throws OpenRDFException 
 	{
 		Iterator<URI> conceptIt = new MonitoredIterator<URI>(concepts, progressMonitor, "finding resources");
 		

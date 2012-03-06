@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -31,7 +32,7 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test
 	public void testConceptCount_1() throws OpenRDFException
 	{
-		Set<URI> involvedConcepts = qSkosConcepts.getInvolvedConcepts();
+		Collection<URI> involvedConcepts = qSkosConcepts.findInvolvedConcepts().getData();
 		Assert.assertEquals(10, involvedConcepts.size());
 	}
 
@@ -45,7 +46,7 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test
 	public void testConceptsCount_2() throws OpenRDFException
 	{
-		Set<URI> involvedConcepts = qSkosComponents.getInvolvedConcepts(); 
+		Collection<URI> involvedConcepts = qSkosComponents.findInvolvedConcepts().getData(); 
 		Assert.assertEquals(21, involvedConcepts.size());		
 	}
 	

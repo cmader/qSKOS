@@ -9,6 +9,7 @@ import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
+import at.ac.univie.mminf.qskos4j.result.UriCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -32,7 +33,7 @@ public class ConceptFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public Set<URI> getInvolvedConcepts(boolean onlyLooseConcepts) 
+	public UriCollectionResult getInvolvedConcepts(boolean onlyLooseConcepts) 
 		throws OpenRDFException 
 	{
 		this.onlyLooseConcepts = onlyLooseConcepts;
@@ -44,7 +45,7 @@ public class ConceptFinder extends Criterion {
 			involvedConcepts = foundConcepts;  
 		}
 		
-		return foundConcepts;
+		return new UriCollectionResult(foundConcepts);
 	}
 	
 	public Set<URI> getAuthoritativeConcepts(

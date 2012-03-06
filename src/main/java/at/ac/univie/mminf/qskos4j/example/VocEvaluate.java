@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 
 import com.beust.jcommander.JCommander;
@@ -119,8 +120,8 @@ public class VocEvaluate {
 			String qSkosMethodName = criterion.getQSkosMethodName(); 
 			
 			try {
-				Object result = invokeQSkosMethod(qSkosMethodName);
-				outputReport(result, criterion);
+				Result<?> result = invokeQSkosMethod(qSkosMethodName);
+				System.out.println(result.getShortReport());
 			}
 			catch (Exception e) {
 				String message = e.getMessage();
@@ -149,10 +150,10 @@ public class VocEvaluate {
 		return criteria;
 	}
 	
-	private Object invokeQSkosMethod(String methodName) throws Exception {
+	private Result<?> invokeQSkosMethod(String methodName) throws Exception {
 		for (Method method : qskos.getClass().getMethods()) {
 			if (method.getName().equals(methodName)) {
-				return method.invoke(qskos);
+				return (Result<?>) method.invoke(qskos);
 			}
 		}
 		throw new NoSuchMethodException();

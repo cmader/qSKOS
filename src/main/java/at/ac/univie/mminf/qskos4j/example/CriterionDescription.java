@@ -6,7 +6,7 @@ enum CriterionDescription {
 	TOTAL_CONCEPTS("c", 
 		"All Concepts", 
 		"Finds all SKOS concepts involved in the vocabulary", 
-		"getInvolvedConcepts"),
+		"findInvolvedConcepts"),
 	AUTHORITATIVE_CONCEPTS("ac", 
 		"Authoritative Concepts", 
 		"Finds all authoritative concepts in the vocabulary", 

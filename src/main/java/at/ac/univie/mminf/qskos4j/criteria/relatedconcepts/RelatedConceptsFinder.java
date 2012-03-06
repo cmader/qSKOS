@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.criteria.relatedconcepts;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,7 +40,7 @@ public class RelatedConceptsFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public Set<RelatedConcepts> findRelatedConcepts(Set<URI> concepts) 
+	public Set<RelatedConcepts> findRelatedConcepts(Collection<URI> concepts) 
 		throws OpenRDFException
 	{
 		if (allRelatedConcepts == null) {
@@ -49,7 +50,7 @@ public class RelatedConceptsFinder extends Criterion {
 		return allRelatedConcepts;
 	}
 	
-	private void generateConceptsLabelMap(Set<URI> concepts) 
+	private void generateConceptsLabelMap(Collection<URI> concepts) 
 		throws OpenRDFException
 	{
 		conceptLabels = new HashMap<URI, Set<SkosLabel>>();

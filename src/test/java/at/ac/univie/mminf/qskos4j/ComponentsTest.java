@@ -22,7 +22,7 @@ public class ComponentsTest extends QSkosTestCase {
 	
 	@Test
 	public void testComponentCount() throws OpenRDFException {
-		long conceptCount = qSkosComponents.getInvolvedConcepts().size();
+		long conceptCount = qSkosComponents.findInvolvedConcepts().getData().size();
 		
 		List<Set<URI>> components = qSkosComponents.findComponents();
 		

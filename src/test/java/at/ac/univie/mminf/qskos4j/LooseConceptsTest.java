@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -22,13 +22,13 @@ public class LooseConceptsTest extends QSkosTestCase {
 	
 	@Test
 	public void testConceptsLooseConceptCount() throws OpenRDFException {
-		Set<URI> looseConcepts = qSkosConcepts.findLooseConcepts();
+		Collection<URI> looseConcepts = qSkosConcepts.findLooseConcepts().getData();
 		Assert.assertEquals(5, looseConcepts.size());		
 	}
 	
 	@Test
 	public void testComponentsLooseConceptCount() throws OpenRDFException {
-		Set<URI> looseConcepts = qSkosComponents.findLooseConcepts(); 
+		Collection<URI> looseConcepts = qSkosComponents.findLooseConcepts().getData(); 
 		Assert.assertEquals(2, looseConcepts.size());		
 	}
 	

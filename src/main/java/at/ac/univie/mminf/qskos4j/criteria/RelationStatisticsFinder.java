@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -16,7 +16,7 @@ public class RelationStatisticsFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public long findLexicalRelationsCount(Set<URI> allConcepts) 
+	public long findLexicalRelationsCount(Collection<URI> allConcepts) 
 		throws OpenRDFException
 	{	
 		long relationsCount = 0; 

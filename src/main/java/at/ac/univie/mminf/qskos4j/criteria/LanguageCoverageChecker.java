@@ -1,5 +1,6 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ public class LanguageCoverageChecker extends Criterion {
 	}
 
 	public Map<Resource, Set<String>> getIncompleteLanguageCoverage(
-		Set<URI> concepts) throws OpenRDFException 
+		Collection<URI> concepts) throws OpenRDFException 
 	{
 		incompleteLanguageCoverage = new HashMap<Resource, Set<String>>();
 		
@@ -37,7 +38,7 @@ public class LanguageCoverageChecker extends Criterion {
 		return incompleteLanguageCoverage;
 	}
 	
-	private void checkLanguageCoverage(Set<URI> concepts) throws OpenRDFException 
+	private void checkLanguageCoverage(Collection<URI> concepts) throws OpenRDFException 
 	{
 		languageCoverage = new HashMap<Resource, Set<String>>();
 		

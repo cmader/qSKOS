@@ -38,6 +38,7 @@ import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
+import at.ac.univie.mminf.qskos4j.result.UriCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
@@ -61,7 +62,8 @@ public class QSkos {
 	private Integer urlDereferencingDelay;
 	private Float randomSubsetSize_percent;
 	
-	private Set<URI> involvedConcepts, authoritativeConcepts;
+	private UriCollectionResult involvedConcepts;
+	private Set<URI> authoritativeConcepts;
 	
 	public QSkos(File rdfFile) 
 		throws OpenRDFException, IOException
@@ -136,7 +138,7 @@ public class QSkos {
 		}		
 	}
 	
-	public Set<URI> getInvolvedConcepts() throws OpenRDFException
+	public UriCollectionResult findInvolvedConcepts() throws OpenRDFException
 	{
 		if (involvedConcepts == null) {
 			involvedConcepts = conceptFinder.getInvolvedConcepts(false);
@@ -153,14 +155,14 @@ public class QSkos {
 		return authoritativeConcepts;
 	}
 		
-	public Set<URI> findLooseConcepts() throws OpenRDFException
+	public UriCollectionResult findLooseConcepts() throws OpenRDFException
 	{
 		return conceptFinder.getInvolvedConcepts(true);
 	}
 	
 	public long findLexicalRelationsCount() throws OpenRDFException
 	{
-		return new RelationStatisticsFinder(vocabRepository).findLexicalRelationsCount(getInvolvedConcepts());
+		return new RelationStatisticsFinder(vocabRepository).findLexicalRelationsCount(findInvolvedConcepts().getData());
 	}
 	
 	public long findSemanticRelationsCount() throws OpenRDFException
@@ -203,7 +205,7 @@ public class QSkos {
 		ExternalResourcesFinder extResourcesFinder = new ExternalResourcesFinder(vocabRepository);
 		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
-		return extResourcesFinder.findExternalResourcesForConcepts(getInvolvedConcepts(), publishingHost);
+		return extResourcesFinder.findExternalResourcesForConcepts(findInvolvedConcepts().getData(), publishingHost);
 	}
 	
 	public Map<URL, String> checkResourceAvailability() throws OpenRDFException 
@@ -236,7 +238,7 @@ public class QSkos {
 	
 	public Map<Resource, Set<String>> getIncompleteLanguageCoverage() throws OpenRDFException {
 		languageCoverageChecker.setProgressMonitor(progressMonitor);
-		return languageCoverageChecker.getIncompleteLanguageCoverage(getInvolvedConcepts());
+		return languageCoverageChecker.getIncompleteLanguageCoverage(findInvolvedConcepts().getData());
 	}
 	
 	public Map<URI, Set<String>> findNotUniquePrefLabels() throws OpenRDFException {
@@ -258,7 +260,7 @@ public class QSkos {
 	public Set<RelatedConcepts> findRelatedConcepts() throws OpenRDFException {
 		RelatedConceptsFinder relatedConceptsFinder = new RelatedConceptsFinder(vocabRepository);
 		relatedConceptsFinder.setProgressMonitor(progressMonitor);
-		return relatedConceptsFinder.findRelatedConcepts(getInvolvedConcepts());
+		return relatedConceptsFinder.findRelatedConcepts(findInvolvedConcepts().getData());
 	}
 	
 	public Map<URI, Set<URI>> analyzeConceptsRank() throws OpenRDFException 
@@ -283,7 +285,7 @@ public class QSkos {
 		DocumentationCoverageChecker docCovChecker = 
 			new DocumentationCoverageChecker(vocabRepository);
 		docCovChecker.setProgressMonitor(progressMonitor);
-		return docCovChecker.getAverageDocumentationCoverageRatio(getInvolvedConcepts());
+		return docCovChecker.getAverageDocumentationCoverageRatio(findInvolvedConcepts().getData());
 	}
 	
 	public List<URI> findConceptSchemesWithoutTopConcept() throws OpenRDFException {

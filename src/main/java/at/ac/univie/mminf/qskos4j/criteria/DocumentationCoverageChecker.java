@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -25,7 +25,7 @@ public class DocumentationCoverageChecker extends Criterion {
 	}
 	
 	public float getAverageDocumentationCoverageRatio(
-		Set<URI> authoritativeConcepts) throws OpenRDFException
+		Collection<URI> authoritativeConcepts) throws OpenRDFException
 	{
 		float docCoverage = 0;
 		
