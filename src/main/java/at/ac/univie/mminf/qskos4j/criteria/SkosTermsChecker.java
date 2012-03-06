@@ -26,7 +26,7 @@ public class SkosTermsChecker extends Criterion {
 	public Map<URI, Set<URI>> findDeprecatedProperties() throws OpenRDFException 
 	{
 		if (deprecatedProperties == null) {
-			TupleQueryResult result = queryRepository(createDeprecatedPropertiesQuery());
+			TupleQueryResult result = vocabRepository.query(createDeprecatedPropertiesQuery());
 			generateDeprecatedPropertiesMap(result);	
 		}
 		
@@ -74,7 +74,7 @@ public class SkosTermsChecker extends Criterion {
 	public Map<URI, Set<URI>> findIllegalTerms() throws OpenRDFException 
 	{
 		if (illegalTerms == null) {
-			TupleQueryResult result = queryRepository(createIllegalTermsQuery());
+			TupleQueryResult result = vocabRepository.query(createIllegalTermsQuery());
 			generateIllegalTermsMap(result);
 		}
 		

@@ -25,7 +25,7 @@ public class AmbiguousRelationsFinder extends Criterion {
 	{
 		ambiguousRelations = new HashSet<Pair<URI>>();
 		
-		TupleQueryResult result = queryRepository(createdAmbiguousRelationsQuery());
+		TupleQueryResult result = vocabRepository.query(createdAmbiguousRelationsQuery());
 		addToResultsList(result);
 		
 		return ambiguousRelations;

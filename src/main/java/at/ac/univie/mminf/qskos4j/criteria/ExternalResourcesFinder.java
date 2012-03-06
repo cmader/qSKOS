@@ -67,7 +67,7 @@ public class ExternalResourcesFinder extends Criterion {
 	{
 		String query = createIRIQuery(concept); 
 		
-		TupleQueryResult result = queryRepository(query);
+		TupleQueryResult result = vocabRepository.query(query);
 		List<URL> resourceList = identifyResources(result);
 		
 		return resourceList;

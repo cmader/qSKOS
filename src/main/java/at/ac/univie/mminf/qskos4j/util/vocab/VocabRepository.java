@@ -6,6 +6,11 @@ import java.net.URL;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -22,6 +27,7 @@ public class VocabRepository {
 	
 	private final String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
 	private Repository repository;
+	private RepositoryConnection connection;
 	private File rdfFile;
 	private String queryEndpointUrl;
 	
@@ -87,6 +93,17 @@ public class VocabRepository {
 		finally {
 			connection.close();
 		}
+	}
+	
+	public TupleQueryResult query(String sparqlQuery) 
+		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	{
+		if (connection == null) {
+			connection = repository.getConnection();
+		}
+		
+		TupleQuery graphQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
+		return graphQuery.evaluate();
 	}
 		
 }

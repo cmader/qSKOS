@@ -29,7 +29,7 @@ public class SolitaryTransitiveRelationsFinder extends Criterion {
 		throws OpenRDFException
 	{
 		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
-			TupleQueryResult result = queryRepository(createSolitaryTransitiveRelationsQuery(transitivePropertyPair));
+			TupleQueryResult result = vocabRepository.query(createSolitaryTransitiveRelationsQuery(transitivePropertyPair));
 			addToResults(result);			
 		}
 		

@@ -39,7 +39,7 @@ public class InverseRelationsChecker extends Criterion {
 		throws OpenRDFException
 	{
 		for (String[] inversePropertyPair : inversePropertyPairs) {
-			TupleQueryResult result = queryRepository(createOmittedRelationsQuery(inversePropertyPair));
+			TupleQueryResult result = vocabRepository.query(createOmittedRelationsQuery(inversePropertyPair));
 			addToOmittedReverseRelationsMap(result, inversePropertyPair);			
 		}
 		
@@ -86,7 +86,7 @@ public class InverseRelationsChecker extends Criterion {
 	public long getInverseRelationPairCount() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
 			for (String inverseProperty : inversePropertyPair) {
-				TupleQueryResult result = queryRepository(createInverseRelationQuery(inverseProperty));
+				TupleQueryResult result = vocabRepository.query(createInverseRelationQuery(inverseProperty));
 				addToInverseRelationPairs(inverseRelationPairs, result);
 			}
 		}

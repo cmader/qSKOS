@@ -8,39 +8,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-
 import at.ac.univie.mminf.qskos4j.util.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public abstract class Criterion {
 
 	protected VocabRepository vocabRepository;
-	
 	private IProgressMonitor progressMonitor;
-	private RepositoryConnection connection;
 	
 	public Criterion(VocabRepository vocabRepository) {
 		this.vocabRepository = vocabRepository;
 	}
 	
-	protected TupleQueryResult queryRepository(String sparqlQuery) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
-	{
-		if (connection == null) {
-			connection = vocabRepository.getRepository().getConnection();
-		}
-		
-		TupleQuery graphQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
-		return graphQuery.evaluate();
-	}
-		
 	protected <T> Iterator<T> getMonitoredIterator(
 		String taskDescription,	
 		Collection<T> collection) 

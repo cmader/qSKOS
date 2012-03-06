@@ -25,7 +25,7 @@ public class RedundantAssociativeRelationsFinder extends Criterion {
 	{
 		Map<URI, Set<Pair<URI>>> redundantAssociativeRelations = new HashMap<URI, Set<Pair<URI>>>();
 		
-		TupleQueryResult result = queryRepository(createRedundantAssociativeRelationsQuery());
+		TupleQueryResult result = vocabRepository.query(createRedundantAssociativeRelationsQuery());
 		generateResultsMap(redundantAssociativeRelations, result);
 		
 		return redundantAssociativeRelations;
@@ -35,7 +35,7 @@ public class RedundantAssociativeRelationsFinder extends Criterion {
 	{
 		Map<URI, Set<Pair<URI>>> notAssociatedSiblings = new HashMap<URI, Set<Pair<URI>>>();
 		
-		TupleQueryResult result = queryRepository(createNotAssociatedSiblingsQuery());
+		TupleQueryResult result = vocabRepository.query(createNotAssociatedSiblingsQuery());
 		generateResultsMap(notAssociatedSiblings, result);
 		
 		return notAssociatedSiblings;		

@@ -77,7 +77,7 @@ public class HierarchyAnalyzer extends Criterion {
 		}
 		
 		String query = createHierarchicalGraphQuery(skosHierarchyProperties);
-		return queryRepository(query);
+		return vocabRepository.query(query);
 	}
 	
 	private String createHierarchicalGraphQuery(String skosHierarchyProperties) {

@@ -58,7 +58,7 @@ public class ComponentFinder extends Criterion {
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
 		String query = createNodeQuery();
-		return queryRepository(query);
+		return vocabRepository.query(query);
 	}
 	
 	/**

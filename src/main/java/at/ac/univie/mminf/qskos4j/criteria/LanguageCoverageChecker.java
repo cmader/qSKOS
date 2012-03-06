@@ -43,7 +43,7 @@ public class LanguageCoverageChecker extends Criterion {
 		Iterator<URI> it = getMonitoredIterator(concepts);
 		while (it.hasNext()) {
 			URI concept = it.next();
-			TupleQueryResult result = queryRepository(createLanguageLiteralQuery(concept));
+			TupleQueryResult result = vocabRepository.query(createLanguageLiteralQuery(concept));
 			addToLanguageCoverageMap(concept, result);
 		}
 	}

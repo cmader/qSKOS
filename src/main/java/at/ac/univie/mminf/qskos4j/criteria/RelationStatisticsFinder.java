@@ -22,7 +22,7 @@ public class RelationStatisticsFinder extends Criterion {
 		long relationsCount = 0; 
 		
 		for (URI concept : allConcepts) {
-			TupleQueryResult result = queryRepository(createLexicalLabelQuery(concept));
+			TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));
 			relationsCount += countResults(result);
 		}
 		
@@ -56,7 +56,7 @@ public class RelationStatisticsFinder extends Criterion {
 	public long findSemanticRelationsCount() 
 		throws OpenRDFException
 	{
-		TupleQueryResult result = queryRepository(createSemanticRelationsQuery());
+		TupleQueryResult result = vocabRepository.query(createSemanticRelationsQuery());
 		return countResults(result);
 	}
 
@@ -70,7 +70,7 @@ public class RelationStatisticsFinder extends Criterion {
 	
 	public long findAggregationRelationsCount() throws OpenRDFException
 	{
-		TupleQueryResult result = queryRepository(createAggregationRelationsQuery());
+		TupleQueryResult result = vocabRepository.query(createAggregationRelationsQuery());
 		return countResults(result);
 	}
 	
@@ -92,7 +92,7 @@ public class RelationStatisticsFinder extends Criterion {
 	
 	public long findConceptSchemeCount() throws OpenRDFException
 	{
-		TupleQueryResult result = queryRepository(createConceptSchemeQuery());		
+		TupleQueryResult result = vocabRepository.query(createConceptSchemeQuery());		
 		return countResults(result);
 	}
 	
@@ -111,7 +111,7 @@ public class RelationStatisticsFinder extends Criterion {
 	
 	public long findCollectionCount() throws OpenRDFException
 	{
-		TupleQueryResult result = queryRepository(createCollectionsQuery());
+		TupleQueryResult result = vocabRepository.query(createCollectionsQuery());
 		return countResults(result);
 	}
 	

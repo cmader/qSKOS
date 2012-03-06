@@ -28,7 +28,7 @@ public class AmbiguousLabelFinder extends Criterion {
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Set<String>>();
 		
-		TupleQueryResult result = queryRepository(createNotUniquePrefLabelsQuery());
+		TupleQueryResult result = vocabRepository.query(createNotUniquePrefLabelsQuery());
 		addPrefLabelsToAmbiguouslyLabeledConceptsMap(result);
 		
 		return ambiguouslyLabeledConcepts;
@@ -89,7 +89,7 @@ public class AmbiguousLabelFinder extends Criterion {
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Set<String>>();
 		
-		TupleQueryResult result = queryRepository(createNotDisjointLabelsQuery());
+		TupleQueryResult result = vocabRepository.query(createNotDisjointLabelsQuery());
 		addNotDisjointLabelsToAmbiguouslyLabeledConceptsMap(result);
 		
 		return ambiguouslyLabeledConcepts;

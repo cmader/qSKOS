@@ -65,7 +65,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 	
 	public Set<String> findNonHttpResources() throws OpenRDFException 
 	{
-		TupleQueryResult result = queryRepository(createNonHttpUriQuery());
+		TupleQueryResult result = vocabRepository.query(createNonHttpUriQuery());
 		return createNonHttpUriSet(result);
 	}
 	
@@ -96,7 +96,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 	private void findAllHttpURLs() 
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
-		TupleQueryResult result = queryRepository(createIRIQuery());
+		TupleQueryResult result = vocabRepository.query(createIRIQuery());
 		
 		while (result.hasNext()) {
 			Value iri = result.next().getValue("iri");

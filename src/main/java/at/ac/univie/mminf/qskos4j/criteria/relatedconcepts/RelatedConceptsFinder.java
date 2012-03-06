@@ -55,7 +55,7 @@ public class RelatedConceptsFinder extends Criterion {
 		
 		logger.debug("Collecting label info");
 		for (URI concept : concepts) {
-			TupleQueryResult resultLabels1 = queryRepository(createConceptLabelQuery(concept));
+			TupleQueryResult resultLabels1 = vocabRepository.query(createConceptLabelQuery(concept));
 			Set<SkosLabel> skosLabels = createSkosLabelsFromResult(concept, resultLabels1);
 
 			conceptLabels.put(concept, skosLabels);

@@ -91,7 +91,7 @@ public class ConceptFinder extends Criterion {
 	private TupleQueryResult queryConcepts() throws OpenRDFException 
 	{
 		String query = createConceptsQuery();
-		return queryRepository(query);
+		return vocabRepository.query(query);
 	}
 	
 	private String createConceptsQuery() {

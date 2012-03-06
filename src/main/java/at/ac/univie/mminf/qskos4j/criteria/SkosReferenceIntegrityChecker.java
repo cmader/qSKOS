@@ -29,7 +29,7 @@ public class SkosReferenceIntegrityChecker extends Criterion {
 	public Collection<Pair<URI>> findAssociativeVsHierarchicalClashes() 
 		throws OpenRDFException
 	{
-		TupleQueryResult result = queryRepository(createRelatedConceptsQuery());
+		TupleQueryResult result = vocabRepository.query(createRelatedConceptsQuery());
 		Collection<Pair<URI>> relatedConcepts = createResultCollection(result);
 		Collection<Pair<URI>> hierarchicallyConnectedConcepts = 
 			findHierarchicallyConnectedConcepts(relatedConcepts);
@@ -117,7 +117,7 @@ public class SkosReferenceIntegrityChecker extends Criterion {
 	public Collection<Pair<URI>> findExactVsAssociativeMappingClashes()
 		throws OpenRDFException
 	{
-		TupleQueryResult result = queryRepository(createExVsAssMappingQuery());
+		TupleQueryResult result = vocabRepository.query(createExVsAssMappingQuery());
 		Collection<Pair<URI>> exactVsAssMappingClashes = createResultCollection(result);
 		
 		return exactVsAssMappingClashes;

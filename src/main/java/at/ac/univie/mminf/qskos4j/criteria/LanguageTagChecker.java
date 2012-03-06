@@ -28,7 +28,7 @@ public class LanguageTagChecker extends Criterion {
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
 		if (missingLangTags == null) {
-			TupleQueryResult result = queryRepository(createMissingLangTagQuery());
+			TupleQueryResult result = vocabRepository.query(createMissingLangTagQuery());
 			generateMissingLangTagSet(result);
 		}
 		return missingLangTags;
