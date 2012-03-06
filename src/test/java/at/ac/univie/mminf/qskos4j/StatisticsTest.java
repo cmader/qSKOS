@@ -72,13 +72,19 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test
 	public void testAggregationRelationsCount() throws OpenRDFException
 	{
-		Assert.assertEquals(6, qSkosAggregations.findAggregationRelations());
+		Assert.assertEquals(7, qSkosAggregations.findAggregationRelations());
 	}
 	
 	@Test
 	public void testConceptSchemeCount() throws OpenRDFException
 	{
 		Assert.assertEquals(5, qSkosAggregations.findConceptSchemeCount());
+	}
+	
+	@Test
+	public void testCollectionCount() throws OpenRDFException
+	{
+		Assert.assertEquals(4, qSkosAggregations.findCollectionCount());
 	}
 	
 }

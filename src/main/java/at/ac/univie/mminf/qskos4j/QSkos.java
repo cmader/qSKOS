@@ -175,6 +175,11 @@ public class QSkos {
 		return new RelationStatisticsFinder(vocabRepository).findConceptSchemeCount();
 	}
 	
+	public long findCollectionCount() throws OpenRDFException
+	{
+		return new RelationStatisticsFinder(vocabRepository).findCollectionCount();
+	}
+	
 	public List<Set<URI>> findComponents() throws OpenRDFException {
 		return componentFinder.findComponents();
 	}

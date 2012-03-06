@@ -21,12 +21,16 @@ enum CriterionDescription {
 		"findSemanticRelationsCount"),
 	AGGREGATION_RELATIONS_COUNT("ar",
 		"Aggregation Relations Count",
-		"Finds the number of statements relating resources to ConceptSchemes or Collections",
+		"Counts the statements relating resources to ConceptSchemes or Collections",
 		"findAggregationRelations"),
 	CONCEPT_SCHEME_COUNT("cs",
 		"Concept Scheme Count",
-		"Finds the number of involved ConceptSchemes",
+		"Counts the involved ConceptSchemes",
 		"findConceptSchemeCount"),
+	COLLECTION_COUNT("cc",
+		"Collection Count",
+		"Counts the involved Collections",
+		"findCollectionCount"),
 	
 	// Graph-based measures
 	LOOSE_CONCEPTS("lc", 

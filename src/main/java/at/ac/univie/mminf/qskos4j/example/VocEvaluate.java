@@ -212,6 +212,9 @@ public class VocEvaluate {
 		case AVG_DOC_COVERAGE:
 		case LEXICAL_RELATIONS_COUNT:
 		case SEMANTIC_RELATIONS_COUNT:
+		case AGGREGATION_RELATIONS_COUNT:
+		case CONCEPT_SCHEME_COUNT:
+		case COLLECTION_COUNT:
 		default:
 			outputStandardReport(result);
 		}		

@@ -25,7 +25,11 @@
 	</rdf:Description>
 
 	<rdf:Description rdf:about="collection2">
-		<skos:hasMember rdf:resource="someConcept"/>
+		<skos:member rdf:resource="someConcept"/>
+	</rdf:Description>
+
+	<rdf:Description rdf:about="collection3">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#OrderedCollection"/>
 	</rdf:Description>
 
 	<rdf:Description rdf:about="orderedCollection">

@@ -68,8 +68,7 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";	
 	}
 	
-	public long findAggregationRelationsCount() 
-		throws OpenRDFException
+	public long findAggregationRelationsCount() throws OpenRDFException
 	{
 		TupleQueryResult result = queryRepository(createAggregationRelationsQuery());
 		return countResults(result);
@@ -91,8 +90,7 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";
 	}
 	
-	public long findConceptSchemeCount() 
-		throws OpenRDFException
+	public long findConceptSchemeCount() throws OpenRDFException
 	{
 		TupleQueryResult result = queryRepository(createConceptSchemeQuery());		
 		return countResults(result);
@@ -111,7 +109,20 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";	
 	}
 	
-	public long findCollectionCount() {
-		return 0;
+	public long findCollectionCount() throws OpenRDFException
+	{
+		TupleQueryResult result = queryRepository(createCollectionsQuery());
+		return countResults(result);
+	}
+	
+	private String createCollectionsQuery() {
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.RDF +
+			"SELECT DISTINCT ?collection WHERE {" +
+				"{?collection rdf:type/rdfs:subClassOf* skos:Collection .}" +
+				"UNION" +
+				"{?collection ?hasMember ?resource . ?hasMember rdfs:subPropertyOf* skos:member}" +
+				"UNION" +
+				"{?collection ?memberList ?resource . ?memberList rdfs:subPropertyOf* skos:memberList}" +
+			"}";
 	}
 }
