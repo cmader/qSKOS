@@ -22,6 +22,7 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -54,7 +55,7 @@ public class ExternalResourcesFinder extends Criterion {
 	
 	private void findResourcesForConcepts(Set<URI> concepts) throws OpenRDFException 
 	{
-		Iterator<URI> conceptIt = getMonitoredIterator("finding resources", concepts);
+		Iterator<URI> conceptIt = new MonitoredIterator<URI>(concepts, progressMonitor, "finding resources");
 		
 		while (conceptIt.hasNext()) {
 			URI concept = conceptIt.next();			
@@ -85,9 +86,10 @@ public class ExternalResourcesFinder extends Criterion {
 	private void guessPublishingHost() throws QueryEvaluationException {
 		HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
 		
-		Iterator<List<URL>> resourcesListIt = getMonitoredIterator(
-			"guessing publishing host", 
-			resourcesForConcept.values());
+		Iterator<List<URL>> resourcesListIt = new MonitoredIterator<List<URL>>(
+			resourcesForConcept.values(),
+			progressMonitor,
+			"guessing publishing host");
 		while (resourcesListIt.hasNext()) {
 			for (URL conceptResource : resourcesListIt.next()) {
 				hostNameOccurencies.put(conceptResource.getHost());
@@ -121,9 +123,10 @@ public class ExternalResourcesFinder extends Criterion {
 	private void retainExternalResources() {
 		List<URL> validExternalResources = new ArrayList<URL>();
 		
-		Iterator<URI> conceptIt = getMonitoredIterator(
-			"retaining external resources", 
-			resourcesForConcept.keySet());
+		Iterator<URI> conceptIt = new MonitoredIterator<URI>(
+			resourcesForConcept.keySet(),
+			progressMonitor,
+			"retaining external resources");
 		while (conceptIt.hasNext()) {
 			URI concept = conceptIt.next();
 			

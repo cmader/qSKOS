@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.util.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 
 public class LoggingProgressMonitor implements IProgressMonitor {
 

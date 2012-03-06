@@ -19,6 +19,7 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
@@ -139,7 +140,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 	private void dereferenceURIs(Float randomSubsetSize_percent) 
 	{
 		Set<URI> urisToBeDereferenced = collectUrisToBeDereferenced(randomSubsetSize_percent);
-		Iterator<URI> it = getMonitoredIterator(urisToBeDereferenced);
+		Iterator<URI> it = new MonitoredIterator<URI>(urisToBeDereferenced, progressMonitor);
 		
 		int i = 1;
 		while (it.hasNext()) {

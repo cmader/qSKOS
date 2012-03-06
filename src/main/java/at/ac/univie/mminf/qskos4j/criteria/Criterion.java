@@ -1,43 +1,21 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import at.ac.univie.mminf.qskos4j.util.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public abstract class Criterion {
 
 	protected VocabRepository vocabRepository;
-	private IProgressMonitor progressMonitor;
+	protected IProgressMonitor progressMonitor;
 	
 	public Criterion(VocabRepository vocabRepository) {
 		this.vocabRepository = vocabRepository;
-	}
-	
-	protected <T> Iterator<T> getMonitoredIterator(
-		String taskDescription,	
-		Collection<T> collection) 
-	{
-		if (progressMonitor != null) {
-			progressMonitor.setTaskDescription(taskDescription);
-		}
-		return getMonitoredIterator(collection);
-	}
-	
-	protected <T> Iterator<T> getMonitoredIterator(Collection<T> collection) {
-		if (progressMonitor == null) {
-			return collection.iterator();
-		}
-		else {
-			progressMonitor.reset();
-			return new MonitoredIterator<T>(collection.iterator(), collection.size());
-		}
 	}
 	
 	protected <T> Set<T> createRandomSubset(
@@ -66,37 +44,4 @@ public abstract class Criterion {
 		this.progressMonitor = progressMonitor;
 	}
 		
-	private class MonitoredIterator<T> implements Iterator<T> {
-
-		private Iterator<T> delegate;
-		private int totalSteps, currentStep;
-		
-		MonitoredIterator(Iterator<T> delegate, int totalSteps) {
-			this.delegate = delegate;
-			this.totalSteps = totalSteps;
-			currentStep = 0;
-		}
-		
-		@Override
-		public boolean hasNext() {
-			return delegate.hasNext();
-		}
-
-		@Override
-		public T next() {
-			progressMonitor.onUpdateProgress((float) currentStep / totalSteps);
-			
-			T nextElement = delegate.next();
-			currentStep++;
-			
-			return nextElement;
-		}
-
-		@Override
-		public void remove() {
-			delegate.remove();
-		}
-		
-	}
-	
 }

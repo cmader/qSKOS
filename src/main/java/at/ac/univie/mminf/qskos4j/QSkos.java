@@ -38,8 +38,9 @@ import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
-import at.ac.univie.mminf.qskos4j.util.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class QSkos {
@@ -84,7 +85,7 @@ public class QSkos {
 	
 	public QSkos(String queryEndpointUrl) {
 		vocabRepository = new VocabRepository(queryEndpointUrl);
-		initCriteria();
+		init();
 	}
 
 	public QSkos(File rdfFile,
@@ -95,17 +96,19 @@ public class QSkos {
 		vocabRepository = new VocabRepository(rdfFile, baseURI, dataFormat);
 		
 		extractPublishingHost(baseURI);
-		initCriteria();
+		init();
 	}
 	
-	private void initCriteria() {
+	private void init() {
 		skosTermsChecker = new SkosTermsChecker(vocabRepository);
 		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
 		hierarchyAnalyer = new HierarchyAnalyzer(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
 		componentFinder = new ComponentFinder(vocabRepository);
 		redundantAssociativeRelationsFinder = new RedundantAssociativeRelationsFinder(vocabRepository);
-		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);				
+		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);	
+		
+		progressMonitor = new DummyProgressMonitor();
 	}
 	
 	private void extractPublishingHost(String baseUri) {

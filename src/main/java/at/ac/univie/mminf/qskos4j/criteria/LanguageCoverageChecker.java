@@ -14,6 +14,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class LanguageCoverageChecker extends Criterion {
@@ -40,7 +41,7 @@ public class LanguageCoverageChecker extends Criterion {
 	{
 		languageCoverage = new HashMap<Resource, Set<String>>();
 		
-		Iterator<URI> it = getMonitoredIterator(concepts);
+		Iterator<URI> it = new MonitoredIterator<URI>(concepts, progressMonitor);
 		while (it.hasNext()) {
 			URI concept = it.next();
 			TupleQueryResult result = vocabRepository.query(createLanguageLiteralQuery(concept));

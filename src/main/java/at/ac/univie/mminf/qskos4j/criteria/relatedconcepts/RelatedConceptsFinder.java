@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.criteria.Criterion;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.SkosLabel.LabelType;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -70,7 +71,7 @@ public class RelatedConceptsFinder extends Criterion {
 		List<URI> allConcepts = new ArrayList<URI>(conceptLabels.keySet());
 		
 		int i = 0;
-		Iterator<URI> it = getMonitoredIterator(allConcepts);
+		Iterator<URI> it = new MonitoredIterator<URI>(allConcepts, progressMonitor);
 		while (it.hasNext()) {
 			URI concept1 = it.next();
 

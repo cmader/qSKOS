@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -65,7 +66,7 @@ public class SkosReferenceIntegrityChecker extends Criterion {
 	{
 		Collection<Pair<URI>> relatedPairs = new ArrayList<Pair<URI>>();
 		
-		Iterator<Pair<URI>> it = getMonitoredIterator(resourcePairs);
+		Iterator<Pair<URI>> it = new MonitoredIterator<Pair<URI>>(resourcePairs, progressMonitor);
 		while (it.hasNext()) {
 			Pair<URI> resourcePair = it.next();
 			

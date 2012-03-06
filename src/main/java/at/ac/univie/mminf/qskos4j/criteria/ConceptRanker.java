@@ -18,6 +18,7 @@ import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class ConceptRanker extends Criterion {
@@ -55,9 +56,10 @@ public class ConceptRanker extends Criterion {
 	{
 		this.authoritativeConcepts = authoritativeConcepts;
 		
-		Iterator<URI> conceptIt = getMonitoredIterator(
-			"ranking concepts",
-			getRankedConcepts(randomSubsetSize_percent));
+		Iterator<URI> conceptIt = new MonitoredIterator<URI>(
+			getRankedConcepts(randomSubsetSize_percent),
+			progressMonitor,
+			"ranking concepts");
 
 		while (conceptIt.hasNext()) {
 			rankConcept(conceptIt.next());
