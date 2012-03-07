@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.openrdf.OpenRDFException;
@@ -8,6 +9,7 @@ import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
 
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -17,11 +19,12 @@ public class ConceptSchemeChecker extends Criterion {
 		super(vocabRepository);
 	}
 
-	public List<URI> findConceptSchemesWithoutTopConcept() 
+	public CollectionResult<URI> findConceptSchemesWithoutTopConcept() 
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createConceptSchemesWithoutTopConceptQuery());
-		return createUriResultList(result, "conceptScheme");			
+		Collection<URI> foundConceptSchemes = createUriResultList(result, "conceptScheme");
+		return new CollectionResult<URI>(foundConceptSchemes);
 	}
 	
 	private String createConceptSchemesWithoutTopConceptQuery() {
@@ -34,7 +37,7 @@ public class ConceptSchemeChecker extends Criterion {
 			"}";
 	}
 	
-	private List<URI> createUriResultList(
+	private Collection<URI> createUriResultList(
 		TupleQueryResult result, 
 		String bindingName) throws OpenRDFException
 	{
@@ -49,11 +52,12 @@ public class ConceptSchemeChecker extends Criterion {
 		return resultList;
 	}
 	
-	public List<URI> findTopConceptsHavingBroaderConcept() 
+	public CollectionResult<URI> findTopConceptsHavingBroaderConcept() 
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createTopConceptsHavingBroaderConceptQuery());
-		return createUriResultList(result, "topConcept");			
+		Collection<URI> foundTopConcepts = createUriResultList(result, "topConcept");
+		return new CollectionResult<URI>(foundTopConcepts);
 	}
 	
 	private String createTopConceptsHavingBroaderConceptQuery() {

@@ -17,6 +17,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
+import at.ac.univie.mminf.qskos4j.result.WccResult;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -35,14 +36,14 @@ public class ComponentFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public List<Set<URI>> findComponents() throws OpenRDFException 
+	public WccResult findComponents() throws OpenRDFException 
 	{
 		if (graph == null) {
 			TupleQueryResult result = findTriples();
 			createGraph(result);
 		}
 		connectedSets = new ConnectivityInspector<URI, NamedEdge>(graph).connectedSets(); 
-		return connectedSets;
+		return new WccResult(connectedSets);
 	}
 	
 	public void exportComponents(Writer[] writers) throws OpenRDFException

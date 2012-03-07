@@ -4,6 +4,8 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
@@ -22,9 +24,9 @@ public class GraphExporter {
 		this.graph = graph;
 	}
 	
-	public void exportSubGraph(Collection<Collection<URI>> vertexSubSets, Writer[] outputWriters) {
+	public void exportSubGraph(List<Set<URI>> vertexSubSets, Writer[] outputWriters) {
 		int i = 0;
-		Iterator<Collection<URI>> it = vertexSubSets.iterator();
+		Iterator<Set<URI>> it = vertexSubSets.iterator();
 		while (it.hasNext()) {
 			Graph<URI, NamedEdge> componentGraph = getGraphForComponent(it.next());
 			new DOTExporter<URI, NamedEdge>(

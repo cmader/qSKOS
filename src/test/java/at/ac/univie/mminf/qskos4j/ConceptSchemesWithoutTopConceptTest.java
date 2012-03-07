@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -21,7 +21,7 @@ public class ConceptSchemesWithoutTopConceptTest extends QSkosTestCase {
 	
 	@Test
 	public void testConceptSchemesWithoutTopConceptsCount() throws OpenRDFException {
-		List<URI> conceptSchemes = qSkosMissingTopConcepts.findConceptSchemesWithoutTopConcept();
+		Collection<URI> conceptSchemes = qSkosMissingTopConcepts.findConceptSchemesWithoutTopConcept().getData();
 		Assert.assertEquals(1, conceptSchemes.size());
 	}
 	

@@ -14,6 +14,7 @@ import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -27,7 +28,7 @@ public class SkosReferenceIntegrityChecker extends Criterion {
 		super(vocabRepository);
 	}
 
-	public Collection<Pair<URI>> findAssociativeVsHierarchicalClashes() 
+	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() 
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createRelatedConceptsQuery());
@@ -35,7 +36,7 @@ public class SkosReferenceIntegrityChecker extends Criterion {
 		Collection<Pair<URI>> hierarchicallyConnectedConcepts = 
 			findHierarchicallyConnectedConcepts(relatedConcepts);
 		
-		return  hierarchicallyConnectedConcepts;
+		return new CollectionResult<Pair<URI>>(hierarchicallyConnectedConcepts);
 	}
 	
 	private String createRelatedConceptsQuery() {
@@ -115,13 +116,13 @@ public class SkosReferenceIntegrityChecker extends Criterion {
 			"}";		
 	}
 		
-	public Collection<Pair<URI>> findExactVsAssociativeMappingClashes()
+	public CollectionResult<Pair<URI>> findExactVsAssociativeMappingClashes()
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createExVsAssMappingQuery());
 		Collection<Pair<URI>> exactVsAssMappingClashes = createResultCollection(result);
 		
-		return exactVsAssMappingClashes;
+		return new CollectionResult<Pair<URI>>(exactVsAssMappingClashes);
 	}
 	
 	private String createExVsAssMappingQuery() {

@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -21,8 +21,8 @@ public class TopConceptsHavingBroaderConceptTest extends QSkosTestCase {
 	
 	@Test
 	public void testTopConceptsHavingBroaderConceptCount() throws OpenRDFException {
-		List<URI> topConceptsHavingBroaderConcept =	qSkosTopConceptsHavingBroaderConcept.
-			findTopConceptsHavingBroaderConcept();
+		Collection<URI> topConceptsHavingBroaderConcept =	qSkosTopConceptsHavingBroaderConcept.
+			findTopConceptsHavingBroaderConcept().getData();
 		Assert.assertEquals(4, topConceptsHavingBroaderConcept.size());
 	}
 	

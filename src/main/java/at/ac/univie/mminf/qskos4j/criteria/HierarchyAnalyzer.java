@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -38,13 +37,13 @@ public class HierarchyAnalyzer extends Criterion {
 	private final String skosNarrowerProperties = "skos:narrower, skos:narrowerTransitive, skos:narrowMatch";	
 
 	private DirectedGraph<URI, NamedEdge> hierarchyGraph;
-	private Collection<Collection<URI>> cycleContainingComponents;
+	private List<Set<URI>> cycleContainingComponents;
 	
 	public HierarchyAnalyzer(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<Collection<URI>> findCycleContainingComponents() throws OpenRDFException 
+	public CollectionResult<Set<URI>> findCycleContainingComponents() throws OpenRDFException 
 	{
 		if (hierarchyGraph == null) {
 			TupleQueryResult broaderResult = findTriples(HierarchyStyle.BROADER);
@@ -54,7 +53,7 @@ public class HierarchyAnalyzer extends Criterion {
 		
 		Set<URI> nodesInCycles = new CycleDetector<URI, NamedEdge>(hierarchyGraph).findCycles();
 		cycleContainingComponents = trackNodesInCycles(nodesInCycles);
-		return new CollectionResult<Collection<URI>>(cycleContainingComponents);
+		return new CollectionResult<Set<URI>>(cycleContainingComponents);
 	}
 	
 	public void exportCycleContainingComponents(Writer[] writers) throws OpenRDFException 
@@ -135,9 +134,9 @@ public class HierarchyAnalyzer extends Criterion {
 		}
 	}
 		
-	private Collection<Collection<URI>> trackNodesInCycles(Set<URI> nodesInCycles) 
+	private List<Set<URI>> trackNodesInCycles(Set<URI> nodesInCycles) 
 	{
-		Collection<Collection<URI>> ret = new ArrayList<Collection<URI>>();
+		List<Set<URI>> ret = new ArrayList<Set<URI>>();
 		List<Set<URI>> stronglyConnectedSets =
 			new StrongConnectivityInspector<URI, NamedEdge>(hierarchyGraph).stronglyConnectedSets();
 		

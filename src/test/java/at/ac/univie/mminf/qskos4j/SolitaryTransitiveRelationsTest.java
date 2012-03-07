@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,8 +22,8 @@ public class SolitaryTransitiveRelationsTest extends QSkosTestCase {
 
 	@Test
 	public void testSolitaryTransitiveRelationsCount() throws OpenRDFException {
-		Set<Pair<URI>> solitaryTransitiveRelations = 
-			qSkosSolitaryTransitiveRelations.findSolitaryTransitiveRelations();
+		Collection<Pair<URI>> solitaryTransitiveRelations = 
+			qSkosSolitaryTransitiveRelations.findSolitaryTransitiveRelations().getData();
 		Assert.assertEquals(2, solitaryTransitiveRelations.size());
 	}
 	

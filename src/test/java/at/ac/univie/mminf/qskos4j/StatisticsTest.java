@@ -60,31 +60,31 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test
 	public void testLexicalRelationsCount() throws OpenRDFException
 	{
-		Assert.assertEquals(29, qSkosComponents.findLexicalRelationsCount());
+		Assert.assertEquals(29, qSkosComponents.findLexicalRelationsCount().getData().longValue());
 	}
 	
 	@Test
 	public void testSemanticRelationsCount() throws OpenRDFException
 	{
-		Assert.assertEquals(18, qSkosComponents.findSemanticRelationsCount());
+		Assert.assertEquals(18, qSkosComponents.findSemanticRelationsCount().getData().longValue());
 	}
 	
 	@Test
 	public void testAggregationRelationsCount() throws OpenRDFException
 	{
-		Assert.assertEquals(7, qSkosAggregations.findAggregationRelations());
+		Assert.assertEquals(7, qSkosAggregations.findAggregationRelations().getData().longValue());
 	}
 	
 	@Test
 	public void testConceptSchemeCount() throws OpenRDFException
 	{
-		Assert.assertEquals(5, qSkosAggregations.findConceptSchemeCount());
+		Assert.assertEquals(5, qSkosAggregations.findConceptSchemeCount().getData().longValue());
 	}
 	
 	@Test
 	public void testCollectionCount() throws OpenRDFException
 	{
-		Assert.assertEquals(4, qSkosAggregations.findCollectionCount());
+		Assert.assertEquals(4, qSkosAggregations.findCollectionCount().getData().longValue());
 	}
 	
 }

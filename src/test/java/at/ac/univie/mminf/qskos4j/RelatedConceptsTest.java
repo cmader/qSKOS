@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	
 	@Test
 	public void testRelatedConceptsCount_1() throws OpenRDFException {
-		Set<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts();
+		Collection<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts().getData();
 		
 		Assert.assertEquals(2, allRelatedConcepts.size());
 		Assert.assertEquals(4, getDifferentConcepts(allRelatedConcepts).size());
@@ -33,7 +34,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 
 	@Test
 	public void testNotDirectlyConnectedRelatedConceptsCount() throws OpenRDFException {
-		Set<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts();
+		Collection<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts().getData();
 		
 		long notDirectlyConnectedConceptsCount = 0;
 		for (RelatedConcepts relatedConcepts : allRelatedConcepts) {
@@ -45,7 +46,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 		Assert.assertEquals(1, notDirectlyConnectedConceptsCount);
 	}
 	
-	private Set<URI> getDifferentConcepts(Set<RelatedConcepts> allRelatedConcepts) 
+	private Collection<URI> getDifferentConcepts(Collection<RelatedConcepts> allRelatedConcepts) 
 	{
 		Set<URI> ret = new HashSet<URI>();
 		
@@ -59,6 +60,6 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	
 	@Test
 	public void testRelatedConceptsCount_2() throws OpenRDFException {
-		Assert.assertEquals(0, qSkosRelatedConcepts.findRelatedConcepts().size());
+		Assert.assertEquals(0, qSkosRelatedConcepts.findRelatedConcepts().getData().size());
 	}
 }

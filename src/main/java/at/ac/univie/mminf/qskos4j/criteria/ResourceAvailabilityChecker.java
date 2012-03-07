@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,6 +20,7 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
@@ -54,7 +56,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 		return urlAvailability;
 	}
 	
-	public Set<String> findInvalidResources(
+	public CollectionResult<String> findInvalidResources(
 		Float randomSubsetSize_percent,
 		Integer urlDereferencingDelayMillis) throws OpenRDFException
 	{
@@ -62,13 +64,14 @@ public class ResourceAvailabilityChecker extends Criterion {
 			checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelayMillis);
 		}
 		
-		return invalidResources;
+		return new CollectionResult<String>(invalidResources);
 	}
 	
-	public Set<String> findNonHttpResources() throws OpenRDFException 
+	public CollectionResult<String> findNonHttpResources() throws OpenRDFException 
 	{
 		TupleQueryResult result = vocabRepository.query(createNonHttpUriQuery());
-		return createNonHttpUriSet(result);
+		Collection<String> nonHttpUriSet = createNonHttpUriSet(result);
+		return new CollectionResult<String>(nonHttpUriSet);
 	}
 	
 	private String createNonHttpUriQuery() {
@@ -79,7 +82,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 			"}";
 	}
 	
-	private Set<String> createNonHttpUriSet(TupleQueryResult result)
+	private Collection<String> createNonHttpUriSet(TupleQueryResult result)
 		throws OpenRDFException
 	{
 		Set<String> nonHttpURIs = new HashSet<String>();

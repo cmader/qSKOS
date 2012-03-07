@@ -53,14 +53,14 @@ public class ResourceAvailabilityTest extends QSkosTestCase {
 	public void testConceptsNonHttpUriCount() throws OpenRDFException {
 		Assert.assertEquals(
 			1,
-			qSkosConcepts.findNonHttpResources().size());
+			qSkosConcepts.findNonHttpResources().getData().size());
 	}
 
 	@Test
 	public void testResourcesNonHttpUriCount() throws OpenRDFException {
 		Assert.assertEquals(
 			2, 
-			qSkosExtResources.findNonHttpResources().size());
+			qSkosExtResources.findNonHttpResources().getData().size());
 	}
 
 }

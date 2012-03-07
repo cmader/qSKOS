@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,7 @@ import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.result.WccResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
@@ -193,7 +193,7 @@ public class QSkos {
 		componentFinder.exportComponents(writers);
 	}
 	
-	public CollectionResult<Collection<URI>> findHierarchicalCycles() throws OpenRDFException {
+	public CollectionResult<Set<URI>> findHierarchicalCycles() throws OpenRDFException {
 		return hierarchyAnalyer.findCycleContainingComponents();
 	}
 

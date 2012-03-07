@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.criteria.Criterion;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.SkosLabel.LabelType;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -40,14 +41,14 @@ public class RelatedConceptsFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public Set<RelatedConcepts> findRelatedConcepts(Collection<URI> concepts) 
+	public CollectionResult<RelatedConcepts> findRelatedConcepts(Collection<URI> concepts) 
 		throws OpenRDFException
 	{
 		if (allRelatedConcepts == null) {
 			generateConceptsLabelMap(concepts);
 			compareConceptLabels();
 		}
-		return allRelatedConcepts;
+		return new CollectionResult<RelatedConcepts>(allRelatedConcepts);
 	}
 	
 	private void generateConceptsLabelMap(Collection<URI> concepts) 
