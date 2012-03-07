@@ -1,6 +1,8 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.result.general;
 
 import java.util.Collection;
+
+import at.ac.univie.mminf.qskos4j.result.Result;
 
 public class CollectionResult<T> extends Result<Collection<T>> {
 
@@ -14,9 +16,8 @@ public class CollectionResult<T> extends Result<Collection<T>> {
 	}
 
 	@Override
-	public String getDetailedReport() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getExtensiveReport() {
+		return getData().toString();
 	}
 
 }

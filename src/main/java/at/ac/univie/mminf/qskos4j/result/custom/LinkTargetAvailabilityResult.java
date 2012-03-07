@@ -1,13 +1,15 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.result.custom;
 
 import java.net.URL;
 import java.util.Map;
 
-public class LtaResult extends Result<Map<URL, String>> {
+import at.ac.univie.mminf.qskos4j.result.Result;
+
+public class LinkTargetAvailabilityResult extends Result<Map<URL, String>> {
 
 	private Float subsetSize_percent;
 	
-	public LtaResult(Map<URL, String> data, Float subsetSize_percent) {
+	public LinkTargetAvailabilityResult(Map<URL, String> data, Float subsetSize_percent) {
 		super(data);
 		this.subsetSize_percent = subsetSize_percent;
 	}
@@ -36,7 +38,7 @@ public class LtaResult extends Result<Map<URL, String>> {
 	}
 
 	@Override
-	public String getDetailedReport() {
+	public String getExtensiveReport() {
 		// TODO Auto-generated method stub
 		return null;
 	}

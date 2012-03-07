@@ -11,7 +11,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.RarResult;
+import at.ac.univie.mminf.qskos4j.result.custom.RedundantAssocRelationsResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -22,14 +22,14 @@ public class RedundantAssociativeRelationsFinder extends Criterion {
 		super(vocabRepository);
 	}
 
-	public RarResult findRedundantAssociativeRelations() throws OpenRDFException 
+	public RedundantAssocRelationsResult findRedundantAssociativeRelations() throws OpenRDFException 
 	{
 		Map<URI, Set<Pair<URI>>> redundantAssociativeRelations = new HashMap<URI, Set<Pair<URI>>>();
 		
 		TupleQueryResult result = vocabRepository.query(createRedundantAssociativeRelationsQuery());
 		generateResultsMap(redundantAssociativeRelations, result);
 		
-		return new RarResult(redundantAssociativeRelations);
+		return new RedundantAssocRelationsResult(redundantAssociativeRelations);
 	}
 	
 	public Map<URI, Set<Pair<URI>>> findNotAssociatedSiblings() throws OpenRDFException 

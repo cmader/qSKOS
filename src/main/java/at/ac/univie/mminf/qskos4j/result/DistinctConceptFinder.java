@@ -8,9 +8,9 @@ import org.openrdf.model.URI;
 
 import at.ac.univie.mminf.qskos4j.util.Pair;
 
-class DistinctConceptFinder {
+public class DistinctConceptFinder {
 
-	static Collection<URI> getDistinctConceptsFromPairs(Collection<Pair<URI>> conceptURIs) {
+	public static Collection<URI> getDistinctConceptsFromPairs(Collection<Pair<URI>> conceptURIs) {
 		Set<URI> distinctConcepts = new HashSet<URI>();
 		
 		for (Pair<URI> pair : conceptURIs) {

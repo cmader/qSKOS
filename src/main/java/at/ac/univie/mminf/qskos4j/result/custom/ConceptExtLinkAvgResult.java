@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.result.custom;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -7,9 +7,11 @@ import java.util.Map;
 
 import org.openrdf.model.URI;
 
-public class CelaResult extends Result<Map<URI, List<URL>>> {
+import at.ac.univie.mminf.qskos4j.result.Result;
 
-	public CelaResult(Map<URI, List<URL>> data) {
+public class ConceptExtLinkAvgResult extends Result<Map<URI, List<URL>>> {
+
+	public ConceptExtLinkAvgResult(Map<URI, List<URL>> data) {
 		super(data);
 	}
 
@@ -25,7 +27,7 @@ public class CelaResult extends Result<Map<URI, List<URL>>> {
 	}
 
 	@Override
-	public String getDetailedReport() {
+	public String getExtensiveReport() {
 		// TODO Auto-generated method stub
 		return null;
 	}

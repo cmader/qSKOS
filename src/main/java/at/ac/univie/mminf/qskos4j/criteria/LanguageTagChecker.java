@@ -13,7 +13,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-import at.ac.univie.mminf.qskos4j.result.MapOfCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.MapOfCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 

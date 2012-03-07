@@ -1,7 +1,9 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.result.general;
 
 import java.util.Collection;
 import java.util.Map;
+
+import at.ac.univie.mminf.qskos4j.result.Result;
 
 public class MapOfCollectionResult<K, T> extends Result<Map<K, Collection<T>>> {
 
@@ -15,7 +17,7 @@ public class MapOfCollectionResult<K, T> extends Result<Map<K, Collection<T>>> {
 	}
 
 	@Override
-	public String getDetailedReport() {
+	public String getExtensiveReport() {
 		// TODO Auto-generated method stub
 		return null;
 	}

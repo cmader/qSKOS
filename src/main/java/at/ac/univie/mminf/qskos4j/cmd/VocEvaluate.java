@@ -42,6 +42,9 @@ public class VocEvaluate {
 	@Parameter(names = {"-m", "--use-measures"}, description = "Comma-separated list of measure IDs to perform")
 	private String selectedCriteria;
 	
+	@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
+	private boolean extensiveReport = false;
+	
 	private QSkos qskos;
 	
 	public static void main(String[] args) {
@@ -109,11 +112,11 @@ public class VocEvaluate {
 	private void performMeasures() {
 		for (CriterionDescription criterion : extractCriteria()) {
 			System.out.println("--- " +criterion.getName());
-			String qSkosMethodName = criterion.getQSkosMethodName(); 
+			String qSkosMethodName = criterion.getQSkosMethodName();
 			
 			try {
 				Result<?> result = invokeQSkosMethod(qSkosMethodName);
-				System.out.println(result.getShortReport());
+				outputReport(result);
 			}
 			catch (Exception e) {
 				String message = e.getMessage();
@@ -125,6 +128,14 @@ public class VocEvaluate {
 			}
 		}
 	}	
+	
+	private void outputReport(Result<?> result) {
+		System.out.println(result.getShortReport());
+		
+		if (extensiveReport) {
+			System.out.println(result.getExtensiveReport());
+		}
+	}
 	
 	private List<CriterionDescription> extractCriteria() {
 		List<CriterionDescription> criteria = new ArrayList<CriterionDescription>();

@@ -1,9 +1,11 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.result.general;
 
 import java.util.Collection;
 
 import org.openrdf.model.URI;
 
+import at.ac.univie.mminf.qskos4j.result.DistinctConceptFinder;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 
 public class ConceptPairsResult extends Result<Collection<Pair<URI>>> {
@@ -19,7 +21,7 @@ public class ConceptPairsResult extends Result<Collection<Pair<URI>>> {
 	}
 	
 	@Override
-	public String getDetailedReport() {
+	public String getExtensiveReport() {
 		// TODO Auto-generated method stub
 		return null;
 	}

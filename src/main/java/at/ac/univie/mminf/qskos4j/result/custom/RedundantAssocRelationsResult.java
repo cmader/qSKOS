@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.result.custom;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -6,11 +6,13 @@ import java.util.Set;
 
 import org.openrdf.model.URI;
 
+import at.ac.univie.mminf.qskos4j.result.DistinctConceptFinder;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 
-public class RarResult extends Result<Map<URI, Set<Pair<URI>>>> {
+public class RedundantAssocRelationsResult extends Result<Map<URI, Set<Pair<URI>>>> {
 
-	public RarResult(Map<URI, Set<Pair<URI>>> data) {
+	public RedundantAssocRelationsResult(Map<URI, Set<Pair<URI>>> data) {
 		super(data);
 	}
 
@@ -40,7 +42,7 @@ public class RarResult extends Result<Map<URI, Set<Pair<URI>>>> {
 	}
 
 	@Override
-	public String getDetailedReport() {
+	public String getExtensiveReport() {
 		// TODO Auto-generated method stub
 		return null;
 	}

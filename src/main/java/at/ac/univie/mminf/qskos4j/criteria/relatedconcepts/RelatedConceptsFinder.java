@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.criteria.Criterion;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.SkosLabel.LabelType;
-import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;

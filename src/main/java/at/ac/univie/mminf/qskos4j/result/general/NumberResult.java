@@ -1,4 +1,6 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.result.general;
+
+import at.ac.univie.mminf.qskos4j.result.Result;
 
 public class NumberResult<T extends Number> extends Result<T> {
 
@@ -12,7 +14,7 @@ public class NumberResult<T extends Number> extends Result<T> {
 	}
 
 	@Override
-	public String getDetailedReport() {
+	public String getExtensiveReport() {
 		// not needed for this type
 		return "";
 	}

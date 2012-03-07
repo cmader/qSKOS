@@ -14,7 +14,7 @@ public abstract class Result<T> {
 	
 	public abstract String getShortReport();
 	
-	public abstract String getDetailedReport();
+	public abstract String getExtensiveReport();
 	
 	@Override
 	public String toString() {

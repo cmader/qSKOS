@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.result.custom;
 
 import java.util.Map;
 import java.util.Set;
@@ -7,9 +7,9 @@ import org.openrdf.model.URI;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
 
-public class AciResult extends Result<Map<URI, Set<URI>>> {
+public class AvgConceptIndegreeResult extends Result<Map<URI, Set<URI>>> {
 
-	public AciResult(Map<URI, Set<URI>> data) {
+	public AvgConceptIndegreeResult(Map<URI, Set<URI>> data) {
 		super(data);
 	}
 
@@ -26,7 +26,7 @@ public class AciResult extends Result<Map<URI, Set<URI>>> {
 	}
 
 	@Override
-	public String getDetailedReport() {
+	public String getExtensiveReport() {
 		// TODO Auto-generated method stub
 		return null;
 	}

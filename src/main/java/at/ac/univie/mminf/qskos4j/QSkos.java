@@ -34,15 +34,16 @@ import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
-import at.ac.univie.mminf.qskos4j.result.CelaResult;
-import at.ac.univie.mminf.qskos4j.result.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.ConceptPairsResult;
-import at.ac.univie.mminf.qskos4j.result.LtaResult;
-import at.ac.univie.mminf.qskos4j.result.MapOfCollectionResult;
-import at.ac.univie.mminf.qskos4j.result.NumberResult;
-import at.ac.univie.mminf.qskos4j.result.RarResult;
-import at.ac.univie.mminf.qskos4j.result.UrcResult;
-import at.ac.univie.mminf.qskos4j.result.WccResult;
+import at.ac.univie.mminf.qskos4j.result.custom.AvgConceptIndegreeResult;
+import at.ac.univie.mminf.qskos4j.result.custom.ConceptExtLinkAvgResult;
+import at.ac.univie.mminf.qskos4j.result.custom.LinkTargetAvailabilityResult;
+import at.ac.univie.mminf.qskos4j.result.custom.RedundantAssocRelationsResult;
+import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
+import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.ConceptPairsResult;
+import at.ac.univie.mminf.qskos4j.result.general.MapOfCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
@@ -188,7 +189,7 @@ public class QSkos {
 		return new RelationStatisticsFinder(vocabRepository).findCollectionCount();
 	}
 	
-	public WccResult findComponents() throws OpenRDFException {
+	public WeaklyConnectedComponentsResult findComponents() throws OpenRDFException {
 		return componentFinder.findComponents();
 	}
 	
@@ -204,14 +205,14 @@ public class QSkos {
 		hierarchyAnalyer.exportCycleContainingComponents(writers);
 	}
 
-	public CelaResult findExternalResources() throws OpenRDFException {
+	public ConceptExtLinkAvgResult findExternalResources() throws OpenRDFException {
 		ExternalResourcesFinder extResourcesFinder = new ExternalResourcesFinder(vocabRepository);
 		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
 		return extResourcesFinder.findExternalResourcesForConcepts(findInvolvedConcepts().getData(), publishingHost);
 	}
 	
-	public LtaResult checkResourceAvailability() throws OpenRDFException 
+	public LinkTargetAvailabilityResult checkResourceAvailability() throws OpenRDFException 
 	{
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
 		return resourceAvailabilityChecker.checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelay);
@@ -252,7 +253,7 @@ public class QSkos {
 		return new AmbiguousLabelFinder(vocabRepository).findNotDisjointLabels();
 	}
 	
-	public RarResult findRedundantAssociativeRelations() throws OpenRDFException {
+	public RedundantAssocRelationsResult findRedundantAssociativeRelations() throws OpenRDFException {
 		return redundantAssociativeRelationsFinder.findRedundantAssociativeRelations();
 	}
 	
@@ -262,7 +263,7 @@ public class QSkos {
 		return relatedConceptsFinder.findRelatedConcepts(findInvolvedConcepts().getData());
 	}
 	
-	public AciResult analyzeConceptsRank() throws OpenRDFException 
+	public AvgConceptIndegreeResult analyzeConceptsRank() throws OpenRDFException 
 	{
 		ConceptRanker conceptRanker = new ConceptRanker(
 			vocabRepository, 
@@ -271,7 +272,7 @@ public class QSkos {
 		return conceptRanker.analyzeConceptsRank(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
 	}
 	
-	public UrcResult findOmittedInverseRelations() throws OpenRDFException {
+	public UnidirRelConceptsResult findOmittedInverseRelations() throws OpenRDFException {
 		return new InverseRelationsChecker(vocabRepository).findOmittedInverseRelations();
 	}
 	
