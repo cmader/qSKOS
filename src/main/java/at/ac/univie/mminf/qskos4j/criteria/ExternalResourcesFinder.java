@@ -22,6 +22,7 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.univie.mminf.qskos4j.result.CelaResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -37,7 +38,7 @@ public class ExternalResourcesFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public Map<URI, List<URL>> findExternalResourcesForConcepts(
+	public CelaResult findExternalResourcesForConcepts(
 		Collection<URI> concepts,
 		String publishingHost) throws OpenRDFException 
 	{
@@ -50,7 +51,7 @@ public class ExternalResourcesFinder extends Criterion {
 		}
 		retainExternalResources();
 		
-		return resourcesForConcept;
+		return new CelaResult(resourcesForConcept);
 	}
 	
 	private void findResourcesForConcepts(Collection<URI> concepts) throws OpenRDFException 

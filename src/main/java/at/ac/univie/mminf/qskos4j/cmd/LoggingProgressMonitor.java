@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.example;
+package at.ac.univie.mminf.qskos4j.cmd;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

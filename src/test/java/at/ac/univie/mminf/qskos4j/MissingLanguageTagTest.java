@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -23,13 +23,13 @@ public class MissingLanguageTagTest extends QSkosTestCase {
 	
 	@Test
 	public void testMissingLangTagCount_1() throws OpenRDFException {
-		Map<String, Set<Resource>> missingLangTags = qSkosComponents.findMissingLanguageTags();
+		Map<String, Collection<Resource>> missingLangTags = qSkosComponents.findMissingLanguageTags().getData();
 		Assert.assertEquals(3, missingLangTags.size());
 	}
 	
 	@Test
 	public void testMissingLangTagCount_2() throws OpenRDFException {
-		Map<String, Set<Resource>> missingLangTags = qSkosDeprecatedAndIllegal.findMissingLanguageTags();
+		Map<String, Collection<Resource>> missingLangTags = qSkosDeprecatedAndIllegal.findMissingLanguageTags().getData();
 		Assert.assertEquals(7, missingLangTags.size());
 	}
 }

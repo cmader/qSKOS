@@ -2,9 +2,9 @@ package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	public void testIncompleteLanguageCoverageCount() 
 		throws OpenRDFException 
 	{
-		Map<Resource, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
+		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage().getData();
 		Assert.assertEquals(13, incompleteLangCoverage.size());		
 	}
 	
@@ -33,10 +33,10 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	public void testExistResourcesNotHavingEnglishLabels() 
 		throws OpenRDFException 
 	{
-		Map<Resource, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
+		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage().getData();
 		
 		boolean englishTagFound = false;
-		for (Set<String> missingLanguages : incompleteLangCoverage.values()) {
+		for (Collection<String> missingLanguages : incompleteLangCoverage.values()) {
 			englishTagFound = missingLanguages.contains("en");
 			if (englishTagFound) break;
 		}
@@ -48,11 +48,11 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	public void testResourcesMissingOnlyFrenchLabelsCount() 
 		throws OpenRDFException
 	{
-		Map<Resource, Set<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage();
+		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage().getData();
 
 		List<Resource> foundResources = new ArrayList<Resource>();
 		for (Resource resource : incompleteLangCoverage.keySet()) {
-			Set<String> missingLanguages = incompleteLangCoverage.get(resource);
+			Collection<String> missingLanguages = incompleteLangCoverage.get(resource);
 			if (missingLanguages.size() == 1 && missingLanguages.contains("fr")) {
 				foundResources.add(resource);
 			}

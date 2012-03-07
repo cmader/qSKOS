@@ -9,7 +9,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.ConceptPairsResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -26,7 +26,7 @@ public class SolitaryTransitiveRelationsFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<Pair<URI>> findSolitaryTransitiveRelations()  
+	public ConceptPairsResult findSolitaryTransitiveRelations()  
 		throws OpenRDFException
 	{
 		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
@@ -34,7 +34,7 @@ public class SolitaryTransitiveRelationsFinder extends Criterion {
 			addToResults(result);			
 		}
 		
-		return new CollectionResult<Pair<URI>>(solitaryTransitiveRelations);
+		return new ConceptPairsResult(solitaryTransitiveRelations);
 	}
 
 	private String createSolitaryTransitiveRelationsQuery(

@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -22,7 +22,7 @@ public class IllegalTermsTest extends QSkosTestCase {
 		
 	@Test
 	public void testIllegalTermsCount() throws OpenRDFException {
-		Map<URI, Set<URI>> deprecatedTerms = qSkosDeprecatedAndIllegal.findIllegalTerms();
+		Map<URI, Collection<URI>> deprecatedTerms = qSkosDeprecatedAndIllegal.findIllegalTerms().getData();
 		Assert.assertEquals(12, deprecatedTerms.size());
 	}
 	

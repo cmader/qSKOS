@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +21,7 @@ public class AmbiguousLabelTest extends QSkosTestCase {
 	
 	@Test
 	public void testUniquePrefLabels() throws OpenRDFException {
-		Map<URI, Set<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotUniquePrefLabels();
+		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotUniquePrefLabels().getData();
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA"));
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA2"));
@@ -32,15 +32,15 @@ public class AmbiguousLabelTest extends QSkosTestCase {
 	
 	@Test 
 	public void testDisjointLabels() throws OpenRDFException {
-		Map<URI, Set<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotDisjointLabels();
+		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotDisjointLabels().getData();
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptD"));
 		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptE"));
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptF"));
 	}
 	
-	private Set<String> getEntryForUriSuffix(
-		Map<URI, Set<String>> map,
+	private Collection<String> getEntryForUriSuffix(
+		Map<URI, Collection<String>> map,
 		String suffix)
 	{
 		for (URI resource : map.keySet()) {

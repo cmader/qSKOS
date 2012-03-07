@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -23,13 +23,13 @@ public class DeprecatedPropertiesTest extends QSkosTestCase {
 	
 	@Test
 	public void testDeprecatedPropertiesCount_1() throws OpenRDFException {
-		Map<URI, Set<URI>> deprecatedTerms = qSkosConcepts.findDeprecatedProperties();
+		Map<URI, Collection<URI>> deprecatedTerms = qSkosConcepts.findDeprecatedProperties().getData();
 		Assert.assertEquals(1, deprecatedTerms.size());
 	}
 
 	@Test
 	public void testDeprecatedPropertiesCount_2() throws OpenRDFException {
-		Map<URI, Set<URI>> deprecatedTerms = qSkosDeprecatedAndIllegal.findDeprecatedProperties();
+		Map<URI, Collection<URI>> deprecatedTerms = qSkosDeprecatedAndIllegal.findDeprecatedProperties().getData();
 		Assert.assertEquals(9, deprecatedTerms.size());
 	}
 	

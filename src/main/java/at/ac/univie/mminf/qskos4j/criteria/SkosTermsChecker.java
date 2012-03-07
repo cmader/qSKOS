@@ -1,9 +1,9 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -12,25 +12,26 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
+import at.ac.univie.mminf.qskos4j.result.MapOfCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class SkosTermsChecker extends Criterion {
 
-	private Map<URI, Set<URI>> deprecatedProperties, illegalTerms;
+	private Map<URI, Collection<URI>> deprecatedProperties, illegalTerms;
 	
 	public SkosTermsChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public Map<URI, Set<URI>> findDeprecatedProperties() throws OpenRDFException 
+	public MapOfCollectionResult<URI, URI> findDeprecatedProperties() throws OpenRDFException 
 	{
 		if (deprecatedProperties == null) {
 			TupleQueryResult result = vocabRepository.query(createDeprecatedPropertiesQuery());
 			generateDeprecatedPropertiesMap(result);	
 		}
 		
-		return deprecatedProperties;
+		return new MapOfCollectionResult<URI, URI>(deprecatedProperties);
 	}
 	
 	private String createDeprecatedPropertiesQuery() {
@@ -55,14 +56,14 @@ public class SkosTermsChecker extends Criterion {
 	private void generateDeprecatedPropertiesMap(TupleQueryResult result) 
 		throws QueryEvaluationException 
 	{
-		deprecatedProperties = new HashMap<URI, Set<URI>>();
+		deprecatedProperties = new HashMap<URI, Collection<URI>>();
 
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
 			URI resource = (URI) queryResult.getValue("iri");
 			URI deprProperty = (URI) queryResult.getValue("deprProp");
 			
-			Set<URI> resources = deprecatedProperties.get(deprProperty);
+			Collection<URI> resources = deprecatedProperties.get(deprProperty);
 			if (resources == null) {
 				resources = new HashSet<URI>();
 				deprecatedProperties.put(deprProperty, resources);
@@ -71,14 +72,14 @@ public class SkosTermsChecker extends Criterion {
 		}
 	}
 	
-	public Map<URI, Set<URI>> findIllegalTerms() throws OpenRDFException 
+	public MapOfCollectionResult<URI, URI> findIllegalTerms() throws OpenRDFException 
 	{
 		if (illegalTerms == null) {
 			TupleQueryResult result = vocabRepository.query(createIllegalTermsQuery());
 			generateIllegalTermsMap(result);
 		}
 		
-		return illegalTerms;
+		return new MapOfCollectionResult<URI, URI>(illegalTerms);
 	}
 	
 	private String createIllegalTermsQuery() {
@@ -99,7 +100,7 @@ public class SkosTermsChecker extends Criterion {
 	private void generateIllegalTermsMap(TupleQueryResult result) 
 		throws QueryEvaluationException 
 	{
-		illegalTerms = new HashMap<URI, Set<URI>>();
+		illegalTerms = new HashMap<URI, Collection<URI>>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -114,7 +115,7 @@ public class SkosTermsChecker extends Criterion {
 	}
 	
 	private void addTermToMap(URI term, URI subject, Value object) {
-		Set<URI> resources = illegalTerms.get(term);
+		Collection<URI> resources = illegalTerms.get(term);
 		if (resources == null) {
 			resources = new HashSet<URI>();
 			illegalTerms.put(term, resources);

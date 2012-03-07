@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.openrdf.OpenRDFException;
@@ -37,8 +34,14 @@ import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
+import at.ac.univie.mminf.qskos4j.result.CelaResult;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.ConceptPairsResult;
+import at.ac.univie.mminf.qskos4j.result.LtaResult;
+import at.ac.univie.mminf.qskos4j.result.MapOfCollectionResult;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.result.RarResult;
+import at.ac.univie.mminf.qskos4j.result.UrcResult;
 import at.ac.univie.mminf.qskos4j.result.WccResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
@@ -201,14 +204,14 @@ public class QSkos {
 		hierarchyAnalyer.exportCycleContainingComponents(writers);
 	}
 
-	public Map<URI, List<URL>> findExternalResources() throws OpenRDFException {
+	public CelaResult findExternalResources() throws OpenRDFException {
 		ExternalResourcesFinder extResourcesFinder = new ExternalResourcesFinder(vocabRepository);
 		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
 		return extResourcesFinder.findExternalResourcesForConcepts(findInvolvedConcepts().getData(), publishingHost);
 	}
 	
-	public Map<URL, String> checkResourceAvailability() throws OpenRDFException 
+	public LtaResult checkResourceAvailability() throws OpenRDFException 
 	{
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
 		return resourceAvailabilityChecker.checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelay);
@@ -224,37 +227,33 @@ public class QSkos {
 		return resourceAvailabilityChecker.findNonHttpResources();
 	}
 	
-	public Map<URI, Set<URI>> findDeprecatedProperties() throws OpenRDFException {
+	public MapOfCollectionResult<URI, URI> findDeprecatedProperties() throws OpenRDFException {
 		return skosTermsChecker.findDeprecatedProperties();
 	}
 	
-	public Map<URI, Set<URI>> findIllegalTerms() throws OpenRDFException {
+	public MapOfCollectionResult<URI, URI> findIllegalTerms() throws OpenRDFException {
 		return skosTermsChecker.findIllegalTerms();
 	}
 	
-	public Map<String, Set<Resource>> findMissingLanguageTags() throws OpenRDFException {
+	public MapOfCollectionResult<String, Resource> findMissingLanguageTags() throws OpenRDFException {
 		return new LanguageTagChecker(vocabRepository).findMissingLanguageTags();
 	}
 	
-	public Map<Resource, Set<String>> getIncompleteLanguageCoverage() throws OpenRDFException {
+	public MapOfCollectionResult<Resource, String> getIncompleteLanguageCoverage() throws OpenRDFException {
 		languageCoverageChecker.setProgressMonitor(progressMonitor);
 		return languageCoverageChecker.getIncompleteLanguageCoverage(findInvolvedConcepts().getData());
 	}
 	
-	public Map<URI, Set<String>> findNotUniquePrefLabels() throws OpenRDFException {
+	public MapOfCollectionResult<URI, String> findNotUniquePrefLabels() throws OpenRDFException {
 		return new AmbiguousLabelFinder(vocabRepository).findNotUniquePrefLabels();
 	}
 	
-	public Map<URI, Set<String>> findNotDisjointLabels() throws OpenRDFException {
+	public MapOfCollectionResult<URI, String> findNotDisjointLabels() throws OpenRDFException {
 		return new AmbiguousLabelFinder(vocabRepository).findNotDisjointLabels();
 	}
 	
-	public Map<URI, Set<Pair<URI>>> findRedundantAssociativeRelations() throws OpenRDFException {
+	public RarResult findRedundantAssociativeRelations() throws OpenRDFException {
 		return redundantAssociativeRelationsFinder.findRedundantAssociativeRelations();
-	}
-	
-	public Map<URI, Set<Pair<URI>>> findNotAssociatedSiblings() throws OpenRDFException {
-		return redundantAssociativeRelationsFinder.findNotAssociatedSiblings();
 	}
 	
 	public CollectionResult<RelatedConcepts> findRelatedConcepts() throws OpenRDFException {
@@ -263,7 +262,7 @@ public class QSkos {
 		return relatedConceptsFinder.findRelatedConcepts(findInvolvedConcepts().getData());
 	}
 	
-	public Map<URI, Set<URI>> analyzeConceptsRank() throws OpenRDFException 
+	public AciResult analyzeConceptsRank() throws OpenRDFException 
 	{
 		ConceptRanker conceptRanker = new ConceptRanker(
 			vocabRepository, 
@@ -272,11 +271,11 @@ public class QSkos {
 		return conceptRanker.analyzeConceptsRank(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
 	}
 	
-	public Map<Pair<URI>, String> findOmittedInverseRelations() throws OpenRDFException {
+	public UrcResult findOmittedInverseRelations() throws OpenRDFException {
 		return new InverseRelationsChecker(vocabRepository).findOmittedInverseRelations();
 	}
 	
-	public CollectionResult<Pair<URI>> findSolitaryTransitiveRelations() throws OpenRDFException {
+	public ConceptPairsResult findSolitaryTransitiveRelations() throws OpenRDFException {
 		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolitaryTransitiveRelations();
 	}
 	
@@ -307,7 +306,7 @@ public class QSkos {
 		return new SkosReferenceIntegrityChecker(vocabRepository).findExactVsAssociativeMappingClashes();
 	}
 	
-	public CollectionResult<Pair<URI>> findAmbiguousRelations() throws OpenRDFException {
+	public ConceptPairsResult findAmbiguousRelations() throws OpenRDFException {
 		return new AmbiguousRelationsFinder(vocabRepository).findAmbiguousRelations();
 	}
 	

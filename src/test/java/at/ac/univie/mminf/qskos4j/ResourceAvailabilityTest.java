@@ -27,7 +27,7 @@ public class ResourceAvailabilityTest extends QSkosTestCase {
 	
 	@Test
 	public void testResourceAvailability() throws OpenRDFException {	
-		Map<URL, String> resourceAvailability = qSkosExtResources.checkResourceAvailability();
+		Map<URL, String> resourceAvailability = qSkosExtResources.checkResourceAvailability().getData();
 		generateAvailabilityLists(resourceAvailability);
 		
 		Assert.assertEquals(8, resourceAvailability.keySet().size());

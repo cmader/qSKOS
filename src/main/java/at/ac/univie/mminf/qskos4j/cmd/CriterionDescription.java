@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.example;
+package at.ac.univie.mminf.qskos4j.cmd;
 
 enum CriterionDescription {
 

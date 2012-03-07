@@ -1,5 +1,6 @@
 package at.ac.univie.mminf.qskos4j.result;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -13,8 +14,13 @@ public class WccResult extends Result<List<Set<URI>>> {
 
 	@Override
 	public String getShortReport() {
-		// TODO Auto-generated method stub
-		return null;
+		long componentCount = 0;
+		
+		for (Collection<URI> component : getData()) {
+			componentCount += component.size() > 1 ? 1 : 0;
+		}
+		
+		return "count: " +componentCount;
 	}
 
 	@Override

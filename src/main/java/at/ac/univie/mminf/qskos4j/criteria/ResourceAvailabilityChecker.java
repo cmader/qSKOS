@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.LtaResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
@@ -42,7 +43,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public Map<URL, String> checkResourceAvailability(
+	public LtaResult checkResourceAvailability(
 		Float randomSubsetSize_percent,
 		Integer urlDereferencingDelayMillis) throws OpenRDFException 
 	{
@@ -53,7 +54,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 		findAllHttpURLs();
 		dereferenceURIs(randomSubsetSize_percent);
 				
-		return urlAvailability;
+		return new LtaResult(urlAvailability, randomSubsetSize_percent);
 	}
 	
 	public CollectionResult<String> findInvalidResources(

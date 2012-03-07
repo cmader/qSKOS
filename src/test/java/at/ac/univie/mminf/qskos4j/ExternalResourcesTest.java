@@ -24,13 +24,13 @@ public class ExternalResourcesTest extends QSkosTestCase {
 	
 	@Test
 	public void testComponentsExternalLinkCount() throws OpenRDFException {
-		Map<URI, List<URL>> extLinks = qSkosComponents.findExternalResources();
+		Map<URI, List<URL>> extLinks = qSkosComponents.findExternalResources().getData();
 		Assert.assertEquals(0, mapEntriesCount(extLinks));
 	}
 	
 	@Test
 	public void testConceptsExternalLinkCount() throws OpenRDFException {	
-		Map<URI, List<URL>> extLinks = qSkosConcepts.findExternalResources();
+		Map<URI, List<URL>> extLinks = qSkosConcepts.findExternalResources().getData();
 		Assert.assertEquals(2, mapEntriesCount(extLinks));		
 	}
 	

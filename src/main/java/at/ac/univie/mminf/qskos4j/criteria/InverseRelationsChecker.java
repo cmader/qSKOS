@@ -14,6 +14,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
+import at.ac.univie.mminf.qskos4j.result.UrcResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -35,7 +36,7 @@ public class InverseRelationsChecker extends Criterion {
 		super(vocabRepository);
 	}
 
-	public Map<Pair<URI>, String> findOmittedInverseRelations() 
+	public UrcResult findOmittedInverseRelations() 
 		throws OpenRDFException
 	{
 		for (String[] inversePropertyPair : inversePropertyPairs) {
@@ -43,7 +44,7 @@ public class InverseRelationsChecker extends Criterion {
 			addToOmittedReverseRelationsMap(result, inversePropertyPair);			
 		}
 		
-		return omittedInverseRelations;
+		return new UrcResult(omittedInverseRelations);
 	}
 	
 	private String createOmittedRelationsQuery(String[] inverseRelations) {
