@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
+
 public class ConceptRankTest extends QSkosTestCase {
 
 	private QSkos qSkosRankConcepts;

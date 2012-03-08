@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
+
 public class TopConceptsHavingBroaderConceptTest extends QSkosTestCase {
 
 	private QSkos qSkosTopConceptsHavingBroaderConcept;

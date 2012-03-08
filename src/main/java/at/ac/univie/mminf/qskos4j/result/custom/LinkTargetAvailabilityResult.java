@@ -39,8 +39,18 @@ public class LinkTargetAvailabilityResult extends Result<Map<URL, String>> {
 
 	@Override
 	public String getExtensiveReport() {
-		// TODO Auto-generated method stub
-		return null;
+		String extensiveReport = "";
+		
+		for (URL resource : getData().keySet()) {
+			String contentType = getData().get(resource);
+			if (contentType == null) {
+				contentType = "unavailable";
+			}
+			
+			extensiveReport += "resource: '" +resource.toString()+ "', content type: " +contentType+ "\n";
+		}
+
+		return extensiveReport;
 	}
 
 }

@@ -113,7 +113,7 @@ enum CriterionDescription {
 		"findTopConceptsHavingBroaderConcept"),
 	
 	// Labeling issues	
-	MISSING_LANG_TAGS("mlt",
+	MISSING_LANG_TAGS("lts",
 		"Language Tag Support",
 		"Finds missing language tags of text literals",
 		"findMissingLanguageTags"),
@@ -121,7 +121,7 @@ enum CriterionDescription {
 		"Concepts With Incomplete Language Coverage",
 		"Finds concepts lacking description in languages that are present for other concepts",
 		"getIncompleteLanguageCoverage"),
-	AMBIGUOUS_PREFLABELED_CONCEPTS("apl",
+	AMBIGUOUS_PREFLABELED_CONCEPTS("apc",
 		"Ambiguously Preflabeled Concepts",
 		"Finds concepts with more then one prefLabel per languate",	
 		"findNotUniquePrefLabels"),
@@ -135,7 +135,7 @@ enum CriterionDescription {
 		"Potentially Semantically Related Concepts",
 		"Finds concepts with similar (identical) labels",
 		"findRelatedConcepts"),
-	AVG_DOC_COVERAGE("adc",
+	AVG_DOC_COVERAGE("cdcr",
 		"Concept Documentation Coverage Ratio",
 		"Calculates average use of documentation properties per concept",
 		"getAverageDocumentationCoverageRatio"),

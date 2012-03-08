@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 
+
 public class DocumentationCoverageTest extends QSkosTestCase {
 
 	private QSkos qSkosDocumentedConcepts;

@@ -11,6 +11,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
 
+
 public class StatisticsTest extends QSkosTestCase {
 	
 	private QSkos qSkosConcepts, qSkosComponents, qSkosAggregations;

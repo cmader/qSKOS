@@ -43,8 +43,15 @@ public class RedundantAssocRelationsResult extends Result<Map<URI, Set<Pair<URI>
 
 	@Override
 	public String getExtensiveReport() {
-		// TODO Auto-generated method stub
-		return null;
+		String extensiveReport = "";
+		
+		for (URI parent : getData().keySet()) {
+			Set<Pair<URI>> relations = getData().get(parent);
+			
+			extensiveReport += "parent: '" +parent.stringValue()+ "', related pairs: " +relations.toString()+ "\n";
+		}
+		
+		return extensiveReport;
 	}
 
 }

@@ -21,8 +21,13 @@ public class UnidirRelConceptsResult extends Result<Map<Pair<URI>, String>> {
 
 	@Override
 	public String getExtensiveReport() {
-		// TODO Auto-generated method stub
-		return null;
+		String extensiveReport = "";
+		
+		for (Pair<URI> concepts : getData().keySet()) {
+			extensiveReport += "concepts: " +concepts.toString()+ ", related by: '" +getData().get(concepts)+ "'\n";
+		}
+
+		return extensiveReport;
 	}
 
 }

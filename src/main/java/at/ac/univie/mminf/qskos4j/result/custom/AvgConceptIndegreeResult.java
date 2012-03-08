@@ -27,8 +27,17 @@ public class AvgConceptIndegreeResult extends Result<Map<URI, Set<URI>>> {
 
 	@Override
 	public String getExtensiveReport() {
-		// TODO Auto-generated method stub
-		return null;
+		String extensiveReport = "";
+		
+		for (URI resource : getData().keySet()) {
+			Set<URI> refResources = getData().get(resource);
+			
+			if (!refResources.isEmpty()) {
+				extensiveReport += "vocabulary resource: '" +resource.stringValue()+ "', referenced by: " +refResources+ "\n";
+			}
+		}
+
+		return extensiveReport;
 	}
 
 }

@@ -106,7 +106,7 @@
 			<configuration>
 				<archive>
 					<manifest>
-						<mainClass>at.ac.univie.mminf.qskos4j.example.VocEvaluate</mainClass>
+						<mainClass>at.ac.univie.mminf.qskos4j.cmd.VocEvaluate</mainClass>
 					</manifest>
 				</archive>
 			</configuration>

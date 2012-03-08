@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 
+
 public class HierarchicalAndAssociativeRelationsTest extends QSkosTestCase {
 
 	private QSkos qSkosHierarchicalAndAssociativeRelations;

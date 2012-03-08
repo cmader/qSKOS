@@ -9,6 +9,7 @@ import org.junit.Ignore;
 import org.openrdf.OpenRDFException;
 import org.openrdf.rio.RDFFormat;
 
+
 @Ignore
 public class QSkosTestCase {
 	

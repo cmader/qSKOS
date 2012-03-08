@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 
+
 public class LanguageCoverageTest extends QSkosTestCase {
 
 	private QSkos qSkosComponents;

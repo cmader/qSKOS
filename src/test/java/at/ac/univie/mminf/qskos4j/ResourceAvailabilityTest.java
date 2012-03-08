@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 
+
 public class ResourceAvailabilityTest extends QSkosTestCase {
 
 	private List<URL> availableURLs, notAvailableURLs;

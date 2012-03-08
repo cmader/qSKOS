@@ -28,8 +28,17 @@ public class ConceptExtLinkAvgResult extends Result<Map<URI, List<URL>>> {
 
 	@Override
 	public String getExtensiveReport() {
-		// TODO Auto-generated method stub
-		return null;
+		String extensiveReport = "";
+		
+		for (URI concept : getData().keySet()) {
+			List<URL> extResources = getData().get(concept);
+			
+			if (!extResources.isEmpty()) {
+				extensiveReport += "concept: '" +concept.stringValue()+ "', external resources: " +extResources.toString()+ "\n";
+			}
+		}
+
+		return extensiveReport;
 	}
 
 }

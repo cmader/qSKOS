@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
+
 public class DeprecatedPropertiesTest extends QSkosTestCase {
 	
 	private QSkos qSkosConcepts, qSkosDeprecatedAndIllegal;

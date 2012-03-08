@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 
+
 public class MissingLanguageTagTest extends QSkosTestCase {
 
 	private QSkos qSkosComponents, qSkosDeprecatedAndIllegal;
