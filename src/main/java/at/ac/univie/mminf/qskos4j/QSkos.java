@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
@@ -36,13 +35,16 @@ import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
 import at.ac.univie.mminf.qskos4j.result.custom.AvgConceptIndegreeResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptExtLinkAvgResult;
+import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
+import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
+import at.ac.univie.mminf.qskos4j.result.custom.IncomleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.result.custom.LinkTargetAvailabilityResult;
+import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
 import at.ac.univie.mminf.qskos4j.result.custom.RedundantAssocRelationsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ConceptPairsResult;
-import at.ac.univie.mminf.qskos4j.result.general.MapOfCollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
@@ -228,28 +230,28 @@ public class QSkos {
 		return resourceAvailabilityChecker.findNonHttpResources();
 	}
 	
-	public MapOfCollectionResult<URI, URI> findDeprecatedProperties() throws OpenRDFException {
+	public IllegalResourceResult findDeprecatedProperties() throws OpenRDFException {
 		return skosTermsChecker.findDeprecatedProperties();
 	}
 	
-	public MapOfCollectionResult<URI, URI> findIllegalTerms() throws OpenRDFException {
+	public IllegalResourceResult findIllegalTerms() throws OpenRDFException {
 		return skosTermsChecker.findIllegalTerms();
 	}
 	
-	public MapOfCollectionResult<String, Resource> findMissingLanguageTags() throws OpenRDFException {
+	public MissingLangTagResult findMissingLanguageTags() throws OpenRDFException {
 		return new LanguageTagChecker(vocabRepository).findMissingLanguageTags();
 	}
 	
-	public MapOfCollectionResult<Resource, String> getIncompleteLanguageCoverage() throws OpenRDFException {
+	public IncomleteLangCovResult getIncompleteLanguageCoverage() throws OpenRDFException {
 		languageCoverageChecker.setProgressMonitor(progressMonitor);
 		return languageCoverageChecker.getIncompleteLanguageCoverage(findInvolvedConcepts().getData());
 	}
 	
-	public MapOfCollectionResult<URI, String> findNotUniquePrefLabels() throws OpenRDFException {
+	public ConceptLabelsResult findNotUniquePrefLabels() throws OpenRDFException {
 		return new AmbiguousLabelFinder(vocabRepository).findNotUniquePrefLabels();
 	}
 	
-	public MapOfCollectionResult<URI, String> findNotDisjointLabels() throws OpenRDFException {
+	public ConceptLabelsResult findNotDisjointLabels() throws OpenRDFException {
 		return new AmbiguousLabelFinder(vocabRepository).findNotDisjointLabels();
 	}
 	

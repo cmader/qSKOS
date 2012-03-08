@@ -12,7 +12,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.general.MapOfCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -24,14 +24,14 @@ public class SkosTermsChecker extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public MapOfCollectionResult<URI, URI> findDeprecatedProperties() throws OpenRDFException 
+	public IllegalResourceResult findDeprecatedProperties() throws OpenRDFException 
 	{
 		if (deprecatedProperties == null) {
 			TupleQueryResult result = vocabRepository.query(createDeprecatedPropertiesQuery());
 			generateDeprecatedPropertiesMap(result);	
 		}
 		
-		return new MapOfCollectionResult<URI, URI>(deprecatedProperties);
+		return new IllegalResourceResult(deprecatedProperties);
 	}
 	
 	private String createDeprecatedPropertiesQuery() {
@@ -72,14 +72,14 @@ public class SkosTermsChecker extends Criterion {
 		}
 	}
 	
-	public MapOfCollectionResult<URI, URI> findIllegalTerms() throws OpenRDFException 
+	public IllegalResourceResult findIllegalTerms() throws OpenRDFException 
 	{
 		if (illegalTerms == null) {
 			TupleQueryResult result = vocabRepository.query(createIllegalTermsQuery());
 			generateIllegalTermsMap(result);
 		}
 		
-		return new MapOfCollectionResult<URI, URI>(illegalTerms);
+		return new IllegalResourceResult(illegalTerms);
 	}
 	
 	private String createIllegalTermsQuery() {

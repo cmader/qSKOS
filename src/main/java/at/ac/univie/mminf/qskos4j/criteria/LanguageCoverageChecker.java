@@ -15,7 +15,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.general.MapOfCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.custom.IncomleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -28,7 +28,7 @@ public class LanguageCoverageChecker extends Criterion {
 		super(vocabRepository);
 	}
 
-	public MapOfCollectionResult<Resource, String> getIncompleteLanguageCoverage(
+	public IncomleteLangCovResult getIncompleteLanguageCoverage(
 		Collection<URI> concepts) throws OpenRDFException 
 	{
 		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
@@ -36,7 +36,7 @@ public class LanguageCoverageChecker extends Criterion {
 		checkLanguageCoverage(concepts);
 		generateIncompleteLanguageCoverageMap();
 		
-		return new MapOfCollectionResult<Resource, String>(incompleteLanguageCoverage);
+		return new IncomleteLangCovResult(incompleteLanguageCoverage);
 	}
 	
 	private void checkLanguageCoverage(Collection<URI> concepts) throws OpenRDFException 

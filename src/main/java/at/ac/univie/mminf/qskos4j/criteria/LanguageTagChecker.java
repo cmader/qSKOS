@@ -13,7 +13,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-import at.ac.univie.mminf.qskos4j.result.general.MapOfCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -25,14 +25,14 @@ public class LanguageTagChecker extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public MapOfCollectionResult<String, Resource> findMissingLanguageTags() 
+	public MissingLangTagResult findMissingLanguageTags() 
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
 		if (missingLangTags == null) {
 			TupleQueryResult result = vocabRepository.query(createMissingLangTagQuery());
 			generateMissingLangTagSet(result);
 		}
-		return new MapOfCollectionResult<String, Resource>(missingLangTags);
+		return new MissingLangTagResult(missingLangTags);
 	}
 	
 	private String createMissingLangTagQuery() {

@@ -22,8 +22,13 @@ public class ConceptPairsResult extends Result<Collection<Pair<URI>>> {
 	
 	@Override
 	public String getExtensiveReport() {
-		// TODO Auto-generated method stub
-		return null;
+		String extensiveReport = "affected pairs:\n";
+		
+		for (Pair<URI> pair : getData()) {
+			extensiveReport += pair.toString() + "\n";
+		}
+		
+		return extensiveReport;
 	}
 
 }

@@ -13,7 +13,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
 import at.ac.univie.mminf.qskos4j.criteria.Criterion;
-import at.ac.univie.mminf.qskos4j.result.general.MapOfCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -25,14 +25,14 @@ public class AmbiguousLabelFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public MapOfCollectionResult<URI, String> findNotUniquePrefLabels() throws OpenRDFException 
+	public ConceptLabelsResult findNotUniquePrefLabels() throws OpenRDFException 
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
 		
 		TupleQueryResult result = vocabRepository.query(createNotUniquePrefLabelsQuery());
 		addPrefLabelsToAmbiguouslyLabeledConceptsMap(result);
 		
-		return new MapOfCollectionResult<URI, String>(ambiguouslyLabeledConcepts);
+		return new ConceptLabelsResult(ambiguouslyLabeledConcepts);
 	}
 	
 	private String createNotUniquePrefLabelsQuery() {
@@ -86,14 +86,14 @@ public class AmbiguousLabelFinder extends Criterion {
 		ambiguousLabels.add(prefLabel.stringValue());
 	}
 	
-	public MapOfCollectionResult<URI, String> findNotDisjointLabels() throws OpenRDFException 
+	public ConceptLabelsResult findNotDisjointLabels() throws OpenRDFException 
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
 		
 		TupleQueryResult result = vocabRepository.query(createNotDisjointLabelsQuery());
 		addNotDisjointLabelsToAmbiguouslyLabeledConceptsMap(result);
 		
-		return new MapOfCollectionResult<URI, String>(ambiguouslyLabeledConcepts);
+		return new ConceptLabelsResult(ambiguouslyLabeledConcepts);
 	}
 	
 	private String createNotDisjointLabelsQuery() {
