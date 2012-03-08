@@ -12,6 +12,8 @@ import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.criteria.AmbiguousRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ComponentFinder;
@@ -53,6 +55,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class QSkos {
 
+	private final Logger logger = LoggerFactory.getLogger(QSkos.class);
+	
 	private Set<String> sparqlEndPoints = new HashSet<String>();
 	
 	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
@@ -92,6 +96,8 @@ public class QSkos {
 	}
 	
 	public QSkos(String queryEndpointUrl) {
+		logger.info("initializing vocabulary from SPARQL endpoint '" +queryEndpointUrl+ "'...");
+		
 		vocabRepository = new VocabRepository(queryEndpointUrl);
 		init();
 	}
@@ -101,6 +107,8 @@ public class QSkos {
 		RDFFormat dataFormat) 
 		throws RepositoryException, RDFParseException, IOException 
 	{
+		logger.info("initializing vocabulary from file '" +rdfFile.getName()+ "'...");
+		
 		vocabRepository = new VocabRepository(rdfFile, baseURI, dataFormat);
 		
 		extractPublishingHost(baseURI);

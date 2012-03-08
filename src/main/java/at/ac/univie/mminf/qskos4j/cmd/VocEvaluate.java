@@ -105,8 +105,6 @@ public class VocEvaluate {
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
 		qskos.setSubsetSize(randomSubsetSize_percent);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
-		
-		System.out.println("evaluating vocab: " +vocabFilenames.get(0));
 	}
 
 	private void performMeasures() {
