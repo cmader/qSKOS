@@ -24,7 +24,7 @@ public class LooseConceptsTest extends QSkosTestCase {
 	@Test
 	public void testConceptsLooseConceptCount() throws OpenRDFException {
 		Collection<URI> looseConcepts = qSkosConcepts.findLooseConcepts().getData();
-		Assert.assertEquals(5, looseConcepts.size());		
+		Assert.assertEquals(7, looseConcepts.size());		
 	}
 	
 	@Test

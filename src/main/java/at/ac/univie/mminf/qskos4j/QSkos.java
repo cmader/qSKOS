@@ -155,7 +155,7 @@ public class QSkos {
 	public CollectionResult<URI> findInvolvedConcepts() throws OpenRDFException
 	{
 		if (involvedConcepts == null) {
-			involvedConcepts = conceptFinder.getInvolvedConcepts(false);
+			involvedConcepts = conceptFinder.findInvolvedConcepts();
 		}
 		
 		return involvedConcepts;
@@ -171,7 +171,7 @@ public class QSkos {
 		
 	public CollectionResult<URI> findLooseConcepts() throws OpenRDFException
 	{
-		return conceptFinder.getInvolvedConcepts(true);
+		return conceptFinder.findLooseConcepts();
 	}
 	
 	public NumberResult<Long> findLexicalRelationsCount() throws OpenRDFException

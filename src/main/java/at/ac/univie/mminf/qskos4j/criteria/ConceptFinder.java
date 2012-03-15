@@ -19,7 +19,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
  */
 public class ConceptFinder extends Criterion {
 	
-	private boolean onlyLooseConcepts;
 	private Set<URI> involvedConcepts, authoritativeConcepts;
 	
 	/**
@@ -33,19 +32,40 @@ public class ConceptFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<URI> getInvolvedConcepts(boolean onlyLooseConcepts) 
+	public CollectionResult<URI> findInvolvedConcepts() 
 		throws OpenRDFException 
 	{
-		this.onlyLooseConcepts = onlyLooseConcepts;
-		
-		TupleQueryResult result = queryConcepts();
+		TupleQueryResult result = vocabRepository.query(createConceptsQuery());
 		Set<URI> foundConcepts = getConceptURIs(result); 
-		
-		if (!onlyLooseConcepts) {
-			involvedConcepts = foundConcepts;  
-		}
+		involvedConcepts = foundConcepts;  
 		
 		return new CollectionResult<URI>(foundConcepts);
+	}
+	
+	public CollectionResult<URI> findLooseConcepts()
+		throws OpenRDFException
+	{
+		TupleQueryResult result = vocabRepository.query(createLooseConceptsQuery());
+		Set<URI> connectedConcepts = getConceptURIs(result);
+		
+		if (involvedConcepts == null) {
+			findInvolvedConcepts();
+		}
+		
+		Set<URI> looseConcepts = new HashSet<URI>(involvedConcepts);
+		looseConcepts.removeAll(connectedConcepts);
+
+		return new CollectionResult<URI>(looseConcepts);	
+	}
+	
+	private String createLooseConceptsQuery() {
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
+			"SELECT DISTINCT ?concept ?semanticRelation ?otherConcept WHERE" +
+			"{" +
+				"{?concept ?semanticRelation ?otherConcept . ?semanticRelation rdfs:subPropertyOf+ skos:semanticRelation}" +
+				"UNION" +
+				"{?otherConcept ?semanticRelation ?concept . ?semanticRelation rdfs:subPropertyOf+ skos:semanticRelation}" +
+			"}";				
 	}
 	
 	public CollectionResult<URI> getAuthoritativeConcepts(
@@ -55,7 +75,7 @@ public class ConceptFinder extends Criterion {
 		if (authoritativeConcepts == null) {
 		
 			if (involvedConcepts == null) {
-				getInvolvedConcepts(false);
+				findInvolvedConcepts();
 			}
 			
 			extractAuthoritativeConceptsFromInvolved(
@@ -88,15 +108,9 @@ public class ConceptFinder extends Criterion {
 			}
 		}
 	}
-	
-	private TupleQueryResult queryConcepts() throws OpenRDFException 
-	{
-		String query = createConceptsQuery();
-		return vocabRepository.query(query);
-	}
-	
+		
 	private String createConceptsQuery() {
-		String query = SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?concept "+
 			"FROM <" +vocabRepository.getVocabContext()+ "> "+
 			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
@@ -108,35 +122,18 @@ public class ConceptFinder extends Criterion {
 				
 				"{"+
 					"GRAPH <" +vocabRepository.SKOS_GRAPH_URL+ "> {"+
-						"?semRelSubProp rdfs:subPropertyOf{1,3} skos:semanticRelation ."+
-					"}" +
+						"?semRelSubProp rdfs:subPropertyOf+ skos:semanticRelation ."+
+					"}" +			
 					"{" +
 						"{?x ?semRelSubProp ?concept . } UNION "+
 						"{?concept ?semRelSubProp ?x . } UNION " +
 						"{?concept ?p ?x . ?p rdfs:subPropertyOf+ ?semRelSubProp} UNION " +
 						"{?x ?p ?concept . ?p rdfs:subPropertyOf+ ?semRelSubProp}" +
 					"}"+
-				"}";
-		
-		if (onlyLooseConcepts) {
-			query += "FILTER NOT EXISTS "+
-				"{" +
-					"GRAPH <" +vocabRepository.SKOS_GRAPH_URL+ "> {"+
-						"?skosRelation rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core> . "+
-					"}" +
-					"{" +					
-						"{?concept ?skosRelation ?resource . FILTER isIRI(?resource) } UNION "+
-						"{?resource ?skosRelation ?concept . FILTER isIRI(?resource) } UNION "+
-						"{?concept ?p ?resource . ?p rdfs:subPropertyOf+ ?skosRelation. FILTER isIRI(?resource) } UNION "+
-						"{?resource ?p ?concept . ?p rdfs:subPropertyOf+ ?skosRelation. FILTER isIRI(?resource) }" +
-					"}"+
-				"}";
-		}
-		query += "}";
-		
-		return query;
+				"}" +
+			"}";
 	}
-
+	
 	private Set<URI> getConceptURIs(TupleQueryResult result) throws QueryEvaluationException {
 		Set<URI> ret = new HashSet<URI>();
 		

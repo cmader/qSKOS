@@ -44,7 +44,7 @@ public class StatisticsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testConceptsCount_2() throws OpenRDFException
+	public void testConceptCount_2() throws OpenRDFException
 	{
 		Collection<URI> involvedConcepts = qSkosComponents.findInvolvedConcepts().getData(); 
 		Assert.assertEquals(21, involvedConcepts.size());		
