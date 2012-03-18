@@ -200,11 +200,7 @@ public class QSkos {
 	}
 	
 	public WeaklyConnectedComponentsResult findComponents() throws OpenRDFException {
-		return componentFinder.findComponents();
-	}
-	
-	public void exportComponentsAsDOT(Writer[] writers) throws OpenRDFException {
-		componentFinder.exportComponents(writers);
+		return componentFinder.findComponents(findInvolvedConcepts().getData());
 	}
 	
 	public CollectionResult<Set<URI>> findHierarchicalCycles() throws OpenRDFException {

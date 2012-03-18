@@ -1,24 +1,17 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
-import java.io.Writer;
-import java.util.List;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
 
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
-import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -30,102 +23,90 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 public class ComponentFinder extends Criterion {
 
 	private DirectedGraph<URI, NamedEdge> graph;
-	private List<Set<URI>> connectedSets;
 	
 	public ComponentFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public WeaklyConnectedComponentsResult findComponents() throws OpenRDFException 
+	public WeaklyConnectedComponentsResult findComponents(Collection<URI> allConcepts) 
+		throws OpenRDFException 
 	{
 		if (graph == null) {
-			TupleQueryResult result = findTriples();
-			createGraph(result);
-		}
-		connectedSets = new ConnectivityInspector<URI, NamedEdge>(graph).connectedSets(); 
-		return new WeaklyConnectedComponentsResult(connectedSets);
-	}
-	
-	public void exportComponents(Writer[] writers) throws OpenRDFException
-	{	
-		if (connectedSets == null) {
-			findComponents();
+			createGraph(allConcepts);
 		}
 		
-		new GraphExporter(graph).exportSubGraph(connectedSets, writers);
-	}
-		
-	private TupleQueryResult findTriples() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
-	{
-		String query = createNodeQuery();
-		return vocabRepository.query(query);
+		return new WeaklyConnectedComponentsResult(graph);
 	}
 	
-	/**
-	 * Creates a SPARQL query to retrieve the information needed for component finding.
-	 * Nodes are all instances of (subclasses of) skos classes. Edges in the graph are
-	 * all skos properties relating the nodes to each other. 
-	 * @return
-	 */
-	private String createNodeQuery() {
-		String query = SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.OWL +
-			"SELECT ?skosResource ?skosRelation ?otherResource "+
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
-			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
-			
-			"WHERE {" +
-				"{" +
-					"?skosResource rdf:type+/rdfs:subClassOf* ?skosClass . "+
-					"GRAPH <"+vocabRepository.SKOS_GRAPH_URL+"> "+
-					"{" +
-						"?skosClass rdf:type owl:Class ." +
-					"}" +
-				"} " +
-				"UNION "+
-				"{" +
-					"?skosResource ?relation ?otherResource . "+
-					"?relation rdfs:subPropertyOf* ?skosRelation . "+
-					"GRAPH <"+vocabRepository.SKOS_GRAPH_URL+"> " +
-					"{" +
-						"?skosRelation rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core> ." +
-					"} "+
-					"FILTER isIRI(?otherResource)" +
-				"} "+
-			"}";
-				
-		return query;
-	}
-	
-	private void createGraph(TupleQueryResult result) 
-		throws QueryEvaluationException 
+	private void createGraph(Collection<URI> allConcepts) 
+		throws OpenRDFException
 	{
 		graph = new DirectedMultigraph<URI, NamedEdge>(NamedEdge.class);
 		
-		while (result.hasNext()) {
-			BindingSet bindingSet = result.next();
+		for (URI concept : allConcepts) {
+			Collection<Relation> relations = findRelations(concept);
 			
-			addNodesToGraph(
-				bindingSet.getValue("skosResource"),
-				bindingSet.getValue("otherResource"),
-				bindingSet.getValue("skosRelation"));
+			for (Relation relation : relations) {
+				addNodesToGraph(
+					relation.sourceConcept,
+					relation.targetConcept,
+					relation.property);
+			}
 		}
 	}
 	
-	private void addNodesToGraph(
-		Value skosResource, 
-		Value otherResource,
-		Value skosRelation)
+	private Collection<Relation> findRelations(URI concept) 
+		throws OpenRDFException
 	{
-		URI node1 = new URIImpl(skosResource.stringValue());
-		graph.addVertex(node1);
+		Collection<Relation> allRelations = new ArrayList<Relation>();
+		
+		TupleQueryResult result = vocabRepository.query(createConnectionsQuery(concept));
+		while (result.hasNext()) {
+			BindingSet bindingSet = result.next();
+			Value otherConcept = bindingSet.getValue("otherConcept");
+			Value semanticRelation = bindingSet.getValue("semanticRelation");
+			
+			if (otherConcept != null && semanticRelation != null) {
+				allRelations.add(new Relation(concept, (URI) otherConcept, (URI) semanticRelation));
+			}
+		}
+		
+		return allRelations;
+	}
+	
+	private String createConnectionsQuery(URI concept) {
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
+			"SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
+			"{" +
+			"<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept . ?semanticRelation rdfs:subPropertyOf+ skos:semanticRelation" +
+			"}";
+	}
+	
+	private void addNodesToGraph(
+		URI skosResource, 
+		URI otherResource,
+		URI skosRelation)
+	{
+		graph.addVertex(skosResource);
 		
 		if (otherResource != null) {
-			URI node2 = new URIImpl(otherResource.stringValue());
-			graph.addVertex(node2);
-			
-			URI relation = new URIImpl(skosRelation.stringValue());
-			graph.addEdge(node1, node2, new NamedEdge(relation.getLocalName()));
+			graph.addVertex(otherResource);
+			graph.addEdge(skosResource, otherResource, new NamedEdge(skosRelation.getLocalName()));
+		}
+	}
+	
+	private class Relation {
+		private URI sourceConcept, targetConcept, property;
+		
+		private Relation(URI sourceConcept, URI targetConcept, URI property) {
+			this.sourceConcept = sourceConcept;
+			this.targetConcept = targetConcept;
+			this.property = property;
+		}
+		
+		@Override
+		public String toString() {
+			return sourceConcept.stringValue() +" -- "+ property +" --> "+ targetConcept;
 		}
 	}
 		
