@@ -33,7 +33,7 @@ public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<URI, N
 		long compCount = 1;
 		
 		for (Set<URI> component : connectedSets) {
-			detailedReport += "component " +compCount+ ": " +component.toString()+ "\n";
+			detailedReport += "component " +compCount+ ", size: " +component.size()+ "\n" +component.toString()+ "\n";
 			compCount++;
 		}
 		
