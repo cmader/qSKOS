@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -13,6 +14,7 @@ import org.openrdf.query.TupleQueryResult;
 
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -43,8 +45,9 @@ public class ComponentFinder extends Criterion {
 	{
 		graph = new DirectedMultigraph<URI, NamedEdge>(NamedEdge.class);
 		
-		for (URI concept : allConcepts) {
-			Collection<Relation> relations = findRelations(concept);
+		Iterator<URI> conceptIt = new MonitoredIterator<URI>(allConcepts, progressMonitor);
+		while (conceptIt.hasNext()) {
+			Collection<Relation> relations = findRelations(conceptIt.next());
 			
 			for (Relation relation : relations) {
 				addNodesToGraph(

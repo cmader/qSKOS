@@ -200,6 +200,7 @@ public class QSkos {
 	}
 	
 	public WeaklyConnectedComponentsResult findComponents() throws OpenRDFException {
+		componentFinder.setProgressMonitor(progressMonitor);
 		return componentFinder.findComponents(findInvolvedConcepts().getData());
 	}
 	
