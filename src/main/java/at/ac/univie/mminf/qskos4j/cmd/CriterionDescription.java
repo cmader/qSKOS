@@ -135,10 +135,10 @@ enum CriterionDescription {
 		"Potentially Semantically Related Concepts",
 		"Finds concepts with similar (identical) labels",
 		"findRelatedConcepts"),
-	AVG_DOC_COVERAGE("cdcr",
-		"Concept Documentation Coverage Ratio",
-		"Calculates average use of documentation properties per concept",
-		"getAverageDocumentationCoverageRatio"),
+	UNDOCUMENTED_CONCEPTS("udc",
+		"Undocumented Concepts",
+		"Finds concepts that don't use any SKOS documentation properties",
+		"findUndocumentedConcepts"),
 		
 	NULL_DESC("", "", "", "");
 	

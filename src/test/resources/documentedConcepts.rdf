@@ -12,4 +12,14 @@
 		<skos:changeNote>changeNote</skos:changeNote>
 	</rdf:Description>
 
+	<!-- Undocumented concept -->
+	<rdf:Description rdf:about="conceptC">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	</rdf:Description>
+
+	<!-- Also undocumented, shouldn't count as concept -->
+	<rdf:Description rdf:about="conceptD">
+		<skos:scopeNote>scopenote</skos:scopeNote>
+	</rdf:Description>
+
 </rdf:RDF>

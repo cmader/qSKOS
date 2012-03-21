@@ -1,15 +1,17 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 
 
-public class DocumentationCoverageTest extends QSkosTestCase {
+public class UndocumentedConceptsTest extends QSkosTestCase {
 
 	private QSkos qSkosDocumentedConcepts;
 	
@@ -20,10 +22,9 @@ public class DocumentationCoverageTest extends QSkosTestCase {
 	
 	@Test
 	public void testAverageDocumentationCoverageRatio() throws OpenRDFException {
-		qSkosDocumentedConcepts.setPublishingHost("mminf.univie.ac.at");
-		float avgDocCoverage = qSkosDocumentedConcepts.getAverageDocumentationCoverageRatio().getData();
+		Collection<Resource> undocConcepts = qSkosDocumentedConcepts.findUndocumentedConcepts().getData();
 		
-		Assert.assertEquals(0.214, avgDocCoverage, 0.0005);
+		Assert.assertEquals(1, undocConcepts.size());
 	}
 	
 }

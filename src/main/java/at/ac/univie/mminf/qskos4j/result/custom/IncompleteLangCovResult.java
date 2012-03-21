@@ -8,9 +8,9 @@ import org.openrdf.model.Resource;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 
-public class IncomleteLangCovResult extends Result<Map<Resource, Collection<String>>> {
+public class IncompleteLangCovResult extends Result<Map<Resource, Collection<String>>> {
 
-	public IncomleteLangCovResult(Map<Resource, Collection<String>> data) {
+	public IncompleteLangCovResult(Map<Resource, Collection<String>> data) {
 		super(data);
 	}
 

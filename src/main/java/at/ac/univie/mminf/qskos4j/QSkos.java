@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
@@ -20,7 +21,7 @@ import at.ac.univie.mminf.qskos4j.criteria.ComponentFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptRanker;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptSchemeChecker;
-import at.ac.univie.mminf.qskos4j.criteria.DocumentationCoverageChecker;
+import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ExternalResourcesFinder;
 import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
 import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
@@ -39,7 +40,7 @@ import at.ac.univie.mminf.qskos4j.result.custom.AvgConceptIndegreeResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptExtLinkAvgResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
-import at.ac.univie.mminf.qskos4j.result.custom.IncomleteLangCovResult;
+import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.result.custom.LinkTargetAvailabilityResult;
 import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
 import at.ac.univie.mminf.qskos4j.result.custom.RedundantAssocRelationsResult;
@@ -247,7 +248,7 @@ public class QSkos {
 		return new LanguageTagChecker(vocabRepository).findOmittedOrInvalidLanguageTags();
 	}
 	
-	public IncomleteLangCovResult getIncompleteLanguageCoverage() throws OpenRDFException {
+	public IncompleteLangCovResult getIncompleteLanguageCoverage() throws OpenRDFException {
 		languageCoverageChecker.setProgressMonitor(progressMonitor);
 		return languageCoverageChecker.getIncompleteLanguageCoverage(findInvolvedConcepts().getData());
 	}
@@ -287,12 +288,12 @@ public class QSkos {
 		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolitaryTransitiveRelations();
 	}
 	
-	public NumberResult<Float> getAverageDocumentationCoverageRatio() throws OpenRDFException 
+	public CollectionResult<Resource> findUndocumentedConcepts() throws OpenRDFException 
 	{
-		DocumentationCoverageChecker docCovChecker = 
-			new DocumentationCoverageChecker(vocabRepository);
+		UndocumentedConceptsChecker docCovChecker = 
+			new UndocumentedConceptsChecker(vocabRepository);
 		docCovChecker.setProgressMonitor(progressMonitor);
-		return docCovChecker.getAverageDocumentationCoverageRatio(findInvolvedConcepts().getData());
+		return docCovChecker.findUndocumentedConcepts(findInvolvedConcepts().getData());
 	}
 	
 	public CollectionResult<URI> findConceptSchemesWithoutTopConcept() throws OpenRDFException {
