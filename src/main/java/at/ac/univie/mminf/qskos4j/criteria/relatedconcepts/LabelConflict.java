@@ -6,21 +6,19 @@ import org.openrdf.model.URI;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.SkosLabel.LabelType;
 
 
-public class RelatedConcepts {
+public class LabelConflict {
 
 	private URI concept1, concept2;
 	private Literal label1, label2;
 	private LabelType label1Type, label2Type;
-	private boolean directlyConnected;
 	
-	RelatedConcepts(
+	LabelConflict(
 		URI concept1, 
 		URI concept2, 
 		Literal label1,
 		Literal label2,
 		LabelType label1Type,
-		LabelType label2Type,
-		boolean directlyConnected)
+		LabelType label2Type)
 	{
 		this.concept1 = concept1;
 		this.concept2 = concept2;
@@ -28,7 +26,6 @@ public class RelatedConcepts {
 		this.label2 = label2;
 		this.label1Type = label1Type;
 		this.label2Type = label2Type;
-		this.directlyConnected = directlyConnected;
 	}
 
 	public URI getConcept1() {
@@ -54,11 +51,7 @@ public class RelatedConcepts {
 	public LabelType getLabel2Type() {
 		return label2Type;
 	}
-	
-	public boolean getDirectlyConnected() {
-		return directlyConnected;
-	}
-	
+		
 	@Override
 	public String toString() {
 		return concept1 +"("+label1+") <-> "+ concept2 +"("+label2+")";

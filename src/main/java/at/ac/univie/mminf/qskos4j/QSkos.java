@@ -34,8 +34,8 @@ import at.ac.univie.mminf.qskos4j.criteria.SkosReferenceIntegrityChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SkosTermsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConceptsFinder;
+import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
+import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflictsFinder;
 import at.ac.univie.mminf.qskos4j.result.custom.AvgConceptIndegreeResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptExtLinkAvgResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
@@ -265,10 +265,10 @@ public class QSkos {
 		return redundantAssociativeRelationsFinder.findRedundantAssociativeRelations();
 	}
 	
-	public CollectionResult<RelatedConcepts> findRelatedConcepts() throws OpenRDFException {
-		RelatedConceptsFinder relatedConceptsFinder = new RelatedConceptsFinder(vocabRepository);
-		relatedConceptsFinder.setProgressMonitor(progressMonitor);
-		return relatedConceptsFinder.findRelatedConcepts(findInvolvedConcepts().getData());
+	public CollectionResult<LabelConflict> findLabelConflicts() throws OpenRDFException {
+		LabelConflictsFinder labelConflictsFinder = new LabelConflictsFinder(vocabRepository);
+		labelConflictsFinder.setProgressMonitor(progressMonitor);
+		return labelConflictsFinder.findLabelConflicts(findInvolvedConcepts().getData());
 	}
 	
 	public AvgConceptIndegreeResult analyzeConceptsRank() throws OpenRDFException 

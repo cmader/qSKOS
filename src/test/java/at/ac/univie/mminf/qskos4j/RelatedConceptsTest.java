@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.RelatedConcepts;
+import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
 
 public class RelatedConceptsTest extends QSkosTestCase {
 
@@ -26,31 +26,17 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	
 	@Test
 	public void testRelatedConceptsCount_1() throws OpenRDFException {
-		Collection<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts().getData();
+		Collection<LabelConflict> allRelatedConcepts = qSkosComponents.findLabelConflicts().getData();
 		
 		Assert.assertEquals(2, allRelatedConcepts.size());
 		Assert.assertEquals(4, getDifferentConcepts(allRelatedConcepts).size());
 	}
 
-	@Test
-	public void testNotDirectlyConnectedRelatedConceptsCount() throws OpenRDFException {
-		Collection<RelatedConcepts> allRelatedConcepts = qSkosComponents.findRelatedConcepts().getData();
-		
-		long notDirectlyConnectedConceptsCount = 0;
-		for (RelatedConcepts relatedConcepts : allRelatedConcepts) {
-			if (!relatedConcepts.getDirectlyConnected()) {
-				notDirectlyConnectedConceptsCount++;
-			}
-		}
-		
-		Assert.assertEquals(1, notDirectlyConnectedConceptsCount);
-	}
-	
-	private Collection<URI> getDifferentConcepts(Collection<RelatedConcepts> allRelatedConcepts) 
+	private Collection<URI> getDifferentConcepts(Collection<LabelConflict> allRelatedConcepts) 
 	{
 		Set<URI> ret = new HashSet<URI>();
 		
-		for (RelatedConcepts relatedConcepts : allRelatedConcepts) {
+		for (LabelConflict relatedConcepts : allRelatedConcepts) {
 			ret.add(relatedConcepts.getConcept1());
 			ret.add(relatedConcepts.getConcept2());
 		}
@@ -60,6 +46,6 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	
 	@Test
 	public void testRelatedConceptsCount_2() throws OpenRDFException {
-		Assert.assertEquals(0, qSkosRelatedConcepts.findRelatedConcepts().getData().size());
+		Assert.assertEquals(0, qSkosRelatedConcepts.findLabelConflicts().getData().size());
 	}
 }

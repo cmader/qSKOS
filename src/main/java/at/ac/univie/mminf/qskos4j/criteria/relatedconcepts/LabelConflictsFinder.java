@@ -13,12 +13,9 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,25 +27,25 @@ import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class RelatedConceptsFinder extends Criterion {
+public class LabelConflictsFinder extends Criterion {
 
-	private final Logger logger = LoggerFactory.getLogger(RelatedConceptsFinder.class);
-	private Set<RelatedConcepts> allRelatedConcepts;
+	private final Logger logger = LoggerFactory.getLogger(LabelConflictsFinder.class);
+	private Set<LabelConflict> allRelatedConcepts;
 	private Map<URI, Set<SkosLabel>> conceptLabels;
 	
-	public RelatedConceptsFinder(VocabRepository vocabRepository) 
+	public LabelConflictsFinder(VocabRepository vocabRepository) 
 	{
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<RelatedConcepts> findRelatedConcepts(Collection<URI> concepts) 
+	public CollectionResult<LabelConflict> findLabelConflicts(Collection<URI> concepts) 
 		throws OpenRDFException
 	{
 		if (allRelatedConcepts == null) {
 			generateConceptsLabelMap(concepts);
 			compareConceptLabels();
 		}
-		return new CollectionResult<RelatedConcepts>(allRelatedConcepts);
+		return new CollectionResult<LabelConflict>(allRelatedConcepts);
 	}
 	
 	private void generateConceptsLabelMap(Collection<URI> concepts) 
@@ -69,7 +66,7 @@ public class RelatedConceptsFinder extends Criterion {
 	private void compareConceptLabels() 
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
-		allRelatedConcepts = new HashSet<RelatedConcepts>();
+		allRelatedConcepts = new HashSet<LabelConflict>();
 		List<URI> allConcepts = new ArrayList<URI>(conceptLabels.keySet());
 		
 		int i = 0;
@@ -143,15 +140,14 @@ public class RelatedConceptsFinder extends Criterion {
 				
 				if (labelsAreSimilar(label1.getLiteral(), label2.getLiteral())) 
 				{
-					RelatedConcepts relatedConcepts =
-						new RelatedConcepts(
+					LabelConflict relatedConcepts =
+						new LabelConflict(
 							label1.getConcept(), 
 							label2.getConcept(), 
 							label1.getLiteral(), 
 							label2.getLiteral(), 
 							label1.getLabelType(), 
-							label2.getLabelType(), 
-							checkDirectlyConnected(label1.getConcept(), label2.getConcept()));
+							label2.getLabelType());
 					
 					allRelatedConcepts.add(relatedConcepts);
 				}
@@ -166,18 +162,4 @@ public class RelatedConceptsFinder extends Criterion {
 		return lit1.equals(lit2);
 	}
 	
-	private boolean checkDirectlyConnected(URI concept1, URI concept2) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
-	{
-		RepositoryConnection connection = vocabRepository.getRepository().getConnection();
-		BooleanQuery graphQuery = connection.prepareBooleanQuery(
-			QueryLanguage.SPARQL, 
-			createConnectionQuery(concept1, concept2));
-		return graphQuery.evaluate();
-	}
-	
-	private String createConnectionQuery(URI concept1, URI concept2) {
-		return "ASK {{<"+concept1.stringValue()+"> ?p <"+concept2.stringValue()+">} UNION" +
-				"{<"+concept2.stringValue()+"> ?p <"+concept1.stringValue()+">}}";
-	}
 }

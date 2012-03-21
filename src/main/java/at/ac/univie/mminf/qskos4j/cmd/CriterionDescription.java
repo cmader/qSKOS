@@ -36,6 +36,24 @@ enum CriterionDescription {
 		"Counts the involved Collections",
 		"findCollectionCount"),
 	
+	// Labeling and Documentation Criteria
+	OMITTED_OR_INVALID_LANG_TAGS("oilt",
+		"Omitted or Invalid Language Tags",
+		"Finds omitted or invalid language tags of text literals",
+		"findOmittedOrInvalidLanguageTags"),
+	INCOMPLETE_LANG_COVERAGE("ilc",	
+		"Incomplete Language Coverage",
+		"Finds concepts lacking description in languages that are present for other concepts",
+		"getIncompleteLanguageCoverage"),
+	UNDOCUMENTED_CONCEPTS("udc",
+		"Undocumented Concepts",
+		"Finds concepts that don't use any SKOS documentation properties",
+		"findUndocumentedConcepts"),
+	LABEL_CONFLICTS("labc",	
+		"Label Conflicts",
+		"Finds concepts with similar (identical) labels",
+		"findLabelConflicts"),
+				
 	// Graph-based measures
 	LOOSE_CONCEPTS("lc", 
 		"Loose Concepts", 
@@ -113,14 +131,6 @@ enum CriterionDescription {
 		"findTopConceptsHavingBroaderConcept"),
 	
 	// Labeling issues	
-	OMITTED_OR_INVALID_LANG_TAGS("oilt",
-		"Omitted or Invalid Language Tags",
-		"Finds omitted or invalid language tags of text literals",
-		"findOmittedOrInvalidLanguageTags"),
-	CONCEPTS_INCOMPLETE_LANG_COVERAGE("cilc",	
-		"Concepts With Incomplete Language Coverage",
-		"Finds concepts lacking description in languages that are present for other concepts",
-		"getIncompleteLanguageCoverage"),
 	AMBIGUOUS_PREFLABELED_CONCEPTS("apc",
 		"Ambiguously Preflabeled Concepts",
 		"Finds concepts with more then one prefLabel per languate",	
@@ -130,15 +140,7 @@ enum CriterionDescription {
 		"Finds concepts with identical entries for different label types",
 		"findNotDisjointLabels"),
 		
-	// Other measures	
-	SEM_RELATED_CONCEPTS("src",	
-		"Potentially Semantically Related Concepts",
-		"Finds concepts with similar (identical) labels",
-		"findRelatedConcepts"),
-	UNDOCUMENTED_CONCEPTS("udc",
-		"Undocumented Concepts",
-		"Finds concepts that don't use any SKOS documentation properties",
-		"findUndocumentedConcepts"),
+	// Other measures		
 		
 	NULL_DESC("", "", "", "");
 	
