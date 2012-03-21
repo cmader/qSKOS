@@ -36,7 +36,8 @@
 		<void:vocabulary rdf:resource="http://www.w3.org/2004/02/skos/core#"/>
 	</rdf:Description>
 	
-	<rdf:Description rdf:about="conceptC"
-		skos:prefLabel="tralala"/>
+	<rdf:Description rdf:about="conceptC" skos:prefLabel="tralala" xml:lang="blubb">
+		<skos:scopeNote>test scopenote</skos:scopeNote>
+	</rdf:Description>
 
 </rdf:RDF>

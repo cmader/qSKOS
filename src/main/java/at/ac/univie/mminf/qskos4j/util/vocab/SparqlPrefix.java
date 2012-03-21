@@ -5,7 +5,8 @@ public enum SparqlPrefix {
 	SKOS("skos", "http://www.w3.org/2004/02/skos/core#"),
 	RDF("rdf", org.openrdf.model.vocabulary.RDF.NAMESPACE),
 	RDFS("rdfs", org.openrdf.model.vocabulary.RDFS.NAMESPACE),
-	OWL("owl", org.openrdf.model.vocabulary.OWL.NAMESPACE);
+	OWL("owl", org.openrdf.model.vocabulary.OWL.NAMESPACE),
+	DCTERMS("dcterms", "http://purl.org/dc/terms/");
 
 	private String abbrv, nameSpace;
 	

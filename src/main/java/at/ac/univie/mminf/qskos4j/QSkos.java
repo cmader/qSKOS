@@ -243,8 +243,8 @@ public class QSkos {
 		return skosTermsChecker.findIllegalTerms();
 	}
 	
-	public MissingLangTagResult findMissingLanguageTags() throws OpenRDFException {
-		return new LanguageTagChecker(vocabRepository).findMissingLanguageTags();
+	public MissingLangTagResult findOmittedOrInvalidLanguageTags() throws OpenRDFException {
+		return new LanguageTagChecker(vocabRepository).findOmittedOrInvalidLanguageTags();
 	}
 	
 	public IncomleteLangCovResult getIncompleteLanguageCoverage() throws OpenRDFException {

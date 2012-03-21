@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
+import org.openrdf.model.util.language.LanguageTag;
+import org.openrdf.model.util.language.LanguageTagSyntaxException;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -19,37 +21,46 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class LanguageTagChecker extends Criterion {
 
-	private Map<String, Collection<Resource>> missingLangTags;
+	private Map<Resource, Collection<Literal>> missingLangTags;
 	
 	public LanguageTagChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public MissingLangTagResult findMissingLanguageTags() 
+	public MissingLangTagResult findOmittedOrInvalidLanguageTags() 
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
 		if (missingLangTags == null) {
 			TupleQueryResult result = vocabRepository.query(createMissingLangTagQuery());
-			generateMissingLangTagSet(result);
+			generateMissingLangTagMap(result);
 		}
 		return new MissingLangTagResult(missingLangTags);
 	}
 	
 	private String createMissingLangTagQuery() {
-		return SparqlPrefix.SKOS+
-			"SELECT ?literal ?s "+
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
+			"SELECT ?literal ?s ?p "+
+			
 			"FROM <" +vocabRepository.getVocabContext()+ "> "+
+			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
+			
 			"WHERE {" +
 				"?s ?p ?literal . " +
-				"FILTER langMatches(lang(?literal), \"\" )" +
-				"FILTER NOT EXISTS {?s skos:notation ?literal}" +
+			
+				"GRAPH <" +vocabRepository.SKOS_GRAPH_URL+ "> {"+
+					"{?p rdfs:subPropertyOf* rdfs:label}" +
+					"UNION" +
+					"{?p rdfs:subPropertyOf* skos:note}" +
+				"}" +
+									
+				"FILTER isLiteral(?literal) " +
 			"}";
 	}
 	
-	private void generateMissingLangTagSet(TupleQueryResult result) 
+	private void generateMissingLangTagMap(TupleQueryResult result) 
 		throws QueryEvaluationException 
 	{
-		missingLangTags = new HashMap<String, Collection<Resource>>();
+		missingLangTags = new HashMap<Resource, Collection<Literal>>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -57,14 +68,31 @@ public class LanguageTagChecker extends Criterion {
 			Resource subject = (Resource) queryResult.getValue("s");
 			
 			if (literal.getDatatype() == null) {
-				Collection<Resource> concepts = missingLangTags.get(literal.stringValue());
-				if (concepts == null) {
-					concepts = new HashSet<Resource>();
-					missingLangTags.put(literal.stringValue(), concepts);
+				String langTag = literal.getLanguage();
+				if (langTag == null || isInvalidLanguage(langTag)) {
+					addToMissingLangTagMap(subject, literal);
 				}
-				concepts.add(subject);
 			}
 		}
 	}
-
+	
+	private boolean isInvalidLanguage(String langTag) {
+		try {
+			new LanguageTag(langTag);
+		} 
+		catch (LanguageTagSyntaxException e) {
+			return true;
+		}
+		return false;
+	}
+	
+	private void addToMissingLangTagMap(Resource resource, Literal literal) {
+		Collection<Literal> literals = missingLangTags.get(resource);
+		if (literals == null) {
+			literals = new HashSet<Literal>();
+			missingLangTags.put(resource, literals);
+		}
+		literals.add(literal);
+	}
+	
 }

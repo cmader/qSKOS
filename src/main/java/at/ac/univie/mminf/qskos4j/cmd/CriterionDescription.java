@@ -113,10 +113,10 @@ enum CriterionDescription {
 		"findTopConceptsHavingBroaderConcept"),
 	
 	// Labeling issues	
-	MISSING_LANG_TAGS("lts",
-		"Language Tag Support",
-		"Finds missing language tags of text literals",
-		"findMissingLanguageTags"),
+	OMITTED_OR_INVALID_LANG_TAGS("oilt",
+		"Omitted or Invalid Language Tags",
+		"Finds omitted or invalid language tags of text literals",
+		"findOmittedOrInvalidLanguageTags"),
 	CONCEPTS_INCOMPLETE_LANG_COVERAGE("cilc",	
 		"Concepts With Incomplete Language Coverage",
 		"Finds concepts lacking description in languages that are present for other concepts",
