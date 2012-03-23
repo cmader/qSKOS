@@ -11,7 +11,7 @@ import org.openrdf.model.URI;
 
 import at.ac.univie.mminf.qskos4j.util.Pair;
 
-public class SolitaryTransitiveRelationsTest extends QSkosTestCase {
+public class SolelyTransitivelyRelatedConceptsTest extends QSkosTestCase {
 
 	private QSkos qSkosSolitaryTransitiveRelations;
 	
@@ -23,7 +23,7 @@ public class SolitaryTransitiveRelationsTest extends QSkosTestCase {
 	@Test
 	public void testSolitaryTransitiveRelationsCount() throws OpenRDFException {
 		Collection<Pair<URI>> solitaryTransitiveRelations = 
-			qSkosSolitaryTransitiveRelations.findSolitaryTransitiveRelations().getData();
+			qSkosSolitaryTransitiveRelations.findSolelyTransitivelyRelatedConcepts().getData();
 		Assert.assertEquals(2, solitaryTransitiveRelations.size());
 	}
 	

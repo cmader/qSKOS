@@ -26,7 +26,7 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	public void testIncompleteLanguageCoverageCount() 
 		throws OpenRDFException 
 	{
-		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage().getData();
+		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.findIncompleteLanguageCoverage().getData();
 		Assert.assertEquals(13, incompleteLangCoverage.size());		
 	}
 	
@@ -34,7 +34,7 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	public void testExistResourcesNotHavingEnglishLabels() 
 		throws OpenRDFException 
 	{
-		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage().getData();
+		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.findIncompleteLanguageCoverage().getData();
 		
 		boolean englishTagFound = false;
 		for (Collection<String> missingLanguages : incompleteLangCoverage.values()) {
@@ -49,7 +49,7 @@ public class LanguageCoverageTest extends QSkosTestCase {
 	public void testResourcesMissingOnlyFrenchLabelsCount() 
 		throws OpenRDFException
 	{
-		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.getIncompleteLanguageCoverage().getData();
+		Map<Resource, Collection<String>> incompleteLangCoverage = qSkosComponents.findIncompleteLanguageCoverage().getData();
 
 		List<Resource> foundResources = new ArrayList<Resource>();
 		for (Resource resource : incompleteLangCoverage.keySet()) {

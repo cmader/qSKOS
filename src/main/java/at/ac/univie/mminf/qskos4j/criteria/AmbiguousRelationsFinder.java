@@ -8,7 +8,7 @@ import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.general.ConceptPairsResult;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -21,7 +21,7 @@ public class AmbiguousRelationsFinder extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public ConceptPairsResult findAmbiguousRelations() 
+	public CollectionResult<Pair<URI>> findAmbiguousRelations() 
 		throws OpenRDFException
 	{
 		ambiguousRelations = new HashSet<Pair<URI>>();
@@ -29,7 +29,7 @@ public class AmbiguousRelationsFinder extends Criterion {
 		TupleQueryResult result = vocabRepository.query(createdAmbiguousRelationsQuery());
 		addToResultsList(result);
 		
-		return new ConceptPairsResult(ambiguousRelations);
+		return new CollectionResult<Pair<URI>>(ambiguousRelations);
 	}
 	
 	private String createdAmbiguousRelationsQuery() {

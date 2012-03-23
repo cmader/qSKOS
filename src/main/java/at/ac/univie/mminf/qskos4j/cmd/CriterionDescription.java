@@ -15,8 +15,8 @@ enum CriterionDescription {
 		"Authoritative Concepts", 
 		"Finds all authoritative concepts in the vocabulary", 
 		"findAuthoritativeConcepts"),
-	LEXICAL_RELATIONS_COUNT("lr",
-		"Lexical Relations Count",
+	LABELS_COUNT("l",
+		"Labels Count",
 		"Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
 		"findLexicalRelationsCount"),
 	SEMANTIC_RELATIONS_COUNT("sr",
@@ -36,7 +36,7 @@ enum CriterionDescription {
 		"Counts the involved Collections",
 		"findCollectionCount"),
 	
-	// Labeling and Documentation Criteria
+	// Labeling and Documentation Issues
 	OMITTED_OR_INVALID_LANG_TAGS("oilt",
 		"Omitted or Invalid Language Tags",
 		"Finds omitted or invalid language tags of text literals",
@@ -44,35 +44,47 @@ enum CriterionDescription {
 	INCOMPLETE_LANG_COVERAGE("ilc",	
 		"Incomplete Language Coverage",
 		"Finds concepts lacking description in languages that are present for other concepts",
-		"getIncompleteLanguageCoverage"),
-	UNDOCUMENTED_CONCEPTS("udc",
+		"findIncompleteLanguageCoverage"),
+	UNDOCUMENTED_CONCEPTS("uc",
 		"Undocumented Concepts",
 		"Finds concepts that don't use any SKOS documentation properties",
 		"findUndocumentedConcepts"),
-	LABEL_CONFLICTS("labc",	
+	LABEL_CONFLICTS("lc",	
 		"Label Conflicts",
 		"Finds concepts with similar (identical) labels",
 		"findLabelConflicts"),
 				
-	// Graph-based measures
-	LOOSE_CONCEPTS("lc", 
-		"Loose Concepts", 
-		"Finds all loose concepts as defined in https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC1_Relative_Number_of_Loose_Concepts", 
+	// Structural Issues		
+	ORPHAN_CONCEPTS("oc", 
+		"Orphan Concepts", 
+		"Finds all orphan concepts, i.e. those not having semantic relationships to other concepts", 
 		"findLooseConcepts"),
 	WEAKLY_CONNECTED_COMPONENTS("wcc", 
 		"Weakly Connected Components", 
 		"Finds all weakly connected components as defined in https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC2_Weakly_Connected_Components", 
 		"findComponents"),
-	HIERARCHICAL_CYCLES("hc", 
+	CYCLIC_HIERARCHICAL_RELATIONS("chr", 
 		"Hierarchical Cycles", 
 		"Finds all cycle containing components, for additional information see https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC3_Cyclic_Hierarchical_Relations", 
 		"findHierarchicalCycles"),
-	
-	// Structure-related measures
-	REDUNDANT_ASSOCIATIVE_RELATIONS("rar", 
+	VALUELESS_ASSOCIATIVE_RELATIONS("var", 
 		"Redundant Associative Relations", 
 		"Two concepts are sibling, but also connected by an associative relation", 
-		"findRedundantAssociativeRelations"),
+		"findValuelessAssociativeRelations"),
+	SOLELY_TRANSITIVELY_RELATED_CONCEPTS("strc",
+		"Solely Transitively Related Concepts",
+		"Concepts only related by skos:broaderTransitive or skos:narrowerTransitive, see https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC_ST4_Solely_Transitively_Related_Concepts",
+		"findSolelyTransitivelyRelatedConcepts"),
+	OMITTED_TOP_CONCEPTS("otc",
+		"Omitted Top Concepts",
+		"Finds skos:ConceptSchemes without top concepts",
+		"findConceptSchemesWithoutTopConcept"),
+	TOP_CONCEPTS_HAVING_BROADER("tchbc",
+		"Top Concepts Having Broader Concepts",
+		"Finds top concepts internal to the vocabulary hierarchy tree",
+		"findTopConceptsHavingBroaderConcept"),	
+		
+	/*	
 	HIERARCHICALLY_AND_ASSOCIATIVELY_RELATED_CONCEPTS("harc",
 		"Hierarchically and Associatively Related Concepts",
 		"Concepts that are both hierarchically and associatively connected",
@@ -80,11 +92,7 @@ enum CriterionDescription {
 	UNIDIRECTIONALLY_RELATED_CONCEPTS("urc",
 		"Unidirectionally Related Concepts",
 		"Concepts not including reciprocal relations",	
-		"findOmittedInverseRelations"),
-	SOLELY_TRANSITIVELY_RELATED_CONCEPTS("strc",
-		"Solely Transitively Related Concepts",
-		"Concepts only related by skos:broaderTransitive or skos:narrowerTransitive, see https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC_ST4_Solely_Transitively_Related_Concepts",
-		"findSolitaryTransitiveRelations"),	
+		"findOmittedInverseRelations"),		
 	
 	// Linked Data related measures
 	CONCEPT_EXT_LINK_AVG("cela",
@@ -121,14 +129,6 @@ enum CriterionDescription {
 		"Deprecated property usage",
 		"Finds usage of properties according to appendix D of the SKOS reference",
 		"findDeprecatedProperties"),
-	OMITTED_TOP_CONCEPTS("otc",
-		"Omitted Top Concepts",
-		"Finds skos:ConceptSchemes without top concepts",
-		"findConceptSchemesWithoutTopConcept"),
-	TOP_CONCEPTS_HAVING_BROADER("tcb",
-		"Top Concepts Having Broader Concepts",
-		"Finds top concepts internal to the vocabulary hierarchy tree",
-		"findTopConceptsHavingBroaderConcept"),
 	
 	// Labeling issues	
 	AMBIGUOUS_PREFLABELED_CONCEPTS("apc",
@@ -139,6 +139,7 @@ enum CriterionDescription {
 		"Not Disjoint Labeled Concepts",
 		"Finds concepts with identical entries for different label types",
 		"findNotDisjointLabels"),
+	*/
 		
 	// Other measures		
 		

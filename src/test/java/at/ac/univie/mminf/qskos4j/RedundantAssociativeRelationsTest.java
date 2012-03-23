@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -24,10 +23,10 @@ public class RedundantAssociativeRelationsTest extends QSkosTestCase {
 	
 	@Test
 	public void testRedundantAssociativeRelationsCount() throws OpenRDFException {
-		Map<URI, Set<Pair<URI>>> redAssRels = qSkosRedundantAssociativeRelations.
-			findRedundantAssociativeRelations().getData();
+		Collection<Pair<URI>> redAssRels = qSkosRedundantAssociativeRelations.
+			findValuelessAssociativeRelations().getData();
 		
-		Assert.assertEquals(4, redAssRels.size());
+		Assert.assertEquals(5, redAssRels.size());
 	}
 	
 }

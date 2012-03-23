@@ -5,7 +5,7 @@ import java.util.Map;
 import org.openrdf.model.URI;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.result.general.ConceptPairsResult;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 
 public class UnidirRelConceptsResult extends Result<Map<Pair<URI>, String>> {
@@ -16,7 +16,7 @@ public class UnidirRelConceptsResult extends Result<Map<Pair<URI>, String>> {
 
 	@Override
 	public String getShortReport() {
-		return new ConceptPairsResult(getData().keySet()).getShortReport();
+		return new CollectionResult<Pair<URI>>(getData().keySet()).getShortReport();
 	}
 
 	@Override

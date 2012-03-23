@@ -28,7 +28,7 @@ public class LanguageCoverageChecker extends Criterion {
 		super(vocabRepository);
 	}
 
-	public IncompleteLangCovResult getIncompleteLanguageCoverage(
+	public IncompleteLangCovResult findIncompleteLanguageCoverage(
 		Collection<URI> concepts) throws OpenRDFException 
 	{
 		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();

@@ -21,7 +21,6 @@ import at.ac.univie.mminf.qskos4j.criteria.ComponentFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptRanker;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptSchemeChecker;
-import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ExternalResourcesFinder;
 import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
 import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
@@ -33,6 +32,7 @@ import at.ac.univie.mminf.qskos4j.criteria.ResourceAvailabilityChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SkosReferenceIntegrityChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SkosTermsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
+import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflictsFinder;
@@ -43,11 +43,9 @@ import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.result.custom.LinkTargetAvailabilityResult;
 import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
-import at.ac.univie.mminf.qskos4j.result.custom.RedundantAssocRelationsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.ConceptPairsResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
@@ -248,9 +246,9 @@ public class QSkos {
 		return new LanguageTagChecker(vocabRepository).findOmittedOrInvalidLanguageTags();
 	}
 	
-	public IncompleteLangCovResult getIncompleteLanguageCoverage() throws OpenRDFException {
+	public IncompleteLangCovResult findIncompleteLanguageCoverage() throws OpenRDFException {
 		languageCoverageChecker.setProgressMonitor(progressMonitor);
-		return languageCoverageChecker.getIncompleteLanguageCoverage(findInvolvedConcepts().getData());
+		return languageCoverageChecker.findIncompleteLanguageCoverage(findInvolvedConcepts().getData());
 	}
 	
 	public ConceptLabelsResult findNotUniquePrefLabels() throws OpenRDFException {
@@ -261,8 +259,8 @@ public class QSkos {
 		return new AmbiguousLabelFinder(vocabRepository).findNotDisjointLabels();
 	}
 	
-	public RedundantAssocRelationsResult findRedundantAssociativeRelations() throws OpenRDFException {
-		return redundantAssociativeRelationsFinder.findRedundantAssociativeRelations();
+	public CollectionResult<Pair<URI>> findValuelessAssociativeRelations() throws OpenRDFException {
+		return redundantAssociativeRelationsFinder.findValuelessAssociativeRelations();
 	}
 	
 	public CollectionResult<LabelConflict> findLabelConflicts() throws OpenRDFException {
@@ -284,8 +282,8 @@ public class QSkos {
 		return new InverseRelationsChecker(vocabRepository).findOmittedInverseRelations();
 	}
 	
-	public ConceptPairsResult findSolitaryTransitiveRelations() throws OpenRDFException {
-		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolitaryTransitiveRelations();
+	public CollectionResult<Pair<URI>> findSolelyTransitivelyRelatedConcepts() throws OpenRDFException {
+		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolelyTransitivelyRelatedConcepts();
 	}
 	
 	public CollectionResult<Resource> findUndocumentedConcepts() throws OpenRDFException 
@@ -315,7 +313,7 @@ public class QSkos {
 		return new SkosReferenceIntegrityChecker(vocabRepository).findExactVsAssociativeMappingClashes();
 	}
 	
-	public ConceptPairsResult findAmbiguousRelations() throws OpenRDFException {
+	public CollectionResult<Pair<URI>> findAmbiguousRelations() throws OpenRDFException {
 		return new AmbiguousRelationsFinder(vocabRepository).findAmbiguousRelations();
 	}
 	
