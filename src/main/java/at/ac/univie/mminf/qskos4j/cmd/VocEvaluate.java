@@ -36,10 +36,10 @@ public class VocEvaluate {
 	@Parameter(names = {"-s", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
 	private Float randomSubsetSize_percent;
 
-	@Parameter(names = {"-l", "--list-measures"}, description = "Output a list of all available measure IDs")
-	private Boolean outputMeasures;
+	@Parameter(names = {"-l", "--list-issues"}, description = "Output a list of all available quality issue IDs")
+	private Boolean outputIssues;
 	
-	@Parameter(names = {"-m", "--use-measures"}, description = "Comma-separated list of measure IDs to perform")
+	@Parameter(names = {"-i", "--check-issue"}, description = "Comma-separated list of issue IDs to check for")
 	private String selectedCriteria;
 	
 	@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
@@ -53,16 +53,16 @@ public class VocEvaluate {
 		
 		try {
 			jCommander.parse(args);
-			instance.listMeasuresOrEvaluate();
+			instance.listIssuesOrEvaluate();
 		}
 		catch (ParameterException e) {
 			jCommander.usage();
 		}
 	}
 	
-	private void listMeasuresOrEvaluate() {
-		if (outputMeasures != null && outputMeasures == true) {
-			outputMeasuresDescription();
+	private void listIssuesOrEvaluate() {
+		if (outputIssues != null && outputIssues == true) {
+			outputIssuesDescription();
 		}
 		else {
 			checkVocabFilenameGiven();
@@ -70,7 +70,7 @@ public class VocEvaluate {
 		}
 	}
 
-	private void outputMeasuresDescription() {
+	private void outputIssuesDescription() {
 		String formatString = "%5s\t%-55s\t%-60s\n"; 
 		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
 		for (CriterionDescription critDesc : CriterionDescription.values()) {
@@ -88,7 +88,7 @@ public class VocEvaluate {
 	private void evaluate() {
 		try {		
 			setupQSkos();
-			performMeasures();
+			checkForIssue();
 		} 
 		catch (IOException ioException) {
 			System.out.println("Error reading vocabulary file: " +ioException.getMessage());
@@ -107,7 +107,7 @@ public class VocEvaluate {
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 	}
 
-	private void performMeasures() {
+	private void checkForIssue() {
 		for (CriterionDescription criterion : extractCriteria()) {
 			System.out.println("--- " +criterion.getName());
 			String qSkosMethodName = criterion.getQSkosMethodName();
