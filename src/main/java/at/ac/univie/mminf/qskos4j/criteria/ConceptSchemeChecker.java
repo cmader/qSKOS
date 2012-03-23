@@ -19,7 +19,7 @@ public class ConceptSchemeChecker extends Criterion {
 		super(vocabRepository);
 	}
 
-	public CollectionResult<URI> findConceptSchemesWithoutTopConcept() 
+	public CollectionResult<URI> findOmittedTopConcepts() 
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createConceptSchemesWithoutTopConceptQuery());
@@ -52,7 +52,7 @@ public class ConceptSchemeChecker extends Criterion {
 		return resultList;
 	}
 	
-	public CollectionResult<URI> findTopConceptsHavingBroaderConcept() 
+	public CollectionResult<URI> findTopConceptsHavingBroaderConcepts() 
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createTopConceptsHavingBroaderConceptQuery());

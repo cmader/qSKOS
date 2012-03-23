@@ -78,11 +78,11 @@ enum CriterionDescription {
 	OMITTED_TOP_CONCEPTS("otc",
 		"Omitted Top Concepts",
 		"Finds skos:ConceptSchemes without top concepts",
-		"findConceptSchemesWithoutTopConcept"),
-	TOP_CONCEPTS_HAVING_BROADER("tchbc",
+		"findOmittedTopConcepts"),
+	TOP_CONCEPTS_HAVING_BROADER_CONCEPTS("tchbc",
 		"Top Concepts Having Broader Concepts",
 		"Finds top concepts internal to the vocabulary hierarchy tree",
-		"findTopConceptsHavingBroaderConcept"),	
+		"findTopConceptsHavingBroaderConcepts"),	
 		
 	/*	
 	HIERARCHICALLY_AND_ASSOCIATIVELY_RELATED_CONCEPTS("harc",

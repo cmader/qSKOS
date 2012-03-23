@@ -23,7 +23,7 @@ public class TopConceptsHavingBroaderConceptTest extends QSkosTestCase {
 	@Test
 	public void testTopConceptsHavingBroaderConceptCount() throws OpenRDFException {
 		Collection<URI> topConceptsHavingBroaderConcept =	qSkosTopConceptsHavingBroaderConcept.
-			findTopConceptsHavingBroaderConcept().getData();
+			findTopConceptsHavingBroaderConcepts().getData();
 		Assert.assertEquals(4, topConceptsHavingBroaderConcept.size());
 	}
 	

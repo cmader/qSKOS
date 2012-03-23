@@ -294,12 +294,12 @@ public class QSkos {
 		return docCovChecker.findUndocumentedConcepts(findInvolvedConcepts().getData());
 	}
 	
-	public CollectionResult<URI> findConceptSchemesWithoutTopConcept() throws OpenRDFException {
-		return new ConceptSchemeChecker(vocabRepository).findConceptSchemesWithoutTopConcept();
+	public CollectionResult<URI> findOmittedTopConcepts() throws OpenRDFException {
+		return new ConceptSchemeChecker(vocabRepository).findOmittedTopConcepts();
 	}
 	
-	public CollectionResult<URI> findTopConceptsHavingBroaderConcept() throws OpenRDFException {
-		return new ConceptSchemeChecker(vocabRepository).findTopConceptsHavingBroaderConcept();
+	public CollectionResult<URI> findTopConceptsHavingBroaderConcepts() throws OpenRDFException {
+		return new ConceptSchemeChecker(vocabRepository).findTopConceptsHavingBroaderConcepts();
 	}
 	
 	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
