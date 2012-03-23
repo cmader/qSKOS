@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,20 +20,20 @@ import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.result.custom.AvgConceptIndegreeResult;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class ConceptRanker extends Criterion {
+public class InLinkFinder extends Criterion {
 
-	private final Logger logger = LoggerFactory.getLogger(ConceptRanker.class);
+	private final Logger logger = LoggerFactory.getLogger(InLinkFinder.class);
 	
 	private Collection<URI> authoritativeConcepts;
 	private Set<SPARQLRepository> sparqlEndpoints;
-	private Map<URI, Set<URI>> conceptsRank = new HashMap<URI, Set<URI>>();
+	private Map<URI, Set<URI>> conceptReferencingResources = new HashMap<URI, Set<URI>>();
 	
-	public ConceptRanker(
+	public InLinkFinder(
 		VocabRepository vocabRepository,
 		Set<String> sparqlEndpoints) 
 	{
@@ -53,7 +54,7 @@ public class ConceptRanker extends Criterion {
 		}
 	}
 	
-	public AvgConceptIndegreeResult analyzeConceptsRank(
+	public CollectionResult<URI> findMissingInLinks(
 		Collection<URI> authoritativeConcepts,
 		Float randomSubsetSize_percent) throws OpenRDFException
 	{
@@ -62,13 +63,13 @@ public class ConceptRanker extends Criterion {
 		Iterator<URI> conceptIt = new MonitoredIterator<URI>(
 			getRankedConcepts(randomSubsetSize_percent),
 			progressMonitor,
-			"ranking concepts");
+			"finding In-Links");
 
 		while (conceptIt.hasNext()) {
 			rankConcept(conceptIt.next());
 		}
 		
-		return new AvgConceptIndegreeResult(conceptsRank);
+		return new CollectionResult<URI>(extractUnreferencedConcepts());
 	}
 	
 	private Collection<URI> getRankedConcepts(Float randomSubsetSize_percent) {
@@ -113,10 +114,10 @@ public class ConceptRanker extends Criterion {
 		Set<URI> referencingResourcesOnOtherHost = 
 			getReferencingResourcesOnOtherHost(concept, result);
 
-		Set<URI> allReferencingResources = conceptsRank.get(concept);
+		Set<URI> allReferencingResources = conceptReferencingResources.get(concept);
 		if (allReferencingResources == null) {
 			allReferencingResources = new HashSet<URI>();
-			conceptsRank.put(concept, allReferencingResources);
+			conceptReferencingResources.put(concept, allReferencingResources);
 		}
 		allReferencingResources.addAll(referencingResourcesOnOtherHost);
 	}
@@ -151,5 +152,17 @@ public class ConceptRanker extends Criterion {
 		String host = new java.net.URI(resource.toString()).getHost();
 		String otherHost = new java.net.URI(otherResource.toString()).getHost();
 		return !host.equalsIgnoreCase(otherHost);		
+	}
+	
+	private Collection<URI> extractUnreferencedConcepts() {
+		Collection<URI> unrefConcepts = new ArrayList<URI>();
+		
+		for (URI concept : conceptReferencingResources.keySet()) {
+			if (conceptReferencingResources.get(concept).isEmpty()) {
+				unrefConcepts.add(concept);
+			}
+		}
+		
+		return unrefConcepts;
 	}
 }

@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 import at.ac.univie.mminf.qskos4j.criteria.AmbiguousRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ComponentFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptFinder;
-import at.ac.univie.mminf.qskos4j.criteria.ConceptRanker;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptSchemeChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ExternalResourcesFinder;
 import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
+import at.ac.univie.mminf.qskos4j.criteria.InLinkFinder;
 import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageCoverageChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageTagChecker;
@@ -36,7 +36,6 @@ import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflictsFinder;
-import at.ac.univie.mminf.qskos4j.result.custom.AvgConceptIndegreeResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptExtLinkAvgResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
@@ -72,7 +71,7 @@ public class QSkos {
 	private Integer urlDereferencingDelay;
 	private Float randomSubsetSize_percent;
 	
-	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
+	private CollectionResult<URI> involvedConcepts;
 	
 	public QSkos(File rdfFile) 
 		throws OpenRDFException, IOException
@@ -161,11 +160,7 @@ public class QSkos {
 	}
 	
 	public CollectionResult<URI> findAuthoritativeConcepts() throws OpenRDFException {
-		if (authoritativeConcepts == null) {		
-			authoritativeConcepts = conceptFinder.getAuthoritativeConcepts(publishingHost, authoritativeUriSubstring);
-		}
-		
-		return authoritativeConcepts;
+		return conceptFinder.getAuthoritativeConcepts(publishingHost, authoritativeUriSubstring);
 	}
 		
 	public CollectionResult<URI> findLooseConcepts() throws OpenRDFException
@@ -269,13 +264,13 @@ public class QSkos {
 		return labelConflictsFinder.findLabelConflicts(findInvolvedConcepts().getData());
 	}
 	
-	public AvgConceptIndegreeResult analyzeConceptsRank() throws OpenRDFException 
+	public CollectionResult<URI> findMissingInLinks() throws OpenRDFException 
 	{
-		ConceptRanker conceptRanker = new ConceptRanker(
+		InLinkFinder inLinkFinder = new InLinkFinder(
 			vocabRepository, 
 			sparqlEndPoints);
-		conceptRanker.setProgressMonitor(progressMonitor);
-		return conceptRanker.analyzeConceptsRank(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
+		inLinkFinder.setProgressMonitor(progressMonitor);
+		return inLinkFinder.findMissingInLinks(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
 	}
 	
 	public UnidirRelConceptsResult findOmittedInverseRelations() throws OpenRDFException {

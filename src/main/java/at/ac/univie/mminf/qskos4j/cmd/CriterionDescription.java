@@ -84,6 +84,13 @@ enum CriterionDescription {
 		"Finds top concepts internal to the vocabulary hierarchy tree",
 		"findTopConceptsHavingBroaderConcepts"),	
 		
+	// Linked Data Specific Issues
+	MISSING_INLINKS("mil",
+		"Missing In-Links",
+		"Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
+		"findMissingInLinks"),	
+
+		
 	/*	
 	HIERARCHICALLY_AND_ASSOCIATIVELY_RELATED_CONCEPTS("harc",
 		"Hierarchically and Associatively Related Concepts",
@@ -107,10 +114,7 @@ enum CriterionDescription {
 		"Link Target Availability",
 		"Checks dereferencability of all links",
 		"checkResourceAvailability"),
-	AVG_CONCEPT_INDEGREE("aci",
-		"Average Concept In-degree",
-		"Average number of other datasets referencing concepts of the vocabulary",
-		"analyzeConceptsRank"),
+	
 	
 	// SKOS related measures	
 	ASS_VS_HIER_RELATION_CLASHES("ahrc",
