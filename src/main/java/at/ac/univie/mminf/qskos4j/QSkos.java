@@ -20,12 +20,12 @@ import at.ac.univie.mminf.qskos4j.criteria.AmbiguousRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ComponentFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptSchemeChecker;
-import at.ac.univie.mminf.qskos4j.criteria.ExternalResourcesFinder;
 import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
 import at.ac.univie.mminf.qskos4j.criteria.InLinkFinder;
 import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageCoverageChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageTagChecker;
+import at.ac.univie.mminf.qskos4j.criteria.OutLinkFinder;
 import at.ac.univie.mminf.qskos4j.criteria.RedundantAssociativeRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.RelationStatisticsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ResourceAvailabilityChecker;
@@ -36,7 +36,6 @@ import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflictsFinder;
-import at.ac.univie.mminf.qskos4j.result.custom.ConceptExtLinkAvgResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
@@ -206,11 +205,11 @@ public class QSkos {
 		hierarchyAnalyer.exportCycleContainingComponents(writers);
 	}
 
-	public ConceptExtLinkAvgResult findExternalResources() throws OpenRDFException {
-		ExternalResourcesFinder extResourcesFinder = new ExternalResourcesFinder(vocabRepository);
+	public CollectionResult<URI> findMissingOutLinks() throws OpenRDFException {
+		OutLinkFinder extResourcesFinder = new OutLinkFinder(vocabRepository);
 		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
-		return extResourcesFinder.findExternalResourcesForConcepts(findInvolvedConcepts().getData(), publishingHost);
+		return extResourcesFinder.findMissingOutLinks(findInvolvedConcepts().getData(), publishingHost);
 	}
 	
 	public LinkTargetAvailabilityResult checkResourceAvailability() throws OpenRDFException 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,27 +23,27 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.result.custom.ConceptExtLinkAvgResult;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class ExternalResourcesFinder extends Criterion {
+public class OutLinkFinder extends Criterion {
 
-	private final Logger logger = LoggerFactory.getLogger(ExternalResourcesFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(OutLinkFinder.class);
 	
 	private String publishingHost;
-	private Map<URI, List<URL>> resourcesForConcept;
+	private Map<URI, List<URL>> extResourcesForConcept;
 	
-	public ExternalResourcesFinder(VocabRepository vocabRepository) {
+	public OutLinkFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public ConceptExtLinkAvgResult findExternalResourcesForConcepts(
+	public CollectionResult<URI> findMissingOutLinks(
 		Collection<URI> concepts,
 		String publishingHost) throws OpenRDFException 
 	{
-		resourcesForConcept = new HashMap<URI, List<URL>>();
+		extResourcesForConcept = new HashMap<URI, List<URL>>();
 		this.publishingHost = publishingHost;
 		
 		findResourcesForConcepts(concepts);
@@ -51,7 +52,7 @@ public class ExternalResourcesFinder extends Criterion {
 		}
 		retainExternalResources();
 		
-		return new ConceptExtLinkAvgResult(resourcesForConcept);
+		return new CollectionResult<URI>(extractUnlinkedConcepts());
 	}
 	
 	private void findResourcesForConcepts(Collection<URI> concepts) throws OpenRDFException 
@@ -60,7 +61,7 @@ public class ExternalResourcesFinder extends Criterion {
 		
 		while (conceptIt.hasNext()) {
 			URI concept = conceptIt.next();			
-			resourcesForConcept.put(concept, findResourcesForConcept(concept));
+			extResourcesForConcept.put(concept, findResourcesForConcept(concept));
 		}
 	}
 	
@@ -88,7 +89,7 @@ public class ExternalResourcesFinder extends Criterion {
 		HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
 		
 		Iterator<List<URL>> resourcesListIt = new MonitoredIterator<List<URL>>(
-			resourcesForConcept.values(),
+			extResourcesForConcept.values(),
 			progressMonitor,
 			"guessing publishing host");
 		while (resourcesListIt.hasNext()) {
@@ -125,13 +126,13 @@ public class ExternalResourcesFinder extends Criterion {
 		List<URL> validExternalResources = new ArrayList<URL>();
 		
 		Iterator<URI> conceptIt = new MonitoredIterator<URI>(
-			resourcesForConcept.keySet(),
+			extResourcesForConcept.keySet(),
 			progressMonitor,
 			"retaining external resources");
 		while (conceptIt.hasNext()) {
 			URI concept = conceptIt.next();
 			
-			List<URL> resourceURLs = resourcesForConcept.get(concept);
+			List<URL> resourceURLs = extResourcesForConcept.get(concept);
 
 			for (URL url : resourceURLs) {
 				if (publishingHostMismatch(url) && isNonSkosURL(url)) {
@@ -149,6 +150,18 @@ public class ExternalResourcesFinder extends Criterion {
 	
 	private boolean isNonSkosURL(URL url) {
 		return !url.toString().contains(SparqlPrefix.SKOS.getNameSpace());
+	}
+	
+	private Collection<URI> extractUnlinkedConcepts() {
+		Collection<URI> unlinkedConcepts = new HashSet<URI>();
+		
+		for (URI concept : extResourcesForConcept.keySet()) {
+			if (extResourcesForConcept.get(concept).isEmpty()) {
+				unlinkedConcepts.add(concept);
+			}
+		}
+		
+		return unlinkedConcepts;
 	}
 	
 	@SuppressWarnings("serial")

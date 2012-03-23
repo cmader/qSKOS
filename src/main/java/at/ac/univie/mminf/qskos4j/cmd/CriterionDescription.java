@@ -61,11 +61,11 @@ enum CriterionDescription {
 		"findLooseConcepts"),
 	WEAKLY_CONNECTED_COMPONENTS("wcc", 
 		"Weakly Connected Components", 
-		"Finds all weakly connected components as defined in https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC2_Weakly_Connected_Components", 
+		"Finds all weakly connected components", 
 		"findComponents"),
 	CYCLIC_HIERARCHICAL_RELATIONS("chr", 
 		"Hierarchical Cycles", 
-		"Finds all cycle containing components, for additional information see https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC3_Cyclic_Hierarchical_Relations", 
+		"Finds all hierarchy cycle containing components", 
 		"findHierarchicalCycles"),
 	VALUELESS_ASSOCIATIVE_RELATIONS("var", 
 		"Redundant Associative Relations", 
@@ -73,7 +73,7 @@ enum CriterionDescription {
 		"findValuelessAssociativeRelations"),
 	SOLELY_TRANSITIVELY_RELATED_CONCEPTS("strc",
 		"Solely Transitively Related Concepts",
-		"Concepts only related by skos:broaderTransitive or skos:narrowerTransitive, see https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies#wiki-VQC_ST4_Solely_Transitively_Related_Concepts",
+		"Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
 		"findSolelyTransitivelyRelatedConcepts"),
 	OMITTED_TOP_CONCEPTS("otc",
 		"Omitted Top Concepts",
@@ -89,7 +89,12 @@ enum CriterionDescription {
 		"Missing In-Links",
 		"Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
 		"findMissingInLinks"),	
+	MISSING_OUTLINKS("mol",
+		"Missing Out-Links",
+		"Finds concepts that are not linked to other vocabularies on the Web",
+		"findMissingOutLinks"),
 
+		
 		
 	/*	
 	HIERARCHICALLY_AND_ASSOCIATIVELY_RELATED_CONCEPTS("harc",
@@ -102,10 +107,6 @@ enum CriterionDescription {
 		"findOmittedInverseRelations"),		
 	
 	// Linked Data related measures
-	CONCEPT_EXT_LINK_AVG("cela",
-		"Concept External Link Average",
-		"Average count of each concept's links to external resources",
-		"findExternalResources"),
 	HTTP_URI_SCHEME_VIOLATION("husv",
 		"HTTP URI Scheme Violation",
 		"Finds triple subjects that are no HTTP URIs",

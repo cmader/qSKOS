@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -155,7 +154,7 @@ public class InLinkFinder extends Criterion {
 	}
 	
 	private Collection<URI> extractUnreferencedConcepts() {
-		Collection<URI> unrefConcepts = new ArrayList<URI>();
+		Collection<URI> unrefConcepts = new HashSet<URI>();
 		
 		for (URI concept : conceptReferencingResources.keySet()) {
 			if (conceptReferencingResources.get(concept).isEmpty()) {
