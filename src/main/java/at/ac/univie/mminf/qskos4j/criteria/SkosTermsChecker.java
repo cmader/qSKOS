@@ -12,7 +12,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -24,14 +24,18 @@ public class SkosTermsChecker extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public IllegalResourceResult findDeprecatedProperties() throws OpenRDFException 
+	public CollectionResult<URI> findUndefinedSkosResources() throws OpenRDFException
 	{
-		if (deprecatedProperties == null) {
-			TupleQueryResult result = vocabRepository.query(createDeprecatedPropertiesQuery());
-			generateDeprecatedPropertiesMap(result);	
-		}
+		findDeprecatedProperties();
+		findIllegalTerms();
 		
-		return new IllegalResourceResult(deprecatedProperties);
+		return new CollectionResult<URI>(collectUndefinedResources());
+	}
+	
+	private void findDeprecatedProperties() throws OpenRDFException 
+	{
+		TupleQueryResult result = vocabRepository.query(createDeprecatedPropertiesQuery());
+		generateDeprecatedPropertiesMap(result);	
 	}
 	
 	private String createDeprecatedPropertiesQuery() {
@@ -72,14 +76,10 @@ public class SkosTermsChecker extends Criterion {
 		}
 	}
 	
-	public IllegalResourceResult findIllegalTerms() throws OpenRDFException 
+	private void findIllegalTerms() throws OpenRDFException 
 	{
-		if (illegalTerms == null) {
-			TupleQueryResult result = vocabRepository.query(createIllegalTermsQuery());
-			generateIllegalTermsMap(result);
-		}
-		
-		return new IllegalResourceResult(illegalTerms);
+		TupleQueryResult result = vocabRepository.query(createIllegalTermsQuery());
+		generateIllegalTermsMap(result);
 	}
 	
 	private String createIllegalTermsQuery() {
@@ -127,5 +127,14 @@ public class SkosTermsChecker extends Criterion {
 		else if (object != null && object instanceof URI) {
 			resources.add((URI) object);
 		}		
+	}
+	
+	private Collection<URI> collectUndefinedResources() {
+		Collection<URI> undefRes = new HashSet<URI>();
+		
+		undefRes.addAll(deprecatedProperties.keySet());
+		undefRes.addAll(illegalTerms.keySet());
+		
+		return undefRes;
 	}
 }

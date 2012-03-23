@@ -93,10 +93,16 @@ enum CriterionDescription {
 		"Missing Out-Links",
 		"Finds concepts that are not linked to other vocabularies on the Web",
 		"findMissingOutLinks"),
-
+	LINK_TARGET_AVAILABILITY("bl",
+		"Broken Links",
+		"Checks dereferencability of all links",
+		"findBrokenLinks"),
+	UNDEFINED_SKOS_RESOURCES("usr",
+		"Undefined SKOS Resources",
+		"Finds 'invented' new terms within the SKOS namespace or deprecated properties",	
+		"findUndefinedSkosResources"),
 		
-		
-	/*	
+	// Other Issues	
 	HIERARCHICALLY_AND_ASSOCIATIVELY_RELATED_CONCEPTS("harc",
 		"Hierarchically and Associatively Related Concepts",
 		"Concepts that are both hierarchically and associatively connected",
@@ -106,18 +112,11 @@ enum CriterionDescription {
 		"Concepts not including reciprocal relations",	
 		"findOmittedInverseRelations"),		
 	
-	// Linked Data related measures
 	HTTP_URI_SCHEME_VIOLATION("husv",
 		"HTTP URI Scheme Violation",
 		"Finds triple subjects that are no HTTP URIs",
 		"findNonHttpResources"),
-	LINK_TARGET_AVAILABILITY("lta",
-		"Link Target Availability",
-		"Checks dereferencability of all links",
-		"checkResourceAvailability"),
 	
-	
-	// SKOS related measures	
 	ASS_VS_HIER_RELATION_CLASHES("ahrc",
 		"Associative vs. Hierarchical Relation Clashes",
 		"Covers condition S27 from the SKOS reference document",
@@ -126,16 +125,7 @@ enum CriterionDescription {
 		"Exact vs. Associative and Hierarchical Mapping Clashes",
 		"Covers condition S46 from the SKOS reference document",	
 		"findExactVsAssociativeMappingClashes"),
-	ILLEGAL_TERMS("it",
-		"Illegal SKOS terms",
-		"Finds 'invented' new terms within the SKOS namespace",	
-		"findIllegalTerms"),
-	DEPRECATED_PROP_USAGE("dpu",
-		"Deprecated property usage",
-		"Finds usage of properties according to appendix D of the SKOS reference",
-		"findDeprecatedProperties"),
 	
-	// Labeling issues	
 	AMBIGUOUS_PREFLABELED_CONCEPTS("apc",
 		"Ambiguously Preflabeled Concepts",
 		"Finds concepts with more then one prefLabel per languate",	
@@ -144,9 +134,6 @@ enum CriterionDescription {
 		"Not Disjoint Labeled Concepts",
 		"Finds concepts with identical entries for different label types",
 		"findNotDisjointLabels"),
-	*/
-		
-	// Other measures		
 		
 	NULL_DESC("", "", "", "");
 	

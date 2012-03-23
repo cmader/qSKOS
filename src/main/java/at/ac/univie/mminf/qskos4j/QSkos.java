@@ -36,10 +36,9 @@ import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflictsFinder;
+import at.ac.univie.mminf.qskos4j.result.custom.BrokenLinksResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
-import at.ac.univie.mminf.qskos4j.result.custom.IllegalResourceResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
-import at.ac.univie.mminf.qskos4j.result.custom.LinkTargetAvailabilityResult;
 import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
 import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
@@ -57,7 +56,6 @@ public class QSkos {
 	private Set<String> sparqlEndPoints = new HashSet<String>();
 	
 	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
-	private SkosTermsChecker skosTermsChecker;
 	private HierarchyAnalyzer hierarchyAnalyer;
 	private ConceptFinder conceptFinder;
 	private ComponentFinder componentFinder;
@@ -113,7 +111,6 @@ public class QSkos {
 	}
 	
 	private void init() {
-		skosTermsChecker = new SkosTermsChecker(vocabRepository);
 		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
 		hierarchyAnalyer = new HierarchyAnalyzer(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
@@ -212,10 +209,10 @@ public class QSkos {
 		return extResourcesFinder.findMissingOutLinks(findInvolvedConcepts().getData(), publishingHost);
 	}
 	
-	public LinkTargetAvailabilityResult checkResourceAvailability() throws OpenRDFException 
+	public BrokenLinksResult findBrokenLinks() throws OpenRDFException 
 	{
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		return resourceAvailabilityChecker.checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelay);
+		return resourceAvailabilityChecker.findBrokenLinks(randomSubsetSize_percent, urlDereferencingDelay);
 	}
 	
 	public CollectionResult<String> findInvalidResources(Float randomSubsetSize_percent) throws OpenRDFException {
@@ -228,14 +225,10 @@ public class QSkos {
 		return resourceAvailabilityChecker.findNonHttpResources();
 	}
 	
-	public IllegalResourceResult findDeprecatedProperties() throws OpenRDFException {
-		return skosTermsChecker.findDeprecatedProperties();
+	public CollectionResult<URI> findUndefinedSkosResources() throws OpenRDFException {
+		return new SkosTermsChecker(vocabRepository).findUndefinedSkosResources();
 	}
-	
-	public IllegalResourceResult findIllegalTerms() throws OpenRDFException {
-		return skosTermsChecker.findIllegalTerms();
-	}
-	
+		
 	public MissingLangTagResult findOmittedOrInvalidLanguageTags() throws OpenRDFException {
 		return new LanguageTagChecker(vocabRepository).findOmittedOrInvalidLanguageTags();
 	}

@@ -20,7 +20,7 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.result.custom.LinkTargetAvailabilityResult;
+import at.ac.univie.mminf.qskos4j.result.custom.BrokenLinksResult;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
@@ -43,7 +43,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 		super(vocabRepository);
 	}
 	
-	public LinkTargetAvailabilityResult checkResourceAvailability(
+	public BrokenLinksResult findBrokenLinks(
 		Float randomSubsetSize_percent,
 		Integer urlDereferencingDelayMillis) throws OpenRDFException 
 	{
@@ -54,7 +54,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 		findAllHttpURLs();
 		dereferenceURIs(randomSubsetSize_percent);
 				
-		return new LinkTargetAvailabilityResult(urlAvailability, randomSubsetSize_percent);
+		return new BrokenLinksResult(urlAvailability, randomSubsetSize_percent);
 	}
 	
 	public CollectionResult<String> findInvalidResources(
@@ -62,7 +62,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 		Integer urlDereferencingDelayMillis) throws OpenRDFException
 	{
 		if (invalidResources == null) {
-			checkResourceAvailability(randomSubsetSize_percent, urlDereferencingDelayMillis);
+			findBrokenLinks(randomSubsetSize_percent, urlDereferencingDelayMillis);
 		}
 		
 		return new CollectionResult<String>(invalidResources);
