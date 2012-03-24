@@ -58,7 +58,7 @@ enum CriterionDescription {
 	ORPHAN_CONCEPTS("oc", 
 		"Orphan Concepts", 
 		"Finds all orphan concepts, i.e. those not having semantic relationships to other concepts", 
-		"findLooseConcepts"),
+		"findOrphanConcepts"),
 	WEAKLY_CONNECTED_COMPONENTS("wcc", 
 		"Weakly Connected Components", 
 		"Finds all weakly connected components", 

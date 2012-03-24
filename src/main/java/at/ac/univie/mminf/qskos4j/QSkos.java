@@ -159,9 +159,9 @@ public class QSkos {
 		return conceptFinder.getAuthoritativeConcepts(publishingHost, authoritativeUriSubstring);
 	}
 		
-	public CollectionResult<URI> findLooseConcepts() throws OpenRDFException
+	public CollectionResult<URI> findOrphanConcepts() throws OpenRDFException
 	{
-		return conceptFinder.findLooseConcepts();
+		return conceptFinder.findOrphanConcepts();
 	}
 	
 	public NumberResult<Long> findLexicalRelationsCount() throws OpenRDFException

@@ -23,13 +23,13 @@ public class LooseConceptsTest extends QSkosTestCase {
 	
 	@Test
 	public void testConceptsLooseConceptCount() throws OpenRDFException {
-		Collection<URI> looseConcepts = qSkosConcepts.findLooseConcepts().getData();
+		Collection<URI> looseConcepts = qSkosConcepts.findOrphanConcepts().getData();
 		Assert.assertEquals(7, looseConcepts.size());		
 	}
 	
 	@Test
 	public void testComponentsLooseConceptCount() throws OpenRDFException {
-		Collection<URI> looseConcepts = qSkosComponents.findLooseConcepts().getData(); 
+		Collection<URI> looseConcepts = qSkosComponents.findOrphanConcepts().getData(); 
 		Assert.assertEquals(2, looseConcepts.size());		
 	}
 	

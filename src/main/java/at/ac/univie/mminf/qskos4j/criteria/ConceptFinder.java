@@ -42,7 +42,7 @@ public class ConceptFinder extends Criterion {
 		return new CollectionResult<URI>(foundConcepts);
 	}
 	
-	public CollectionResult<URI> findLooseConcepts()
+	public CollectionResult<URI> findOrphanConcepts()
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createLooseConceptsQuery());
