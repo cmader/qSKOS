@@ -206,7 +206,10 @@ public class QSkos {
 		OutLinkFinder extResourcesFinder = new OutLinkFinder(vocabRepository);
 		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
-		return extResourcesFinder.findMissingOutLinks(findInvolvedConcepts().getData(), publishingHost);
+		return extResourcesFinder.findMissingOutLinks(
+			findInvolvedConcepts().getData(), 
+			publishingHost,
+			authoritativeUriSubstring);
 	}
 	
 	public BrokenLinksResult findBrokenLinks() throws OpenRDFException 

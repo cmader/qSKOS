@@ -32,7 +32,7 @@ public class OutLinkFinder extends Criterion {
 
 	private final Logger logger = LoggerFactory.getLogger(OutLinkFinder.class);
 	
-	private String publishingHost;
+	private String publishingHost, authoritativeUriSubstring;
 	private Map<URI, List<URL>> extResourcesForConcept;
 	
 	public OutLinkFinder(VocabRepository vocabRepository) {
@@ -41,13 +41,15 @@ public class OutLinkFinder extends Criterion {
 	
 	public CollectionResult<URI> findMissingOutLinks(
 		Collection<URI> concepts,
-		String publishingHost) throws OpenRDFException 
+		String publishingHost,
+		String authoritativeUriSubstring) throws OpenRDFException 
 	{
 		extResourcesForConcept = new HashMap<URI, List<URL>>();
 		this.publishingHost = publishingHost;
+		this.authoritativeUriSubstring = authoritativeUriSubstring;
 		
 		findResourcesForConcepts(concepts);
-		if (publishingHost == null) {
+		if (publishingHost == null && authoritativeUriSubstring == null) {
 			guessPublishingHost();
 		}
 		retainExternalResources();
@@ -135,7 +137,7 @@ public class OutLinkFinder extends Criterion {
 			List<URL> resourceURLs = extResourcesForConcept.get(concept);
 
 			for (URL url : resourceURLs) {
-				if (publishingHostMismatch(url) && isNonSkosURL(url)) {
+				if (isExternalResource(url) && isNonSkosURL(url)) {
 					validExternalResources.add(url);
 				}
 			}
@@ -144,8 +146,15 @@ public class OutLinkFinder extends Criterion {
 		}
 	}
 	
-	private boolean publishingHostMismatch(URL url) {
-		return !url.getHost().equals(publishingHost);
+	private boolean isExternalResource(URL url) {
+		if (publishingHost != null) {
+			return !url.getHost().equals(publishingHost);	
+		}
+		else if (authoritativeUriSubstring != null) {
+			return url.toString().toLowerCase().contains(authoritativeUriSubstring.toLowerCase());
+		}
+		
+		throw new IllegalArgumentException("publishing host or authoritative URI substring must not be null");
 	}
 	
 	private boolean isNonSkosURL(URL url) {
