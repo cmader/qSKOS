@@ -24,6 +24,8 @@ public class UndocumentedConceptsChecker extends Criterion {
 		"skos:example", "skos:historyNote", "skos:scopeNote"
 	};
 	
+	private RepositoryConnection connection;
+	
 	public UndocumentedConceptsChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
@@ -31,6 +33,7 @@ public class UndocumentedConceptsChecker extends Criterion {
 	public CollectionResult<Resource> findUndocumentedConcepts(Collection<URI> allConcepts) 
 		throws OpenRDFException
 	{
+		connection = vocabRepository.getRepository().getConnection();
 		List<Resource> undocumentedConcepts = new ArrayList<Resource>();
 		
 		Iterator<URI> conceptIt = new MonitoredIterator<URI>(allConcepts, progressMonitor);
@@ -59,7 +62,6 @@ public class UndocumentedConceptsChecker extends Criterion {
 	private boolean conceptHasProperty(Resource concept, String property) 
 		throws OpenRDFException
 	{
-		RepositoryConnection connection = vocabRepository.getRepository().getConnection();
 		BooleanQuery graphQuery = connection.prepareBooleanQuery(
 			QueryLanguage.SPARQL, 
 			createPropertyQuery(concept, property));

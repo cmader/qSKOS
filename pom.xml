@@ -139,7 +139,7 @@
     </repository>
   </repositories>
   <properties>
-  	<sesame.version>2.6.4</sesame.version>
+  	<sesame.version>2.6.3</sesame.version>
   </properties>
   <distributionManagement>
     <snapshotRepository>
