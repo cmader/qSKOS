@@ -25,11 +25,14 @@ public class BrokenLinksResult extends Result<Map<URL, String>> {
 			}
 		}
 		
+		String report = "broken link count: "+notAvailableCount;
+		
 		if (subsetSize_percent != null) {
 			notAvailableCount *= 100 / subsetSize_percent;
+			report += ", extrapolated: " +notAvailableCount;
 		}
 		
-		return "broken link count: "+notAvailableCount;
+		return report;
 	}
 
 	@Override

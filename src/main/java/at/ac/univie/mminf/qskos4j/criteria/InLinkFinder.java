@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -58,9 +59,14 @@ public class InLinkFinder extends Criterion {
 		Float randomSubsetSize_percent) throws OpenRDFException
 	{
 		this.authoritativeConcepts = authoritativeConcepts;
+		Collection<URI> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
+		
+		if (randomSubsetSize_percent != null) {
+			logger.info("using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
+		}
 		
 		Iterator<URI> conceptIt = new MonitoredIterator<URI>(
-			getRankedConcepts(randomSubsetSize_percent),
+			conceptsToCheck,
 			progressMonitor,
 			"finding In-Links");
 
@@ -68,10 +74,10 @@ public class InLinkFinder extends Criterion {
 			rankConcept(conceptIt.next());
 		}
 		
-		return new CollectionResult<URI>(extractUnreferencedConcepts());
+		return new ExtrapolatedCollectionResult<URI>(extractUnreferencedConcepts(), randomSubsetSize_percent);
 	}
 	
-	private Collection<URI> getRankedConcepts(Float randomSubsetSize_percent) {
+	private Collection<URI> getConceptsToCheck(Float randomSubsetSize_percent) {
 		if (randomSubsetSize_percent == null) {
 			return authoritativeConcepts;
 		}
