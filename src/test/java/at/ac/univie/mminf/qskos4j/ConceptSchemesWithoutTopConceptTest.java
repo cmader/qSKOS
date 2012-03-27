@@ -23,7 +23,7 @@ public class ConceptSchemesWithoutTopConceptTest extends QSkosTestCase {
 	@Test
 	public void testConceptSchemesWithoutTopConceptsCount() throws OpenRDFException {
 		Collection<URI> conceptSchemes = qSkosMissingTopConcepts.findOmittedTopConcepts().getData();
-		Assert.assertEquals(1, conceptSchemes.size());
+		Assert.assertEquals(2, conceptSchemes.size());
 	}
 	
 }

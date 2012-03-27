@@ -285,7 +285,7 @@ public class QSkos {
 	}
 	
 	public CollectionResult<URI> findOmittedTopConcepts() throws OpenRDFException {
-		return new ConceptSchemeChecker(vocabRepository).findOmittedTopConcepts();
+		return new ConceptSchemeChecker(vocabRepository).findOmittedTopConcepts(findConceptSchemes().getData());
 	}
 	
 	public CollectionResult<URI> findTopConceptsHavingBroaderConcepts() throws OpenRDFException {

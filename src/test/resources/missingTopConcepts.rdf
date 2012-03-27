@@ -10,6 +10,11 @@
 		<skos:inScheme rdf:resource="conceptSchemeA"/>
 	</rdf:Description>
 
+	<!-- Case 5; error -->
+	<rdf:Description rdf:about="resourceF">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	</rdf:Description>
+
 	<!-- Case 2; ok -->
 	<rdf:Description rdf:about="conceptSchemeB">
 		<skos:hasTopConcept rdf:resource="resourceB"/>
