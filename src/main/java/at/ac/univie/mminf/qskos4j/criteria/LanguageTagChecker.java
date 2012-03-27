@@ -68,7 +68,7 @@ public class LanguageTagChecker extends Criterion {
 			Resource subject = (Resource) queryResult.getValue("s");
 			
 			if (literal.getDatatype() == null) {
-				String langTag = literal.getLanguage();
+				String langTag = literal.getLanguage();			
 				if (langTag == null || isInvalidLanguage(langTag)) {
 					addToMissingLangTagMap(subject, literal);
 				}

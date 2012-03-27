@@ -1,12 +1,14 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -91,22 +93,22 @@ public class RelationStatisticsFinder extends Criterion {
 			"}";
 	}
 	
-	public NumberResult<Long> findConceptSchemeCount() throws OpenRDFException
+	public CollectionResult<URI> findConceptSchemes() throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createConceptSchemeQuery());		
-		return new NumberResult<Long>(countResults(result));
+		return new CollectionResult<URI>(identifyResources(result));
 	}
 	
 	private String createConceptSchemeQuery() {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.RDF +
-			"SELECT DISTINCT ?conceptScheme WHERE {" +
-				"{?conceptScheme rdf:type/rdfs:subClassOf* skos:ConceptScheme}" +
+			"SELECT DISTINCT ?resource WHERE {" +
+				"{?resource rdf:type/rdfs:subClassOf* skos:ConceptScheme}" +
 				"UNION" +
-				"{?conceptScheme ?hasTopConcept ?concept . ?hasTopConcept rdfs:subPropertyOf* skos:hasTopConcept}" +
+				"{?resource ?hasTopConcept ?concept . ?hasTopConcept rdfs:subPropertyOf* skos:hasTopConcept}" +
 				"UNION" +
-				"{?concept ?topConceptOf ?conceptScheme . ?topConceptOf rdfs:subPropertyOf* skos:topConceptOf}" +
+				"{?concept ?topConceptOf ?resource . ?topConceptOf rdfs:subPropertyOf* skos:topConceptOf}" +
 				"UNION" +
-				"{?concept ?inScheme ?conceptScheme . ?inScheme rdfs:subPropertyOf* skos:inScheme}"+
+				"{?concept ?inScheme ?resource . ?inScheme rdfs:subPropertyOf* skos:inScheme}"+
 			"}";	
 	}
 	
@@ -114,6 +116,18 @@ public class RelationStatisticsFinder extends Criterion {
 	{
 		TupleQueryResult result = vocabRepository.query(createCollectionsQuery());
 		return new NumberResult<Long>(countResults(result));
+	}
+	
+	public Collection<URI> identifyResources(TupleQueryResult result) throws QueryEvaluationException 
+	{
+		Collection<URI> allResources = new HashSet<URI>();
+		
+		while (result.hasNext()) {
+			URI resource = (URI) result.next().getValue("resource");
+			allResources.add(resource);
+		}
+		
+		return allResources;
 	}
 	
 	private String createCollectionsQuery() {

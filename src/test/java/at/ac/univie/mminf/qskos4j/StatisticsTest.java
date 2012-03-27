@@ -79,7 +79,7 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test
 	public void testConceptSchemeCount() throws OpenRDFException
 	{
-		Assert.assertEquals(5, qSkosAggregations.findConceptSchemeCount().getData().longValue());
+		Assert.assertEquals(5, qSkosAggregations.findConceptSchemes().getData().size());
 	}
 	
 	@Test
