@@ -136,7 +136,7 @@ public class ConceptFinder extends Criterion {
 		}
 		
 		authResourceIdentifier = hostNameOccurencies.getMostOftenOccuringHostName();
-		logger.info("Guessed external resource identifier: '" +authResourceIdentifier+ "'");
+		logger.info("Guessed authoritative resource identifier: '" +authResourceIdentifier+ "'");
 	}
 		
 	private String createConceptsQuery() {
