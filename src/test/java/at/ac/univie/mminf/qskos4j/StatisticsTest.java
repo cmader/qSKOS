@@ -53,7 +53,7 @@ public class StatisticsTest extends QSkosTestCase {
 	@Test 
 	public void testAuthoritativeConceptsCount() throws OpenRDFException
 	{
-		qSkosConcepts.setPublishingHost("zbw.eu");
+		qSkosConcepts.setAuthoritativeResourceIdentifier("zbw.eu");
 		Collection<URI> authoritativeConcepts = qSkosConcepts.findAuthoritativeConcepts().getData();
 		Assert.assertEquals(9, authoritativeConcepts.size());
 	}

@@ -34,7 +34,7 @@ public class MissingOutLinkTest extends QSkosTestCase {
 	public void testConceptsMissingOutLinkCount() throws OpenRDFException {	
 		Collection<URI> extLinks = qSkosConcepts.findMissingOutLinks().getData();
 		
-		Assert.assertEquals(8, extLinks.size());		
+		Assert.assertEquals(7, extLinks.size());		
 	}
 
 }

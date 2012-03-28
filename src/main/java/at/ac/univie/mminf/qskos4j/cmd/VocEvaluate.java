@@ -26,12 +26,9 @@ public class VocEvaluate {
 	
 	@Parameter(description = "vocabularyfile")
 	private List<String> vocabFilenames;
-	
-	@Parameter(names = {"-h", "--publishing-host"}, description = "Name of publishing host")
-	private String publishingHost;
-	
-	@Parameter(names = {"-a", "--auth-uri-substring"}, description = "Authoritative URI substring")
-	private String authoritativeUriSubstring;
+		
+	@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
+	private String authoritativeResourceIdentifier;
 	
 	@Parameter(names = {"-s", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
 	private Float randomSubsetSize_percent;
@@ -100,8 +97,7 @@ public class VocEvaluate {
 	
 	private void setupQSkos() throws OpenRDFException, IOException {
 		qskos = new QSkos(new File(vocabFilenames.get(0)));
-		qskos.setPublishingHost(publishingHost);
-		qskos.setAuthoritativeUriSubstring(authoritativeUriSubstring);
+		qskos.setAuthoritativeResourceIdentifier(authoritativeResourceIdentifier);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
 		qskos.setSubsetSize(randomSubsetSize_percent);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");

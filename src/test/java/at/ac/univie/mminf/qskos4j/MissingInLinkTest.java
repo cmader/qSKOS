@@ -23,7 +23,7 @@ public class MissingInLinkTest extends QSkosTestCase {
 	
 	@Test
 	public void testInLinksAsDbPedia() throws OpenRDFException {
-		qSkosRankConcepts.setPublishingHost("dbpedia.org");
+		qSkosRankConcepts.setAuthoritativeResourceIdentifier("dbpedia.org");
 		
 		Collection<URI> conceptsMissingInLinks = qSkosRankConcepts.findMissingInLinks().getData();
 		Assert.assertTrue(conceptsMissingInLinks.isEmpty());		
@@ -31,7 +31,7 @@ public class MissingInLinkTest extends QSkosTestCase {
 
 	@Test
 	public void testInLinksAsSTW() throws OpenRDFException {
-		qSkosRankConcepts.setPublishingHost("zbw.eu");
+		qSkosRankConcepts.setAuthoritativeResourceIdentifier("zbw.eu");
 		
 		Collection<URI> conceptsMissingInLinks = qSkosRankConcepts.findMissingInLinks().getData();
 		Assert.assertEquals(2, conceptsMissingInLinks.size());		
@@ -39,7 +39,7 @@ public class MissingInLinkTest extends QSkosTestCase {
 
 	@Test
 	public void testInLinksAsLocal() throws OpenRDFException {
-		qSkosRankConcepts.setPublishingHost("myvocab.org");
+		qSkosRankConcepts.setAuthoritativeResourceIdentifier("myvocab.org");
 		
 		Collection<URI> conceptsMissingInLinks = qSkosRankConcepts.findMissingInLinks().getData();
 		Assert.assertEquals(1, conceptsMissingInLinks.size());

@@ -64,11 +64,11 @@ public class QSkos {
 	
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
-	private String publishingHost, authoritativeUriSubstring;
+	private String authResourceIdentifier;
 	private Integer urlDereferencingDelay;
 	private Float randomSubsetSize_percent;
 	
-	private CollectionResult<URI> involvedConcepts;
+	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
 	
 	public QSkos(File rdfFile) 
 		throws OpenRDFException, IOException
@@ -106,7 +106,7 @@ public class QSkos {
 		
 		vocabRepository = new VocabRepository(rdfFile, baseURI, dataFormat);
 		
-		extractPublishingHost(baseURI);
+		extractAuthResourceIdentifier(baseURI);
 		init();
 	}
 	
@@ -121,16 +121,13 @@ public class QSkos {
 		progressMonitor = new DummyProgressMonitor();
 	}
 	
-	private void extractPublishingHost(String baseUri) {
-		if (baseUri == null) {
-			publishingHost = null;
-		}
-		else {
+	private void extractAuthResourceIdentifier(String baseUri) {
+		if (baseUri != null) {
 			try {
-				publishingHost = new java.net.URI(baseUri).getHost();
+				authResourceIdentifier = new java.net.URI(baseUri).getHost();
 			} 
 			catch (URISyntaxException e) {
-				publishingHost = null;
+				// cannot guess authoritative resource identifier
 			}
 		}
 	}
@@ -156,7 +153,17 @@ public class QSkos {
 	}
 	
 	public CollectionResult<URI> findAuthoritativeConcepts() throws OpenRDFException {
-		return conceptFinder.getAuthoritativeConcepts(publishingHost, authoritativeUriSubstring);
+		conceptFinder.setProgressMonitor(progressMonitor);
+		
+		if (authoritativeConcepts == null) {
+			authoritativeConcepts = conceptFinder.findAuthoritativeConcepts(authResourceIdentifier);
+			
+			if (authResourceIdentifier == null) {
+				authResourceIdentifier = conceptFinder.getAuthoritativeResourceIdentifier();
+			}
+			
+		}
+		return authoritativeConcepts;
 	}
 		
 	public CollectionResult<URI> findOrphanConcepts() throws OpenRDFException
@@ -207,9 +214,8 @@ public class QSkos {
 		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
 		return extResourcesFinder.findMissingOutLinks(
-			findInvolvedConcepts().getData(), 
-			publishingHost,
-			authoritativeUriSubstring);
+			findAuthoritativeConcepts().getData(),
+			authResourceIdentifier);
 	}
 	
 	public BrokenLinksResult findBrokenLinks() throws OpenRDFException 
@@ -315,14 +321,10 @@ public class QSkos {
 		sparqlEndPoints.add(endpointUrl);
 	}
 	
-	public void setPublishingHost(String publishingHost) {
-		this.publishingHost = publishingHost;
+	public void setAuthoritativeResourceIdentifier(String authResourceIdentifier) {
+		this.authResourceIdentifier = authResourceIdentifier;
 	}
-	
-	public void setAuthoritativeUriSubstring(String authoritativeUriSubstring) {
-		this.authoritativeUriSubstring = authoritativeUriSubstring;
-	}
-	
+		
 	public void setUrlDereferencingDelay(int delayMillis) {
 		urlDereferencingDelay = delayMillis;
 	}

@@ -1,15 +1,27 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
@@ -19,7 +31,9 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
  */
 public class ConceptFinder extends Criterion {
 	
-	private Set<URI> involvedConcepts, authoritativeConcepts;
+	private final Logger logger = LoggerFactory.getLogger(ConceptFinder.class);
+	private Collection<URI> involvedConcepts, authoritativeConcepts;
+	private String authResourceIdentifier;
 	
 	/**
 	 * @param vocabRepository The repository that should be scanned for concepts
@@ -68,32 +82,27 @@ public class ConceptFinder extends Criterion {
 			"}";				
 	}
 	
-	public CollectionResult<URI> getAuthoritativeConcepts(
-		String publishingHost,
-		String authoritativeUriSubstring) throws OpenRDFException
+	public CollectionResult<URI> findAuthoritativeConcepts(
+		String authResourceIdentifier) throws OpenRDFException
 	{
 		if (authoritativeConcepts == null) {
-		
+			this.authResourceIdentifier = authResourceIdentifier;
+			
 			if (involvedConcepts == null) {
 				findInvolvedConcepts();
 			}
 			
-			extractAuthoritativeConceptsFromInvolved(
-				publishingHost,	
-				authoritativeUriSubstring);
+			extractAuthoritativeConceptsFromInvolved();
 		}
 		
 		return new CollectionResult<URI>(authoritativeConcepts);
 	}
 	
-	private void extractAuthoritativeConceptsFromInvolved(
-		String publishingHost,	
-		String authoritativeUriSubstring) 
+	private void extractAuthoritativeConceptsFromInvolved() 
 	{		
-		if ((publishingHost == null || publishingHost.isEmpty()) &&
-			(authoritativeUriSubstring == null || authoritativeUriSubstring.isEmpty()))
+		if (authResourceIdentifier == null || authResourceIdentifier.isEmpty())
 		{
-			throw new IllegalArgumentException("no publishing host and no authoritative uri substring given");
+			guessAuthoritativeResourceIdentifier();
 		}
 		
 		authoritativeConcepts = new HashSet<URI>();
@@ -101,12 +110,33 @@ public class ConceptFinder extends Criterion {
 		for (URI concept : involvedConcepts) {
 			String lowerCaseUriValue = concept.toString().toLowerCase();
 			
-			if (publishingHost != null && lowerCaseUriValue.contains(publishingHost.toLowerCase()) ||
-				authoritativeUriSubstring != null && lowerCaseUriValue.contains(authoritativeUriSubstring.toLowerCase())) 
+			if (lowerCaseUriValue.contains(authResourceIdentifier.toLowerCase())) 
 			{
 				authoritativeConcepts.add(concept);
 			}
 		}
+	}
+	
+	private void guessAuthoritativeResourceIdentifier() {
+		HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
+		
+		Iterator<URI> resourcesListIt = new MonitoredIterator<URI>(
+			involvedConcepts,
+			progressMonitor,
+			"guessing publishing host");
+		
+		while (resourcesListIt.hasNext()) {
+			try {
+				URL url = new URL(resourcesListIt.next().stringValue());
+				hostNameOccurencies.put(url.getHost());
+			}
+			catch (MalformedURLException e) {
+				// ignore this exception and continue with next concept
+			}
+		}
+		
+		authResourceIdentifier = hostNameOccurencies.getMostOftenOccuringHostName();
+		logger.info("Guessed external resource identifier: '" +authResourceIdentifier+ "'");
 	}
 		
 	private String createConceptsQuery() {
@@ -146,5 +176,37 @@ public class ConceptFinder extends Criterion {
 		}
 		
 		return ret;
+	}
+	
+	public String getAuthoritativeResourceIdentifier() {
+		return authResourceIdentifier;
+	}
+	
+	@SuppressWarnings("serial")
+	private class HostNameOccurrencies extends HashMap<String, Integer>
+	{
+		HostNameOccurrencies() {
+			super();
+		}
+		
+		void put(String hostname) {
+			Integer occurencies = get(hostname);
+			put(hostname, occurencies == null ? 1 : ++occurencies);
+		}
+		
+		String getMostOftenOccuringHostName() {
+			SortedSet<Map.Entry<String, Integer>> sortedEntries = new TreeSet<Map.Entry<String, Integer>>(
+				new Comparator<Map.Entry<String, Integer>>() 
+				{
+					@Override 
+					public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
+						return e2.getValue().compareTo(e1.getValue());
+					}
+				}
+			);
+			
+			sortedEntries.addAll(entrySet());
+			return sortedEntries.first().getKey();
+		}
 	}
 }
