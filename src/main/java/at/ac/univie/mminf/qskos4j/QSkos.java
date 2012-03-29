@@ -201,7 +201,7 @@ public class QSkos {
 		return componentFinder.findComponents(findInvolvedConcepts().getData());
 	}
 	
-	public CollectionResult<Set<URI>> findHierarchicalCycles() throws OpenRDFException {
+	public CollectionResult<Set<Resource>> findHierarchicalCycles() throws OpenRDFException {
 		return hierarchyAnalyer.findCycleContainingComponents();
 	}
 

@@ -6,20 +6,20 @@ import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 
-public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<URI, NamedEdge>> {
+public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<Resource, NamedEdge>> {
 
-	private List<Set<URI>> connectedSets;
+	private List<Set<Resource>> connectedSets;
 	
-	public WeaklyConnectedComponentsResult(DirectedGraph<URI, NamedEdge> data) {
+	public WeaklyConnectedComponentsResult(DirectedGraph<Resource, NamedEdge> data) {
 		super(data);
 		
-		connectedSets = new ConnectivityInspector<URI, NamedEdge>(getData()).connectedSets();
+		connectedSets = new ConnectivityInspector<Resource, NamedEdge>(getData()).connectedSets();
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<URI, N
 		String detailedReport = "";
 		long compCount = 1;
 		
-		for (Set<URI> component : connectedSets) {
+		for (Set<Resource> component : connectedSets) {
 			detailedReport += "component " +compCount+ ", size: " +component.size()+ "\n" +component.toString()+ "\n";
 			compCount++;
 		}
@@ -44,7 +44,7 @@ public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<URI, N
 		new GraphExporter(getData()).exportSubGraph(connectedSets, writers);
 	}
 	
-	public List<Set<URI>> getConnectedSets() {
+	public List<Set<Resource>> getConnectedSets() {
 		return connectedSets;
 	}
 }

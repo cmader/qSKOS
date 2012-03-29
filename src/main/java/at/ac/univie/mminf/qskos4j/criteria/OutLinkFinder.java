@@ -26,7 +26,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 public class OutLinkFinder extends Criterion {
 
 	private String authResourceIdentifier;
-	private Map<URI, List<URL>> extResourcesForConcept;
+	private Map<URI, Collection<URL>> extResourcesForConcept;
 	
 	public OutLinkFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
@@ -36,11 +36,10 @@ public class OutLinkFinder extends Criterion {
 		Collection<URI> autoritativeConcepts,
 		String authResourceIdentifier) throws OpenRDFException 
 	{
-		extResourcesForConcept = new HashMap<URI, List<URL>>();
+		extResourcesForConcept = new HashMap<URI, Collection<URL>>();
 		this.authResourceIdentifier = authResourceIdentifier;
 		
 		findResourcesForConcepts(autoritativeConcepts);
-		retainExternalResources();
 		
 		return new CollectionResult<URI>(extractUnlinkedConcepts());
 	}
@@ -51,11 +50,11 @@ public class OutLinkFinder extends Criterion {
 		
 		while (conceptIt.hasNext()) {
 			URI concept = conceptIt.next();			
-			extResourcesForConcept.put(concept, findResourcesForConcept(concept));
+			extResourcesForConcept.put(concept, findExternalResourcesForConcept(concept));
 		}
 	}
 	
-	private List<URL> findResourcesForConcept(URI concept) 
+	private Collection<URL> findExternalResourcesForConcept(URI concept) 
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException
 	{
 		String query = createIRIQuery(concept); 
@@ -63,7 +62,7 @@ public class OutLinkFinder extends Criterion {
 		TupleQueryResult result = vocabRepository.query(query);
 		List<URL> resourceList = identifyResources(result);
 		
-		return resourceList;
+		return extractExternalResources(resourceList);
 	}
 	
 	private String createIRIQuery(URI concept) {
@@ -95,26 +94,16 @@ public class OutLinkFinder extends Criterion {
 		return ret;
 	}
 	
-	private void retainExternalResources() {
-		List<URL> validExternalResources = new ArrayList<URL>();
+	private Collection<URL> extractExternalResources(Collection<URL> allResources) {
+		Collection<URL> validExternalResources = new HashSet<URL>();
 		
-		Iterator<URI> conceptIt = new MonitoredIterator<URI>(
-			extResourcesForConcept.keySet(),
-			progressMonitor,
-			"retaining external resources");
-		while (conceptIt.hasNext()) {
-			URI concept = conceptIt.next();
-			
-			List<URL> resourceURLs = extResourcesForConcept.get(concept);
-
-			for (URL url : resourceURLs) {
-				if (isExternalResource(url) && isNonSkosURL(url)) {
-					validExternalResources.add(url);
-				}
+		for (URL url : allResources) {
+			if (isExternalResource(url) && isNonSkosURL(url)) {
+				validExternalResources.add(url);
 			}
-			
-			resourceURLs.retainAll(validExternalResources);
 		}
+		
+		return validExternalResources;
 	}
 	
 	private boolean isExternalResource(URL url) {

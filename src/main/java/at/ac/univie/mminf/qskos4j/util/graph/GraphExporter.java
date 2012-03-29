@@ -14,41 +14,41 @@ import org.jgrapht.ext.IntegerNameProvider;
 import org.jgrapht.ext.StringEdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.jgrapht.graph.DirectedSubgraph;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 
 public class GraphExporter {
 
-	private DirectedGraph<URI, NamedEdge> graph;
+	private DirectedGraph<Resource, NamedEdge> graph;
 	
-	public GraphExporter(DirectedGraph<URI, NamedEdge> graph) {
+	public GraphExporter(DirectedGraph<Resource, NamedEdge> graph) {
 		this.graph = graph;
 	}
 	
-	public void exportSubGraph(List<Set<URI>> vertexSubSets, Writer[] outputWriters) {
+	public void exportSubGraph(List<Set<Resource>> vertexSubSets, Writer[] outputWriters) {
 		int i = 0;
-		Iterator<Set<URI>> it = vertexSubSets.iterator();
+		Iterator<Set<Resource>> it = vertexSubSets.iterator();
 		while (it.hasNext()) {
-			Graph<URI, NamedEdge> componentGraph = getGraphForComponent(it.next());
-			new DOTExporter<URI, NamedEdge>(
-				new IntegerNameProvider<URI>(),
+			Graph<Resource, NamedEdge> componentGraph = getGraphForComponent(it.next());
+			new DOTExporter<Resource, NamedEdge>(
+				new IntegerNameProvider<Resource>(),
 				new URIVertexNameProvider(),
 				new StringEdgeNameProvider<NamedEdge>()
-			).export(outputWriters[i], (DirectedGraph<URI, NamedEdge>) componentGraph);
+			).export(outputWriters[i], (DirectedGraph<Resource, NamedEdge>) componentGraph);
 			i++;
 		}
 
 	}
 	
-	private Graph<URI, NamedEdge> getGraphForComponent(Collection<URI> component)
+	private Graph<Resource, NamedEdge> getGraphForComponent(Collection<Resource> component)
 	{
-		return new DirectedSubgraph<URI, NamedEdge>(graph, new HashSet<URI>(component), null);
+		return new DirectedSubgraph<Resource, NamedEdge>(graph, new HashSet<Resource>(component), null);
 	}
 	
-	private class URIVertexNameProvider implements VertexNameProvider<URI>
+	private class URIVertexNameProvider implements VertexNameProvider<Resource>
 	{
 		@Override
-		public String getVertexName(URI vertex) {
-			return vertex.getLocalName();
+		public String getVertexName(Resource vertex) {
+			return vertex.stringValue();
 		}	
 	}
 }

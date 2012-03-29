@@ -10,9 +10,8 @@ import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -36,14 +35,14 @@ public class HierarchyAnalyzer extends Criterion {
 	private final String skosBroaderProperties = "skos:broader, skos:broaderTransitive, skos:broadMatch";
 	private final String skosNarrowerProperties = "skos:narrower, skos:narrowerTransitive, skos:narrowMatch";	
 
-	private DirectedGraph<URI, NamedEdge> hierarchyGraph;
-	private List<Set<URI>> cycleContainingComponents;
+	private DirectedGraph<Resource, NamedEdge> hierarchyGraph;
+	private List<Set<Resource>> cycleContainingComponents;
 	
 	public HierarchyAnalyzer(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<Set<URI>> findCycleContainingComponents() throws OpenRDFException 
+	public CollectionResult<Set<Resource>> findCycleContainingComponents() throws OpenRDFException 
 	{
 		if (hierarchyGraph == null) {
 			TupleQueryResult broaderResult = findTriples(HierarchyStyle.BROADER);
@@ -51,9 +50,9 @@ public class HierarchyAnalyzer extends Criterion {
 			createGraph(broaderResult, narrowerResult);
 		}
 		
-		Set<URI> nodesInCycles = new CycleDetector<URI, NamedEdge>(hierarchyGraph).findCycles();
+		Set<Resource> nodesInCycles = new CycleDetector<Resource, NamedEdge>(hierarchyGraph).findCycles();
 		cycleContainingComponents = trackNodesInCycles(nodesInCycles);
-		return new CollectionResult<Set<URI>>(cycleContainingComponents);
+		return new CollectionResult<Set<Resource>>(cycleContainingComponents);
 	}
 	
 	public void exportCycleContainingComponents(Writer[] writers) throws OpenRDFException 
@@ -97,7 +96,7 @@ public class HierarchyAnalyzer extends Criterion {
 	private void createGraph(TupleQueryResult broaderResult, TupleQueryResult narrowerResult) 
 		throws QueryEvaluationException 
 	{
-		hierarchyGraph = new DirectedMultigraph<URI, NamedEdge>(NamedEdge.class);
+		hierarchyGraph = new DirectedMultigraph<Resource, NamedEdge>(NamedEdge.class);
 		addResultsToGraph(broaderResult, false);
 		addResultsToGraph(narrowerResult, true);
 	}
@@ -120,10 +119,10 @@ public class HierarchyAnalyzer extends Criterion {
 		Value otherResource,
 		boolean invertEdges) 
 	{
-		URI resourceNode = new URIImpl(resource.stringValue());		
+		Resource resourceNode = (Resource) resource;		
 		hierarchyGraph.addVertex(resourceNode);
 		
-		URI otherNode = new URIImpl(otherResource.stringValue());
+		Resource otherNode = (Resource) otherResource;
 		hierarchyGraph.addVertex(otherNode);
 
 		if (invertEdges) {
@@ -134,14 +133,14 @@ public class HierarchyAnalyzer extends Criterion {
 		}
 	}
 		
-	private List<Set<URI>> trackNodesInCycles(Set<URI> nodesInCycles) 
+	private List<Set<Resource>> trackNodesInCycles(Set<Resource> nodesInCycles) 
 	{
-		List<Set<URI>> ret = new ArrayList<Set<URI>>();
-		List<Set<URI>> stronglyConnectedSets =
-			new StrongConnectivityInspector<URI, NamedEdge>(hierarchyGraph).stronglyConnectedSets();
+		List<Set<Resource>> ret = new ArrayList<Set<Resource>>();
+		List<Set<Resource>> stronglyConnectedSets =
+			new StrongConnectivityInspector<Resource, NamedEdge>(hierarchyGraph).stronglyConnectedSets();
 		
-		for (URI node : nodesInCycles) {
-			for (Set<URI> stronglyConnectedSet : stronglyConnectedSets) {
+		for (Resource node : nodesInCycles) {
+			for (Set<Resource> stronglyConnectedSet : stronglyConnectedSets) {
 				if (stronglyConnectedSet.contains(node)) {
 					if (!ret.contains(stronglyConnectedSet)) {
 						ret.add(stronglyConnectedSet);

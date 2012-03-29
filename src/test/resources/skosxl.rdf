@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:skosxl="http://www.w3.org/2008/05/skos-xl#">
+
+<rdf:Description rdf:about="love">
+  <skosxl:prefLabel rdf:resource="prefLabel"/> ;
+	<skosxl:altLabel rdf:resource="altLabel"/> ;
+	<skosxl:hiddenLabel rdf:resource="hiddenLabel"/> ;
+</rdf:Description>
+
+<rdf:Description rdf:about="prefLabel">
+	<rdf:type rdf:resource="http://www.w3.org/2008/05/skos-xl#Label"/>
+  <skosxl:literalForm xml:lang="en">love</skosxl:LiteralForm>
+</rdf:Description>
+
+<rdf:Description rdf:about="altLabel">
+	<rdf:type rdf:resource="http://www.w3.org/2008/05/skos-xl#Label"/>
+	<skosxl:literalForm xml:lang="en">adoration</skosxl:LiteralForm>
+</rdf:Description>
+
+<rdf:Description rdf:about="hiddenLabel">
+	<rdf:type rdf:resource="http://www.w3.org/2008/05/skos-xl#Label"/>
+	<skosxl:literalForm xml:lang="en">luv</skosxl:LiteralForm>
+</rdf:Description>
+
+</rdf:RDF>

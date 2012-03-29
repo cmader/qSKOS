@@ -40,4 +40,8 @@
 		<skos:scopeNote>test scopenote</skos:scopeNote>
 	</rdf:Description>
 
+	<rdf:Description rdf:about="conceptD">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:notation>1.2.3</skos:notation>
+	</rdf:Description>
 </rdf:RDF>

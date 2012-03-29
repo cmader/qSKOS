@@ -7,6 +7,7 @@ import java.util.Iterator;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
@@ -24,7 +25,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
  */
 public class ComponentFinder extends Criterion {
 
-	private DirectedGraph<URI, NamedEdge> graph;
+	private DirectedGraph<Resource, NamedEdge> graph;
 	
 	public ComponentFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
@@ -43,7 +44,7 @@ public class ComponentFinder extends Criterion {
 	private void createGraph(Collection<URI> allConcepts) 
 		throws OpenRDFException
 	{
-		graph = new DirectedMultigraph<URI, NamedEdge>(NamedEdge.class);
+		graph = new DirectedMultigraph<Resource, NamedEdge>(NamedEdge.class);
 		
 		Iterator<URI> conceptIt = new MonitoredIterator<URI>(allConcepts, progressMonitor);
 		while (conceptIt.hasNext()) {
@@ -70,7 +71,7 @@ public class ComponentFinder extends Criterion {
 			Value semanticRelation = bindingSet.getValue("semanticRelation");
 			
 			if (otherConcept != null && semanticRelation != null) {
-				allRelations.add(new Relation(concept, (URI) otherConcept, (URI) semanticRelation));
+				allRelations.add(new Relation(concept, (Resource) otherConcept, (Resource) semanticRelation));
 			}
 		}
 		
@@ -86,22 +87,22 @@ public class ComponentFinder extends Criterion {
 	}
 	
 	private void addNodesToGraph(
-		URI skosResource, 
-		URI otherResource,
-		URI skosRelation)
+		Resource skosResource, 
+		Resource otherResource,
+		Resource skosRelation)
 	{
 		graph.addVertex(skosResource);
 		
 		if (otherResource != null) {
 			graph.addVertex(otherResource);
-			graph.addEdge(skosResource, otherResource, new NamedEdge(skosRelation.getLocalName()));
+			graph.addEdge(skosResource, otherResource, new NamedEdge(skosRelation.stringValue()));
 		}
 	}
 	
 	private class Relation {
-		private URI sourceConcept, targetConcept, property;
+		private Resource sourceConcept, targetConcept, property;
 		
-		private Relation(URI sourceConcept, URI targetConcept, URI property) {
+		private Relation(Resource sourceConcept, Resource targetConcept, Resource property) {
 			this.sourceConcept = sourceConcept;
 			this.targetConcept = targetConcept;
 			this.property = property;
