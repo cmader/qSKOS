@@ -26,7 +26,7 @@ public class RedundantAssociativeRelationsTest extends QSkosTestCase {
 		Collection<Pair<URI>> redAssRels = qSkosRedundantAssociativeRelations.
 			findValuelessAssociativeRelations().getData();
 		
-		Assert.assertEquals(5, redAssRels.size());
+		Assert.assertEquals(6, redAssRels.size());
 	}
 	
 }

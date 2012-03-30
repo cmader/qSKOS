@@ -44,9 +44,20 @@ public class RedundantAssociativeRelationsFinder extends Criterion {
 		return SparqlPrefix.SKOS +
 			"SELECT ?parent ?child ?otherchild "+
 			"FROM <" +vocabRepository.getVocabContext()+ "> "+
-			"WHERE {?parent skos:narrower|skos:narrowMatch|^skos:broader|^skos:broadMatch ?child . " +
-				"?parent skos:narrower|skos:narrowMatch|^skos:broader|^skos:broadMatch ?otherchild . " +
-				"?child skos:related|skos:relatedMatch ?otherchild . }";
+			"WHERE {" +
+				"{" +
+					"?parent skos:narrower|skos:narrowerTransitive|^skos:broader|^skos:broaderTransitive ?child . " +
+					"?parent skos:narrower|skos:narrowerTransitive|^skos:broader|^skos:broaderTransitive ?otherchild . " +
+				"}" +
+				"UNION" +
+				"{" +
+					"?child skos:narrower|skos:narrowerTransitive|^skos:broader|^skos:broaderTransitive ?parent . " +
+					"?otherchild skos:narrower|skos:narrowerTransitive|^skos:broader|^skos:broaderTransitive ?parent . " +
+				"}" +
+
+				"?child skos:related|skos:relatedMatch ?otherchild. "+
+				
+			"}";
 	}
 	
 	private String createNotAssociatedSiblingsQuery() {
