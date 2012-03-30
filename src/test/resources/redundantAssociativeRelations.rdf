@@ -26,7 +26,7 @@
 
 	<!-- Case 3 -->
 	<rdf:Description rdf:about="conceptG">
-		<skos:broadMatch rdf:resource="conceptH"/>
+		<skos:broaderTransitive rdf:resource="conceptH"/>
 		<skos:related rdf:resource="conceptI"/>
   </rdf:Description>
 
@@ -40,7 +40,7 @@
   </rdf:Description>
 
 	<rdf:Description rdf:about="conceptK">
-		<skos:narrowMatch rdf:resource="conceptL"/>
+		<skos:narrowerTransitive rdf:resource="conceptL"/>
 		<skos:narrower rdf:resource="conceptM"/>
 	</rdf:Description>
 
@@ -52,6 +52,16 @@
 		<skos:related rdf:resource="conceptJ"/>
   </rdf:Description>
 
+	<!-- Case 5; same narrower "parent"	-->
+	<rdf:Description rdf:about="conceptQ">
+		<skos:broader rdf:resource="conceptS"/>		
+  </rdf:Description>
+
+	<rdf:Description rdf:about="conceptR">
+		<skos:narrower rdf:resource="conceptQ"/>
+		<skos:related rdf:resource="conceptS"/>
+  </rdf:Description>
+
 	<!-- Unrelated siblings -->
 	<rdf:Description rdf:about="conceptN">
 		<skos:narrower rdf:resource="conceptO"/>
@@ -61,4 +71,7 @@
 	<rdf:Description rdf:about="conceptO">
 		<skos:prefLabel>some label</skos:prefLabel>
   </rdf:Description>
+
+
+
 </rdf:RDF>

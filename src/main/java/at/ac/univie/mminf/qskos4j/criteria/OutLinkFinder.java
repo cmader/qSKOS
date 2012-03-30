@@ -81,7 +81,7 @@ public class OutLinkFinder extends Criterion {
 		
 		while (iriTuples.hasNext()) {
 			Value iri = iriTuples.next().getValue("iri");
-			
+
 			try {
 				URL url = new URL(iri.stringValue());
 				ret.add(url);
@@ -106,7 +106,7 @@ public class OutLinkFinder extends Criterion {
 		return validExternalResources;
 	}
 	
-	private boolean isExternalResource(URL url) {
+	private boolean isExternalResource(URL url) {		
 		if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {
 			return !url.toString().toLowerCase().contains(authResourceIdentifier.toLowerCase());
 		}
