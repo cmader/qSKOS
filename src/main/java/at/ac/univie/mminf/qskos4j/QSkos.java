@@ -10,9 +10,7 @@ import java.util.Set;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,17 +88,10 @@ public class QSkos {
 		this(rdfFile, baseURI, null);
 	}
 	
-	public QSkos(String queryEndpointUrl) {
-		logger.info("initializing vocabulary from SPARQL endpoint '" +queryEndpointUrl+ "'...");
-		
-		vocabRepository = new VocabRepository(queryEndpointUrl);
-		init();
-	}
-
 	public QSkos(File rdfFile,
 		String baseURI,
 		RDFFormat dataFormat) 
-		throws RepositoryException, RDFParseException, IOException 
+		throws OpenRDFException, IOException 
 	{
 		logger.info("initializing vocabulary from file '" +rdfFile.getName()+ "'...");
 		
@@ -130,17 +121,6 @@ public class QSkos {
 				// cannot guess authoritative resource identifier
 			}
 		}
-	}
-	
-	public NumberResult<Long> getTripleCount() 
-	{
-		try {
-			URI vocabContext = vocabRepository.getVocabContext();
-			return new NumberResult<Long>(vocabRepository.getRepository().getConnection().size(vocabContext));
-		} 
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}		
 	}
 	
 	public CollectionResult<URI> findInvolvedConcepts() throws OpenRDFException
@@ -331,6 +311,11 @@ public class QSkos {
 	
 	public void setSubsetSize(Float subsetSizePercent) {
 		randomSubsetSize_percent = subsetSizePercent;
+	}
+	
+	public void enableSkosXlSupport() throws OpenRDFException {
+		logger.info("inferring SKOSXL triples");
+		vocabRepository.enableSkosXlSupport();
 	}
 		
 }

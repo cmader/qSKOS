@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
 
 
 public class StatisticsTest extends QSkosTestCase {
@@ -24,23 +23,10 @@ public class StatisticsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testTripleCount_1() throws RepositoryException {
-		long tripleCount = qSkosConcepts.getTripleCount().getData();
-		Assert.assertEquals(20, tripleCount);		
-	}
-	
-	@Test
 	public void testConceptCount_1() throws OpenRDFException
 	{
 		Collection<URI> involvedConcepts = qSkosConcepts.findInvolvedConcepts().getData();
 		Assert.assertEquals(10, involvedConcepts.size());
-	}
-
-
-	@Test
-	public void testTripleCount_2() throws RepositoryException {
-		long tripleCount = qSkosComponents.getTripleCount().getData();
-		Assert.assertEquals(73, tripleCount);
 	}
 	
 	@Test

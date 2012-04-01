@@ -38,7 +38,7 @@ public class LanguageTagChecker extends Criterion {
 	}
 	
 	private String createMissingLangTagQuery() {
-		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
 			"SELECT ?literal ?s ?p "+
 			
 			"FROM <" +vocabRepository.getVocabContext()+ "> "+

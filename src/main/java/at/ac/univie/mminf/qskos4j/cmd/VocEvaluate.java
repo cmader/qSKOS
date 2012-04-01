@@ -42,6 +42,9 @@ public class VocEvaluate {
 	@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
 	private boolean extensiveReport = false;
 	
+	@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
+	private boolean enableSkosXl = false;
+	
 	private QSkos qskos;
 	
 	public static void main(String[] args) {
@@ -101,6 +104,10 @@ public class VocEvaluate {
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
 		qskos.setSubsetSize(randomSubsetSize_percent);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
+		
+		if (enableSkosXl) {
+			qskos.enableSkosXlSupport();
+		}
 	}
 
 	private void checkForIssue() {

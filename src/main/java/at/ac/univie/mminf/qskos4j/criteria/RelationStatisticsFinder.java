@@ -25,7 +25,7 @@ public class RelationStatisticsFinder extends Criterion {
 		long relationsCount = 0; 
 		
 		for (URI concept : allConcepts) {
-			TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));
+			TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));			
 			relationsCount += countResults(result);
 		}
 		
@@ -33,14 +33,14 @@ public class RelationStatisticsFinder extends Criterion {
 	}
 	
 	private String createLexicalLabelQuery(URI concept) {
-		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-			"SELECT ?labelType ?value WHERE {" +
-				"<" +concept.stringValue()+ "> ?labelType ?value ." +
-				"{?labelType rdfs:subPropertyOf* skos:prefLabel}" +
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
+			"SELECT DISTINCT ?skoslabelType ?literal WHERE {" +
+				"<" +concept.stringValue()+ "> ?skoslabelType ?literal ." +
+				"{?skoslabelType rdfs:subPropertyOf* skos:prefLabel}" +
 				"UNION" +
-				"{?labelType rdfs:subPropertyOf* skos:altLabel}" +
+				"{?skoslabelType rdfs:subPropertyOf* skos:altLabel}" +
 				"UNION" +
-				"{?labelType rdfs:subPropertyOf* skos:hiddenLabel}" +
+				"{?skoslabelType rdfs:subPropertyOf* skos:hiddenLabel}" +
 			"}";	
 	}
 			

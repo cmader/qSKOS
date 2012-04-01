@@ -3,10 +3,6 @@ package at.ac.univie.mminf.qskos4j.cmd;
 enum CriterionDescription {
 
 	// Statistics
-	TRIPLE_COUNT("tc",
-		"Triple Count",
-		"Counts all triples of the vocabulary",
-		"getTripleCount"),
 	TOTAL_CONCEPTS("c", 
 		"All Concepts", 
 		"Finds all SKOS concepts involved in the vocabulary", 
