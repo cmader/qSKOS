@@ -24,20 +24,28 @@ public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<Resour
 
 	@Override
 	public String getShortReport() {
-		return "count: " +connectedSets.size();
+		return generateReport(false);
 	}
 
 	@Override
 	public String getExtensiveReport() {
-		String detailedReport = "";
+		return generateReport(true);
+	}
+	
+	private String generateReport(boolean extensive) {
+		String report = "";
 		long compCount = 1;
 		
+		report += "count: " +connectedSets.size() +"\n";
 		for (Set<Resource> component : connectedSets) {
-			detailedReport += "component " +compCount+ ", size: " +component.size()+ "\n" +component.toString()+ "\n";
+			report += "component " +compCount+ ", size: " +component.size()+ "\n";
+			if (extensive) {
+				report += component.toString()+ "\n";
+			}
 			compCount++;
 		}
 		
-		return detailedReport;
+		return report;
 	}
 
 	public void exportComponentsAsDOT(Writer[] writers) {

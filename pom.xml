@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.ac.univie.mminf</groupId>
   <artifactId>qSKOS</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <name>qSKOS</name>
   <dependencies>
   	<dependency>
@@ -139,7 +139,7 @@
     </repository>
   </repositories>
   <properties>
-  	<sesame.version>2.6.3</sesame.version>
+  	<sesame.version>2.6.4</sesame.version>
   </properties>
   <distributionManagement>
     <snapshotRepository>
