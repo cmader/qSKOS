@@ -2,9 +2,7 @@
 
 == About
 
-qSKOS is a quality assessment tool for SKOS vocabularies. It can be used as command-line tool or API and is based on a set of well-defined {quality criteria}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies]. For a given SKOS vocabulary, it creates reports for each quality criterion.
-
-qSKOS has been reimplemented in Java for performance reasons and supersedes the {previous Ruby implementation}[https://github.com/cmader/qSKOS4rb]. The motivation and methodology for this work has been presented at the {NKOS 2011 workshop}[http://www.comp.glam.ac.uk/pages/research/hypermedia/nkos/nkos2011/presentations/mader_nkos.pdf]. The tool is also expected to constitute a major part in a {proposed PhD thesis}[http://cs.univie.ac.at/research/research-groups/multimedia-information-systems/publikation/infpub/3355/]. An initial evaluation of existing thesauri against these criteria is available {here}[https://github.com/cmader/qSKOS4rb/raw/master/results/qskos_results.ods].
+qSKOS is a tool for finding quality issues in SKOS vocabularies. It takes a vocabulary file as input and creates a report for each issue. qSKOS can be used as command-line tool or API and is based on a set of well-defined {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies]. 
 
 == Building qSKOS
 
