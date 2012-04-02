@@ -242,7 +242,7 @@ public class QSkos {
 	public CollectionResult<LabelConflict> findLabelConflicts() throws OpenRDFException {
 		LabelConflictsFinder labelConflictsFinder = new LabelConflictsFinder(vocabRepository);
 		labelConflictsFinder.setProgressMonitor(progressMonitor);
-		return labelConflictsFinder.findLabelConflicts(findInvolvedConcepts().getData());
+		return labelConflictsFinder.findLabelConflicts(findAuthoritativeConcepts().getData());
 	}
 	
 	public CollectionResult<URI> findMissingInLinks() throws OpenRDFException 
