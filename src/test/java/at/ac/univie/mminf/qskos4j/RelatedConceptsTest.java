@@ -22,6 +22,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosComponents = setUpInstance("components.rdf");
 		qSkosRelatedConcepts = setUpInstance("relatedConcepts.rdf");
+		qSkosRelatedConcepts.setAuthoritativeResourceIdentifier("http://aims.fao.org/aos/agrovoc");
 	}
 	
 	@Test
