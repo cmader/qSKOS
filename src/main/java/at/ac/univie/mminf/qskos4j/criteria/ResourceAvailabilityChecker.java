@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,8 +21,8 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.result.custom.BrokenLinksResult;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
@@ -33,39 +34,30 @@ public class ResourceAvailabilityChecker extends Criterion {
 	
 	private final Logger logger = LoggerFactory.getLogger(ResourceAvailabilityChecker.class);
 	private final String NO_CONTENT_TYPE = "n/a";
+	private final int DEREF_DELAY_MILLIS = 3000;
 	
 	private Map<URL, String> urlAvailability = new HashMap<URL, String>();
 	private Set<URI> httpURIs = new HashSet<URI>();
 	private Set<String> invalidResources = new HashSet<String>();
-	private Integer urlDereferencingDelayMillis = 3000;
 	
 	public ResourceAvailabilityChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public BrokenLinksResult findBrokenLinks(
+	public ExtrapolatedCollectionResult<URL> findBrokenLinks(
 		Float randomSubsetSize_percent,
 		Integer urlDereferencingDelayMillis) throws OpenRDFException 
 	{
-		if (urlDereferencingDelayMillis != null) {
-			this.urlDereferencingDelayMillis = urlDereferencingDelayMillis;
-		}
-		
-		findAllHttpURLs();
-		dereferenceURIs(randomSubsetSize_percent);
-				
-		return new BrokenLinksResult(urlAvailability, randomSubsetSize_percent);
+		createAvailabilityMap(randomSubsetSize_percent, urlDereferencingDelayMillis);
+		return new ExtrapolatedCollectionResult<URL>(collectUnavailableURLs(), randomSubsetSize_percent);
 	}
 	
-	public CollectionResult<String> findInvalidResources(
+	private void createAvailabilityMap(
 		Float randomSubsetSize_percent,
 		Integer urlDereferencingDelayMillis) throws OpenRDFException
 	{
-		if (invalidResources == null) {
-			findBrokenLinks(randomSubsetSize_percent, urlDereferencingDelayMillis);
-		}
-		
-		return new CollectionResult<String>(invalidResources);
+		findAllHttpURLs();
+		dereferenceURIs(randomSubsetSize_percent, urlDereferencingDelayMillis);
 	}
 	
 	public CollectionResult<String> findNonHttpResources() throws OpenRDFException 
@@ -142,7 +134,7 @@ public class ResourceAvailabilityChecker extends Criterion {
 			"FILTER isIRI(?iri)}";
 	}
 
-	private void dereferenceURIs(Float randomSubsetSize_percent) 
+	private void dereferenceURIs(Float randomSubsetSize_percent, Integer urlDereferencingDelayMillis) 
 	{
 		Set<URI> urisToBeDereferenced = collectUrisToBeDereferenced(randomSubsetSize_percent);
 		Iterator<URI> it = new MonitoredIterator<URI>(urisToBeDereferenced, progressMonitor);
@@ -156,6 +148,9 @@ public class ResourceAvailabilityChecker extends Criterion {
 			
 			// delay to avoid flooding the vocabulary host  
 			try {
+				if (urlDereferencingDelayMillis == null) {
+					urlDereferencingDelayMillis = DEREF_DELAY_MILLIS;
+				}
 				Thread.sleep(urlDereferencingDelayMillis);
 			} 
 			catch (InterruptedException e) {
@@ -199,5 +194,17 @@ public class ResourceAvailabilityChecker extends Criterion {
 		}
 
 		urlAvailability.put(url, contentType);
+	}
+	
+	private Collection<URL> collectUnavailableURLs() {
+		Collection<URL> unavailableURLs = new ArrayList<URL>();
+		
+		for (URL url : urlAvailability.keySet()) {
+			if (urlAvailability.get(url) == null) {
+				unavailableURLs.add(url);
+			}
+		}
+		
+		return unavailableURLs;
 	}
 }

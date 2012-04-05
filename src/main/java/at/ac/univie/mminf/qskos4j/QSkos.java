@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,13 +35,13 @@ import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
 import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflictsFinder;
-import at.ac.univie.mminf.qskos4j.result.custom.BrokenLinksResult;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
 import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
@@ -198,17 +199,12 @@ public class QSkos {
 			authResourceIdentifier);
 	}
 	
-	public BrokenLinksResult findBrokenLinks() throws OpenRDFException 
+	public ExtrapolatedCollectionResult<URL> findBrokenLinks() throws OpenRDFException 
 	{
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
 		return resourceAvailabilityChecker.findBrokenLinks(randomSubsetSize_percent, urlDereferencingDelay);
 	}
 	
-	public CollectionResult<String> findInvalidResources(Float randomSubsetSize_percent) throws OpenRDFException {
-		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		return resourceAvailabilityChecker.findInvalidResources(randomSubsetSize_percent, urlDereferencingDelay);
-	}
-		
 	public CollectionResult<String> findNonHttpResources() throws OpenRDFException {
 		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
 		return resourceAvailabilityChecker.findNonHttpResources();
