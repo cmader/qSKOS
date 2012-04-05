@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -24,13 +24,13 @@ public class ComponentsTest extends QSkosTestCase {
 	@Test
 	public void testComponentCount() throws OpenRDFException {
 		long conceptCount = qSkosComponents.findInvolvedConcepts().getData().size();
-		List<Set<Resource>> components = qSkosComponents.findComponents().getConnectedSets();
+		Collection<Set<Resource>> components = qSkosComponents.findComponents().getData();
 
 		Assert.assertEquals(7, components.size());
 		Assert.assertTrue(getVertexCount(components) <= conceptCount);
 	}
 	
-	private long getVertexCount(List<Set<Resource>> components) {
+	private long getVertexCount(Collection<Set<Resource>> components) {
 		long ret = 0;
 		
 		for (Set<Resource> component : components) {

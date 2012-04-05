@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,12 +10,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.jgrapht.DirectedGraph;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.util.graph.GraphWriter;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -44,6 +49,9 @@ public class VocEvaluate {
 	
 	@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
 	private boolean enableSkosXl = false;
+	
+	@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs to disk as .dot files")
+	private boolean writeGraphs = false;
 	
 	private QSkos qskos;
 	
@@ -117,7 +125,7 @@ public class VocEvaluate {
 			
 			try {
 				Result<?> result = invokeQSkosMethod(qSkosMethodName);
-				outputReport(result);
+				outputReport(result, criterion.getId());
 			}
 			catch (Exception e) {
 				String message = e.getMessage();
@@ -130,12 +138,30 @@ public class VocEvaluate {
 		}
 	}	
 	
-	private void outputReport(Result<?> result) {
+	private void outputReport(Result<?> result, String critId) {
 		System.out.println(result.getShortReport());
 		
 		if (extensiveReport) {
 			System.out.println(result.getExtensiveReport());
 		}
+		
+		if (writeGraphs) {
+			DirectedGraph<Resource, NamedEdge> graph = result.getGraph();
+			if (graph != null) {
+				try {
+					new GraphWriter(graph).write(createGraphFileWriter(critId));
+				}
+				catch (IOException e) {
+					logger.error("error writing graph file for issue " +critId, e);
+				}
+			}
+		}
+	}
+	
+	private FileWriter createGraphFileWriter(String fileName) 
+		throws IOException
+	{
+		return new FileWriter(new File(fileName + ".dot"));
 	}
 	
 	private List<CriterionDescription> extractCriteria() {

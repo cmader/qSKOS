@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.jgrapht.DirectedGraph;
+import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -38,7 +39,9 @@ public class ComponentFinder extends Criterion {
 			createGraph(allConcepts);
 		}
 		
-		return new WeaklyConnectedComponentsResult(graph);
+		return new WeaklyConnectedComponentsResult(
+			new ConnectivityInspector<Resource, NamedEdge>(graph).connectedSets(),
+			graph);
 	}
 	
 	private void createGraph(Collection<URI> allConcepts) 

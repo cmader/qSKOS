@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.criteria;
 
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +18,6 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -52,18 +50,9 @@ public class HierarchyAnalyzer extends Criterion {
 		
 		Set<Resource> nodesInCycles = new CycleDetector<Resource, NamedEdge>(hierarchyGraph).findCycles();
 		cycleContainingComponents = trackNodesInCycles(nodesInCycles);
-		return new CollectionResult<Set<Resource>>(cycleContainingComponents);
+		return new CollectionResult<Set<Resource>>(cycleContainingComponents, hierarchyGraph);
 	}
 	
-	public void exportCycleContainingComponents(Writer[] writers) throws OpenRDFException 
-	{
-		if (cycleContainingComponents == null) {
-			findCycleContainingComponents();
-		}
-		
-		new GraphExporter(hierarchyGraph).exportSubGraph(cycleContainingComponents, writers);
-	}
-		
 	private TupleQueryResult findTriples(HierarchyStyle hierarchyStyle)
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{

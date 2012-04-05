@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ public class QSkos {
 	private Set<String> sparqlEndPoints = new HashSet<String>();
 	
 	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
-	private HierarchyAnalyzer hierarchyAnalyer;
+	private HierarchyAnalyzer hierarchyAnalyzer;
 	private ConceptFinder conceptFinder;
 	private ComponentFinder componentFinder;
 	private RedundantAssociativeRelationsFinder redundantAssociativeRelationsFinder;
@@ -104,7 +103,7 @@ public class QSkos {
 	
 	private void init() {
 		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
-		hierarchyAnalyer = new HierarchyAnalyzer(vocabRepository);
+		hierarchyAnalyzer = new HierarchyAnalyzer(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
 		componentFinder = new ComponentFinder(vocabRepository);
 		redundantAssociativeRelationsFinder = new RedundantAssociativeRelationsFinder(vocabRepository);
@@ -183,11 +182,7 @@ public class QSkos {
 	}
 	
 	public CollectionResult<Set<Resource>> findHierarchicalCycles() throws OpenRDFException {
-		return hierarchyAnalyer.findCycleContainingComponents();
-	}
-
-	public void exportHierarchicalCyclesAsDOT(Writer[] writers) throws OpenRDFException {
-		hierarchyAnalyer.exportCycleContainingComponents(writers);
+		return hierarchyAnalyzer.findCycleContainingComponents();
 	}
 
 	public CollectionResult<URI> findMissingOutLinks() throws OpenRDFException {

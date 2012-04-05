@@ -2,14 +2,22 @@ package at.ac.univie.mminf.qskos4j.result.general;
 
 import java.util.Collection;
 
+import org.jgrapht.DirectedGraph;
+import org.openrdf.model.Resource;
+
 import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 
 public class CollectionResult<T> extends Result<Collection<T>> {
 
 	public CollectionResult(Collection<T> data) {
 		super(data);
 	}
-
+	
+	public CollectionResult(Collection<T> data, DirectedGraph<Resource, NamedEdge> graph) {
+		super(data, graph);
+	}
+	
 	@Override
 	public String getShortReport() {
 		return "count: " +getData().size();
