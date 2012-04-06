@@ -18,7 +18,7 @@ import at.ac.univie.mminf.qskos4j.criteria.AmbiguousRelationsFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ComponentFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptFinder;
 import at.ac.univie.mminf.qskos4j.criteria.ConceptSchemeChecker;
-import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
+import at.ac.univie.mminf.qskos4j.criteria.CycleFinder;
 import at.ac.univie.mminf.qskos4j.criteria.InLinkFinder;
 import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
 import at.ac.univie.mminf.qskos4j.criteria.LanguageCoverageChecker;
@@ -54,7 +54,7 @@ public class QSkos {
 	private Set<String> sparqlEndPoints = new HashSet<String>();
 	
 	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
-	private HierarchyAnalyzer hierarchyAnalyzer;
+	private CycleFinder hierarchyAnalyzer;
 	private ConceptFinder conceptFinder;
 	private ComponentFinder componentFinder;
 	private RedundantAssociativeRelationsFinder redundantAssociativeRelationsFinder;
@@ -103,7 +103,7 @@ public class QSkos {
 	
 	private void init() {
 		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
-		hierarchyAnalyzer = new HierarchyAnalyzer(vocabRepository);
+		hierarchyAnalyzer = new CycleFinder(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
 		componentFinder = new ComponentFinder(vocabRepository);
 		redundantAssociativeRelationsFinder = new RedundantAssociativeRelationsFinder(vocabRepository);

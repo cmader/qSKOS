@@ -7,12 +7,16 @@ import org.jgrapht.DirectedGraph;
 import org.openrdf.model.Resource;
 
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 
 public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resource>>
 {
+	private DirectedGraph<Resource, NamedEdge> graph;
+	
 	public WeaklyConnectedComponentsResult(Collection<Set<Resource>> data, DirectedGraph<Resource, NamedEdge> graph) {
-		super(data, graph);
+		super(data);
+		this.graph = graph;
 	}
 
 	@Override
@@ -41,4 +45,8 @@ public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resour
 		return report;
 	}
 
+	@Override
+	public Collection<String> getAsDOT() {
+		return new GraphExporter(graph).exportSubGraphs(getData());
+	}
 }

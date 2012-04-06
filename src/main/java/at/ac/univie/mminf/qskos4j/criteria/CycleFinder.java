@@ -17,7 +17,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.custom.HierarchyCycleResult;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -26,7 +26,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
  * Identifies hierarchical inconsistencies in the repository passed to the constructor 
  * @author christian
  */
-public class HierarchyAnalyzer extends Criterion {
+public class CycleFinder extends Criterion {
 	
 	private enum HierarchyStyle {BROADER, NARROWER}
 	
@@ -36,21 +36,19 @@ public class HierarchyAnalyzer extends Criterion {
 	private DirectedGraph<Resource, NamedEdge> hierarchyGraph;
 	private List<Set<Resource>> cycleContainingComponents;
 	
-	public HierarchyAnalyzer(VocabRepository vocabRepository) {
+	public CycleFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<Set<Resource>> findCycleContainingComponents() throws OpenRDFException 
+	public HierarchyCycleResult findCycleContainingComponents() throws OpenRDFException 
 	{
-		if (hierarchyGraph == null) {
-			TupleQueryResult broaderResult = findTriples(HierarchyStyle.BROADER);
-			TupleQueryResult narrowerResult = findTriples(HierarchyStyle.NARROWER);
-			createGraph(broaderResult, narrowerResult);
-		}
+		TupleQueryResult broaderResult = findTriples(HierarchyStyle.BROADER);
+		TupleQueryResult narrowerResult = findTriples(HierarchyStyle.NARROWER);
+		createGraph(broaderResult, narrowerResult);
 		
 		Set<Resource> nodesInCycles = new CycleDetector<Resource, NamedEdge>(hierarchyGraph).findCycles();
 		cycleContainingComponents = trackNodesInCycles(nodesInCycles);
-		return new CollectionResult<Set<Resource>>(cycleContainingComponents, hierarchyGraph);
+		return new HierarchyCycleResult(cycleContainingComponents, hierarchyGraph);
 	}
 	
 	private TupleQueryResult findTriples(HierarchyStyle hierarchyStyle)
