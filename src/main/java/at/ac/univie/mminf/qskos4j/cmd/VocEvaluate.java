@@ -16,6 +16,7 @@ import org.openrdf.OpenRDFException;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.cmd.CriterionDescription.MeasureType;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import ch.qos.logback.classic.Logger;
 
@@ -33,15 +34,21 @@ public class VocEvaluate {
 	@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
 	private String authoritativeResourceIdentifier;
 	
-	@Parameter(names = {"-s", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
+	@Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
 	private Float randomSubsetSize_percent;
 
-	@Parameter(names = {"-l", "--list-issues"}, description = "Output a list of all available quality issue IDs")
+	@Parameter(names = {"-li", "--list-issues"}, description = "Output a list of all available quality issue IDs")
 	private Boolean outputIssues;
 	
-	@Parameter(names = {"-i", "--check-issue"}, description = "Comma-separated list of issue IDs to check for")
+	@Parameter(names = {"-ls", "--list-statistics"}, description = "Output a list of all available statistics")
+	private Boolean outputStatistics;
+	
+	@Parameter(names = {"-c", "--check-issue"}, description = "Comma-separated list of issue/statistics IDs to check for")
 	private String selectedCriteria;
 	
+	@Parameter(names = {"-ca", "--check-all"}, description = "Checks for all available issues/statistics")
+	private Boolean checkAll;
+
 	@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
 	private boolean extensiveReport = false;
 	
@@ -71,7 +78,10 @@ public class VocEvaluate {
 		
 	private void listIssuesOrEvaluate() {
 		if (outputIssues != null && outputIssues == true) {
-			outputIssuesDescription();
+			outputMeasureDescription(MeasureType.ISSUE);
+		}
+		else if (outputStatistics != null && outputStatistics == true) {
+			outputMeasureDescription(MeasureType.STATISTICS);
 		}
 		else {
 			checkVocabFilenameGiven();
@@ -79,11 +89,13 @@ public class VocEvaluate {
 		}
 	}
 
-	private void outputIssuesDescription() {
+	private void outputMeasureDescription(MeasureType constraintType) {
 		String formatString = "%5s\t%-55s\t%-60s\n"; 
 		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
 		for (CriterionDescription critDesc : CriterionDescription.values()) {
-			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
+			if (critDesc.getType() == constraintType) {
+				System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
+			}
 		}
 	}
 	
@@ -183,7 +195,7 @@ public class VocEvaluate {
 	private List<CriterionDescription> extractCriteria() {
 		List<CriterionDescription> criteria = new ArrayList<CriterionDescription>();
 		
-		if (selectedCriteria == null) {
+		if (checkAll != null && checkAll == true) {
 			criteria = Arrays.asList(CriterionDescription.values());
 		}
 		else {		
