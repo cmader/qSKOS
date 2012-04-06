@@ -21,6 +21,7 @@ public class MissingInLinkTest extends QSkosTestCase {
 		qSkosRankConcepts.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 	}
 	
+	/* temporarily disabled, sindice seems to be broken...
 	@Test
 	public void testInLinksAsDbPedia() throws OpenRDFException {
 		qSkosRankConcepts.setAuthoritativeResourceIdentifier("dbpedia.org");
@@ -28,6 +29,7 @@ public class MissingInLinkTest extends QSkosTestCase {
 		Collection<URI> conceptsMissingInLinks = qSkosRankConcepts.findMissingInLinks().getData();
 		Assert.assertTrue(conceptsMissingInLinks.isEmpty());		
 	}
+	*/
 
 	@Test
 	public void testInLinksAsSTW() throws OpenRDFException {
