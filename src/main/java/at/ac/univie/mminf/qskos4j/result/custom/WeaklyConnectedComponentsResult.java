@@ -21,22 +21,25 @@ public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resour
 
 	@Override
 	public String getShortReport() {
-		return generateReport(false);
+		return generateReport(true);
 	}
 
 	@Override
 	public String getExtensiveReport() {
-		return generateReport(true);
+		return generateReport(false);
 	}
-	
-	private String generateReport(boolean extensive) {
+		
+	private String generateReport(boolean overviewOnly) {
 		String report = "";
 		long compCount = 1;
 		
-		report += "count: " +getData().size() +"\n";
+		if (overviewOnly) {
+			report += "count: " +getData().size() +"\n";
+		}
+		
 		for (Set<Resource> component : getData()) {
 			report += "component " +compCount+ ", size: " +component.size()+ "\n";
-			if (extensive) {
+			if (!overviewOnly) {
 				report += component.toString()+ "\n";
 			}
 			compCount++;

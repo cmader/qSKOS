@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.criteria.relatedconcepts;
+package at.ac.univie.mminf.qskos4j.issues.labelconflict;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;

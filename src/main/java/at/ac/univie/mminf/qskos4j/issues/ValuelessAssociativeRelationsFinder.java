@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.criteria;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,9 +14,9 @@ import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class RedundantAssociativeRelationsFinder extends Criterion {
+public class ValuelessAssociativeRelationsFinder extends Criterion {
 
-	public RedundantAssociativeRelationsFinder(VocabRepository vocabRepository) {
+	public ValuelessAssociativeRelationsFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 

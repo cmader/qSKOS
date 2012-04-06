@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels;
+package at.ac.univie.mminf.qskos4j.issues.ambiguouslabels;
 
 import java.util.HashMap;
 import java.util.HashSet;

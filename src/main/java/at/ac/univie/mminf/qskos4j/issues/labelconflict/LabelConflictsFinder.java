@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.criteria.relatedconcepts;
+package at.ac.univie.mminf.qskos4j.issues.labelconflict;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,8 +20,8 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.criteria.Criterion;
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.SkosLabel.LabelType;
+import at.ac.univie.mminf.qskos4j.issues.Criterion;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.SkosLabel.LabelType;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;

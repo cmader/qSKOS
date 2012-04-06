@@ -1,9 +1,9 @@
-package at.ac.univie.mminf.qskos4j.criteria.relatedconcepts;
+package at.ac.univie.mminf.qskos4j.issues.labelconflict;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.SkosLabel.LabelType;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.SkosLabel.LabelType;
 
 
 public class LabelConflict {

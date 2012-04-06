@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.criteria;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,8 +98,18 @@ public class ComponentFinder extends Criterion {
 		
 		if (otherResource != null) {
 			graph.addVertex(otherResource);
-			graph.addEdge(skosResource, otherResource, new NamedEdge(skosRelation.stringValue()));
+			graph.addEdge(skosResource, otherResource, new NamedEdge(extractFragmentString(skosRelation)));
 		}
+	}
+	
+	private String extractFragmentString(Resource skosRelation) {
+		int hashIndex = skosRelation.stringValue().indexOf("#");
+		
+		if (hashIndex != -1) {
+			return skosRelation.stringValue().substring(hashIndex + 1);
+		}
+		
+		return skosRelation.stringValue();
 	}
 	
 	private class Relation {

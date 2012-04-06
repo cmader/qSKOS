@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.criteria;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.util.Collection;
 import java.util.HashSet;

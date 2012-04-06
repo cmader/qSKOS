@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
 
 public class RelatedConceptsTest extends QSkosTestCase {
 

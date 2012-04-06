@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.openrdf.OpenRDFException;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.result.Result;
+import ch.qos.logback.classic.Logger;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -25,7 +25,7 @@ import com.beust.jcommander.ParameterException;
 
 public class VocEvaluate {
 	
-	private final Logger logger = LoggerFactory.getLogger(VocEvaluate.class);
+	private Logger logger;
 	
 	@Parameter(description = "vocabularyfile")
 	private List<String> vocabFilenames;
@@ -48,15 +48,18 @@ public class VocEvaluate {
 	@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
 	private boolean enableSkosXl = false;
 	
-	@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs to disk as .dot files")
+	@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
 	private boolean writeGraphs = false;
 	
+	@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
+	private boolean quiet = false;
+
 	private QSkos qskos;
 	
 	public static void main(String[] args) {
 		VocEvaluate instance = new VocEvaluate();
 		JCommander jCommander = new JCommander(instance);
-		
+
 		try {
 			jCommander.parse(args);
 			instance.listIssuesOrEvaluate();
@@ -65,7 +68,7 @@ public class VocEvaluate {
 			jCommander.usage();
 		}
 	}
-	
+		
 	private void listIssuesOrEvaluate() {
 		if (outputIssues != null && outputIssues == true) {
 			outputIssuesDescription();
@@ -93,7 +96,7 @@ public class VocEvaluate {
 	
 	private void evaluate() {
 		try {		
-			setupQSkos();
+			setup();
 			checkForIssue();
 		} 
 		catch (IOException ioException) {
@@ -104,7 +107,9 @@ public class VocEvaluate {
 		}
 	}
 	
-	private void setupQSkos() throws OpenRDFException, IOException {
+	private void setup() throws OpenRDFException, IOException {
+		setupLogging();
+
 		qskos = new QSkos(new File(vocabFilenames.get(0)));
 		qskos.setAuthoritativeResourceIdentifier(authoritativeResourceIdentifier);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
@@ -113,7 +118,14 @@ public class VocEvaluate {
 		
 		if (enableSkosXl) {
 			qskos.enableSkosXlSupport();
-		}
+		}		
+	}
+	
+	private void setupLogging() {
+		if (quiet) {
+			System.setProperty("root-level", "ERROR");	
+		}		
+		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
 	}
 
 	private void checkForIssue() {
@@ -137,8 +149,8 @@ public class VocEvaluate {
 	}	
 	
 	private void outputReport(Result<?> result, String critId) {
-		System.out.println(result.getShortReport());
-		
+		System.out.println(result.getShortReport());	
+
 		if (extensiveReport) {
 			System.out.println(result.getExtensiveReport());
 		}
