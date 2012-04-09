@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -23,65 +22,96 @@ import ch.qos.logback.classic.Logger;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
 
 public class VocEvaluate {
 	
+	private final static String CMD_NAME_ANALYZE = "analyze", CMD_NAME_SUMMARIZE = "summarize";
+	
 	private Logger logger;
+	private JCommander jc;
+	private CommandSummarize parsedCommand;
 	
-	@Parameter(description = "vocabularyfile")
-	private List<String> vocabFilenames;
+	@Parameters(commandNames = CMD_NAME_SUMMARIZE, commandDescription = "Computes basic statistics of a given vocabulary")
+	private class CommandSummarize {
 		
-	@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
-	private String authoritativeResourceIdentifier;
+		@Parameter(description = "vocabularyfile")
+		private List<String> vocabFilenames;
+			
+		@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
+		private String authoritativeResourceIdentifier;
 	
-	@Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
-	private Float randomSubsetSize_percent;
+		@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
+		private String selectedIds;
 
-	@Parameter(names = {"-li", "--list-issues"}, description = "Output a list of all available quality issue IDs")
-	private Boolean outputIssues;
-	
-	@Parameter(names = {"-ls", "--list-statistics"}, description = "Output a list of all available statistics")
-	private Boolean outputStatistics;
-	
-	@Parameter(names = {"-c", "--check-issue"}, description = "Comma-separated list of issue/statistics IDs to check for")
-	private String selectedCriteria;
-	
-	@Parameter(names = {"-ca", "--check-all"}, description = "Checks for all available issues/statistics")
-	private Boolean checkAll;
+		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
+		private boolean enableSkosXl = false;
 
-	@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
-	private boolean extensiveReport = false;
+		@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
+		private boolean quiet = false;
+
+	}
 	
-	@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
-	private boolean enableSkosXl = false;
+	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
+	private class CommandAnalyze extends CommandSummarize {
 	
-	@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
-	private boolean writeGraphs = false;
+		@Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
+		private Float randomSubsetSize_percent;
 	
-	@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
-	private boolean quiet = false;
+		@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
+		private boolean extensiveReport = false;
+		
+		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
+		private boolean writeGraphs = false;
+			
+	}
 
 	private QSkos qskos;
 	
 	public static void main(String[] args) {
-		VocEvaluate instance = new VocEvaluate();
-		JCommander jCommander = new JCommander(instance);
+		new VocEvaluate(args);
+	}
+	
+	private VocEvaluate(String[] args) {
+		jc = new JCommander(this);
+		
+		CommandAnalyze commandAnalyze = new CommandAnalyze(); 
+		jc.addCommand(commandAnalyze);
+		
+		CommandSummarize commandSummarize = new CommandSummarize();
+		jc.addCommand(commandSummarize);
 
 		try {
-			jCommander.parse(args);
-			instance.listIssuesOrEvaluate();
+			jc.parse(args);
+			String command = jc.getParsedCommand();
+			if (command == null) {
+				jc.usage();
+			}
+			else {
+				if (command.equals(CMD_NAME_ANALYZE)) {
+					parsedCommand = commandAnalyze;
+				}
+				else if (command.equals(CMD_NAME_SUMMARIZE)) {
+					parsedCommand = commandSummarize;
+				}
+				
+				listIssuesOrEvaluate();
+			}
 		}
 		catch (ParameterException e) {
-			jCommander.usage();
+			jc.usage();
 		}
+		
 	}
 		
 	private void listIssuesOrEvaluate() {
-		if (outputIssues != null && outputIssues == true) {
-			outputMeasureDescription(MeasureType.ISSUE);
-		}
-		else if (outputStatistics != null && outputStatistics == true) {
-			outputMeasureDescription(MeasureType.STATISTICS);
+		if (parsedCommand.vocabFilenames == null) {
+			if (parsedCommand instanceof CommandAnalyze) {
+				outputMeasureDescription(MeasureType.ISSUE);	
+			}
+			else if (parsedCommand instanceof CommandSummarize) {
+				outputMeasureDescription(MeasureType.STATISTICS);	
+			}
 		}
 		else {
 			checkVocabFilenameGiven();
@@ -101,7 +131,7 @@ public class VocEvaluate {
 	
 	private void checkVocabFilenameGiven() throws ParameterException
 	{
-		if (vocabFilenames == null) {
+		if (parsedCommand.vocabFilenames == null) {
 			throw new ParameterException("No vocabulary file given");
 		}		
 	}
@@ -122,19 +152,22 @@ public class VocEvaluate {
 	private void setup() throws OpenRDFException, IOException {
 		setupLogging();
 
-		qskos = new QSkos(new File(vocabFilenames.get(0)));
-		qskos.setAuthoritativeResourceIdentifier(authoritativeResourceIdentifier);
+		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
+		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
-		qskos.setSubsetSize(randomSubsetSize_percent);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
-		if (enableSkosXl) {
+		if (parsedCommand instanceof CommandAnalyze) {
+			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
+		}
+		
+		if (parsedCommand.enableSkosXl) {
 			qskos.enableSkosXlSupport();
 		}		
 	}
 	
 	private void setupLogging() {
-		if (quiet) {
+		if (parsedCommand.quiet) {
 			System.setProperty("root-level", "ERROR");	
 		}		
 		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
@@ -161,21 +194,29 @@ public class VocEvaluate {
 	}	
 	
 	private void outputReport(Result<?> result, String critId) {
-		System.out.println(result.getShortReport());	
-
-		if (extensiveReport) {
+		System.out.println(result.getShortReport());
+		
+		if (shouldOutputExtReport()) {
 			System.out.println(result.getExtensiveReport());
 		}
 		
-		if (writeGraphs) {
+		if (shouldWriteGraphs()) {
 			try {
 				Collection<String> dotGraph = result.getAsDOT();
 				writeToFiles(dotGraph, critId);
 			}
 			catch (IOException e) {
 				logger.error("error writing graph file for issue " +critId, e);
-			}
+			}			
 		}
+	}
+	
+	private boolean shouldOutputExtReport() {
+		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).extensiveReport;
+	}
+	
+	private boolean shouldWriteGraphs() {
+		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).writeGraphs;
 	}
 	
 	private void writeToFiles(Collection<String> dotGraphs, String fileName) 
@@ -195,17 +236,33 @@ public class VocEvaluate {
 	private List<CriterionDescription> extractCriteria() {
 		List<CriterionDescription> criteria = new ArrayList<CriterionDescription>();
 		
-		if (checkAll != null && checkAll == true) {
-			criteria = Arrays.asList(CriterionDescription.values());
+		if (parsedCommand.selectedIds == null || parsedCommand.selectedIds.isEmpty()) {
+			criteria = getAllMeasuresForCommand();
 		}
 		else {		
-			StringTokenizer tokenizer = new StringTokenizer(selectedCriteria, ",");
+			StringTokenizer tokenizer = new StringTokenizer(parsedCommand.selectedIds, ",");
 			while (tokenizer.hasMoreElements()) {
 				criteria.add(CriterionDescription.findById(tokenizer.nextToken()));
 			}
 		}
 		
 		return criteria;
+	}
+	
+	private List<CriterionDescription> getAllMeasuresForCommand() {
+		List<CriterionDescription> measuresForCommand = new ArrayList<CriterionDescription>();
+		
+		for (CriterionDescription critDesc : CriterionDescription.values()) {
+			String command = jc.getParsedCommand();
+			
+			if ((critDesc.getType() == MeasureType.ISSUE && command.equals(CMD_NAME_ANALYZE)) ||
+				(critDesc.getType() == MeasureType.STATISTICS && command.equals(CMD_NAME_SUMMARIZE))) 
+			{
+				measuresForCommand.add(critDesc);
+			}
+		}
+		
+		return measuresForCommand;
 	}
 	
 	private Result<?> invokeQSkosMethod(String methodName) throws Exception {
