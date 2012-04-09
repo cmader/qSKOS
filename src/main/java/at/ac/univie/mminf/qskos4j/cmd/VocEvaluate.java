@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -120,11 +121,19 @@ public class VocEvaluate {
 	}
 
 	private void outputMeasureDescription(MeasureType constraintType) {
-		String formatString = "%5s\t%-55s\t%-60s\n"; 
-		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
-		for (CriterionDescription critDesc : CriterionDescription.values()) {
+		Iterator<CriterionDescription> descIt = Arrays.asList(CriterionDescription.values()).iterator();
+		
+		while (descIt.hasNext()) {
+			CriterionDescription critDesc = descIt.next();
+			if (critDesc == CriterionDescription.NULL_DESC) {
+				continue;
+			}
+			
 			if (critDesc.getType() == constraintType) {
-				System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
+				System.out.println("---");
+				System.out.println("ID: " +critDesc.getId());
+				System.out.println("Name: " +critDesc.getName());
+				System.out.println("Description: " +critDesc.getDescription());
 			}
 		}
 	}
