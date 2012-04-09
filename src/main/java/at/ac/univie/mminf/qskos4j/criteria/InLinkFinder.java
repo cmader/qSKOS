@@ -15,7 +15,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.sparql.SPARQLRepository;
+import org.openrdf.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,30 +30,23 @@ public class InLinkFinder extends Criterion {
 	private final Logger logger = LoggerFactory.getLogger(InLinkFinder.class);
 	
 	private Collection<URI> authoritativeConcepts;
-	private Set<SPARQLRepository> sparqlEndpoints;
+	private Set<Repository> repositories;
 	private Map<URI, Set<URI>> conceptReferencingResources = new HashMap<URI, Set<URI>>();
 	
 	public InLinkFinder(
 		VocabRepository vocabRepository,
-		Set<String> sparqlEndpoints) 
+		Set<Repository> repositories) 
 	{
 		super(vocabRepository);
-		createSparqlRepositories(sparqlEndpoints);
-	}
-	
-	private void createSparqlRepositories(Set<String> sparqlEndpoints) {
-		this.sparqlEndpoints = new HashSet<SPARQLRepository>();
 		
-		if (sparqlEndpoints == null || sparqlEndpoints.isEmpty()) {
-			logger.warn("no SPARQL endpoints defined");
+		if (repositories == null || repositories.isEmpty()) {
+			logger.warn("no repository for querying defined");
 		}
 		else {
-			for (String sparqlEndpoint : sparqlEndpoints) {
-				this.sparqlEndpoints.add(new SPARQLRepository(sparqlEndpoint));
-			}
+			this.repositories = repositories;
 		}
 	}
-	
+		
 	public CollectionResult<URI> findMissingInLinks(
 		Collection<URI> authoritativeConcepts,
 		Float randomSubsetSize_percent) throws OpenRDFException
@@ -89,12 +82,12 @@ public class InLinkFinder extends Criterion {
 	private void rankConcept(URI concept) 
 		throws OpenRDFException 
 	{
-		for (SPARQLRepository sparqlEndpoint : sparqlEndpoints) {
+		for (Repository sparqlEndpoint : repositories) {
 			rankConceptByEndpoint(concept, sparqlEndpoint);	
 		}
 	}
 	
-	private void rankConceptByEndpoint(URI concept, SPARQLRepository endpoint) 
+	private void rankConceptByEndpoint(URI concept, Repository endpoint) 
 		throws OpenRDFException
 	{
 		String query = "SELECT distinct ?resource WHERE " +
