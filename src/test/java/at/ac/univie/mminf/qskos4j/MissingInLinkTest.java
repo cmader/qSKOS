@@ -18,17 +18,16 @@ public class MissingInLinkTest extends QSkosTestCase {
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosRankConcepts = setUpInstance("rankConcepts.rdf");
-		qSkosRankConcepts.addSparqlEndPoint("http://sparql.sindice.com/sparql");
+		qSkosRankConcepts.addRepositoryLoopback();
 	}
 	
-	/* Temporarily disabled because Sindice seems broken...
 	@Test
 	public void testInLinksAsDbPedia() throws OpenRDFException {
 		qSkosRankConcepts.setAuthoritativeResourceIdentifier("dbpedia.org");
 		
 		Collection<URI> conceptsMissingInLinks = qSkosRankConcepts.findMissingInLinks().getData();
 		Assert.assertTrue(conceptsMissingInLinks.isEmpty());		
-	}*/
+	}
 
 	@Test
 	public void testInLinksAsSTW() throws OpenRDFException {
