@@ -31,6 +31,16 @@ public class SkosReferenceIntegrityChecker extends Criterion {
 	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() 
 		throws OpenRDFException
 	{
+		/* TODO: Algorithm
+		 * 1. create hierarchy graph HG
+		 * 2. compute all skos:related pairs (c1,c2)
+		 * 3. compute strongly connected components of HG
+		 * 4. if c1 and c2 are in same component => clash
+		 * 5. else if c1 and c2 are in different components A and B
+		 * 6. replace A and B with single nodes a and b
+		 * 7. if a path a->b or b->a exists => clash
+		 */
+		
 		TupleQueryResult result = vocabRepository.query(createRelatedConceptsQuery());
 		Collection<Pair<URI>> relatedConcepts = createResultCollection(result);
 		Collection<Pair<URI>> hierarchicallyConnectedConcepts = 
