@@ -16,7 +16,7 @@ import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class SkosTermsChecker extends Criterion {
+public class SkosTermsChecker extends Issue {
 
 	private Map<URI, Collection<URI>> deprecatedProperties, illegalTerms;
 	

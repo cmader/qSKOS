@@ -29,7 +29,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
  * Identifies all skos:Concepts in the repository passed to the constructor
  * @author christian
  */
-public class ConceptFinder extends Criterion {
+public class ConceptFinder extends Issue {
 	
 	private final Logger logger = LoggerFactory.getLogger(ConceptFinder.class);
 	private Collection<URI> involvedConcepts, authoritativeConcepts;

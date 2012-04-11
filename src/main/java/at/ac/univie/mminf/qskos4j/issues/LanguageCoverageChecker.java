@@ -19,7 +19,7 @@ import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class LanguageCoverageChecker extends Criterion {
+public class LanguageCoverageChecker extends Issue {
 
 	private Map<Resource, Collection<String>> languageCoverage, incompleteLanguageCoverage;
 	private Set<String> distinctLanguages;

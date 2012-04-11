@@ -14,7 +14,7 @@ import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class ValuelessAssociativeRelationsFinder extends Criterion {
+public class ValuelessAssociativeRelationsFinder extends Issue {
 
 	public ValuelessAssociativeRelationsFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);

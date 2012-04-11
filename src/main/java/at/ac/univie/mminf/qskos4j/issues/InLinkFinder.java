@@ -25,17 +25,17 @@ import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class InLinkFinder extends Criterion {
+public class InLinkFinder extends Issue {
 
 	private final Logger logger = LoggerFactory.getLogger(InLinkFinder.class);
 	
 	private Collection<URI> authoritativeConcepts;
-	private Set<Repository> repositories;
+	private Collection<Repository> repositories;
 	private Map<URI, Set<URI>> conceptReferencingResources = new HashMap<URI, Set<URI>>();
 	
 	public InLinkFinder(
 		VocabRepository vocabRepository,
-		Set<Repository> repositories) 
+		Collection<Repository> repositories) 
 	{
 		super(vocabRepository);
 		

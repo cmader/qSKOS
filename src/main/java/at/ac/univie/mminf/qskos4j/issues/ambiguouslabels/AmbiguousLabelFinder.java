@@ -12,12 +12,12 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.issues.Criterion;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class AmbiguousLabelFinder extends Criterion {
+public class AmbiguousLabelFinder extends Issue {
 
 	private Map<URI, Collection<String>> ambiguouslyLabeledConcepts;
 	

@@ -14,7 +14,7 @@ import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class SolitaryTransitiveRelationsFinder extends Criterion {
+public class SolitaryTransitiveRelationsFinder extends Issue {
 
 	private String[][] transitiveNontransiviteInverseProperties = {
 			{"skos:broaderTransitive", "skos:broader", "skos:narrower"},

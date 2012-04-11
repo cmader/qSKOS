@@ -19,7 +19,7 @@ import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class InverseRelationsChecker extends Criterion {
+public class InverseRelationsChecker extends Issue {
 
 	private String[][] inversePropertyPairs = {
 		{"skos:broader", "skos:narrower"}, 

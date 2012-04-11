@@ -30,7 +30,7 @@ import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class ResourceAvailabilityChecker extends Criterion {
+public class ResourceAvailabilityChecker extends Issue {
 	
 	private final Logger logger = LoggerFactory.getLogger(ResourceAvailabilityChecker.class);
 	private final String NO_CONTENT_TYPE = "n/a";

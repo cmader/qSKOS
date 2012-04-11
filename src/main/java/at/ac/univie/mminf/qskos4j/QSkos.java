@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -21,18 +23,19 @@ import at.ac.univie.mminf.qskos4j.issues.ComponentFinder;
 import at.ac.univie.mminf.qskos4j.issues.ConceptFinder;
 import at.ac.univie.mminf.qskos4j.issues.ConceptSchemeChecker;
 import at.ac.univie.mminf.qskos4j.issues.CycleFinder;
+import at.ac.univie.mminf.qskos4j.issues.HierarchyGraph;
 import at.ac.univie.mminf.qskos4j.issues.InLinkFinder;
 import at.ac.univie.mminf.qskos4j.issues.InverseRelationsChecker;
 import at.ac.univie.mminf.qskos4j.issues.LanguageCoverageChecker;
 import at.ac.univie.mminf.qskos4j.issues.LanguageTagChecker;
 import at.ac.univie.mminf.qskos4j.issues.OutLinkFinder;
-import at.ac.univie.mminf.qskos4j.issues.ValuelessAssociativeRelationsFinder;
 import at.ac.univie.mminf.qskos4j.issues.RelationStatisticsFinder;
 import at.ac.univie.mminf.qskos4j.issues.ResourceAvailabilityChecker;
 import at.ac.univie.mminf.qskos4j.issues.SkosReferenceIntegrityChecker;
 import at.ac.univie.mminf.qskos4j.issues.SkosTermsChecker;
 import at.ac.univie.mminf.qskos4j.issues.SolitaryTransitiveRelationsFinder;
 import at.ac.univie.mminf.qskos4j.issues.UndocumentedConceptsChecker;
+import at.ac.univie.mminf.qskos4j.issues.ValuelessAssociativeRelationsFinder;
 import at.ac.univie.mminf.qskos4j.issues.ambiguouslabels.AmbiguousLabelFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflictsFinder;
@@ -45,6 +48,7 @@ import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -53,14 +57,14 @@ public class QSkos {
 
 	private final Logger logger = LoggerFactory.getLogger(QSkos.class);
 	
-	private Set<Repository> otherRepositories = new HashSet<Repository>();
+	private Collection<Repository> otherRepositories = new HashSet<Repository>();
 	
 	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
-	private CycleFinder hierarchyAnalyzer;
 	private ConceptFinder conceptFinder;
 	private ComponentFinder componentFinder;
 	private ValuelessAssociativeRelationsFinder redundantAssociativeRelationsFinder;
 	private LanguageCoverageChecker languageCoverageChecker;
+	private SkosReferenceIntegrityChecker skosReferenceIntegrityChecker;
 	
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
@@ -69,6 +73,7 @@ public class QSkos {
 	private Float randomSubsetSize_percent;
 	
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
+	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph; 
 	
 	public QSkos(File rdfFile) 
 		throws OpenRDFException, IOException
@@ -105,11 +110,11 @@ public class QSkos {
 	
 	private void init() {
 		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
-		hierarchyAnalyzer = new CycleFinder(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
 		componentFinder = new ComponentFinder(vocabRepository);
 		redundantAssociativeRelationsFinder = new ValuelessAssociativeRelationsFinder(vocabRepository);
-		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);	
+		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);
+		skosReferenceIntegrityChecker = new SkosReferenceIntegrityChecker(vocabRepository);
 		
 		progressMonitor = new DummyProgressMonitor();
 	}
@@ -184,9 +189,18 @@ public class QSkos {
 	}
 	
 	public CollectionResult<Set<Resource>> findHierarchicalCycles() throws OpenRDFException {
-		return hierarchyAnalyzer.findCycleContainingComponents();
+		return new CycleFinder(getHierarchyGraph()).findCycleContainingComponents();
 	}
-
+	
+	private DirectedMultigraph<Resource, NamedEdge> getHierarchyGraph() 
+		throws OpenRDFException
+	{
+		if (hierarchyGraph == null) {
+			hierarchyGraph = new HierarchyGraph(vocabRepository).createGraph();
+		}
+		return hierarchyGraph;
+	}
+	
 	public CollectionResult<URI> findMissingOutLinks() throws OpenRDFException {
 		OutLinkFinder extResourcesFinder = new OutLinkFinder(vocabRepository);
 		
@@ -272,10 +286,8 @@ public class QSkos {
 	}
 	
 	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
-		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = 
-			new SkosReferenceIntegrityChecker(vocabRepository);
 		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
-		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes();
+		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes(getHierarchyGraph());
 	}
 	
 	public CollectionResult<Pair<URI>> findExactVsAssociativeMappingClashes() throws OpenRDFException {

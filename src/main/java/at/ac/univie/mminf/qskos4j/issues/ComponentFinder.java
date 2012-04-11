@@ -24,7 +24,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
  * Identifies all weakly connected components in the repository passed to the constructor
  * @author christian
  */
-public class ComponentFinder extends Criterion {
+public class ComponentFinder extends Issue {
 
 	private DirectedGraph<Resource, NamedEdge> graph;
 	

@@ -19,7 +19,7 @@ import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class LanguageTagChecker extends Criterion {
+public class LanguageTagChecker extends Issue {
 
 	private Map<Resource, Collection<Literal>> missingLangTags;
 	

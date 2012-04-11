@@ -76,6 +76,11 @@
 	<skos:broader rdf:resource="29"/>
 </rdf:Description>
 
+<!-- case 8; error: concepts within same strongly connected hierarchy component -->
+<rdf:Description rdf:about="30">
+	<skos:related rdf:resource="27"/>
+</rdf:Description>
+
 <!-- S46:	skos:exactMatch is disjoint with each of the properties skos:broadMatch and skos:relatedMatch.-->
 
 <!-- case 8; error -->

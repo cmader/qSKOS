@@ -17,7 +17,7 @@ import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class ConceptSchemeChecker extends Criterion {
+public class ConceptSchemeChecker extends Issue {
 
 	public ConceptSchemeChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);

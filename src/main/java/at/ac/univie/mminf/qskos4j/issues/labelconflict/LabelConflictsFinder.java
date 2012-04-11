@@ -20,14 +20,14 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.issues.Criterion;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.labelconflict.SkosLabel.LabelType;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class LabelConflictsFinder extends Criterion {
+public class LabelConflictsFinder extends Issue {
 
 	private final Logger logger = LoggerFactory.getLogger(LabelConflictsFinder.class);
 	private Set<LabelConflict> allRelatedConcepts;

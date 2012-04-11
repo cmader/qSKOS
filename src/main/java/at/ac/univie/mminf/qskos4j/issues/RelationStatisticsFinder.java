@@ -13,7 +13,7 @@ import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class RelationStatisticsFinder extends Criterion {
+public class RelationStatisticsFinder extends Issue {
 
 	public RelationStatisticsFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
