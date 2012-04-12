@@ -36,7 +36,6 @@
   		<groupId>jgrapht</groupId>
   		<artifactId>jgrapht</artifactId>
   		<version>0.7.3</version>
-  		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.apache.httpcomponents</groupId>

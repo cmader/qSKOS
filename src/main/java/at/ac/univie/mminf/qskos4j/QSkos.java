@@ -64,7 +64,6 @@ public class QSkos {
 	private ComponentFinder componentFinder;
 	private ValuelessAssociativeRelationsFinder redundantAssociativeRelationsFinder;
 	private LanguageCoverageChecker languageCoverageChecker;
-	private SkosReferenceIntegrityChecker skosReferenceIntegrityChecker;
 	
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
@@ -114,7 +113,6 @@ public class QSkos {
 		componentFinder = new ComponentFinder(vocabRepository);
 		redundantAssociativeRelationsFinder = new ValuelessAssociativeRelationsFinder(vocabRepository);
 		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);
-		skosReferenceIntegrityChecker = new SkosReferenceIntegrityChecker(vocabRepository);
 		
 		progressMonitor = new DummyProgressMonitor();
 	}
@@ -286,6 +284,7 @@ public class QSkos {
 	}
 	
 	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
+		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = new SkosReferenceIntegrityChecker(vocabRepository);
 		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
 		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes(getHierarchyGraph());
 	}
