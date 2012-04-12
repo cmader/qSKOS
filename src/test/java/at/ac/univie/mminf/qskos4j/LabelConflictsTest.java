@@ -14,7 +14,7 @@ import org.openrdf.model.URI;
 
 import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
 
-public class RelatedConceptsTest extends QSkosTestCase {
+public class LabelConflictsTest extends QSkosTestCase {
 
 	private QSkos qSkosComponents, qSkosRelatedConcepts;
 	
@@ -26,7 +26,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testRelatedConceptsCount_1() throws OpenRDFException {
+	public void testLabelConflictCount_1() throws OpenRDFException {
 		Collection<LabelConflict> allRelatedConcepts = qSkosComponents.findLabelConflicts().getData();
 		
 		Assert.assertEquals(2, allRelatedConcepts.size());
@@ -46,7 +46,7 @@ public class RelatedConceptsTest extends QSkosTestCase {
 	}
 	
 	@Test
-	public void testRelatedConceptsCount_2() throws OpenRDFException {
+	public void testLabelConflictCount_2() throws OpenRDFException {
 		Assert.assertEquals(0, qSkosRelatedConcepts.findLabelConflicts().getData().size());
 	}
 }
