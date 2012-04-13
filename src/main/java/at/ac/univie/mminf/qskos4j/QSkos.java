@@ -11,6 +11,8 @@ import java.util.Set;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.sparql.SPARQLRepository;
 import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +54,7 @@ public class QSkos {
 
 	private final Logger logger = LoggerFactory.getLogger(QSkos.class);
 	
-	private Set<String> sparqlEndPoints = new HashSet<String>();
+	private Set<Repository> otherRepositories = new HashSet<Repository>();
 	
 	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
 	private HierarchyAnalyzer hierarchyAnalyer;
@@ -245,7 +247,7 @@ public class QSkos {
 	{
 		InLinkFinder inLinkFinder = new InLinkFinder(
 			vocabRepository, 
-			sparqlEndPoints);
+			otherRepositories);
 		inLinkFinder.setProgressMonitor(progressMonitor);
 		return inLinkFinder.findMissingInLinks(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
 	}
@@ -294,7 +296,15 @@ public class QSkos {
 	}
 	
 	public void addSparqlEndPoint(String endpointUrl) {
-		sparqlEndPoints.add(endpointUrl);
+		otherRepositories.add(new SPARQLRepository(endpointUrl));
+	}
+	
+	/**
+	 * Adds the repository containing the vocabulary that's about to test to the list of
+	 * other repositories. This is only useful for in-link testing purposes.
+	 */
+	public void addRepositoryLoopback() {
+		otherRepositories.add(vocabRepository.getRepository());
 	}
 	
 	public void setAuthoritativeResourceIdentifier(String authResourceIdentifier) {
