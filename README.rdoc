@@ -2,7 +2,7 @@
 
 == About
 
-qSKOS is a tool for finding quality issues in SKOS vocabularies. It takes a vocabulary file as input and creates a report for each issue. qSKOS can be used as command-line tool or API and is based on a set of well-defined {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Criteria-for-SKOS-Vocabularies]. 
+qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API.
 
 == Building qSKOS
 
