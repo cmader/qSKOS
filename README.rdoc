@@ -1,7 +1,5 @@
 = qSKOS
 
-== About
-
 qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API.
 
 == Building qSKOS
