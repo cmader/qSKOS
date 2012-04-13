@@ -25,11 +25,11 @@ The +QSkos+ class serves as facade for calculating all criteria. For each criter
 
   // instantiation
   qskos = new QSkos(new File("stw.rdf"));
-  qskos.setPublishingHost("zbw.eu");
+  qskos.setAuthoritativeResourceIdentifier("zbw.eu");
 
   // the fun part
   qskos.findComponents();
-  qskos.findRedundantAssociativeRelations();
+  qskos.findValuelessAssociativeRelations();
 
 == Contributors
 
