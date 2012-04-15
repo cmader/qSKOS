@@ -131,10 +131,10 @@ enum CriterionDescription {
 	
 	AMBIGUOUS_PREFLABELED_CONCEPTS("apc",
 		"Ambiguously Preflabeled Concepts",
-		"Finds concepts with more then one prefLabel per languate",	
+		"Finds concepts with more then one prefLabel per language",	
 		"findNotUniquePrefLabels"),
-	NOT_DISJOINT_LABELED_CONCEPTS("ndlc",
-		"Not Disjoint Labeled Concepts",
+	DISJOINT_LABELS_VIOLATION("dlv",
+		"Disjoint Labels Violation",
 		"Finds concepts with identical entries for different label types",
 		"findNotDisjointLabels"),
 		
