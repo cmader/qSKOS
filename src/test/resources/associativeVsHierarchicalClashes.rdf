@@ -76,30 +76,4 @@
 	<skos:broader rdf:resource="29"/>
 </rdf:Description>
 
-<!-- S46:	skos:exactMatch is disjoint with each of the properties skos:broadMatch and skos:relatedMatch.-->
-
-<!-- case 8; error -->
-<rdf:Description rdf:about="17">
-	<skos:exactMatch rdf:resource="18"/>
-	<skos:broadMatch rdf:resource="18"/>
-</rdf:Description>
-
-<!-- case 9; error -->
-<rdf:Description rdf:about="19">
-	<skos:exactMatch rdf:resource="20"/>
-	<skos:relatedMatch rdf:resource="20"/>
-</rdf:Description>
-
-<!-- case 10; error -->
-<rdf:Description rdf:about="21">
-	<skos:exactMatch rdf:resource="22"/>
-	<skos:narrowMatch rdf:resource="22"/>
-</rdf:Description>
-
-<!-- case 11; ok -->
-<rdf:Description rdf:about="23">
-	<skos:broadMatch rdf:resource="24"/>
-	<skos:relatedMatch rdf:resource="24"/>
-</rdf:Description>
-
 </rdf:RDF>

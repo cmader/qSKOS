@@ -106,10 +106,6 @@ enum CriterionDescription {
 		"findUndefinedSkosResources"),
 		
 	// Other Issues	
-	HIERARCHICALLY_AND_ASSOCIATIVELY_RELATED_CONCEPTS("harc",
-		"Hierarchically and Associatively Related Concepts",
-		"Concepts that are both hierarchically and associatively connected",
-		"findAmbiguousRelations"),
 	UNIDIRECTIONALLY_RELATED_CONCEPTS("urc",
 		"Unidirectionally Related Concepts",
 		"Concepts not including reciprocal relations",	

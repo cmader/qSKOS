@@ -60,7 +60,7 @@ public class SkosReferenceIntegrityChecker extends Issue {
 	private String createRelatedConceptsQuery() {
 		return SparqlPrefix.SKOS +
 			"SELECT DISTINCT ?concept1 ?concept2 WHERE {" +
-				"?concept1 skos:related ?concept2 ." +
+				"?concept1 skos:related|skos:relatedMatch ?concept2 ." +
 			"}";
 	}
 	

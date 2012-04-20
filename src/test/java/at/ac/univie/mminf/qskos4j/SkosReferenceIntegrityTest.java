@@ -13,22 +13,23 @@ import at.ac.univie.mminf.qskos4j.util.Pair;
 
 public class SkosReferenceIntegrityTest extends QSkosTestCase {
 
-	private QSkos qSkosReferenceIntegrityRelations;
+	private QSkos qSkosAssVsHierClashes, qSkosExactVsAssMappingClashes;
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosReferenceIntegrityRelations = setUpInstance("skosReferenceIntegrity.rdf");
+		qSkosAssVsHierClashes = setUpInstance("associativeVsHierarchicalClashes.rdf");
+		qSkosExactVsAssMappingClashes = setUpInstance("exactVsAssociativeMappingClashes.rdf");
 	}
 	
 	@Test
 	public void testAssociativeVsHierarchicalClashes() throws OpenRDFException {
-		Collection<Pair<URI>> assHierClashes = qSkosReferenceIntegrityRelations.findAssociativeVsHierarchicalClashes().getData();
+		Collection<Pair<URI>> assHierClashes = qSkosAssVsHierClashes.findAssociativeVsHierarchicalClashes().getData();
 		Assert.assertEquals(5, assHierClashes.size());
 	}
 	
 	@Test
 	public void testExactVsAssociativeMappingClashes() throws OpenRDFException {
-		Collection<Pair<URI>> exAssClashes = qSkosReferenceIntegrityRelations.findExactVsAssociativeMappingClashes().getData();
+		Collection<Pair<URI>> exAssClashes = qSkosExactVsAssMappingClashes.findExactVsAssociativeMappingClashes().getData();
 		Assert.assertEquals(3, exAssClashes.size());
 	}
 	

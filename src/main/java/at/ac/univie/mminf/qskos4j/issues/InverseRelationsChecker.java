@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -14,7 +15,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
+import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelResourcesResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -29,14 +30,14 @@ public class InverseRelationsChecker extends Issue {
 		{"skos:related", "skos:related"},
 		{"skos:relatedMatch", "skos:relatedMatch"}};
 	
-	private Map<Pair<URI>, String> omittedInverseRelations = new HashMap<Pair<URI>, String>();
-	private Set<Pair<URI>> inverseRelationPairs = new HashSet<Pair<URI>>();
+	private Map<Pair<Resource>, String> omittedInverseRelations = new HashMap<Pair<Resource>, String>();
+	private Set<Pair<Resource>> inverseRelationPairs = new HashSet<Pair<Resource>>();
 	
 	public InverseRelationsChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 
-	public UnidirRelConceptsResult findOmittedInverseRelations() 
+	public UnidirRelResourcesResult findOmittedInverseRelations() 
 		throws OpenRDFException
 	{
 		for (String[] inversePropertyPair : inversePropertyPairs) {
@@ -44,7 +45,7 @@ public class InverseRelationsChecker extends Issue {
 			addToOmittedReverseRelationsMap(result, inversePropertyPair);			
 		}
 		
-		return new UnidirRelConceptsResult(omittedInverseRelations);
+		return new UnidirRelResourcesResult(omittedInverseRelations);
 	}
 	
 	private String createOmittedRelationsQuery(String[] inverseRelations) {
@@ -67,11 +68,11 @@ public class InverseRelationsChecker extends Issue {
 	{
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
-			URI resource1 = (URI) queryResult.getValue("resource1");
-			URI resource2 = (URI) queryResult.getValue("resource2");
+			Resource resource1 = (Resource) queryResult.getValue("resource1");
+			Resource resource2 = (Resource) queryResult.getValue("resource2");
 			
 			omittedInverseRelations.put(
-				new Pair<URI>(resource1, resource2), 
+				new Pair<Resource>(resource1, resource2), 
 				inversePropertyPair[0] +"/"+ inversePropertyPair[1]);
 		}
 	}
@@ -106,7 +107,7 @@ public class InverseRelationsChecker extends Issue {
 	}
 	
 	private void addToInverseRelationPairs(
-		Collection<Pair<URI>> collection, 
+		Collection<Pair<Resource>> collection, 
 		TupleQueryResult result) throws QueryEvaluationException 
 	{
 		while (result.hasNext()) {
@@ -114,7 +115,7 @@ public class InverseRelationsChecker extends Issue {
 			URI resource1 = (URI) queryResult.getValue("resource1");
 			URI resource2 = (URI) queryResult.getValue("resource2");
 			
-			inverseRelationPairs.add(new Pair<URI>(resource1, resource2));
+			inverseRelationPairs.add(new Pair<Resource>(resource1, resource2));
 		}
 	}
 	

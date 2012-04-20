@@ -18,7 +18,6 @@ import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.issues.AmbiguousRelationsFinder;
 import at.ac.univie.mminf.qskos4j.issues.ComponentFinder;
 import at.ac.univie.mminf.qskos4j.issues.ConceptFinder;
 import at.ac.univie.mminf.qskos4j.issues.ConceptSchemeChecker;
@@ -42,7 +41,7 @@ import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflictsFinder;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
-import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
+import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelResourcesResult;
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
@@ -259,7 +258,7 @@ public class QSkos {
 		return inLinkFinder.findMissingInLinks(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
 	}
 	
-	public UnidirRelConceptsResult findOmittedInverseRelations() throws OpenRDFException {
+	public UnidirRelResourcesResult findOmittedInverseRelations() throws OpenRDFException {
 		return new InverseRelationsChecker(vocabRepository).findOmittedInverseRelations();
 	}
 	
@@ -292,11 +291,7 @@ public class QSkos {
 	public CollectionResult<Pair<URI>> findExactVsAssociativeMappingClashes() throws OpenRDFException {
 		return new SkosReferenceIntegrityChecker(vocabRepository).findExactVsAssociativeMappingClashes();
 	}
-	
-	public CollectionResult<Pair<URI>> findAmbiguousRelations() throws OpenRDFException {
-		return new AmbiguousRelationsFinder(vocabRepository).findAmbiguousRelations();
-	}
-	
+		
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;
 	}
