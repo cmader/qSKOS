@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,9 +9,11 @@ import org.junit.Ignore;
 import org.openrdf.OpenRDFException;
 import org.openrdf.rio.RDFFormat;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
+
 
 @Ignore
-public class QSkosTestCase {
+public class IssueTestCase {
 	
 	protected QSkos setUpInstance(String testFileName) 
 		throws OpenRDFException, IOException 

@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
-enum CriterionDescription {
+public enum MeasureDescription {
 
 	// Statistics
 	TOTAL_CONCEPTS("c", 
@@ -132,23 +132,21 @@ enum CriterionDescription {
 	DISJOINT_LABELS_VIOLATION("dlv",
 		"Disjoint Labels Violation",
 		"Finds concepts with identical entries for different label types",
-		"findNotDisjointLabels"),
+		"findNotDisjointLabels");
 		
-	NULL_DESC("", "", "", "");
-	
 	public enum MeasureType {STATISTICS, ISSUE}
 	
 	private String id, name, description, qSkosMethodName;
 	private MeasureType type = MeasureType.ISSUE;
 	
-	CriterionDescription(String id, String name, String description, String qSkosMethodName) {
+	MeasureDescription(String id, String name, String description, String qSkosMethodName) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.qSkosMethodName = qSkosMethodName;		
 	}
 	
-	CriterionDescription(String id, String name, String description, String qSkosMethodName, MeasureType type) {
+	MeasureDescription(String id, String name, String description, String qSkosMethodName, MeasureType type) {
 		this(id, name, description, qSkosMethodName);
 		this.type = type;
 	}
@@ -173,12 +171,16 @@ enum CriterionDescription {
 		return type;
 	}
 	
-	static CriterionDescription findById(String id) {
-		for (CriterionDescription critDesc : values()) {
-			if (critDesc.id.equals(id)) {
-				return critDesc;
+	static MeasureDescription findById(String id) 
+		throws UnsupportedMeasureIdException
+	{
+		for (MeasureDescription measureDesc : values()) {
+			if (measureDesc.id.equals(id)) {
+				return measureDesc;
 			}
 		}
-		return NULL_DESC;
+		
+		throw new UnsupportedMeasureIdException(id);
 	}
+	
 }

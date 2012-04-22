@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.net.URL;
@@ -10,8 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 
-public class BrokenLinksTest extends QSkosTestCase {
+
+public class BrokenLinksTest extends IssueTestCase {
 
 	private QSkos qSkosConcepts, qSkosExtResources;
 	

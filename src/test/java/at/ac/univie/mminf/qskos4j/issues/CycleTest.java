@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 
@@ -8,8 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 
-public class CycleTest extends QSkosTestCase {
+
+public class CycleTest extends IssueTestCase {
 
 	private QSkos qSkosCycles, qSkosComponents;
 	

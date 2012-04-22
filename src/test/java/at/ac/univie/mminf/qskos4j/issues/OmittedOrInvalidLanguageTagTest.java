@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -12,8 +12,10 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 
-public class OmittedOrInvalidLanguageTagTest extends QSkosTestCase {
+
+public class OmittedOrInvalidLanguageTagTest extends IssueTestCase {
 
 	private QSkos qSkosComponents, qSkosDeprecatedAndIllegal;
 	

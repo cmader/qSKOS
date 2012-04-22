@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -12,9 +12,10 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
 
-public class LabelConflictsTest extends QSkosTestCase {
+public class LabelConflictsTest extends IssueTestCase {
 
 	private QSkos qSkosComponents, qSkosRelatedConcepts;
 	

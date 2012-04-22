@@ -206,7 +206,11 @@ public class ConceptFinder extends Issue {
 			);
 			
 			sortedEntries.addAll(entrySet());
-			return sortedEntries.first().getKey();
+			if (!sortedEntries.isEmpty()) {
+				return sortedEntries.first().getKey();
+			}
+			
+			return "";
 		}
 	}
 }

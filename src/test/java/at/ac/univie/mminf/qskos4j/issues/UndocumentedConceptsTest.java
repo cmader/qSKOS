@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -10,8 +10,10 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 
-public class UndocumentedConceptsTest extends QSkosTestCase {
+
+public class UndocumentedConceptsTest extends IssueTestCase {
 
 	private QSkos qSkosDocumentedConcepts;
 	

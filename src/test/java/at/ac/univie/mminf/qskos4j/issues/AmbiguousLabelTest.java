@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -10,8 +10,10 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 
-public class AmbiguousLabelTest extends QSkosTestCase {
+
+public class AmbiguousLabelTest extends IssueTestCase {
 
 	private QSkos qSkosAmbiguousLabels;
 	

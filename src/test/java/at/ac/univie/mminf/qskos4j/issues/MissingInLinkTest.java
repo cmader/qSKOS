@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -10,8 +10,10 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 
-public class MissingInLinkTest extends QSkosTestCase {
+
+public class MissingInLinkTest extends IssueTestCase {
 
 	private QSkos qSkosRankConcepts;
 	

@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j;
+package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,8 +12,10 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 
-public class LanguageCoverageTest extends QSkosTestCase {
+
+public class LanguageCoverageTest extends IssueTestCase {
 
 	private QSkos qSkosComponents;
 	
