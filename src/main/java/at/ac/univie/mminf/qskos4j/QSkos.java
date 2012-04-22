@@ -52,6 +52,13 @@ import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
+/**
+ * Main class intended for easy interaction with qSKOS. On instantiation an in-memory ("local") repository 
+ * containing the passed controlled vocabulary is created which can be queried by calling the methods of this class. 
+ * 
+ * @author christian
+ *
+ */
 public class QSkos {
 
 	private final Logger logger = LoggerFactory.getLogger(QSkos.class);
@@ -72,13 +79,29 @@ public class QSkos {
 	
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
 	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph; 
-	
+
+	/**
+	 * Constructs a QSkos object and initializes it with content from the passed RDF vocabulary.
+	 * 
+	 * @param rdfFile rdfFile a file holding a SKOS vocabulary
+	 * @throws OpenRDFException if errors when initializing local repository 
+	 * @throws IOException if problems occur reading the passed vocabulary file
+	 */
 	public QSkos(File rdfFile) 
 		throws OpenRDFException, IOException
 	{
 		this(rdfFile, null, null);
 	}
 	
+	/**
+	 * Constructs a QSkos object and initializes it with content from the passed RDF vocabulary and
+	 * explicitly stating the RDF serialization format.
+	 * 
+	 * @param rdfFile rdfFile a file holding a SKOS vocabulary
+	 * @param dataFormat RDF serialization format of the passed vocabulary
+	 * @throws OpenRDFException if errors when initializing temporal repository
+	 * @throws IOException if problems occur reading the passed vocabulary file
+	 */
 	public QSkos(File rdfFile,
 		RDFFormat dataFormat) 
 		throws OpenRDFException, IOException
@@ -86,14 +109,7 @@ public class QSkos {
 		this(rdfFile, null, dataFormat);
 	}
 	
-	public QSkos(File rdfFile,
-		String baseURI)	
-		throws OpenRDFException, IOException
-	{
-		this(rdfFile, baseURI, null);
-	}
-	
-	public QSkos(File rdfFile,
+	private QSkos(File rdfFile,
 		String baseURI,
 		RDFFormat dataFormat) 
 		throws OpenRDFException, IOException 
@@ -127,6 +143,12 @@ public class QSkos {
 		}
 	}
 	
+	/**
+	 * Finds all <a href="http://www.w3.org/TR/skos-reference/#concepts">SKOS Concepts</a> involved in the vocabulary.
+	 * 
+	 * @return {@link CollectionResult} of all found concept URIs
+	 * @throws OpenRDFException if querying the local repository fails
+	 */
 	public CollectionResult<URI> findInvolvedConcepts() throws OpenRDFException
 	{
 		if (involvedConcepts == null) {
@@ -296,6 +318,11 @@ public class QSkos {
 		this.progressMonitor = progressMonitor;
 	}
 	
+	/**
+	 * Adds a SPARQL endpoint for estimation of in-links.
+	 * 
+	 * @param endpointUrl SPARL endpoint URL
+	 */
 	public void addSparqlEndPoint(String endpointUrl) {
 		otherRepositories.add(new SPARQLRepository(endpointUrl));
 	}
@@ -308,18 +335,44 @@ public class QSkos {
 		otherRepositories.add(vocabRepository.getRepository());
 	}
 	
+	/**
+	 * Sets a string that is used to identify if an URI is authoritative. This is required to, e.g., find all
+	 * out-links to distinguish between URIs in the vocabulary namespace and other resources on the Web.   
+	 * 
+	 * @param authResourceIdentifier a string, usually a substring of an URI in the vocabulary's namespace,
+	 * that uniquely identifies an authoritative URI.
+	 */
 	public void setAuthoritativeResourceIdentifier(String authResourceIdentifier) {
 		this.authResourceIdentifier = authResourceIdentifier;
 	}
-		
+	
+	/**
+	 * Sets a delay time in milliseconds that must pass between dereferencing links. This is intended to avoid
+	 * flooding the vocabulary host with HTTP requests.
+	 * 
+	 * @param delayMillis delay time in milliseconds
+	 */
 	public void setUrlDereferencingDelay(int delayMillis) {
 		urlDereferencingDelay = delayMillis;
 	}
 	
+	/**
+	 * Some methods in this class support investigating only a subset of the vocabulary and extrapolate the results
+	 * to shorten evaluation time. Works for, e.g., finding broken links. 
+	 * 
+	 * @param subsetSizePercent percentage of the total resources to investigate.
+	 */
 	public void setSubsetSize(Float subsetSizePercent) {
 		randomSubsetSize_percent = subsetSizePercent;
 	}
 	
+	/**
+	 * If this is called, the local repository is complemented with SKOS lexical labels inferred from SKOSXL definitions 
+	 * as described in the SKOS <a href="http://www.w3.org/TR/skos-reference/#S55">reference document</a> by the axioms
+	 * S55-S57
+	 * 
+	 * @throws OpenRDFException if errors when initializing local repository
+	 */
 	public void enableSkosXlSupport() throws OpenRDFException {
 		logger.info("inferring SKOSXL triples");
 		vocabRepository.enableSkosXlSupport();
