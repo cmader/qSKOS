@@ -110,12 +110,10 @@ public enum MeasureDescription {
 		"Unidirectionally Related Concepts",
 		"Concepts not including reciprocal relations",	
 		"findOmittedInverseRelations"),		
-	
 	HTTP_URI_SCHEME_VIOLATION("husv",
 		"HTTP URI Scheme Violation",
 		"Finds triple subjects that are no HTTP URIs",
 		"findNonHttpResources"),
-	
 	ASS_VS_HIER_RELATION_CLASHES("ahrc",
 		"Associative vs. Hierarchical Relation Clashes",
 		"Covers condition S27 from the SKOS reference document",
