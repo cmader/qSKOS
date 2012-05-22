@@ -43,4 +43,4 @@ How can I contribute?
 
 == Copyright
 
-Copyright (c) 2011, 2012 Christian Mader. See LICENSE.txt for details
+Copyright (c) 2011, 2012 Christian Mader. See LICENSE.html for details
