@@ -2,12 +2,13 @@ package at.ac.univie.mminf.qskos4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -17,50 +18,57 @@ import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.criteria.AmbiguousRelationsFinder;
-import at.ac.univie.mminf.qskos4j.criteria.ComponentFinder;
-import at.ac.univie.mminf.qskos4j.criteria.ConceptFinder;
-import at.ac.univie.mminf.qskos4j.criteria.ConceptSchemeChecker;
-import at.ac.univie.mminf.qskos4j.criteria.HierarchyAnalyzer;
-import at.ac.univie.mminf.qskos4j.criteria.InLinkFinder;
-import at.ac.univie.mminf.qskos4j.criteria.InverseRelationsChecker;
-import at.ac.univie.mminf.qskos4j.criteria.LanguageCoverageChecker;
-import at.ac.univie.mminf.qskos4j.criteria.LanguageTagChecker;
-import at.ac.univie.mminf.qskos4j.criteria.OutLinkFinder;
-import at.ac.univie.mminf.qskos4j.criteria.RedundantAssociativeRelationsFinder;
-import at.ac.univie.mminf.qskos4j.criteria.RelationStatisticsFinder;
-import at.ac.univie.mminf.qskos4j.criteria.ResourceAvailabilityChecker;
-import at.ac.univie.mminf.qskos4j.criteria.SkosReferenceIntegrityChecker;
-import at.ac.univie.mminf.qskos4j.criteria.SkosTermsChecker;
-import at.ac.univie.mminf.qskos4j.criteria.SolitaryTransitiveRelationsFinder;
-import at.ac.univie.mminf.qskos4j.criteria.UndocumentedConceptsChecker;
-import at.ac.univie.mminf.qskos4j.criteria.ambiguouslabels.AmbiguousLabelFinder;
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflict;
-import at.ac.univie.mminf.qskos4j.criteria.relatedconcepts.LabelConflictsFinder;
+import at.ac.univie.mminf.qskos4j.issues.ComponentFinder;
+import at.ac.univie.mminf.qskos4j.issues.ConceptFinder;
+import at.ac.univie.mminf.qskos4j.issues.ConceptSchemeChecker;
+import at.ac.univie.mminf.qskos4j.issues.CycleFinder;
+import at.ac.univie.mminf.qskos4j.issues.HierarchyGraph;
+import at.ac.univie.mminf.qskos4j.issues.InLinkFinder;
+import at.ac.univie.mminf.qskos4j.issues.InverseRelationsChecker;
+import at.ac.univie.mminf.qskos4j.issues.LanguageCoverageChecker;
+import at.ac.univie.mminf.qskos4j.issues.LanguageTagChecker;
+import at.ac.univie.mminf.qskos4j.issues.OutLinkFinder;
+import at.ac.univie.mminf.qskos4j.issues.RelationStatisticsFinder;
+import at.ac.univie.mminf.qskos4j.issues.ResourceAvailabilityChecker;
+import at.ac.univie.mminf.qskos4j.issues.SkosReferenceIntegrityChecker;
+import at.ac.univie.mminf.qskos4j.issues.SkosTermsChecker;
+import at.ac.univie.mminf.qskos4j.issues.SolitaryTransitiveRelationsFinder;
+import at.ac.univie.mminf.qskos4j.issues.UndocumentedConceptsChecker;
+import at.ac.univie.mminf.qskos4j.issues.ValuelessAssociativeRelationsFinder;
+import at.ac.univie.mminf.qskos4j.issues.ambiguouslabels.AmbiguousLabelFinder;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflictsFinder;
 import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
-import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelConceptsResult;
+import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelResourcesResult;
 import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
+/**
+ * Main class intended for easy interaction with qSKOS. On instantiation an in-memory ("local") repository 
+ * containing the passed controlled vocabulary is created which can be queried by calling the methods of this class. 
+ * 
+ * @author christian
+ *
+ */
 public class QSkos {
 
 	private final Logger logger = LoggerFactory.getLogger(QSkos.class);
 	
-	private Set<Repository> otherRepositories = new HashSet<Repository>();
+	private Collection<Repository> otherRepositories = new HashSet<Repository>();
 	
 	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
-	private HierarchyAnalyzer hierarchyAnalyer;
 	private ConceptFinder conceptFinder;
 	private ComponentFinder componentFinder;
-	private RedundantAssociativeRelationsFinder redundantAssociativeRelationsFinder;
+	private ValuelessAssociativeRelationsFinder redundantAssociativeRelationsFinder;
 	private LanguageCoverageChecker languageCoverageChecker;
 	
 	private VocabRepository vocabRepository;
@@ -70,13 +78,30 @@ public class QSkos {
 	private Float randomSubsetSize_percent;
 	
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
-	
+	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph; 
+
+	/**
+	 * Constructs a QSkos object and initializes it with content from the passed RDF vocabulary.
+	 * 
+	 * @param rdfFile rdfFile a file holding a SKOS vocabulary
+	 * @throws OpenRDFException if errors when initializing local repository 
+	 * @throws IOException if problems occur reading the passed vocabulary file
+	 */
 	public QSkos(File rdfFile) 
 		throws OpenRDFException, IOException
 	{
 		this(rdfFile, null, null);
 	}
 	
+	/**
+	 * Constructs a QSkos object and initializes it with content from the passed RDF vocabulary and
+	 * explicitly stating the RDF serialization format.
+	 * 
+	 * @param rdfFile rdfFile a file holding a SKOS vocabulary
+	 * @param dataFormat RDF serialization format of the passed vocabulary
+	 * @throws OpenRDFException if errors when initializing temporal repository
+	 * @throws IOException if problems occur reading the passed vocabulary file
+	 */
 	public QSkos(File rdfFile,
 		RDFFormat dataFormat) 
 		throws OpenRDFException, IOException
@@ -84,14 +109,7 @@ public class QSkos {
 		this(rdfFile, null, dataFormat);
 	}
 	
-	public QSkos(File rdfFile,
-		String baseURI)	
-		throws OpenRDFException, IOException
-	{
-		this(rdfFile, baseURI, null);
-	}
-	
-	public QSkos(File rdfFile,
+	private QSkos(File rdfFile,
 		String baseURI,
 		RDFFormat dataFormat) 
 		throws OpenRDFException, IOException 
@@ -106,11 +124,10 @@ public class QSkos {
 	
 	private void init() {
 		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
-		hierarchyAnalyer = new HierarchyAnalyzer(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
 		componentFinder = new ComponentFinder(vocabRepository);
-		redundantAssociativeRelationsFinder = new RedundantAssociativeRelationsFinder(vocabRepository);
-		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);	
+		redundantAssociativeRelationsFinder = new ValuelessAssociativeRelationsFinder(vocabRepository);
+		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);
 		
 		progressMonitor = new DummyProgressMonitor();
 	}
@@ -126,6 +143,12 @@ public class QSkos {
 		}
 	}
 	
+	/**
+	 * Finds all <a href="http://www.w3.org/TR/skos-reference/#concepts">SKOS Concepts</a> involved in the vocabulary.
+	 * 
+	 * @return {@link CollectionResult} of all found concept URIs
+	 * @throws OpenRDFException if querying the local repository fails
+	 */
 	public CollectionResult<URI> findInvolvedConcepts() throws OpenRDFException
 	{
 		if (involvedConcepts == null) {
@@ -185,13 +208,18 @@ public class QSkos {
 	}
 	
 	public CollectionResult<Set<Resource>> findHierarchicalCycles() throws OpenRDFException {
-		return hierarchyAnalyer.findCycleContainingComponents();
+		return new CycleFinder(getHierarchyGraph()).findCycleContainingComponents();
 	}
-
-	public void exportHierarchicalCyclesAsDOT(Writer[] writers) throws OpenRDFException {
-		hierarchyAnalyer.exportCycleContainingComponents(writers);
+	
+	private DirectedMultigraph<Resource, NamedEdge> getHierarchyGraph() 
+		throws OpenRDFException
+	{
+		if (hierarchyGraph == null) {
+			hierarchyGraph = new HierarchyGraph(vocabRepository).createGraph();
+		}
+		return hierarchyGraph;
 	}
-
+	
 	public CollectionResult<URI> findMissingOutLinks() throws OpenRDFException {
 		OutLinkFinder extResourcesFinder = new OutLinkFinder(vocabRepository);
 		
@@ -252,7 +280,7 @@ public class QSkos {
 		return inLinkFinder.findMissingInLinks(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
 	}
 	
-	public UnidirRelConceptsResult findOmittedInverseRelations() throws OpenRDFException {
+	public UnidirRelResourcesResult findOmittedInverseRelations() throws OpenRDFException {
 		return new InverseRelationsChecker(vocabRepository).findOmittedInverseRelations();
 	}
 	
@@ -277,24 +305,24 @@ public class QSkos {
 	}
 	
 	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
-		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = 
-			new SkosReferenceIntegrityChecker(vocabRepository);
+		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = new SkosReferenceIntegrityChecker(vocabRepository);
 		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
-		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes();
+		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes(getHierarchyGraph());
 	}
 	
 	public CollectionResult<Pair<URI>> findExactVsAssociativeMappingClashes() throws OpenRDFException {
 		return new SkosReferenceIntegrityChecker(vocabRepository).findExactVsAssociativeMappingClashes();
 	}
-	
-	public CollectionResult<Pair<URI>> findAmbiguousRelations() throws OpenRDFException {
-		return new AmbiguousRelationsFinder(vocabRepository).findAmbiguousRelations();
-	}
-	
+		
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;
 	}
 	
+	/**
+	 * Adds a SPARQL endpoint for estimation of in-links.
+	 * 
+	 * @param endpointUrl SPARL endpoint URL
+	 */
 	public void addSparqlEndPoint(String endpointUrl) {
 		otherRepositories.add(new SPARQLRepository(endpointUrl));
 	}
@@ -307,18 +335,44 @@ public class QSkos {
 		otherRepositories.add(vocabRepository.getRepository());
 	}
 	
+	/**
+	 * Sets a string that is used to identify if an URI is authoritative. This is required to, e.g., find all
+	 * out-links to distinguish between URIs in the vocabulary namespace and other resources on the Web.   
+	 * 
+	 * @param authResourceIdentifier a string, usually a substring of an URI in the vocabulary's namespace,
+	 * that uniquely identifies an authoritative URI.
+	 */
 	public void setAuthoritativeResourceIdentifier(String authResourceIdentifier) {
 		this.authResourceIdentifier = authResourceIdentifier;
 	}
-		
+	
+	/**
+	 * Sets a delay time in milliseconds that must pass between dereferencing links. This is intended to avoid
+	 * flooding the vocabulary host with HTTP requests.
+	 * 
+	 * @param delayMillis delay time in milliseconds
+	 */
 	public void setUrlDereferencingDelay(int delayMillis) {
 		urlDereferencingDelay = delayMillis;
 	}
 	
+	/**
+	 * Some methods in this class support investigating only a subset of the vocabulary and extrapolate the results
+	 * to shorten evaluation time. Works for, e.g., finding broken links. 
+	 * 
+	 * @param subsetSizePercent percentage of the total resources to investigate.
+	 */
 	public void setSubsetSize(Float subsetSizePercent) {
 		randomSubsetSize_percent = subsetSizePercent;
 	}
 	
+	/**
+	 * If this is called, the local repository is complemented with SKOS lexical labels inferred from SKOSXL definitions 
+	 * as described in the SKOS <a href="http://www.w3.org/TR/skos-reference/#S55">reference document</a> by the axioms
+	 * S55-S57
+	 * 
+	 * @throws OpenRDFException if errors when initializing local repository
+	 */
 	public void enableSkosXlSupport() throws OpenRDFException {
 		logger.info("inferring SKOSXL triples");
 		vocabRepository.enableSkosXlSupport();

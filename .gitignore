@@ -1,7 +1,7 @@
 .metadata
 .classpath
 .project
+*~
 .settings/
 target/
-*~
-
+doc/

@@ -1,45 +1,45 @@
 package at.ac.univie.mminf.qskos4j.result.custom;
 
-import java.io.Writer;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.alg.ConnectivityInspector;
 import org.openrdf.model.Resource;
 
-import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 
-public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<Resource, NamedEdge>> {
-
-	private List<Set<Resource>> connectedSets;
+public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resource>>
+{
+	private DirectedGraph<Resource, NamedEdge> graph;
 	
-	public WeaklyConnectedComponentsResult(DirectedGraph<Resource, NamedEdge> data) {
+	public WeaklyConnectedComponentsResult(Collection<Set<Resource>> data, DirectedGraph<Resource, NamedEdge> graph) {
 		super(data);
-		
-		connectedSets = new ConnectivityInspector<Resource, NamedEdge>(getData()).connectedSets();
+		this.graph = graph;
 	}
 
 	@Override
 	public String getShortReport() {
-		return generateReport(false);
+		return generateReport(true);
 	}
 
 	@Override
 	public String getExtensiveReport() {
-		return generateReport(true);
+		return generateReport(false);
 	}
-	
-	private String generateReport(boolean extensive) {
+		
+	private String generateReport(boolean overviewOnly) {
 		String report = "";
 		long compCount = 1;
 		
-		report += "count: " +connectedSets.size() +"\n";
-		for (Set<Resource> component : connectedSets) {
+		if (overviewOnly) {
+			report += "count: " +getData().size() +"\n";
+		}
+		
+		for (Set<Resource> component : getData()) {
 			report += "component " +compCount+ ", size: " +component.size()+ "\n";
-			if (extensive) {
+			if (!overviewOnly) {
 				report += component.toString()+ "\n";
 			}
 			compCount++;
@@ -48,11 +48,8 @@ public class WeaklyConnectedComponentsResult extends Result<DirectedGraph<Resour
 		return report;
 	}
 
-	public void exportComponentsAsDOT(Writer[] writers) {
-		new GraphExporter(getData()).exportSubGraph(connectedSets, writers);
-	}
-	
-	public List<Set<Resource>> getConnectedSets() {
-		return connectedSets;
+	@Override
+	public Collection<String> getAsDOT() {
+		return new GraphExporter(graph).exportSubGraphs(getData());
 	}
 }

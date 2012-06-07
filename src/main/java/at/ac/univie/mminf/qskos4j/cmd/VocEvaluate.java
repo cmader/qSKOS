@@ -1,68 +1,132 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.openrdf.OpenRDFException;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.cmd.MeasureDescription.MeasureType;
 import at.ac.univie.mminf.qskos4j.result.Result;
+import ch.qos.logback.classic.Logger;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
 
 public class VocEvaluate {
 	
-	private final Logger logger = LoggerFactory.getLogger(VocEvaluate.class);
+	public final static String CMD_NAME_ANALYZE = "analyze", CMD_NAME_SUMMARIZE = "summarize";
 	
-	@Parameter(description = "vocabularyfile")
-	private List<String> vocabFilenames;
+	private static JCommander jc;
+	private Logger logger;
+	private CommandSummarize parsedCommand;
+	
+	@Parameters(commandNames = CMD_NAME_SUMMARIZE, commandDescription = "Computes basic statistics of a given vocabulary")
+	private class CommandSummarize {
 		
-	@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
-	private String authoritativeResourceIdentifier;
+		@Parameter(description = "vocabularyfile")
+		private List<String> vocabFilenames;
+			
+		@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
+		private String authoritativeResourceIdentifier;
 	
-	@Parameter(names = {"-s", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
-	private Float randomSubsetSize_percent;
+		@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
+		private String selectedIds;
 
-	@Parameter(names = {"-l", "--list-issues"}, description = "Output a list of all available quality issue IDs")
-	private Boolean outputIssues;
+		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
+		private boolean enableSkosXl = false;
+
+		@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
+		private boolean quiet = false;
+
+	}
 	
-	@Parameter(names = {"-i", "--check-issue"}, description = "Comma-separated list of issue IDs to check for")
-	private String selectedCriteria;
+	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
+	private class CommandAnalyze extends CommandSummarize {
 	
-	@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
-	private boolean extensiveReport = false;
+		@Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
+		private Float randomSubsetSize_percent;
 	
-	@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
-	private boolean enableSkosXl = false;
-	
+		@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
+		private boolean extensiveReport = false;
+		
+		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
+		private boolean writeGraphs = false;
+			
+	}
+
 	private QSkos qskos;
 	
 	public static void main(String[] args) {
-		VocEvaluate instance = new VocEvaluate();
-		JCommander jCommander = new JCommander(instance);
-		
 		try {
-			jCommander.parse(args);
-			instance.listIssuesOrEvaluate();
+			new VocEvaluate(args);
 		}
-		catch (ParameterException e) {
-			jCommander.usage();
+		catch (ParameterException paramExc) {
+			jc.usage();
+		}
+		catch (IOException ioException) {
+			System.out.println("Error reading vocabulary file: " +ioException.getMessage());
+		}
+		catch (OpenRDFException rdfException) {
+			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
+		} 
+		catch (QSKOSMethodInvocationException methInvExc) {
+			System.out.println("Error invoking method: " +methInvExc.getMethodName());
+		} 
+		catch (UnsupportedMeasureIdException measureIdExc) {
+			System.out.println("Unsupported measure id: " +measureIdExc.getUnsupportedId());
+		} 
+	}
+		
+	public VocEvaluate(String[] args) 
+		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException  
+	{
+		jc = new JCommander(this);
+		
+		CommandAnalyze commandAnalyze = new CommandAnalyze(); 
+		jc.addCommand(commandAnalyze);
+		
+		CommandSummarize commandSummarize = new CommandSummarize();
+		jc.addCommand(commandSummarize);
+
+		jc.parse(args);
+		String command = jc.getParsedCommand();
+		if (command == null) {
+			jc.usage();
+		}
+		else {
+			if (command.equals(CMD_NAME_ANALYZE)) {
+				parsedCommand = commandAnalyze;
+			}
+			else if (command.equals(CMD_NAME_SUMMARIZE)) {
+				parsedCommand = commandSummarize;
+			}
+			
+			listIssuesOrEvaluate();
 		}
 	}
-	
-	private void listIssuesOrEvaluate() {
-		if (outputIssues != null && outputIssues == true) {
-			outputIssuesDescription();
+		
+	private void listIssuesOrEvaluate() 
+		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException 
+	{
+		if (parsedCommand.vocabFilenames == null) {
+			if (parsedCommand instanceof CommandAnalyze) {
+				outputMeasureDescription(MeasureType.ISSUE);	
+			}
+			else if (parsedCommand instanceof CommandSummarize) {
+				outputMeasureDescription(MeasureType.STATISTICS);	
+			}
 		}
 		else {
 			checkVocabFilenameGiven();
@@ -70,97 +134,158 @@ public class VocEvaluate {
 		}
 	}
 
-	private void outputIssuesDescription() {
-		String formatString = "%5s\t%-55s\t%-60s\n"; 
-		System.out.format(formatString, "[ID]", "[Name]", "[Description]");
-		for (CriterionDescription critDesc : CriterionDescription.values()) {
-			System.out.format(formatString, critDesc.getId(), critDesc.getName(), critDesc.getDescription());
+	private void outputMeasureDescription(MeasureType constraintType) {
+		Iterator<MeasureDescription> descIt = Arrays.asList(MeasureDescription.values()).iterator();
+		
+		while (descIt.hasNext()) {
+			MeasureDescription measureDesc = descIt.next();
+			
+			if (measureDesc.getType() == constraintType) {
+				System.out.println("---");
+				System.out.println("ID: " +measureDesc.getId());
+				System.out.println("Name: " +measureDesc.getName());
+				System.out.println("Description: " +measureDesc.getDescription());
+			}
 		}
 	}
 	
 	private void checkVocabFilenameGiven() throws ParameterException
 	{
-		if (vocabFilenames == null) {
+		if (parsedCommand.vocabFilenames == null) {
 			throw new ParameterException("No vocabulary file given");
 		}		
 	}
 	
-	private void evaluate() {
-		try {		
-			setupQSkos();
-			checkForIssue();
-		} 
-		catch (IOException ioException) {
-			System.out.println("Error reading vocabulary file: " +ioException.getMessage());
-		}
-		catch (OpenRDFException rdfException) {
-			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
-		}
+	private void evaluate() 
+		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException  
+	{
+		setup();
+		checkForIssue();
 	}
 	
-	private void setupQSkos() throws OpenRDFException, IOException {
-		qskos = new QSkos(new File(vocabFilenames.get(0)));
-		qskos.setAuthoritativeResourceIdentifier(authoritativeResourceIdentifier);
+	private void setup() throws OpenRDFException, IOException {
+		setupLogging();
+
+		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
+		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
-		qskos.setSubsetSize(randomSubsetSize_percent);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
-		if (enableSkosXl) {
-			qskos.enableSkosXlSupport();
+		if (parsedCommand instanceof CommandAnalyze) {
+			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
 		}
+		
+		if (parsedCommand.enableSkosXl) {
+			qskos.enableSkosXlSupport();
+		}		
+	}
+	
+	private void setupLogging() {
+		if (parsedCommand.quiet) {
+			System.setProperty("root-level", "ERROR");	
+		}		
+		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
 	}
 
-	private void checkForIssue() {
-		for (CriterionDescription criterion : extractCriteria()) {
-			System.out.println("--- " +criterion.getName());
-			String qSkosMethodName = criterion.getQSkosMethodName();
+	private void checkForIssue() throws UnsupportedMeasureIdException, QSKOSMethodInvocationException 
+	{
+		for (MeasureDescription measure : extractMeasure()) {
+			System.out.println("--- " +measure.getName());
+			String qSkosMethodName = measure.getQSkosMethodName();
 			
-			try {
-				Result<?> result = invokeQSkosMethod(qSkosMethodName);
-				outputReport(result);
-			}
-			catch (Exception e) {
-				String message = e.getMessage();
-				if (e instanceof InvocationTargetException) {
-					message = ((InvocationTargetException) e).getTargetException().getMessage();
-				}
-				
-				logger.error("error invoking method: " +message);
-			}
+			Result<?> result = invokeQSkosMethod(qSkosMethodName);
+			outputReport(result, measure.getId());
 		}
 	}	
 	
-	private void outputReport(Result<?> result) {
+	private void outputReport(Result<?> result, String measureId) {
 		System.out.println(result.getShortReport());
 		
-		if (extensiveReport) {
+		if (shouldOutputExtReport()) {
 			System.out.println(result.getExtensiveReport());
 		}
+		
+		if (shouldWriteGraphs()) {
+			try {
+				Collection<String> dotGraph = result.getAsDOT();
+				writeToFiles(dotGraph, measureId);
+			}
+			catch (IOException e) {
+				logger.error("error writing graph file for issue " +measureId, e);
+			}			
+		}
 	}
 	
-	private List<CriterionDescription> extractCriteria() {
-		List<CriterionDescription> criteria = new ArrayList<CriterionDescription>();
+	private boolean shouldOutputExtReport() {
+		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).extensiveReport;
+	}
+	
+	private boolean shouldWriteGraphs() {
+		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).writeGraphs;
+	}
+	
+	private void writeToFiles(Collection<String> dotGraphs, String fileName) 
+		throws IOException
+	{
+		int i = 0;
+		Iterator<String> it = dotGraphs.iterator();
+		while (it.hasNext()) {
+			String dotGraph = it.next();
+			FileWriter writer = new FileWriter(new File(fileName +"_"+ i +".dot"));	
+			writer.write(dotGraph);
+			writer.close();
+			i++;
+		}
+	}
+	
+	private List<MeasureDescription> extractMeasure() 
+		throws UnsupportedMeasureIdException
+	{
+		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
 		
-		if (selectedCriteria == null) {
-			criteria = Arrays.asList(CriterionDescription.values());
+		if (parsedCommand.selectedIds == null || parsedCommand.selectedIds.isEmpty()) {
+			measures = getAllMeasuresForCommand();
 		}
 		else {		
-			StringTokenizer tokenizer = new StringTokenizer(selectedCriteria, ",");
+			StringTokenizer tokenizer = new StringTokenizer(parsedCommand.selectedIds, ",");
 			while (tokenizer.hasMoreElements()) {
-				criteria.add(CriterionDescription.findById(tokenizer.nextToken()));
+				measures.add(MeasureDescription.findById(tokenizer.nextToken()));
 			}
 		}
 		
-		return criteria;
+		return measures;
 	}
 	
-	private Result<?> invokeQSkosMethod(String methodName) throws Exception {
-		for (Method method : qskos.getClass().getMethods()) {
-			if (method.getName().equals(methodName)) {
-				return (Result<?>) method.invoke(qskos);
+	private List<MeasureDescription> getAllMeasuresForCommand() {
+		List<MeasureDescription> measuresForCommand = new ArrayList<MeasureDescription>();
+		
+		for (MeasureDescription measureDesc : MeasureDescription.values()) {
+			String command = jc.getParsedCommand();
+			
+			if ((measureDesc.getType() == MeasureType.ISSUE && command.equals(CMD_NAME_ANALYZE)) ||
+				(measureDesc.getType() == MeasureType.STATISTICS && command.equals(CMD_NAME_SUMMARIZE))) 
+			{
+				measuresForCommand.add(measureDesc);
 			}
 		}
-		throw new NoSuchMethodException();
+		
+		return measuresForCommand;
+	}
+	
+	private Result<?> invokeQSkosMethod(String methodName) 
+		throws QSKOSMethodInvocationException 
+	{
+		try {
+			for (Method method : qskos.getClass().getMethods()) {
+				if (method.getName().equals(methodName)) {
+					return (Result<?>) method.invoke(qskos);
+				}
+			}
+		}
+		catch (Exception e) {
+			// fall through
+		}
+		throw new QSKOSMethodInvocationException(methodName);
 	}
 	
 }

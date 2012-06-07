@@ -1,10 +1,9 @@
 package at.ac.univie.mminf.qskos4j.util.graph;
 
-import java.io.Writer;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
@@ -24,19 +23,16 @@ public class GraphExporter {
 		this.graph = graph;
 	}
 	
-	public void exportSubGraph(List<Set<Resource>> vertexSubSets, Writer[] outputWriters) {
-		int i = 0;
+	public Collection<String> exportSubGraphs(Collection<Set<Resource>> vertexSubSets) {
+		Set<String> dotGraphs = new HashSet<String>();
+		
 		Iterator<Set<Resource>> it = vertexSubSets.iterator();
 		while (it.hasNext()) {
 			Graph<Resource, NamedEdge> componentGraph = getGraphForComponent(it.next());
-			new DOTExporter<Resource, NamedEdge>(
-				new IntegerNameProvider<Resource>(),
-				new URIVertexNameProvider(),
-				new StringEdgeNameProvider<NamedEdge>()
-			).export(outputWriters[i], (DirectedGraph<Resource, NamedEdge>) componentGraph);
-			i++;
+			dotGraphs.add(exportGraph(componentGraph));
 		}
-
+		
+		return dotGraphs;
 	}
 	
 	private Graph<Resource, NamedEdge> getGraphForComponent(Collection<Resource> component)
@@ -44,6 +40,18 @@ public class GraphExporter {
 		return new DirectedSubgraph<Resource, NamedEdge>(graph, new HashSet<Resource>(component), null);
 	}
 	
+	private String exportGraph(Graph<Resource, NamedEdge> componentGraph) {
+		StringWriter outputWriter = new StringWriter();
+		
+		new DOTExporter<Resource, NamedEdge>(
+			new IntegerNameProvider<Resource>(),
+			new URIVertexNameProvider(),
+			new StringEdgeNameProvider<NamedEdge>()
+		).export(outputWriter, (DirectedGraph<Resource, NamedEdge>) componentGraph);
+		
+		return outputWriter.toString();
+	}
+			
 	private class URIVertexNameProvider implements VertexNameProvider<Resource>
 	{
 		@Override
