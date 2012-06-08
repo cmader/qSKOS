@@ -27,30 +27,14 @@ import com.beust.jcommander.Parameters;
 public class VocEvaluate {
 	
 	public final static String CMD_NAME_ANALYZE = "analyze", 
-							   CMD_NAME_SUMMARIZE = "summarize",
-							   CMD_NAME_VERSION = "version";
+							   CMD_NAME_SUMMARIZE = "summarize";
 	
 	private static JCommander jc;
 	private Logger logger;
 	private CommandSummarize parsedCommand;
-
-	@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
-	private String authoritativeResourceIdentifier;
-
-	@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
-	private String selectedIds;
-
-	@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
-	private boolean enableSkosXl = false;
-
-	@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
-	private boolean quiet = false;
 	
-	
-	@Parameters(commandNames = CMD_NAME_VERSION, commandDescription = "Outputs version of the tool")
-	private class CommandVersion {
-		
-	}
+	@Parameter(names = {"-v", "--version"}, description = "Outputs version of the tool")
+	private boolean outputVersion = false;
 	
 	@Parameters(commandNames = CMD_NAME_SUMMARIZE, commandDescription = "Computes basic statistics of a given vocabulary")
 	private class CommandSummarize {
@@ -58,6 +42,18 @@ public class VocEvaluate {
 		@Parameter(description = "vocabularyfile")
 		private List<String> vocabFilenames;
 
+		@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
+		private String authoritativeResourceIdentifier;
+
+		@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
+		private String selectedIds;
+
+		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
+		private boolean enableSkosXl = false;
+
+		@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
+		private boolean quiet = false;
+		
 	}
 	
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
@@ -100,6 +96,21 @@ public class VocEvaluate {
 	public VocEvaluate(String[] args) 
 		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException  
 	{
+		parseCmdParams(args);
+		
+		if (outputVersion) {
+			System.out.println("Version: " +getClass().getPackage().getImplementationVersion());
+		}
+		
+		if (parsedCommand == null) {
+			jc.usage();
+		}
+		else {
+			listIssuesOrEvaluate();	
+		}		
+	}
+	
+	private void parseCmdParams(String[] args) {
 		jc = new JCommander(this);
 		
 		CommandAnalyze commandAnalyze = new CommandAnalyze();
@@ -107,37 +118,17 @@ public class VocEvaluate {
 		
 		jc.addCommand(commandAnalyze);
 		jc.addCommand(commandSummarize);		
-		jc.addCommand(new CommandVersion());
-		
-		switch (getParsedCommand(args)) {
-		case CMD_NAME_ANALYZE:
-			parsedCommand = commandAnalyze;
-			listIssuesOrEvaluate();
-			break;
-			
-		case CMD_NAME_SUMMARIZE:
-			parsedCommand = commandSummarize;
-			listIssuesOrEvaluate();
-			break;
-			
-		case CMD_NAME_VERSION:
-			System.out.println("version: " +getClass().getPackage().getImplementationVersion());
-			break;
-			
-		default:
-			jc.usage();
-		}
-	}
-	
-	private String getParsedCommand(String[] args) {
 		jc.parse(args);
 		
-		String parsedCommand = jc.getParsedCommand();
-		if (parsedCommand == null) {
-			return "";
+		String command = jc.getParsedCommand();
+		if (command != null) {			
+			if (command.equals(CMD_NAME_ANALYZE)) {
+				parsedCommand = commandAnalyze;
+			}
+			if (command.equals(CMD_NAME_SUMMARIZE)) {
+				parsedCommand = commandSummarize;
+			}
 		}
-		
-		return parsedCommand;
 	}
 		
 	private void listIssuesOrEvaluate() 
@@ -190,7 +181,7 @@ public class VocEvaluate {
 		setupLogging();
 
 		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
-		qskos.setAuthoritativeResourceIdentifier(authoritativeResourceIdentifier);
+		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
@@ -198,13 +189,13 @@ public class VocEvaluate {
 			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
 		}
 		
-		if (enableSkosXl) {
+		if (parsedCommand.enableSkosXl) {
 			qskos.enableSkosXlSupport();
 		}		
 	}
 	
 	private void setupLogging() {
-		if (quiet) {
+		if (parsedCommand.quiet) {
 			System.setProperty("root-level", "ERROR");	
 		}		
 		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
@@ -266,11 +257,11 @@ public class VocEvaluate {
 	{
 		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
 		
-		if (selectedIds == null || selectedIds.isEmpty()) {
+		if (parsedCommand.selectedIds == null || parsedCommand.selectedIds.isEmpty()) {
 			measures = getAllMeasuresForCommand();
 		}
 		else {		
-			StringTokenizer tokenizer = new StringTokenizer(selectedIds, ",");
+			StringTokenizer tokenizer = new StringTokenizer(parsedCommand.selectedIds, ",");
 			while (tokenizer.hasMoreElements()) {
 				measures.add(MeasureDescription.findById(tokenizer.nextToken()));
 			}
