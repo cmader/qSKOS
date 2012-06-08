@@ -26,29 +26,37 @@ import com.beust.jcommander.Parameters;
 
 public class VocEvaluate {
 	
-	public final static String CMD_NAME_ANALYZE = "analyze", CMD_NAME_SUMMARIZE = "summarize";
+	public final static String CMD_NAME_ANALYZE = "analyze", 
+							   CMD_NAME_SUMMARIZE = "summarize",
+							   CMD_NAME_VERSION = "version";
 	
 	private static JCommander jc;
 	private Logger logger;
 	private CommandSummarize parsedCommand;
+
+	@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
+	private String authoritativeResourceIdentifier;
+
+	@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
+	private String selectedIds;
+
+	@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
+	private boolean enableSkosXl = false;
+
+	@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
+	private boolean quiet = false;
+	
+	
+	@Parameters(commandNames = CMD_NAME_VERSION, commandDescription = "Outputs version of the tool")
+	private class CommandVersion {
+		
+	}
 	
 	@Parameters(commandNames = CMD_NAME_SUMMARIZE, commandDescription = "Computes basic statistics of a given vocabulary")
 	private class CommandSummarize {
 		
 		@Parameter(description = "vocabularyfile")
 		private List<String> vocabFilenames;
-			
-		@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
-		private String authoritativeResourceIdentifier;
-	
-		@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
-		private String selectedIds;
-
-		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
-		private boolean enableSkosXl = false;
-
-		@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
-		private boolean quiet = false;
 
 	}
 	
@@ -94,27 +102,42 @@ public class VocEvaluate {
 	{
 		jc = new JCommander(this);
 		
-		CommandAnalyze commandAnalyze = new CommandAnalyze(); 
-		jc.addCommand(commandAnalyze);
-		
+		CommandAnalyze commandAnalyze = new CommandAnalyze();
 		CommandSummarize commandSummarize = new CommandSummarize();
-		jc.addCommand(commandSummarize);
-
-		jc.parse(args);
-		String command = jc.getParsedCommand();
-		if (command == null) {
+		
+		jc.addCommand(commandAnalyze);
+		jc.addCommand(commandSummarize);		
+		jc.addCommand(new CommandVersion());
+		
+		switch (getParsedCommand(args)) {
+		case CMD_NAME_ANALYZE:
+			parsedCommand = commandAnalyze;
+			listIssuesOrEvaluate();
+			break;
+			
+		case CMD_NAME_SUMMARIZE:
+			parsedCommand = commandSummarize;
+			listIssuesOrEvaluate();
+			break;
+			
+		case CMD_NAME_VERSION:
+			System.out.println("version: " +getClass().getPackage().getImplementationVersion());
+			break;
+			
+		default:
 			jc.usage();
 		}
-		else {
-			if (command.equals(CMD_NAME_ANALYZE)) {
-				parsedCommand = commandAnalyze;
-			}
-			else if (command.equals(CMD_NAME_SUMMARIZE)) {
-				parsedCommand = commandSummarize;
-			}
-			
-			listIssuesOrEvaluate();
+	}
+	
+	private String getParsedCommand(String[] args) {
+		jc.parse(args);
+		
+		String parsedCommand = jc.getParsedCommand();
+		if (parsedCommand == null) {
+			return "";
 		}
+		
+		return parsedCommand;
 	}
 		
 	private void listIssuesOrEvaluate() 
@@ -167,7 +190,7 @@ public class VocEvaluate {
 		setupLogging();
 
 		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
-		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
+		qskos.setAuthoritativeResourceIdentifier(authoritativeResourceIdentifier);
 		qskos.setProgressMonitor(new LoggingProgressMonitor());
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
@@ -175,13 +198,13 @@ public class VocEvaluate {
 			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
 		}
 		
-		if (parsedCommand.enableSkosXl) {
+		if (enableSkosXl) {
 			qskos.enableSkosXlSupport();
 		}		
 	}
 	
 	private void setupLogging() {
-		if (parsedCommand.quiet) {
+		if (quiet) {
 			System.setProperty("root-level", "ERROR");	
 		}		
 		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
@@ -243,11 +266,11 @@ public class VocEvaluate {
 	{
 		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
 		
-		if (parsedCommand.selectedIds == null || parsedCommand.selectedIds.isEmpty()) {
+		if (selectedIds == null || selectedIds.isEmpty()) {
 			measures = getAllMeasuresForCommand();
 		}
 		else {		
-			StringTokenizer tokenizer = new StringTokenizer(parsedCommand.selectedIds, ",");
+			StringTokenizer tokenizer = new StringTokenizer(selectedIds, ",");
 			while (tokenizer.hasMoreElements()) {
 				measures.add(MeasureDescription.findById(tokenizer.nextToken()));
 			}
