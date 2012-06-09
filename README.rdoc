@@ -51,13 +51,9 @@ or
 <tt>java -jar evaluate.jar analyze</tt>
 
 Here's an excerpt from the output:
-<tt>
----
-ID: apc
+<tt>ID: apc
 Name: Ambiguously Preflabeled Concepts
-Description: Finds concepts with more then one prefLabel per language
----
-</tt>
+Description: Finds concepts with more then one prefLabel per language</tt>
 
 Every property/issue is identified by an ID string, has a name and a description. For more detailed information on the quality issues see the +qSKOS+ {wiki page}[https://github.com/cmader/qSKOS/wiki/Quality-Issues].
 
@@ -83,10 +79,21 @@ The command above triggers analysis of the "Label Conflicts" and "Ambiguously Pr
 === FAQ
 
 * What are "authoritative concepts"?
+Every concept in a SKOS vocabulary is a resource and should be identified by an URI to be referenced from other vocabularies on the Web. However, when using qSKOS, for some issues it is required to distinguish between concepts that are originally specified (authoritative) in the vocabulary that's about to be analyzed, and concepts (implictly or explicitly) defined in other vocabularies somewhere on the Web. 
+
+  qSKOS is to some extent able to perform this distinction by examining the host part of the concept's URIs. Depending on the vocabulary's structure in some cases it might be needed to pass an "Authoritative resource identifier" (command line argument <tt>-a</tt>) to qSKOS. This is a substring of an URI that identifies a concept as authoritative.
 
 * How can I write the report to a file?
+Report output is performed directly on the console (+stdout+). If you want them to be contained in text files, you can use the output redirection operator (<tt>></tt>) of your operating system's command line shell. Here's an example:
+
+  <tt>java -jar evaluate.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report. 
 
 * What version of qSKOS do I use?
+Simply pass the command line switch <tt>-v</tt> like this:
+
+<tt>java -jar evaluate.jar -v</tt>
+
+The version will be printed in the first line of the output, directly before the usage information.
 
 == Using the qSKOS API
 
