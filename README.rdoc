@@ -51,17 +51,34 @@ or
 <tt>java -jar evaluate.jar analyze</tt>
 
 Here's an excerpt from the output:
+<tt>
+---
+ID: apc
+Name: Ambiguously Preflabeled Concepts
+Description: Finds concepts with more then one prefLabel per language
+---
+</tt>
+
+Every property/issue is identified by an ID string, has a name and a description. For more detailed information on the quality issues see the +qSKOS+ {wiki page}[https://github.com/cmader/qSKOS/wiki/Quality-Issues].
 
 4) Testing for *specific* issues
 ---
+Specific issues can be tested by passing the <tt>-c</tt> parameter followed by one or more (comma-separated) issue IDs (see example above). Keep in mind, that the <tt>-c</tt> parameter has to be placed between between the +analyze+ command and the vocabulary file like this:
+
 <tt>java -jar evaluate.jar analyze -c lc,apc ipsv_skos.rdf</tt>
+
+The command above triggers analysis of the "Label Conflicts" and "Ambiguously Preflabeled Concepts" issues.
 
 5) Useful command line switches
 ---
--e
 
--q
+* In most cases it is not sufficient to know about the presence and number of quality issues but also which resource cause these potential problems. This can be reported by using the <tt>-e</tt> (extensive) command line switch.
 
+  For example, the command <tt>java -jar evaluate.jar analyze -c usr ipsv_skos.rdf</tt> reports one "Undefined SKOS Resources". Issuing the command <tt>java -jar evaluate.jar analyze -e -c usr ipsv_skos.rdf</tt> (mind the additional <tt>-e</tt> parameter after the +analyze+ command) reports the resource (<tt>http://www.w3.org/2004/02/skos/core#prefSymbol</tt>) causing a potential problem.
+
+* Output of the progress percentage is useful for interactive use of +qSKOS+. However it can be distracting when concise quality issue reports should be generated. The <tt>-q</tt> (quiet) command line switch suppresses of any additional information at processing time.
+
+  The command <tt>java -jar evaluate.jar summarize -c ac ipsv_skos.rdf</tt> reports all authoritative conceps in the vocabulary. However, it also produces progress output and information about what concept URIs are considered authoritative. Using <tt>java -jar evaluate.jar summarize -q -c ac ipsv_skos.rdf</tt> (mind the additional <tt>-q</tt> parameter) only outputs the report results.
 
 === FAQ
 
