@@ -2,20 +2,74 @@
 
 qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API.
 
-== Building qSKOS
+== Requirements
 
 * Verify that Java v.1.6 or greater is installed: <tt>javac -version</tt>
 * Make sure Maven v.3.0 or greater is installed: <tt>mvn -v</tt>
+
+== Building qSKOS
+
 * Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
-* Build and package the qSKOS jar files: <tt>mvn clean package</tt>, wait for tests and build to complete
-* Two jar files are now located in the +target/+ directory:
-  * <tt>qSKOS-[version].one-jar.jar</tt>: the _executable_ jar file containing all dependencies
-  * <tt>qSKOS-[version].jar</tt>: the qSKOS library to include your application's classpath
+* Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>, wait for tests and build to complete.
+* Two jar files are now located in the +qSKOS+ directory:
+  * <tt>evaluate.jar</tt>: The _executable_ jar file that can directly be used for vocabulary evaluation
+  * <tt>qSKOS-[version].jar</tt>: The library to integrate qSKOS' functionality into other applications
 
 == Using the qSKOS command line tool
 
-* Run the tool using <tt>java -jar qSKOS-[version].one-jar.jar</tt>
-* Follow the usage instructions
+=== General Usage
+
+* Run the tool using <tt>java -jar evaluate.jar</tt>
+* A synopsis on the application's parameters is displayed.
+
+=== Examples
+
+The following examples demonstrate typical +qSKOS+ use cases. For demonstration purposes we use the +IPSV+ vocabulary available from the {qSKOS-data}[https://github.com/cmader/qSKOS-data] repository: {Download IPSV vocabulary}[https://github.com/cmader/qSKOS-data/raw/master/IPSV/ipsv_skos.rdf.bz2]. In the examples below we assume that the vocabulary file is placed in the same directory than +evaluate.jar+ file.
+
+1) Retrieving basic vocabulary statistics
+---
+Basic statistical properties (e.g., number of concepts, semantic relations or concept schemes) can be retrieved by issuing the command:
+
+<tt>java -jar evaluate.jar summarize ipsv_skos.rdf</tt>
+
+2) Finding quality issues
+---
+To perform a complete analysis of all quality issues, use the following command:
+
+<tt>java -jar evaluate.jar analyze ipsv_skos.rdf</tt>
+
+Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially in/outlink checking can take up to a couple of hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done.
+
+3) Output a list of *supported* statistical properties and quality issues
+---
+By starting the evaluation using either the +summarize+ or +analyze+ command and omitting the vocabulary filename, you get an overview about the supported statistical properties and quality issues:
+
+<tt>java -jar evaluate.jar summarize</tt>
+
+or
+
+<tt>java -jar evaluate.jar analyze</tt>
+
+Here's an excerpt from the output:
+
+4) Testing for *specific* issues
+---
+<tt>java -jar evaluate.jar analyze -c lc,apc ipsv_skos.rdf</tt>
+
+5) Useful command line switches
+---
+-e
+
+-q
+
+
+=== FAQ
+
+* What are "authoritative concepts"?
+
+* How can I write the report to a file?
+
+* What version of qSKOS do I use?
 
 == Using the qSKOS API
 
@@ -28,6 +82,8 @@ The +QSkos+ class serves as facade for calculating all criteria. For each criter
   // the fun part
   qskos.findComponents();
   qskos.findValuelessAssociativeRelations();
+
+== Citation
 
 == Contributors
 
