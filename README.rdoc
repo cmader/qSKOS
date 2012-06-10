@@ -36,7 +36,7 @@ To perform a complete analysis of all quality issues, use the following command:
 
 <tt>java -jar evaluate.jar analyze ipsv_skos.rdf</tt>
 
-Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially in/outlink checking can take up to a couple of hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done.
+Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially in/outlink checking sometimes can take hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done.
 
 ==== 3) Output a list of *supported* statistical properties and quality issues
 By starting the evaluation using either the +summarize+ or +analyze+ command and omitting the vocabulary filename, you get an overview about the supported statistical properties and quality issues:
@@ -48,9 +48,12 @@ or
 <tt>java -jar evaluate.jar analyze</tt>
 
 Here's an excerpt from the output:
-<tt>ID: apc
-Name: Ambiguously Preflabeled Concepts
-Description: Finds concepts with more then one prefLabel per language</tt>
+
+  <tt>
+  ID: apc
+  Name: Ambiguously Preflabeled Concepts
+  Description: Finds concepts with more then one prefLabel per language
+  </tt>
 
 Every property/issue is identified by an ID string, has a name and a description. For more detailed information on the quality issues see the +qSKOS+ {wiki page}[https://github.com/cmader/qSKOS/wiki/Quality-Issues].
 
