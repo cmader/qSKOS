@@ -72,19 +72,19 @@ Output of the progress percentage is useful for interactive use of +qSKOS+. Howe
 
 The command <tt>java -jar evaluate.jar summarize -c ac ipsv_skos.rdf</tt> reports all authoritative conceps in the vocabulary. However, it also produces progress output and information about what concept URIs are considered authoritative. Using <tt>java -jar evaluate.jar summarize -q -c ac ipsv_skos.rdf</tt> (mind the additional <tt>-q</tt> parameter) only outputs the report results.
 
-=== FAQ
+== FAQ
 
-===== What are "authoritative concepts"?
+=== What are "Authoritative Concepts"?
 Every concept in a SKOS vocabulary is a resource and should be identified by an URI to be referenced from other vocabularies on the Web. However, when using qSKOS, for some issues it is required to distinguish between concepts that are originally specified (authoritative) in the vocabulary that's about to be analyzed, and concepts (implictly or explicitly) defined in other vocabularies somewhere on the Web. 
 
 qSKOS is to some extent able to perform this distinction by examining the host part of the concept's URIs. Depending on the vocabulary's structure in some cases it might be needed to pass an "Authoritative resource identifier" (command line argument <tt>-a</tt>) to qSKOS. This is a substring of an URI that identifies a concept as authoritative.
 
-===== How can I write the report to a file?
+=== How can I write the report to a file?
 Report output is performed directly on the console (+stdout+). If you want them to be contained in text files, you can use the output redirection operator (<tt>></tt>) of your operating system's command line shell. Here's an example:
 
 <tt>java -jar evaluate.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report. 
 
-===== What version of qSKOS do I use?
+=== What version of qSKOS do I use?
 Simply pass the command line switch <tt>-v</tt> like this:
 
 <tt>java -jar evaluate.jar -v</tt>
