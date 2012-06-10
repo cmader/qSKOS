@@ -10,9 +10,9 @@ qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wik
 == Building qSKOS
 
 * Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
-* Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>, wait for tests and build to complete.
+* Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>. Wait for tests and build to complete.
 * Two jar files are now located in the +qSKOS+ directory:
-  * <tt>evaluate.jar</tt>: The _executable_ jar file that can directly be used for vocabulary evaluation
+  * <tt>evaluate.jar</tt>: The *executable* jar file that can directly be used for vocabulary evaluation
   * <tt>qSKOS-[version].jar</tt>: The library to integrate qSKOS' functionality into other applications
 
 == Using the qSKOS command line tool
@@ -24,10 +24,9 @@ qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wik
 
 === Examples
 
-The following examples demonstrate typical +qSKOS+ use cases. For demonstration purposes we use the +IPSV+ vocabulary available from the {qSKOS-data}[https://github.com/cmader/qSKOS-data] repository: {Download IPSV vocabulary}[https://github.com/cmader/qSKOS-data/raw/master/IPSV/ipsv_skos.rdf.bz2]. In the examples below we assume that the vocabulary file is placed in the same directory than +evaluate.jar+ file.
+The following examples demonstrate typical qSKOS use cases. For demonstration purposes we use the IPSV vocabulary available from the {qSKOS-data}[https://github.com/cmader/qSKOS-data] repository: {Download IPSV vocabulary}[https://github.com/cmader/qSKOS-data/raw/master/IPSV/ipsv_skos.rdf.bz2]. In the examples below we assume that the vocabulary file is placed in the same directory than the +evaluate.jar+ file.
 
-1) Retrieving basic vocabulary statistics
----
+==== 1) Retrieving basic vocabulary statistics
 Basic statistical properties (e.g., number of concepts, semantic relations or concept schemes) can be retrieved by issuing the command:
 
 <tt>java -jar evaluate.jar summarize ipsv_skos.rdf</tt>
