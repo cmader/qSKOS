@@ -31,16 +31,14 @@ Basic statistical properties (e.g., number of concepts, semantic relations or co
 
 <tt>java -jar evaluate.jar summarize ipsv_skos.rdf</tt>
 
-2) Finding quality issues
----
+==== 2) Finding quality issues
 To perform a complete analysis of all quality issues, use the following command:
 
 <tt>java -jar evaluate.jar analyze ipsv_skos.rdf</tt>
 
 Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially in/outlink checking can take up to a couple of hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done.
 
-3) Output a list of *supported* statistical properties and quality issues
----
+==== 3) Output a list of *supported* statistical properties and quality issues
 By starting the evaluation using either the +summarize+ or +analyze+ command and omitting the vocabulary filename, you get an overview about the supported statistical properties and quality issues:
 
 <tt>java -jar evaluate.jar summarize</tt>
@@ -56,17 +54,14 @@ Description: Finds concepts with more then one prefLabel per language</tt>
 
 Every property/issue is identified by an ID string, has a name and a description. For more detailed information on the quality issues see the +qSKOS+ {wiki page}[https://github.com/cmader/qSKOS/wiki/Quality-Issues].
 
-4) Testing for *specific* issues
----
+==== 4) Testing for *specific* issues
 Specific issues can be tested by passing the <tt>-c</tt> parameter followed by one or more (comma-separated) issue IDs (see example above). Keep in mind, that the <tt>-c</tt> parameter has to be placed between between the +analyze+ command and the vocabulary file like this:
 
 <tt>java -jar evaluate.jar analyze -c lc,apc ipsv_skos.rdf</tt>
 
 The command above triggers analysis of the "Label Conflicts" and "Ambiguously Preflabeled Concepts" issues.
 
-5) Useful command line switches
----
-
+==== 5) Useful command line switches
 * In most cases it is not sufficient to know about the presence and number of quality issues but also which resource cause these potential problems. This can be reported by using the <tt>-e</tt> (extensive) command line switch.
 
   For example, the command <tt>java -jar evaluate.jar analyze -c usr ipsv_skos.rdf</tt> reports one "Undefined SKOS Resources". Issuing the command <tt>java -jar evaluate.jar analyze -e -c usr ipsv_skos.rdf</tt> (mind the additional <tt>-e</tt> parameter after the +analyze+ command) reports the resource (<tt>http://www.w3.org/2004/02/skos/core#prefSymbol</tt>) causing a potential problem.
