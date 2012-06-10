@@ -107,7 +107,8 @@ The +QSkos+ class serves as facade for calculating all criteria. For each criter
   qskos.findComponents();
   qskos.findValuelessAssociativeRelations();
 
-== Citation
+== Publications
+A subset of the quality issues qSKOS supports (including an analysis of several existing vocabularies) have been published in our paper {Finding Quality Issues in SKOS Vocabularies}[http://arxiv.org/abs/1206.1339v1].
 
 == Contributors
 
