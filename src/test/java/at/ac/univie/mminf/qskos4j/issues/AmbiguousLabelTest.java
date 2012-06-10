@@ -24,7 +24,7 @@ public class AmbiguousLabelTest extends IssueTestCase {
 	
 	@Test
 	public void testUniquePrefLabels() throws OpenRDFException {
-		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotUniquePrefLabels().getData();
+		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findAmbiguouslyPreflabeledConcepts().getData();
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA"));
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA2"));
@@ -35,7 +35,7 @@ public class AmbiguousLabelTest extends IssueTestCase {
 	
 	@Test 
 	public void testDisjointLabels() throws OpenRDFException {
-		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findNotDisjointLabels().getData();
+		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findDisjointLabelsViolations().getData();
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptD"));
 		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptE"));
