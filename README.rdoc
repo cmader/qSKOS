@@ -1,18 +1,21 @@
 = qSKOS
 
-qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API.
+qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API. For release information please see the {changelog}{https://github.com/cmader/qSKOS/blob/devel/CHANGELOG.rdoc}.
 
-== Changelog
+== Installation
 
-Release 0.9
-* initial release
+=== Download from
 
-== Requirements
+Binary releases can be downloaded directly from the repository's {download section}[https://github.com/cmader/qSKOS/downloads]. If you cannot or do not want to use {git}[http://git-scm.com/], you can get the packaged source as {zip}[https://github.com/cmader/qSKOS/zipball/master] or {gzipped tar}[https://github.com/cmader/qSKOS/tarball/master] file.
+
+=== Build from source
+
+==== Requirements
 
 * Verify that Java v.1.6 or greater is installed: <tt>javac -version</tt>
 * Make sure Maven v.3.0 or greater is installed: <tt>mvn -v</tt>
 
-== Building qSKOS
+==== Building qSKOS
 
 * Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
 * Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>. Wait for tests and build to complete.
