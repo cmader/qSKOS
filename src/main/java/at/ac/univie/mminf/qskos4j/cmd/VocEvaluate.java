@@ -181,12 +181,12 @@ public class VocEvaluate {
 		setupLogging();
 
 		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
-		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);		
+		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
+		qskos.setProgressMonitor(new ConsoleProgressMonitor());
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
 		if (parsedCommand instanceof CommandAnalyze) {
 			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
-			qskos.setProgressMonitor(new LoggingProgressMonitor());
 		}
 		
 		if (parsedCommand.enableSkosXl) {

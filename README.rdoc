@@ -72,10 +72,10 @@ In most cases it is not sufficient to know about the presence and number of qual
 
 For example, the command <tt>java -jar qSKOS-cmd.jar analyze -c usr ipsv_skos.rdf</tt> reports one "Undefined SKOS Resources". Issuing the command <tt>java -jar qSKOS-cmd.jar analyze -e -c usr ipsv_skos.rdf</tt> (mind the additional <tt>-e</tt> parameter after the +analyze+ command) reports the resource (<tt>http://www.w3.org/2004/02/skos/core#prefSymbol</tt>) causing a potential problem.
 
-==== 6) Suppressing progress output
-Output of the progress percentage is useful for interactive use of +qSKOS+. However it can be distracting when concise quality issue reports should be generated. The <tt>-q</tt> (quiet) command line switch suppresses of any additional information at processing time.
+==== 6) Suppressing informative output
+Some issues provide additional informative output about their processing steps which you can observe on the console as those lines containing the text <tt>INFO</tt>. This is useful for interactive use of qSKOS but can be distracting when concise quality issue reports should be generated. The <tt>-q</tt> (quiet) command line switch suppresses output of any additional information at processing time.
 
-The command <tt>java -jar qSKOS-cmd.jar summarize -c ac ipsv_skos.rdf</tt> reports all authoritative conceps in the vocabulary. However, it also produces progress output and information about what concept URIs are considered authoritative. Using <tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf</tt> (mind the additional <tt>-q</tt> parameter) only outputs the report results.
+The command <tt>java -jar qSKOS-cmd.jar summarize -c ac ipsv_skos.rdf</tt> reports all authoritative conceps in the vocabulary. However, it also produces additional informative output regarding what concept URIs are considered authoritative. Using <tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf</tt> (mind the additional <tt>-q</tt> parameter) only outputs the report results.
 
 == FAQ
 
