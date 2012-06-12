@@ -120,7 +120,8 @@ A subset of the quality issues qSKOS supports (including an analysis of several 
          address = {Germany},
             year = {2012},
              url = {http://arxiv.org/pdf/1206.1339v1},
-        abstract = {The Simple Knowledge Organization System (SKOS) is a standard model for controlled vocabularies on the Web. However, SKOS   vocabularies often differ in terms of quality, which reduces their applicability across system boundaries. Here we investigate how we can support taxonomists in improving SKOS vocabularies by pointing out quality issues that go beyond the integrity constraints defined in the SKOS specification. We identified potential quality issues and formalized them into computable quality checking functions that can find affected resources in a given SKOS vocabulary. We implemented these functions in the qSKOS quality assessment tool, analyzed 15 existing vocabularies, and found possible quality issues in all of them.}}
+        abstract = {The Simple Knowledge Organization System (SKOS) is a standard model for controlled vocabularies on the Web. However, SKOS   vocabularies often differ in terms of quality, which reduces their applicability across system boundaries. Here we investigate how we can support taxonomists in improving SKOS vocabularies by pointing out quality issues that go beyond the integrity constraints defined in the SKOS specification. We identified potential quality issues and formalized them into computable quality checking functions that can find affected resources in a given SKOS vocabulary. We implemented these functions in the qSKOS quality assessment tool, analyzed 15 existing vocabularies, and found possible quality issues in all of them.}
+  }
 
 == Contributors
 
