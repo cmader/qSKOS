@@ -118,7 +118,7 @@
 			<version>1.4.4</version>
 			<configuration>
 				<outputDirectory>${project.build.directory}/..</outputDirectory>
-				<filename>evaluate.jar</filename>
+				<filename>qSKOS-cmd.jar</filename>
 			</configuration>
 			
 			<executions>

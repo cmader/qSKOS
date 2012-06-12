@@ -2,6 +2,11 @@
 
 qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API.
 
+== Changelog
+
+Release 0.9
+  initial release
+
 == Requirements
 
 * Verify that Java v.1.6 or greater is installed: <tt>javac -version</tt>
@@ -12,40 +17,40 @@ qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wik
 * Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
 * Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>. Wait for tests and build to complete.
 * Two jar files are now located in the +qSKOS+ directory:
-  * <tt>evaluate.jar</tt>: The *executable* jar file that can directly be used for vocabulary evaluation
+  * <tt>qSKOS-cmd.jar</tt>: The *executable* jar file that can directly be used for vocabulary evaluation
   * <tt>qSKOS-[version].jar</tt>: The library to integrate qSKOS' functionality into other applications
 
 == Using the qSKOS command line tool
 
 === General Usage
 
-* Run the tool using <tt>java -jar evaluate.jar</tt>
+* Run the tool using <tt>java -jar qSKOS-cmd.jar</tt>
 * A synopsis on the application's parameters is displayed.
 
 === Examples
 
-The following examples demonstrate typical qSKOS use cases. For demonstration purposes we use the IPSV vocabulary available from the {qSKOS-data}[https://github.com/cmader/qSKOS-data] repository: {Download IPSV vocabulary}[https://github.com/cmader/qSKOS-data/raw/master/IPSV/ipsv_skos.rdf.bz2]. In the examples below we assume that the vocabulary file is placed in the same directory than the +evaluate.jar+ file.
+The following examples demonstrate typical qSKOS use cases. For demonstration purposes we use the IPSV vocabulary available from the {qSKOS-data}[https://github.com/cmader/qSKOS-data] repository: {Download IPSV vocabulary}[https://github.com/cmader/qSKOS-data/raw/master/IPSV/ipsv_skos.rdf.bz2]. In the examples below we assume that the vocabulary file is placed in the same directory than the +qSKOS-cmd.jar+ file.
 
 ==== 1) Retrieving basic vocabulary statistics
 Basic statistical properties (e.g., number of concepts, semantic relations or concept schemes) can be retrieved by issuing the command:
 
-<tt>java -jar evaluate.jar summarize ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar summarize ipsv_skos.rdf</tt>
 
 ==== 2) Finding quality issues
 To perform a complete analysis of all quality issues, use the following command:
 
-<tt>java -jar evaluate.jar analyze ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze ipsv_skos.rdf</tt>
 
 Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially in/outlink checking sometimes can take hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done.
 
 ==== 3) Output a list of *supported* statistical properties and quality issues
 By starting the evaluation using either the +summarize+ or +analyze+ command and omitting the vocabulary filename, you get an overview about the supported statistical properties and quality issues:
 
-<tt>java -jar evaluate.jar summarize</tt>
+<tt>java -jar qSKOS-cmd.jar summarize</tt>
 
 or
 
-<tt>java -jar evaluate.jar analyze</tt>
+<tt>java -jar qSKOS-cmd.jar analyze</tt>
 
 Here's an excerpt from the output:
 
@@ -55,22 +60,22 @@ Here's an excerpt from the output:
 
 Every property/issue is identified by an ID string, has a name and a description. For more detailed information on the quality issues see the qSKOS {wiki page}[https://github.com/cmader/qSKOS/wiki/Quality-Issues].
 
-==== 4) Testing for specific issues
+==== 4) Testing for a specific issue or a subset of issues
 Specific issues can be tested by passing the <tt>-c</tt> parameter followed by one or more (comma-separated) issue IDs (see example above). Keep in mind, that the <tt>-c</tt> parameter has to be placed between between the +analyze+ command and the vocabulary file like this:
 
-<tt>java -jar evaluate.jar analyze -c lc,apc ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze -c lc,apc ipsv_skos.rdf</tt>
 
 The command above triggers analysis of the "Label Conflicts" and "Ambiguously Preflabeled Concepts" issues.
 
 ==== 5) Producing more detailed reports
 In most cases it is not sufficient to know about the presence and number of quality issues but also which resource cause these potential problems. This can be reported by using the <tt>-e</tt> (extensive) command line switch.
 
-For example, the command <tt>java -jar evaluate.jar analyze -c usr ipsv_skos.rdf</tt> reports one "Undefined SKOS Resources". Issuing the command <tt>java -jar evaluate.jar analyze -e -c usr ipsv_skos.rdf</tt> (mind the additional <tt>-e</tt> parameter after the +analyze+ command) reports the resource (<tt>http://www.w3.org/2004/02/skos/core#prefSymbol</tt>) causing a potential problem.
+For example, the command <tt>java -jar qSKOS-cmd.jar analyze -c usr ipsv_skos.rdf</tt> reports one "Undefined SKOS Resources". Issuing the command <tt>java -jar qSKOS-cmd.jar analyze -e -c usr ipsv_skos.rdf</tt> (mind the additional <tt>-e</tt> parameter after the +analyze+ command) reports the resource (<tt>http://www.w3.org/2004/02/skos/core#prefSymbol</tt>) causing a potential problem.
 
 ==== 6) Suppressing progress output
 Output of the progress percentage is useful for interactive use of +qSKOS+. However it can be distracting when concise quality issue reports should be generated. The <tt>-q</tt> (quiet) command line switch suppresses of any additional information at processing time.
 
-The command <tt>java -jar evaluate.jar summarize -c ac ipsv_skos.rdf</tt> reports all authoritative conceps in the vocabulary. However, it also produces progress output and information about what concept URIs are considered authoritative. Using <tt>java -jar evaluate.jar summarize -q -c ac ipsv_skos.rdf</tt> (mind the additional <tt>-q</tt> parameter) only outputs the report results.
+The command <tt>java -jar qSKOS-cmd.jar summarize -c ac ipsv_skos.rdf</tt> reports all authoritative conceps in the vocabulary. However, it also produces progress output and information about what concept URIs are considered authoritative. Using <tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf</tt> (mind the additional <tt>-q</tt> parameter) only outputs the report results.
 
 == FAQ
 
@@ -82,12 +87,12 @@ qSKOS is to some extent able to perform this distinction by examining the host p
 === How can I write the report to a file?
 Report output is performed directly on the console (+stdout+). If you want them to be contained in text files, you can use the output redirection operator (<tt>></tt>) of your operating system's command line shell. Here's an example:
 
-<tt>java -jar evaluate.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report. 
+<tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report. 
 
 === What version of qSKOS do I use?
 Simply pass the command line switch <tt>-v</tt> like this:
 
-<tt>java -jar evaluate.jar -v</tt>
+<tt>java -jar qSKOS-cmd.jar -v</tt>
 
 The version will be printed in the first line of the output, directly before the usage information.
 
@@ -106,10 +111,25 @@ The +QSkos+ class serves as facade for calculating all criteria. For each criter
 == Publications
 A subset of the quality issues qSKOS supports (including an analysis of several existing vocabularies) have been published in our paper {Finding Quality Issues in SKOS Vocabularies}[http://arxiv.org/abs/1206.1339v1].
 
+  <tt>
+  @inproceedings{cs3444,
+       booktitle = {TPDL 2012 Therory and Practice of Digital Libraries},
+           month = {May},
+           title = {Finding Quality Issues in SKOS Vocabularies},
+          author = {Christian Mader and Bernhard Haslhofer and Antoine Isaac},
+         address = {Germany},
+            year = {2012},
+             url = {http://arxiv.org/pdf/1206.1339v1},
+        abstract = {The Simple Knowledge Organization System (SKOS) is a standard model for controlled vocabularies on the Web. However, SKOS   vocabularies often differ in terms of quality, which reduces their applicability across system boundaries. Here we investigate how we can support taxonomists in improving SKOS vocabularies by pointing out quality issues that go beyond the integrity constraints defined in the SKOS specification. We identified potential quality issues and formalized them into computable quality checking functions that can find affected resources in a given SKOS vocabulary. We implemented these functions in the
+qSKOS quality assessment tool, analyzed 15 existing vocabularies, and found possible quality issues in all of them.}
+}
+	</tt>
+
 == Contributors
 
 * Christian Mader ({@cmader}[https://github.com/cmader])
 * Bernhard Haslhofer ({@behas}[https://github.com/behas])
+* Antoine Isaac {@aisaac}[https://github.com/aisaac])
 
 === How can I contribute?
 
