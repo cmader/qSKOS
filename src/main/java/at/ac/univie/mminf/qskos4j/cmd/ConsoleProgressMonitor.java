@@ -26,7 +26,7 @@ public class ConsoleProgressMonitor implements IProgressMonitor {
 	}
 	
 	private void clearConsoleBar() {
-		System.out.print(produceBlanks(PROG_BAR_WIDTH + 5) + "\r");		
+		System.out.print(produceBlanks(PROG_BAR_WIDTH + 10) + "\r");		
 	}
 	
 	private String createBar(int percentage) {

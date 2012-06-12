@@ -46,4 +46,5 @@ public class IssueInvocationTest {
 		URL conceptsUrl = getClass().getResource("/nocontent.rdf");
 		return conceptsUrl.getFile();
 	}
+	
 }

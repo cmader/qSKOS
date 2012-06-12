@@ -42,9 +42,9 @@ Basic statistical properties (e.g., number of concepts, semantic relations or co
 ==== 2) Finding quality issues
 To perform a complete analysis of all quality issues, use the following command:
 
-<tt>java -jar qSKOS-cmd.jar analyze ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze -dc mil,mol,bl ipsv_skos.rdf</tt>
 
-Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially in/outlink checking sometimes can take hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done.
+Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially link checking sometimes can take hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done. In the example above, checking for missing inlinks, missing outlinks and broken links has been disabled to speed up the checking process (using the parameter <tt>-dc mil,mol,bl</tt>).
 
 ==== 3) Output a list of *supported* statistical properties and quality issues
 By starting the evaluation using either the +summarize+ or +analyze+ command and omitting the vocabulary filename, you get an overview about the supported statistical properties and quality issues:
@@ -68,7 +68,11 @@ Specific issues can be tested by passing the <tt>-c</tt> parameter followed by o
 
 <tt>java -jar qSKOS-cmd.jar analyze -c lc,apc ipsv_skos.rdf</tt>
 
-The command above triggers analysis of the "Label Conflicts" and "Ambiguously Preflabeled Concepts" issues.
+The command above triggers analysis of the "Label Conflicts" and "Ambiguously Preflabeled Concepts" issues. In a very similar way it is possible to explicitly *exclude* issues from testing. For example, the command
+
+<tt>java -jar qSKOS-cmd.jar analyze -dc mil ipsv_skos.rdf</tt>
+
+checks for all issues except "Missing In-Links".
 
 ==== 5) Producing more detailed reports
 In most cases it is not sufficient to know about the presence and number of quality issues but also which resource cause these potential problems. This can be reported by using the <tt>-e</tt> (extensive) command line switch.

@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -45,9 +46,12 @@ public class VocEvaluate {
 		@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
 		private String authoritativeResourceIdentifier;
 
-		@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
+		@Parameter(names = {"-c", "--check"}, description = "Comma-separated list of issue/statistics IDs to check for")
 		private String selectedIds;
-
+		
+		@Parameter(names = {"-dc", "--dont-check"}, description = "Comma-separated list of issue/statistics IDs NOT to check for")
+		private String excludedIds;
+		
 		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
 		private boolean enableSkosXl = false;
 
@@ -255,16 +259,35 @@ public class VocEvaluate {
 	private List<MeasureDescription> extractMeasure() 
 		throws UnsupportedMeasureIdException
 	{
-		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
+		List<MeasureDescription> resultingMeasures;
 		
-		if (parsedCommand.selectedIds == null || parsedCommand.selectedIds.isEmpty()) {
-			measures = getAllMeasuresForCommand();
+		List<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
+		List<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
+
+		if (!selectedMeasures.isEmpty()) {
+			resultingMeasures = selectedMeasures;
 		}
-		else {		
-			StringTokenizer tokenizer = new StringTokenizer(parsedCommand.selectedIds, ",");
-			while (tokenizer.hasMoreElements()) {
-				measures.add(MeasureDescription.findById(tokenizer.nextToken()));
-			}
+		else if (!excludedMeasures.isEmpty()) {
+			resultingMeasures = getAllMeasuresForCommand();
+			resultingMeasures.removeAll(excludedMeasures);
+		}
+		else {
+			resultingMeasures = getAllMeasuresForCommand();
+		}
+		
+		return resultingMeasures;
+	}
+	
+	private List<MeasureDescription> getMeasures(String ids) throws UnsupportedMeasureIdException
+	{
+		if (ids == null || ids.isEmpty()) {
+			return Collections.emptyList();
+		}
+		
+		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
+		StringTokenizer tokenizer = new StringTokenizer(ids, ",");
+		while (tokenizer.hasMoreElements()) {
+			measures.add(MeasureDescription.findById(tokenizer.nextToken()));
 		}
 		
 		return measures;
