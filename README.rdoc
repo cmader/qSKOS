@@ -1,12 +1,12 @@
 = qSKOS
 
-qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API. For release information please see the {changelog}{https://github.com/cmader/qSKOS/blob/devel/CHANGELOG.rdoc}.
+qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API. For release information please see the {changelog}[https://github.com/cmader/qSKOS/blob/devel/CHANGELOG.rdoc].
 
 == Installation
 
-=== Download from
+=== Download
 
-Binary releases can be downloaded directly from the repository's {download section}[https://github.com/cmader/qSKOS/downloads]. If you cannot or do not want to use {git}[http://git-scm.com/], you can get the packaged source as {zip}[https://github.com/cmader/qSKOS/zipball/master] or {gzipped tar}[https://github.com/cmader/qSKOS/tarball/master] file.
+Binary releases can be downloaded directly from this repository's {download section}[https://github.com/cmader/qSKOS/downloads]. If you cannot or do not want to use {git}[http://git-scm.com/], you can get the packaged source as {zip}[https://github.com/cmader/qSKOS/zipball/master] or {gzipped tar}[https://github.com/cmader/qSKOS/tarball/master] file.
 
 === Build from source
 
@@ -17,7 +17,7 @@ Binary releases can be downloaded directly from the repository's {download secti
 
 ==== Building qSKOS
 
-* Clone the project: <tt>git clone git@github.com:cmader/qSKOS.git</tt>
+* Clone the project (<tt>git clone git@github.com:cmader/qSKOS.git</tt>) or download the source code as described above.
 * Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>. Wait for tests and build to complete.
 * Two jar files are now located in the +qSKOS+ directory:
   * <tt>qSKOS-cmd.jar</tt>: The *executable* jar file that can directly be used for vocabulary evaluation
