@@ -1,5 +1,5 @@
 = Changelog
 
 == Release 0.9, June 2012
-* initial release
+* first "official" release (announced at public-esw-thes-request@w3.org)
 
