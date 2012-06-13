@@ -24,7 +24,7 @@ public class OmittedInverseRelationsTest extends IssueTestCase {
 	
 	@Test
 	public void testMissingInverseRelationsCount() throws OpenRDFException {
-		Map<Pair<Resource>, String> missingRelations = qSkosOmittedInverseRelations.findOmittedInverseRelations().getData();
+		Map<Pair<Resource>, String> missingRelations = qSkosOmittedInverseRelations.findUnidirectionallyRelatedConcepts().getData();
 		Assert.assertEquals(6, missingRelations.size());
 	}
 	

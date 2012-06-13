@@ -34,13 +34,13 @@ public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resour
 		long compCount = 1;
 		
 		if (overviewOnly) {
-			report += "count: " +getData().size() +"\n";
+			report += "count: " +getData().size();
 		}
 		
 		for (Set<Resource> component : getData()) {
-			report += "component " +compCount+ ", size: " +component.size()+ "\n";
+			report += "\ncomponent " +compCount+ ", size: " +component.size();
 			if (!overviewOnly) {
-				report += component.toString()+ "\n";
+				report += "\n"+ component.toString();
 			}
 			compCount++;
 		}

@@ -37,7 +37,7 @@ public class InverseRelationsChecker extends Issue {
 		super(vocabRepository);
 	}
 
-	public UnidirRelResourcesResult findOmittedInverseRelations() 
+	public UnidirRelResourcesResult findUnidirectionallyRelatedConcepts() 
 		throws OpenRDFException
 	{
 		for (String[] inversePropertyPair : inversePropertyPairs) {

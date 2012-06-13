@@ -25,7 +25,7 @@ public class AmbiguousLabelFinder extends Issue {
 		super(vocabRepository);
 	}
 	
-	public ConceptLabelsResult findNotUniquePrefLabels() throws OpenRDFException 
+	public ConceptLabelsResult findAmbiguouslyPreflabeledConcepts() throws OpenRDFException 
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
 		
@@ -86,7 +86,7 @@ public class AmbiguousLabelFinder extends Issue {
 		ambiguousLabels.add(prefLabel.stringValue());
 	}
 	
-	public ConceptLabelsResult findNotDisjointLabels() throws OpenRDFException 
+	public ConceptLabelsResult findDisjointLabelsViolations() throws OpenRDFException 
 	{
 		ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
 		

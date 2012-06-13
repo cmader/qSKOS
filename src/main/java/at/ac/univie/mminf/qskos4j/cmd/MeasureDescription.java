@@ -109,7 +109,7 @@ public enum MeasureDescription {
 	UNIDIRECTIONALLY_RELATED_CONCEPTS("urc",
 		"Unidirectionally Related Concepts",
 		"Concepts not including reciprocal relations",	
-		"findOmittedInverseRelations"),		
+		"findUnidirectionallyRelatedConcepts"),		
 	HTTP_URI_SCHEME_VIOLATION("husv",
 		"HTTP URI Scheme Violation",
 		"Finds triple subjects that are no HTTP URIs",
@@ -126,11 +126,11 @@ public enum MeasureDescription {
 	AMBIGUOUS_PREFLABELED_CONCEPTS("apc",
 		"Ambiguously Preflabeled Concepts",
 		"Finds concepts with more then one prefLabel per language",	
-		"findNotUniquePrefLabels"),
+		"findAmbiguouslyPreflabeledConcepts"),
 	DISJOINT_LABELS_VIOLATION("dlv",
 		"Disjoint Labels Violation",
 		"Finds concepts with identical entries for different label types",
-		"findNotDisjointLabels");
+		"findDisjointLabelsViolations");
 		
 	public enum MeasureType {STATISTICS, ISSUE}
 	

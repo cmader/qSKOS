@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -26,30 +27,37 @@ import com.beust.jcommander.Parameters;
 
 public class VocEvaluate {
 	
-	public final static String CMD_NAME_ANALYZE = "analyze", CMD_NAME_SUMMARIZE = "summarize";
+	public final static String CMD_NAME_ANALYZE = "analyze", 
+							   CMD_NAME_SUMMARIZE = "summarize";
 	
 	private static JCommander jc;
 	private Logger logger;
 	private CommandSummarize parsedCommand;
+	
+	@Parameter(names = {"-v", "--version"}, description = "Outputs version of the tool")
+	private boolean outputVersion = false;
 	
 	@Parameters(commandNames = CMD_NAME_SUMMARIZE, commandDescription = "Computes basic statistics of a given vocabulary")
 	private class CommandSummarize {
 		
 		@Parameter(description = "vocabularyfile")
 		private List<String> vocabFilenames;
-			
+
 		@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
 		private String authoritativeResourceIdentifier;
-	
-		@Parameter(names = {"-c", "--check-id"}, description = "Comma-separated list of issue/statistics IDs to check for")
-		private String selectedIds;
 
+		@Parameter(names = {"-c", "--check"}, description = "Comma-separated list of issue/statistics IDs to check for")
+		private String selectedIds;
+		
+		@Parameter(names = {"-dc", "--dont-check"}, description = "Comma-separated list of issue/statistics IDs NOT to check for")
+		private String excludedIds;
+		
 		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
 		private boolean enableSkosXl = false;
 
 		@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
 		private boolean quiet = false;
-
+		
 	}
 	
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
@@ -92,28 +100,38 @@ public class VocEvaluate {
 	public VocEvaluate(String[] args) 
 		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException  
 	{
-		jc = new JCommander(this);
+		parseCmdParams(args);
 		
-		CommandAnalyze commandAnalyze = new CommandAnalyze(); 
-		jc.addCommand(commandAnalyze);
+		if (outputVersion) {
+			System.out.println("Version: " +getClass().getPackage().getImplementationVersion());
+		}
 		
-		CommandSummarize commandSummarize = new CommandSummarize();
-		jc.addCommand(commandSummarize);
-
-		jc.parse(args);
-		String command = jc.getParsedCommand();
-		if (command == null) {
+		if (parsedCommand == null) {
 			jc.usage();
 		}
 		else {
+			listIssuesOrEvaluate();	
+		}		
+	}
+	
+	private void parseCmdParams(String[] args) {
+		jc = new JCommander(this);
+		
+		CommandAnalyze commandAnalyze = new CommandAnalyze();
+		CommandSummarize commandSummarize = new CommandSummarize();
+		
+		jc.addCommand(commandAnalyze);
+		jc.addCommand(commandSummarize);		
+		jc.parse(args);
+		
+		String command = jc.getParsedCommand();
+		if (command != null) {			
 			if (command.equals(CMD_NAME_ANALYZE)) {
 				parsedCommand = commandAnalyze;
 			}
-			else if (command.equals(CMD_NAME_SUMMARIZE)) {
+			if (command.equals(CMD_NAME_SUMMARIZE)) {
 				parsedCommand = commandSummarize;
 			}
-			
-			listIssuesOrEvaluate();
 		}
 	}
 		
@@ -168,7 +186,7 @@ public class VocEvaluate {
 
 		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
 		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
-		qskos.setProgressMonitor(new LoggingProgressMonitor());
+		qskos.setProgressMonitor(new ConsoleProgressMonitor());
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
 		
 		if (parsedCommand instanceof CommandAnalyze) {
@@ -241,16 +259,35 @@ public class VocEvaluate {
 	private List<MeasureDescription> extractMeasure() 
 		throws UnsupportedMeasureIdException
 	{
-		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
+		List<MeasureDescription> resultingMeasures;
 		
-		if (parsedCommand.selectedIds == null || parsedCommand.selectedIds.isEmpty()) {
-			measures = getAllMeasuresForCommand();
+		List<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
+		List<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
+
+		if (!selectedMeasures.isEmpty()) {
+			resultingMeasures = selectedMeasures;
 		}
-		else {		
-			StringTokenizer tokenizer = new StringTokenizer(parsedCommand.selectedIds, ",");
-			while (tokenizer.hasMoreElements()) {
-				measures.add(MeasureDescription.findById(tokenizer.nextToken()));
-			}
+		else if (!excludedMeasures.isEmpty()) {
+			resultingMeasures = getAllMeasuresForCommand();
+			resultingMeasures.removeAll(excludedMeasures);
+		}
+		else {
+			resultingMeasures = getAllMeasuresForCommand();
+		}
+		
+		return resultingMeasures;
+	}
+	
+	private List<MeasureDescription> getMeasures(String ids) throws UnsupportedMeasureIdException
+	{
+		if (ids == null || ids.isEmpty()) {
+			return Collections.emptyList();
+		}
+		
+		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
+		StringTokenizer tokenizer = new StringTokenizer(ids, ",");
+		while (tokenizer.hasMoreElements()) {
+			measures.add(MeasureDescription.findById(tokenizer.nextToken()));
 		}
 		
 		return measures;
