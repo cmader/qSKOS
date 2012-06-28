@@ -135,4 +135,14 @@
 		<!--<rdfs:subPropertyOf rdf:resource="bliblablu"/>-->
   </rdf:Description>
 
+	<!-- concepts in the same concept scheme; should not count as a component -->
+	<rdf:Description rdf:about="concept1InScheme1">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:inScheme rdf:resource="conceptScheme1"/>
+  </rdf:Description>
+	<rdf:Description rdf:about="concept2InScheme1">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:inScheme rdf:resource="conceptScheme1"/>
+  </rdf:Description>
+
 </rdf:RDF>
