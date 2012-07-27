@@ -18,8 +18,12 @@ import org.openrdf.query.TupleQueryResult;
 import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LanguageCoverageChecker extends Issue {
+
+    private final Logger logger = LoggerFactory.getLogger(LanguageCoverageChecker.class);
 
 	private Map<Resource, Collection<String>> languageCoverage, incompleteLanguageCoverage;
 	private Set<String> distinctLanguages;
@@ -39,15 +43,21 @@ public class LanguageCoverageChecker extends Issue {
 		return new IncompleteLangCovResult(incompleteLanguageCoverage);
 	}
 	
-	private void checkLanguageCoverage(Collection<URI> concepts) throws OpenRDFException 
+	private void checkLanguageCoverage(Collection<URI> concepts)
 	{
 		languageCoverage = new HashMap<Resource, Collection<String>>();
 		
 		Iterator<URI> it = new MonitoredIterator<URI>(concepts, progressMonitor);
 		while (it.hasNext()) {
 			URI concept = it.next();
-			TupleQueryResult result = vocabRepository.query(createLanguageLiteralQuery(concept));
-			addToLanguageCoverageMap(concept, result);
+
+            try {
+			    TupleQueryResult result = vocabRepository.query(createLanguageLiteralQuery(concept));
+                addToLanguageCoverageMap(concept, result);
+            }
+            catch (OpenRDFException e) {
+                logger.error("Error finding languages for concept '" +concept+ "'");
+            }
 		}
 	}
 	
