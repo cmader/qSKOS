@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.cmd;
+package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 
 @SuppressWarnings("serial")
 public class UnsupportedMeasureIdException extends Exception {

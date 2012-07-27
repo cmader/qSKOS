@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.cmd;
+package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 
 public enum MeasureDescription {
 
@@ -149,15 +149,15 @@ public enum MeasureDescription {
 		this.type = type;
 	}
 	
-	String getId() {
+	public String getId() {
 		return id;
 	}
 	
-	String getName() {
+	public String getName() {
 		return name;
 	}
 	
-	String getDescription() {
+	public String getDescription() {
 		return description;
 	}
 	
@@ -165,11 +165,11 @@ public enum MeasureDescription {
 		return qSkosMethodName;
 	}
 	
-	MeasureType getType() {
+	public MeasureType getType() {
 		return type;
 	}
 	
-	static MeasureDescription findById(String id) 
+	public static MeasureDescription findById(String id)
 		throws UnsupportedMeasureIdException
 	{
 		for (MeasureDescription measureDesc : values()) {

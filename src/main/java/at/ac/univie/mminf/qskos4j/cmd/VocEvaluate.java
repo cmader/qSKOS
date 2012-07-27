@@ -3,20 +3,17 @@ package at.ac.univie.mminf.qskos4j.cmd;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;
 import org.openrdf.OpenRDFException;
 import org.slf4j.LoggerFactory;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.cmd.MeasureDescription.MeasureType;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription.MeasureType;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import ch.qos.logback.classic.Logger;
 
@@ -178,7 +175,9 @@ public class VocEvaluate {
 		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException  
 	{
 		setup();
-		checkForIssue();
+        MeasureInvoker measureInvoker = new MeasureInvoker(qskos);
+        Map<String, Result<?>> measureIdToResultsMap = measureInvoker.checkForMeasures(extractMeasures());
+        outputReport(measureIdToResultsMap);
 	}
 	
 	private void setup() throws OpenRDFException, IOException {
@@ -205,33 +204,26 @@ public class VocEvaluate {
 		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
 	}
 
-	private void checkForIssue() throws UnsupportedMeasureIdException, QSKOSMethodInvocationException 
-	{
-		for (MeasureDescription measure : extractMeasure()) {
-			System.out.println("--- " +measure.getName());
-			String qSkosMethodName = measure.getQSkosMethodName();
-			
-			Result<?> result = invokeQSkosMethod(qSkosMethodName);
-			outputReport(result, measure.getId());
-		}
-	}	
-	
-	private void outputReport(Result<?> result, String measureId) {
-		System.out.println(result.getShortReport());
+	private void outputReport(Map<String, Result<?>> measureIdToResultsMap) {
+        for (String measureId : measureIdToResultsMap.keySet()) {
+            Result<?> result = measureIdToResultsMap.get(measureId);
+
+            System.out.println(result.getShortReport());
 		
-		if (shouldOutputExtReport()) {
-			System.out.println(result.getExtensiveReport());
-		}
-		
-		if (shouldWriteGraphs()) {
-			try {
-				Collection<String> dotGraph = result.getAsDOT();
-				writeToFiles(dotGraph, measureId);
-			}
-			catch (IOException e) {
-				logger.error("error writing graph file for issue " +measureId, e);
-			}			
-		}
+            if (shouldOutputExtReport()) {
+                System.out.println(result.getExtensiveReport());
+            }
+
+            if (shouldWriteGraphs()) {
+                try {
+                    Collection<String> dotGraph = result.getAsDOT();
+                    writeToFiles(dotGraph, measureId);
+                }
+                catch (IOException e) {
+                    logger.error("error writing graph file for issue " +measureId, e);
+                }
+            }
+        }
 	}
 	
 	private boolean shouldOutputExtReport() {
@@ -256,7 +248,7 @@ public class VocEvaluate {
 		}
 	}
 	
-	private List<MeasureDescription> extractMeasure() 
+	private List<MeasureDescription> extractMeasures()
 		throws UnsupportedMeasureIdException
 	{
 		List<MeasureDescription> resultingMeasures;
@@ -308,21 +300,5 @@ public class VocEvaluate {
 		
 		return measuresForCommand;
 	}
-	
-	private Result<?> invokeQSkosMethod(String methodName) 
-		throws QSKOSMethodInvocationException 
-	{
-		try {
-			for (Method method : qskos.getClass().getMethods()) {
-				if (method.getName().equals(methodName)) {
-					return (Result<?>) method.invoke(qskos);
-				}
-			}
-		}
-		catch (Exception e) {
-			// fall through
-		}
-		throw new QSKOSMethodInvocationException(methodName);
-	}
-	
+
 }
