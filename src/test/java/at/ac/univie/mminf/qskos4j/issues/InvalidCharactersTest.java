@@ -2,6 +2,8 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +27,11 @@ public class InvalidCharactersTest extends IssueTestCase {
         try {
             measureInvoker.checkForAllMeasures();
         }
-        catch (Exception e) {
-            Assert.fail();
+        catch (QSKOSMethodInvocationException methInvocExc) {
+            Assert.fail(methInvocExc.getMethodName());
+        }
+        catch (UnsupportedMeasureIdException unsupMesIdExc) {
+            Assert.fail(unsupMesIdExc.getUnsupportedId());
         }
     }
 }

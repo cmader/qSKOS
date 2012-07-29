@@ -16,8 +16,12 @@ import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UndocumentedConceptsChecker extends Issue {
+
+    private final Logger logger = LoggerFactory.getLogger(UndocumentedConceptsChecker.class);
 
 	private String[] documentationProperties = {
 		"skos:note", "skos:changeNote", "skos:definition", "skos:editorialNote",
@@ -59,13 +63,18 @@ public class UndocumentedConceptsChecker extends Issue {
 		return false;
 	}
 	
-	private boolean conceptHasProperty(Resource concept, String property) 
-		throws OpenRDFException
+	private boolean conceptHasProperty(Resource concept, String property)
 	{
-		BooleanQuery graphQuery = connection.prepareBooleanQuery(
-			QueryLanguage.SPARQL, 
-			createPropertyQuery(concept, property));
-		return graphQuery.evaluate();
+        try {
+            BooleanQuery graphQuery = connection.prepareBooleanQuery(
+                QueryLanguage.SPARQL,
+                createPropertyQuery(concept, property));
+            return graphQuery.evaluate();
+        }
+        catch (OpenRDFException e) {
+            logger.error("Error finding properties of concept '" +concept+ "'");
+        }
+        return false;
 	}
 	
 	private String createPropertyQuery(Resource concept, String property) {

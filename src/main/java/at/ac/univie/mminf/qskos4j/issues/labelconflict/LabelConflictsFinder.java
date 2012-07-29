@@ -30,6 +30,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 public class LabelConflictsFinder extends Issue {
 
 	private final Logger logger = LoggerFactory.getLogger(LabelConflictsFinder.class);
+
 	private Set<LabelConflict> allRelatedConcepts;
 	private Map<URI, Set<SkosLabel>> conceptLabels;
 	
@@ -48,17 +49,20 @@ public class LabelConflictsFinder extends Issue {
 		return new CollectionResult<LabelConflict>(allRelatedConcepts);
 	}
 	
-	private void generateConceptsLabelMap(Collection<URI> concepts) 
-		throws OpenRDFException
+	private void generateConceptsLabelMap(Collection<URI> concepts)
 	{
 		conceptLabels = new HashMap<URI, Set<SkosLabel>>();
 		
 		logger.debug("Collecting label info");
 		for (URI concept : concepts) {
-			TupleQueryResult resultLabels1 = vocabRepository.query(createConceptLabelQuery(concept));
-			Set<SkosLabel> skosLabels = createSkosLabelsFromResult(concept, resultLabels1);
-
-			conceptLabels.put(concept, skosLabels);
+            try {
+			    TupleQueryResult resultLabels1 = vocabRepository.query(createConceptLabelQuery(concept));
+                Set<SkosLabel> skosLabels = createSkosLabelsFromResult(concept, resultLabels1);
+                conceptLabels.put(concept, skosLabels);
+            }
+            catch (OpenRDFException e) {
+                logger.error("Error finding labels of concept '" +concept+ "'");
+            }
 		}
 		logger.debug("Finished collecting label info");
 	}
