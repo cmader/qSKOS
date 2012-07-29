@@ -12,21 +12,29 @@ import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RelationStatisticsFinder extends Issue {
+
+    private final Logger logger = LoggerFactory.getLogger(RelationStatisticsFinder.class);
 
 	public RelationStatisticsFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
 	public NumberResult<Long> findLexicalRelationsCount(Collection<URI> allConcepts) 
-		throws OpenRDFException
-	{	
+	{
 		long relationsCount = 0; 
 		
 		for (URI concept : allConcepts) {
-			TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));			
-			relationsCount += countResults(result);
+            try {
+			    TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));
+                relationsCount += countResults(result);
+            }
+            catch (OpenRDFException e) {
+                logger.error("Error finding labels for concept '" +concept+ "'");
+            }
 		}
 		
 		return new NumberResult<Long>(relationsCount);
@@ -59,8 +67,8 @@ public class RelationStatisticsFinder extends Issue {
 	public NumberResult<Long> findSemanticRelationsCount() 
 		throws OpenRDFException
 	{
-		TupleQueryResult result = vocabRepository.query(createSemanticRelationsQuery());
-		return new NumberResult<Long>(countResults(result));
+        TupleQueryResult result = vocabRepository.query(createSemanticRelationsQuery());
+        return new NumberResult<Long>(countResults(result));
 	}
 
 	private String createSemanticRelationsQuery() {

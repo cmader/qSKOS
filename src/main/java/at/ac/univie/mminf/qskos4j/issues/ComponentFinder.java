@@ -19,12 +19,16 @@ import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Identifies all weakly connected components in the repository passed to the constructor
  * @author christian
  */
 public class ComponentFinder extends Issue {
+
+    private final Logger logger = LoggerFactory.getLogger(ComponentFinder.class);
 
 	private DirectedGraph<Resource, NamedEdge> graph;
 	
@@ -63,20 +67,24 @@ public class ComponentFinder extends Issue {
 	}
 	
 	private Collection<Relation> findRelations(URI concept) 
-		throws OpenRDFException
 	{
 		Collection<Relation> allRelations = new ArrayList<Relation>();
-		
-		TupleQueryResult result = vocabRepository.query(createConnectionsQuery(concept));
-		while (result.hasNext()) {
-			BindingSet bindingSet = result.next();
-			Value otherConcept = bindingSet.getValue("otherConcept");
-			Value semanticRelation = bindingSet.getValue("semanticRelation");
-			
-			if (otherConcept != null && semanticRelation != null) {
-				allRelations.add(new Relation(concept, (Resource) otherConcept, (Resource) semanticRelation));
-			}
-		}
+
+        try {
+            TupleQueryResult result = vocabRepository.query(createConnectionsQuery(concept));
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+                Value otherConcept = bindingSet.getValue("otherConcept");
+                Value semanticRelation = bindingSet.getValue("semanticRelation");
+
+                if (otherConcept != null && semanticRelation != null) {
+                    allRelations.add(new Relation(concept, (Resource) otherConcept, (Resource) semanticRelation));
+                }
+            }
+        }
+        catch (OpenRDFException e) {
+            logger.error("Error finding relations of concept '" +concept+ "'");
+        }
 		
 		return allRelations;
 	}
