@@ -1,31 +1,26 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
-
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.TupleQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 public class OutLinkFinder extends Issue {
 
-	private String authResourceIdentifier;
+    private final Logger logger = LoggerFactory.getLogger(OutLinkFinder.class);
+
+    private String authResourceIdentifier;
 	private Map<URI, Collection<URL>> extResourcesForConcept;
 	
 	public OutLinkFinder(VocabRepository vocabRepository) {
@@ -34,7 +29,7 @@ public class OutLinkFinder extends Issue {
 	
 	public CollectionResult<URI> findMissingOutLinks(
 		Collection<URI> autoritativeConcepts,
-		String authResourceIdentifier) throws OpenRDFException 
+		String authResourceIdentifier)
 	{
 		extResourcesForConcept = new HashMap<URI, Collection<URL>>();
 		this.authResourceIdentifier = authResourceIdentifier;
@@ -44,7 +39,7 @@ public class OutLinkFinder extends Issue {
 		return new CollectionResult<URI>(extractUnlinkedConcepts());
 	}
 	
-	private void findResourcesForConcepts(Collection<URI> concepts) throws OpenRDFException 
+	private void findResourcesForConcepts(Collection<URI> concepts)
 	{
 		Iterator<URI> conceptIt = new MonitoredIterator<URI>(concepts, progressMonitor, "finding resources");
 		
@@ -55,12 +50,17 @@ public class OutLinkFinder extends Issue {
 	}
 	
 	private Collection<URL> findExternalResourcesForConcept(URI concept) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException
 	{
+        List<URL> resourceList = new ArrayList<URL>();
 		String query = createIRIQuery(concept); 
-		
-		TupleQueryResult result = vocabRepository.query(query);
-		List<URL> resourceList = identifyResources(result);
+
+        try {
+            TupleQueryResult result = vocabRepository.query(query);
+            resourceList = identifyResources(result);
+        }
+        catch (OpenRDFException e) {
+            logger.error("Error finding references to/from concept '" +concept+ "'");
+        }
 		
 		return extractExternalResources(resourceList);
 	}
@@ -87,8 +87,8 @@ public class OutLinkFinder extends Issue {
 				ret.add(url);
 			} 
 			catch (MalformedURLException e) {
-				continue;
-			}			
+                // ignore exception
+			}
 		}
 		
 		return ret;

@@ -17,6 +17,7 @@ public class InvalidCharactersTest extends IssueTestCase {
     @Before
     public void setUp() throws OpenRDFException, IOException {
         qSkosInvalidCharacters = setUpInstance("invalidCharacters.rdf");
+        qSkosInvalidCharacters.addRepositoryLoopback();
     }
 
     @Test

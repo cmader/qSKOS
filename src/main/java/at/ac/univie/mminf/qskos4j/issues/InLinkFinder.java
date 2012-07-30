@@ -80,15 +80,19 @@ public class InLinkFinder extends Issue {
 	}
 	
 	private void rankConcept(URI concept) 
-		throws OpenRDFException 
 	{
 		for (Repository sparqlEndpoint : repositories) {
-			rankConceptByEndpoint(concept, sparqlEndpoint);	
+            try {
+			    rankConceptByEndpoint(concept, sparqlEndpoint);
+            }
+            catch (OpenRDFException e) {
+                logger.error("Error ranking concept '" +concept+ "'");
+            }
 		}
 	}
 	
-	private void rankConceptByEndpoint(URI concept, Repository endpoint) 
-		throws OpenRDFException
+	private void rankConceptByEndpoint(URI concept, Repository endpoint)
+          throws OpenRDFException
 	{
 		String query = "SELECT distinct ?resource WHERE " +
 			"{?resource ?p <"+concept.toString()+">  " +
@@ -96,14 +100,8 @@ public class InLinkFinder extends Issue {
 			"FILTER(regex(str(?resource), \"^http.*\"))}";
 		
 		TupleQuery endpointQuery = endpoint.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, query);
-		
-		try {
-			TupleQueryResult result = endpointQuery.evaluate();
-			addToConceptsRankMap(concept, result);
-		}
-		catch (QueryEvaluationException e) {
-			logger.error("error evaluating concept rank", e);
-		}
+        TupleQueryResult result = endpointQuery.evaluate();
+        addToConceptsRankMap(concept, result);
 	}
 	
 	private void addToConceptsRankMap(URI concept, TupleQueryResult result) 
