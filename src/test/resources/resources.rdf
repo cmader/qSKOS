@@ -3,7 +3,7 @@
 
 	<rdf:Description rdf:about="someresource">
 		<owl:seeAlso rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
-		<owl:seeAlso rdf:resource="http://dbpedia.org/resource/Category:Unassessed_Jamaica_articles"/>
+		<owl:seeAlso rdf:resource="https://github.com/cmader/qSKOS/"/>
 	</rdf:Description>
 
 	<!-- non-http resources test OK -->
