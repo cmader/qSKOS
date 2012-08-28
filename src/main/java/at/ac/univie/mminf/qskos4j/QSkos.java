@@ -1,13 +1,19 @@
 package at.ac.univie.mminf.qskos4j;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import at.ac.univie.mminf.qskos4j.issues.*;
+import at.ac.univie.mminf.qskos4j.issues.ambiguouslabels.AmbiguousLabelFinder;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflictsFinder;
+import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.result.custom.*;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -18,39 +24,13 @@ import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.issues.ComponentFinder;
-import at.ac.univie.mminf.qskos4j.issues.ConceptFinder;
-import at.ac.univie.mminf.qskos4j.issues.ConceptSchemeChecker;
-import at.ac.univie.mminf.qskos4j.issues.CycleFinder;
-import at.ac.univie.mminf.qskos4j.issues.HierarchyGraph;
-import at.ac.univie.mminf.qskos4j.issues.InLinkFinder;
-import at.ac.univie.mminf.qskos4j.issues.InverseRelationsChecker;
-import at.ac.univie.mminf.qskos4j.issues.LanguageCoverageChecker;
-import at.ac.univie.mminf.qskos4j.issues.LanguageTagChecker;
-import at.ac.univie.mminf.qskos4j.issues.OutLinkFinder;
-import at.ac.univie.mminf.qskos4j.issues.RelationStatisticsFinder;
-import at.ac.univie.mminf.qskos4j.issues.ResourceAvailabilityChecker;
-import at.ac.univie.mminf.qskos4j.issues.SkosReferenceIntegrityChecker;
-import at.ac.univie.mminf.qskos4j.issues.SkosTermsChecker;
-import at.ac.univie.mminf.qskos4j.issues.SolitaryTransitiveRelationsFinder;
-import at.ac.univie.mminf.qskos4j.issues.UndocumentedConceptsChecker;
-import at.ac.univie.mminf.qskos4j.issues.ValuelessAssociativeRelationsFinder;
-import at.ac.univie.mminf.qskos4j.issues.ambiguouslabels.AmbiguousLabelFinder;
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflictsFinder;
-import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
-import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
-import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
-import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelResourcesResult;
-import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
-import at.ac.univie.mminf.qskos4j.util.Pair;
-import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
-import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Main class intended for easy interaction with qSKOS. On instantiation an in-memory ("local") repository 
@@ -370,8 +350,10 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public CollectionResult<Pair<URI>> findValuelessAssociativeRelations() throws OpenRDFException {
-		return redundantAssociativeRelationsFinder.findValuelessAssociativeRelations();
+	public Result<Collection<Pair<URI>>> findValuelessAssociativeRelations() throws OpenRDFException {
+		return new ValuelessAssocRelationsResult(
+            redundantAssociativeRelationsFinder.findValuelessAssociativeRelations(),
+            vocabRepository);
 	}
 	
 	/**
@@ -480,7 +462,7 @@ public class QSkos {
 
 	/**
 	 * Set am IProgressMonitor that is notified on changes in the evaluation progress of Issues.
-	 * @param progressMonitor
+	 * @param progressMonitor monitor instance to be notified
 	 */
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;

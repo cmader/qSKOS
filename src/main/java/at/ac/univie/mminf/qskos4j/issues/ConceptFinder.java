@@ -37,8 +37,6 @@ public class ConceptFinder extends Issue {
 	
 	/**
 	 * @param vocabRepository The repository that should be scanned for concepts
-	 * @param onlyLooseConcepts If true, returns only concepts, that have no skos relations
-	 * to other resources
 	 */
 	public ConceptFinder(
 		VocabRepository vocabRepository)

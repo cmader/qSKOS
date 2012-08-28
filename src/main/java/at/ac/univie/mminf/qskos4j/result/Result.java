@@ -3,16 +3,14 @@ package at.ac.univie.mminf.qskos4j.result;
 import java.util.Collection;
 import java.util.Collections;
 
-
-
 public abstract class Result<T> {
 
 	private T data;
-	
+
 	public Result(T data) {
 		this.data = data;
 	}
-	
+
 	public T getData() {
 		return data;
 	}
