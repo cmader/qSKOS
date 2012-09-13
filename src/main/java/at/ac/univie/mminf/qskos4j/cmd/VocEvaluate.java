@@ -176,8 +176,12 @@ public class VocEvaluate {
 	{
 		setup();
         MeasureInvoker measureInvoker = new MeasureInvoker(qskos);
-        Map<String, Result<?>> measureIdToResultsMap = measureInvoker.checkForMeasures(extractMeasures());
-        outputReport(measureIdToResultsMap);
+
+        for (MeasureDescription measure : extractMeasures()) {
+            System.out.println("--- " +measure.getName());
+            Result<?> result = measureInvoker.getMeasureResult(measure);
+            outputReport(measure, result);
+        }
 	}
 	
 	private void setup() throws OpenRDFException, IOException {
@@ -187,6 +191,7 @@ public class VocEvaluate {
 		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.setProgressMonitor(new ConsoleProgressMonitor());
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
+        qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
 		
 		if (parsedCommand instanceof CommandAnalyze) {
 			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
@@ -204,24 +209,20 @@ public class VocEvaluate {
 		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
 	}
 
-	private void outputReport(Map<String, Result<?>> measureIdToResultsMap) {
-        for (String measureId : measureIdToResultsMap.keySet()) {
-            Result<?> result = measureIdToResultsMap.get(measureId);
+	private void outputReport(MeasureDescription measure, Result<?> result) {
+        System.out.println(result.getShortReport());
 
-            System.out.println(result.getShortReport());
-		
-            if (shouldOutputExtReport()) {
-                System.out.println(result.getExtensiveReport());
+        if (shouldOutputExtReport()) {
+            System.out.println(result.getExtensiveReport());
+        }
+
+        if (shouldWriteGraphs()) {
+            try {
+                Collection<String> dotGraph = result.getAsDOT();
+                writeToFiles(dotGraph, measure.getId());
             }
-
-            if (shouldWriteGraphs()) {
-                try {
-                    Collection<String> dotGraph = result.getAsDOT();
-                    writeToFiles(dotGraph, measureId);
-                }
-                catch (IOException e) {
-                    logger.error("error writing graph file for issue " +measureId, e);
-                }
+            catch (IOException e) {
+                logger.error("error writing graph file for issue " +measure.getId(), e);
             }
         }
 	}

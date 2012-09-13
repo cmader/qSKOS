@@ -72,7 +72,7 @@ public class UndocumentedConceptsChecker extends Issue {
             return graphQuery.evaluate();
         }
         catch (OpenRDFException e) {
-            logger.error("Error finding properties of concept '" +concept+ "'");
+            logger.error("Error finding documentation properties of concept '" +concept+ "'");
         }
         return false;
 	}

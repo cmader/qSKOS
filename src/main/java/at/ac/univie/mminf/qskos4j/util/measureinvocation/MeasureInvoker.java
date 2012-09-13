@@ -4,7 +4,6 @@ import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.result.Result;
 
 import java.lang.reflect.Method;
-import java.util.*;
 
 public class MeasureInvoker {
 
@@ -14,26 +13,10 @@ public class MeasureInvoker {
         this.qskos = qskos;
     }
 
-    public Map<String, Result<?>> checkForAllMeasures()
-            throws UnsupportedMeasureIdException, QSKOSMethodInvocationException
+    public Result<?> getMeasureResult(MeasureDescription measure)
+        throws QSKOSMethodInvocationException
     {
-        return checkForMeasures(Arrays.asList(MeasureDescription.values()));
-    }
-
-    public Map<String, Result<?>> checkForMeasures(List<MeasureDescription> measures)
-            throws UnsupportedMeasureIdException, QSKOSMethodInvocationException
-    {
-        Map<String, Result<?>> measureIdToResultsMap = new HashMap<String, Result<?>>();
-
-        for (MeasureDescription measure : measures) {
-            System.out.println("--- " +measure.getName());
-            String qSkosMethodName = measure.getQSkosMethodName();
-
-            Result<?> result = invokeQSkosMethod(qSkosMethodName);
-            measureIdToResultsMap.put(measure.getId(), result);
-        }
-
-        return measureIdToResultsMap;
+        return invokeQSkosMethod(measure.getQSkosMethodName());
     }
 
     private Result<?> invokeQSkosMethod(String methodName)
