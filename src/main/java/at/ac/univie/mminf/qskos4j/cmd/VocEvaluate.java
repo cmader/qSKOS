@@ -54,8 +54,11 @@ public class VocEvaluate {
 
 		@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
 		private boolean quiet = false;
-		
-	}
+
+        @Parameter(names = {"-np", "--no-progress"}, description = "Suppresses output of a progress indicator")
+        private boolean noProgressBar = false;
+
+    }
 	
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
 	private class CommandAnalyze extends CommandSummarize {
@@ -189,7 +192,6 @@ public class VocEvaluate {
 
 		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
 		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
-		qskos.setProgressMonitor(new ConsoleProgressMonitor());
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
         qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
 		
@@ -199,7 +201,11 @@ public class VocEvaluate {
 		
 		if (parsedCommand.enableSkosXl) {
 			qskos.enableSkosXlSupport();
-		}		
+		}
+
+        if (!parsedCommand.noProgressBar) {
+            qskos.setProgressMonitor(new ConsoleProgressMonitor());
+        }
 	}
 	
 	private void setupLogging() {
