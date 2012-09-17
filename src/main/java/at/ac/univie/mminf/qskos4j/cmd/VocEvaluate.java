@@ -175,15 +175,21 @@ public class VocEvaluate {
 	}
 	
 	private void evaluate() 
-		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException  
+		throws OpenRDFException, IOException, UnsupportedMeasureIdException
 	{
 		setup();
         MeasureInvoker measureInvoker = new MeasureInvoker(qskos);
 
         for (MeasureDescription measure : extractMeasures()) {
             System.out.println("--- " +measure.getName());
-            Result<?> result = measureInvoker.getMeasureResult(measure);
-            outputReport(measure, result);
+
+            try {
+                Result<?> result = measureInvoker.getMeasureResult(measure);
+                outputReport(measure, result);
+            }
+            catch (QSKOSMethodInvocationException e) {
+                logger.error("Error getting measure result", e);
+            }
         }
 	}
 	

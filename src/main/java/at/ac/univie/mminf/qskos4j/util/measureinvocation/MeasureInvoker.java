@@ -30,9 +30,9 @@ public class MeasureInvoker {
             }
         }
         catch (Exception e) {
-            // fall through
+            throw new QSKOSMethodInvocationException(methodName, e);
         }
-        throw new QSKOSMethodInvocationException(methodName);
+        throw new QSKOSMethodInvocationException(methodName, "Method not found");
     }
 
 }

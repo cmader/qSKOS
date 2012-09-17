@@ -1,12 +1,7 @@
 package at.ac.univie.mminf.qskos4j.util.url;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -14,6 +9,10 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 public class UrlDereferencer {
 
@@ -26,7 +25,7 @@ public class UrlDereferencer {
 		try {
 			HttpResponse response = sendRequest(url);
 			
-			if (isValidResponse(url, response)) {
+			if (isValidResponse(response)) {
 				Header contentType = response.getFirstHeader("Content-Type");
 				if (contentType == null || contentType.getValue().isEmpty()) {
 					throw new NoContentTypeProvidedException(); 
@@ -42,16 +41,21 @@ public class UrlDereferencer {
 	}
 	
 	private HttpResponse sendRequest(URL url) 
-		throws URISyntaxException, ClientProtocolException, IOException 
+		throws URISyntaxException, IOException
 	{
 		logger.debug("dereferencing: " +url.toString());
 		
 		HttpGet httpGet = new HttpGet(url.toURI());
 		httpGet.setHeader("Accept", "application/rdf+xml,text/html,application/xhtml+xml,application/xml,text/plain,*/*");
-		return createParmeterizedHttpClient().execute(httpGet);
+
+        AbstractHttpClient httpClient = createParameterizedHttpClient();
+        HttpResponse response = httpClient.execute(httpGet);
+        httpClient.getConnectionManager().shutdown();
+
+        return response;
 	}
 	
-	private AbstractHttpClient createParmeterizedHttpClient() {
+	private AbstractHttpClient createParameterizedHttpClient() {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpParams params = httpClient.getParams();
 		params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, HTTP_GET_TIMOUT_MILLIS);
@@ -60,7 +64,7 @@ public class UrlDereferencer {
 		return httpClient;
 	}
 	
-	private boolean isValidResponse(URL dereferencedUrl, HttpResponse response) 
+	private boolean isValidResponse(HttpResponse response)
 	{
 		int statusCode = response.getStatusLine().getStatusCode();
 		logger.debug("response status: " +statusCode);
