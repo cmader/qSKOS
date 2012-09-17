@@ -38,6 +38,11 @@ public enum MeasureDescription {
 		"Counts the involved Collections",
 		"findCollectionCount",
 		MeasureType.STATISTICS),
+    HTTP_URI_COUNT("huc",
+        "HTTP URI Count",
+        "Counts the total number of HTTP URIs",
+        "findAllHttpUriCount",
+        MeasureType.STATISTICS),
 	
 	// Labeling and Documentation Issues
 	OMITTED_OR_INVALID_LANG_TAGS("oilt",

@@ -45,7 +45,7 @@ public class QSkos {
 	
 	private Collection<Repository> otherRepositories = new HashSet<Repository>();
 	
-	private ResourceAvailabilityChecker resourceAvailabilityChecker;	
+	private BrokenLinksFinder brokenLinksFinder;
 	private ConceptFinder conceptFinder;
 	private ComponentFinder componentFinder;
 	private ValuelessAssociativeRelationsFinder redundantAssociativeRelationsFinder;
@@ -103,7 +103,7 @@ public class QSkos {
 	}
 	
 	private void init() {
-		resourceAvailabilityChecker = new ResourceAvailabilityChecker(vocabRepository);
+		brokenLinksFinder = new BrokenLinksFinder(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
 		componentFinder = new ComponentFinder(vocabRepository);
 		redundantAssociativeRelationsFinder = new ValuelessAssociativeRelationsFinder(vocabRepository);
@@ -220,6 +220,11 @@ public class QSkos {
 	{
 		return new RelationStatisticsFinder(vocabRepository).findCollectionCount();
 	}
+
+    public NumberResult<Integer> findAllHttpUriCount() throws OpenRDFException
+    {
+        return new NumberResult<Integer>(brokenLinksFinder.findAllHttpURIs().size());
+    }
 	
 	/**
 	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Weakly_Connected_Components">
@@ -274,8 +279,8 @@ public class QSkos {
 	 */
 	public ExtrapolatedCollectionResult<URL> findBrokenLinks() throws OpenRDFException 
 	{
-		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		return resourceAvailabilityChecker.findBrokenLinks(randomSubsetSize_percent, urlDereferencingDelay);
+		brokenLinksFinder.setProgressMonitor(progressMonitor);
+		return brokenLinksFinder.findBrokenLinks(randomSubsetSize_percent, urlDereferencingDelay);
 	}
 	
 	/**
@@ -286,8 +291,8 @@ public class QSkos {
 	 * @throws OpenRDFException
 	 */
 	public CollectionResult<String> findNonHttpResources() throws OpenRDFException {
-		resourceAvailabilityChecker.setProgressMonitor(progressMonitor);
-		return resourceAvailabilityChecker.findNonHttpResources();
+		brokenLinksFinder.setProgressMonitor(progressMonitor);
+		return brokenLinksFinder.findNonHttpResources();
 	}
 	
 	/**

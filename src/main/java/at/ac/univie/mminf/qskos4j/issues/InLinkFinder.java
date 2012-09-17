@@ -79,14 +79,14 @@ public class InLinkFinder extends Issue {
 		}
 	}
 	
-	private void rankConcept(URI concept) 
+	private void rankConcept(URI concept)
 	{
 		for (Repository sparqlEndpoint : repositories) {
             try {
 			    rankConceptByEndpoint(concept, sparqlEndpoint);
             }
             catch (OpenRDFException e) {
-                logger.error("Error ranking concept '" +concept+ "'");
+                logger.error("Error ranking concept '" +concept+ "', " + e.toString());
             }
 		}
 	}

@@ -30,17 +30,17 @@ import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
-public class ResourceAvailabilityChecker extends Issue {
+public class BrokenLinksFinder extends Issue {
 	
-	private final Logger logger = LoggerFactory.getLogger(ResourceAvailabilityChecker.class);
+	private final Logger logger = LoggerFactory.getLogger(BrokenLinksFinder.class);
 	private final String NO_CONTENT_TYPE = "n/a";
 	private final int DEREF_DELAY_MILLIS = 3000;
 	
 	private Map<URL, String> urlAvailability = new HashMap<URL, String>();
-	private Set<URI> httpURIs = new HashSet<URI>();
+	private Set<URI> httpURIs;
 	private Set<String> invalidResources = new HashSet<String>();
 	
-	public ResourceAvailabilityChecker(VocabRepository vocabRepository) {
+	public BrokenLinksFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
@@ -56,7 +56,7 @@ public class ResourceAvailabilityChecker extends Issue {
 		Float randomSubsetSize_percent,
 		Integer urlDereferencingDelayMillis) throws OpenRDFException
 	{
-		findAllHttpURLs();
+		findAllHttpURIs();
 		dereferenceURIs(randomSubsetSize_percent, urlDereferencingDelayMillis);
 	}
 	
@@ -91,16 +91,21 @@ public class ResourceAvailabilityChecker extends Issue {
 		return nonHttpURIs;
 	}
 	
-	private void findAllHttpURLs() 
+	public Set<URI> findAllHttpURIs()
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
+        if (httpURIs != null) {
+            return httpURIs;
+        }
+
+        httpURIs = new HashSet<URI>();
 		TupleQueryResult result = vocabRepository.query(createIRIQuery());
 		
 		while (result.hasNext()) {
 			Value iri = result.next().getValue("iri");
 			addToUrlList(iri);
 		}
-		logger.info("found " +httpURIs.size()+ " http URIs");
+		return httpURIs;
 	}
 	
 	private void addToUrlList(Value iri) {
