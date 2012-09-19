@@ -1,17 +1,13 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
+import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
+import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
+import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
@@ -21,20 +17,16 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
-import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
-import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
-import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
 
 public class BrokenLinksFinder extends Issue {
 	
 	private final Logger logger = LoggerFactory.getLogger(BrokenLinksFinder.class);
 	private final String NO_CONTENT_TYPE = "n/a";
-	private final int DEREF_DELAY_MILLIS = 3000;
 	
 	private Map<URL, String> urlAvailability = new HashMap<URL, String>();
 	private Set<URI> httpURIs;
@@ -153,9 +145,6 @@ public class BrokenLinksFinder extends Issue {
 			
 			// delay to avoid flooding the vocabulary host  
 			try {
-				if (urlDereferencingDelayMillis == null) {
-					urlDereferencingDelayMillis = DEREF_DELAY_MILLIS;
-				}
 				Thread.sleep(urlDereferencingDelayMillis);
 			} 
 			catch (InterruptedException e) {

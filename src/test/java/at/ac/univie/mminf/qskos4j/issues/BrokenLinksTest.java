@@ -21,7 +21,7 @@ public class BrokenLinksTest extends IssueTestCase {
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosConcepts = setUpInstance("concepts.rdf");
 		qSkosExtResources = setUpInstance("resources.rdf");
-		qSkosExtResources.setUrlDereferencingDelay(0);
+		qSkosExtResources.setExtAccessDelayMillis(0);
 	}
 	
 	@Test
@@ -47,8 +47,8 @@ public class BrokenLinksTest extends IssueTestCase {
     @Test
     public void testConceptsHttpUriCount() throws OpenRDFException {
         Assert.assertEquals(
-            21,
-            (int) qSkosConcepts.findAllHttpUriCount().getData());
+                21,
+                (int) qSkosConcepts.findAllHttpUriCount().getData());
     }
 
     @Test

@@ -21,6 +21,7 @@ public class MissingInLinkTest extends IssueTestCase {
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosRankConcepts = setUpInstance("rankConcepts.rdf");
 		qSkosRankConcepts.addRepositoryLoopback();
+        qSkosRankConcepts.setExtAccessDelayMillis(0);
 	}
 	
 	@Test

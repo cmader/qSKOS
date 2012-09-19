@@ -42,6 +42,12 @@ import java.util.Set;
 public class QSkos {
 
 	private final Logger logger = LoggerFactory.getLogger(QSkos.class);
+
+    /**
+     * Delay to avoid flooding "external" sources. This is used, e.g., when dereferencing lots of links or sending
+     * many queryies to a SPARQL endpoint
+     */
+    private final static int EXT_ACCESS_MILLIS = 1500;
 	
 	private Collection<Repository> otherRepositories = new HashSet<Repository>();
 	
@@ -54,7 +60,7 @@ public class QSkos {
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
 	private String authResourceIdentifier;
-	private Integer urlDereferencingDelay;
+	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
 	
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
@@ -280,7 +286,7 @@ public class QSkos {
 	public ExtrapolatedCollectionResult<URL> findBrokenLinks() throws OpenRDFException 
 	{
 		brokenLinksFinder.setProgressMonitor(progressMonitor);
-		return brokenLinksFinder.findBrokenLinks(randomSubsetSize_percent, urlDereferencingDelay);
+		return brokenLinksFinder.findBrokenLinks(randomSubsetSize_percent, extAccessDelayMillis);
 	}
 	
 	/**
@@ -387,7 +393,11 @@ public class QSkos {
 			vocabRepository, 
 			otherRepositories);
 		inLinkFinder.setProgressMonitor(progressMonitor);
-		return inLinkFinder.findMissingInLinks(findAuthoritativeConcepts().getData(), randomSubsetSize_percent);
+
+        return inLinkFinder.findMissingInLinks(
+            findAuthoritativeConcepts().getData(),
+            randomSubsetSize_percent,
+            extAccessDelayMillis);
 	}
 	
 	/**
@@ -502,13 +512,13 @@ public class QSkos {
 	}
 	
 	/**
-	 * Sets a delay time in milliseconds that must pass between dereferencing links. This is intended to avoid
-	 * flooding the vocabulary host with HTTP requests.
+	 * Sets a delay time in milliseconds that must pass between accessing an external resource. This is intended to
+     * avoid flooding of, e.g., vocabulary hosts or SPARQL endpoints with HTTP requests.
 	 * 
 	 * @param delayMillis delay time in milliseconds
 	 */
-	public void setUrlDereferencingDelay(int delayMillis) {
-		urlDereferencingDelay = delayMillis;
+	public void setExtAccessDelayMillis(int delayMillis) {
+		extAccessDelayMillis = delayMillis;
 	}
 	
 	/**

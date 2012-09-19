@@ -1,29 +1,23 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URISyntaxException;
+import java.util.*;
 
 public class InLinkFinder extends Issue {
 
@@ -32,6 +26,7 @@ public class InLinkFinder extends Issue {
 	private Collection<URI> authoritativeConcepts;
 	private Collection<Repository> repositories;
 	private Map<URI, Set<URI>> conceptReferencingResources = new HashMap<URI, Set<URI>>();
+    private Integer queryDelayMillis;
 	
 	public InLinkFinder(
 		VocabRepository vocabRepository,
@@ -46,30 +41,33 @@ public class InLinkFinder extends Issue {
 			this.repositories = repositories;
 		}
 	}
-		
-	public CollectionResult<URI> findMissingInLinks(
-		Collection<URI> authoritativeConcepts,
-		Float randomSubsetSize_percent) throws OpenRDFException
-	{
-		this.authoritativeConcepts = authoritativeConcepts;
-		Collection<URI> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
-		
-		if (randomSubsetSize_percent != null) {
-			logger.info("using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
-		}
-		
-		Iterator<URI> conceptIt = new MonitoredIterator<URI>(
-			conceptsToCheck,
-			progressMonitor,
-			"finding In-Links");
 
-		while (conceptIt.hasNext()) {
-			rankConcept(conceptIt.next());
-		}
-		
-		return new ExtrapolatedCollectionResult<URI>(extractUnreferencedConcepts(), randomSubsetSize_percent);
-	}
-	
+    public CollectionResult<URI> findMissingInLinks(
+        Collection<URI> authoritativeConcepts,
+        Float randomSubsetSize_percent,
+        Integer queryDelayMillis) throws OpenRDFException
+    {
+        this.queryDelayMillis = queryDelayMillis;
+        this.authoritativeConcepts = authoritativeConcepts;
+
+        Collection<URI> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
+
+        if (randomSubsetSize_percent != null) {
+            logger.info("using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
+        }
+
+        Iterator<URI> conceptIt = new MonitoredIterator<URI>(
+                conceptsToCheck,
+                progressMonitor,
+                "finding In-Links");
+
+        while (conceptIt.hasNext()) {
+            rankConcept(conceptIt.next());
+        }
+
+        return new ExtrapolatedCollectionResult<URI>(extractUnreferencedConcepts(), randomSubsetSize_percent);
+    }
+
 	private Collection<URI> getConceptsToCheck(Float randomSubsetSize_percent) {
 		if (randomSubsetSize_percent == null) {
 			return authoritativeConcepts;
@@ -98,10 +96,21 @@ public class InLinkFinder extends Issue {
 			"{?resource ?p <"+concept.toString()+">  " +
 			"FILTER isIRI(?resource) "+
 			"FILTER(regex(str(?resource), \"^http.*\"))}";
-		
-		TupleQuery endpointQuery = endpoint.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, query);
-        TupleQueryResult result = endpointQuery.evaluate();
+
+        // delay to avoid flooding the SPARQL endpoint
+        try {
+            Thread.sleep(queryDelayMillis);
+        }
+        catch (InterruptedException e) {
+            // ignore this exception
+        }
+
+        RepositoryConnection connection = endpoint.getConnection();
+
+        TupleQueryResult result = connection.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
         addToConceptsRankMap(concept, result);
+
+        connection.close();
 	}
 	
 	private void addToConceptsRankMap(URI concept, TupleQueryResult result) 
