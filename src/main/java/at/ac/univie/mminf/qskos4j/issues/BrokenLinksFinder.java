@@ -159,7 +159,11 @@ public class BrokenLinksFinder extends Issue {
 		if (randomSubsetSize_percent == null) {
 			return httpURIs;
 		}
-		return new RandomSubSet<URI>(httpURIs, randomSubsetSize_percent);
+
+        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs, randomSubsetSize_percent);
+        logger.info("using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
+
+		return urisToBeDereferenced;
 	}
 	
 	private void addToResults(URI uri) {
