@@ -24,7 +24,13 @@ public class CollectionResult<T> extends Result<Collection<T>> {
 
 	@Override
 	public String getExtensiveReport() {
-		return getData().toString();
+        String report = "";
+
+        for (T dataItem : getData()) {
+            report += "\n" + dataItem.toString();
+        }
+
+        return report;
 	}
 
 }

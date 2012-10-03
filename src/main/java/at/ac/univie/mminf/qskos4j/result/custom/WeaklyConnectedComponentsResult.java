@@ -40,7 +40,9 @@ public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resour
 		for (Set<Resource> component : getData()) {
 			report += "\ncomponent " +compCount+ ", size: " +component.size();
 			if (!overviewOnly) {
-				report += "\n"+ component.toString();
+                for (Resource resource : component) {
+                    report += "\n\t" +resource.toString();
+                }
 			}
 			compCount++;
 		}
