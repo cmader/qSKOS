@@ -32,14 +32,14 @@ public class ReportGenerator {
 
             if (!issues.isEmpty()) {
                 System.out.println("Concept (containing) '" +conceptSubstring+ "':");
-                System.out.print("\tOccurs in issue(s):" +issues.toString());
+                System.out.println("\tOccurs in issue(s): " + issues.toString());
             }
         }
     }
 
     public Map<String, Collection<String>> collectIssuesForConcepts(File uriTrackFile) throws IOException
     {
-        Map<String, Collection<String>> uriSubstringToIssuesMapping = new HashMap<String, Collection<String>>();
+        Map<String, Collection<String>> uriSubstringToIssuesMapping = new LinkedHashMap<String, Collection<String>>();
 
 
         for (MeasureDescription measure : measures) {
