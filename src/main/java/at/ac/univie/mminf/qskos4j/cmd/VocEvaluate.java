@@ -201,7 +201,7 @@ public class VocEvaluate {
 			qskos.enableSkosXlSupport();
 		}
 
-        if (!parsedCommand.noProgressBar) {
+        if (!uriTrackingEnabled() && !parsedCommand.noProgressBar) {
             qskos.setProgressMonitor(new ConsoleProgressMonitor());
         }
 	}
