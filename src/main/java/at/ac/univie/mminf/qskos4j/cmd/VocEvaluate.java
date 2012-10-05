@@ -1,26 +1,20 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
-
+import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription.MeasureType;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;
-import org.openrdf.OpenRDFException;
-import org.slf4j.LoggerFactory;
-
-import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription.MeasureType;
-import at.ac.univie.mminf.qskos4j.result.Result;
-import ch.qos.logback.classic.Logger;
-
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
+import org.openrdf.OpenRDFException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class VocEvaluate {
 	
@@ -28,8 +22,9 @@ public class VocEvaluate {
 							   CMD_NAME_SUMMARIZE = "summarize";
 	
 	private static JCommander jc;
-	private Logger logger;
 	private CommandSummarize parsedCommand;
+    private QSkos qskos;
+    private ReportGenerator reportGenerator;
 	
 	@Parameter(names = {"-v", "--version"}, description = "Outputs version of the tool")
 	private boolean outputVersion = false;
@@ -52,9 +47,6 @@ public class VocEvaluate {
 		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
 		private boolean enableSkosXl = false;
 
-		@Parameter(names = {"-q", "--quiet"}, description = "Suppress informative output")
-		private boolean quiet = false;
-
         @Parameter(names = {"-np", "--no-progress"}, description = "Suppresses output of a progress indicator")
         private boolean noProgressBar = false;
 
@@ -71,10 +63,13 @@ public class VocEvaluate {
 		
 		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
 		private boolean writeGraphs = false;
+
+        @Parameter(
+            names = {"-utf", "--uri-track-file"},
+            description = "A file that contains concept URIs. The output will contain the issues in which each of the concepts shows up.")
+        private String uriTrackFilename;
 			
 	}
-
-	private QSkos qskos;
 	
 	public static void main(String[] args) {
 		try {
@@ -84,7 +79,7 @@ public class VocEvaluate {
 			jc.usage();
 		}
 		catch (IOException ioException) {
-			System.out.println("Error reading vocabulary file: " +ioException.getMessage());
+			System.out.println("Error reading file: " +ioException.getMessage());
 		}
 		catch (OpenRDFException rdfException) {
 			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
@@ -178,30 +173,27 @@ public class VocEvaluate {
 		throws OpenRDFException, IOException, UnsupportedMeasureIdException
 	{
 		setup();
-        MeasureInvoker measureInvoker = new MeasureInvoker(qskos);
 
-        for (MeasureDescription measure : extractMeasures()) {
-            System.out.println("--- " +measure.getName());
+        reportGenerator = new ReportGenerator(
+            new MeasureInvoker(qskos),
+            extractMeasures()
+        );
 
-            try {
-                Result<?> result = measureInvoker.getMeasureResult(measure);
-                outputReport(measure, result);
-            }
-            catch (QSKOSMethodInvocationException e) {
-                logger.error("Error getting measure result", e);
-            }
+        if (uriTrackingEnabled()) {
+            reportGenerator.outputURITrackingReport(new File(((CommandAnalyze) parsedCommand).uriTrackFilename));
+        }
+        else {
+            reportGenerator.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
         }
 	}
 	
 	private void setup() throws OpenRDFException, IOException {
-		setupLogging();
-
 		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
 		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
         qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
-		
-		if (parsedCommand instanceof CommandAnalyze) {
+
+        if (parsedCommand instanceof CommandAnalyze) {
 			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
 		}
 		
@@ -213,31 +205,10 @@ public class VocEvaluate {
             qskos.setProgressMonitor(new ConsoleProgressMonitor());
         }
 	}
-	
-	private void setupLogging() {
-		if (parsedCommand.quiet) {
-			System.setProperty("root-level", "ERROR");	
-		}		
-		logger = (Logger) LoggerFactory.getLogger(VocEvaluate.class);
-	}
 
-	private void outputReport(MeasureDescription measure, Result<?> result) {
-        System.out.println(result.getShortReport());
-
-        if (shouldOutputExtReport()) {
-            System.out.println(result.getExtensiveReport());
-        }
-
-        if (shouldWriteGraphs()) {
-            try {
-                Collection<String> dotGraph = result.getAsDOT();
-                writeToFiles(dotGraph, measure.getId());
-            }
-            catch (IOException e) {
-                logger.error("error writing graph file for issue " +measure.getId(), e);
-            }
-        }
-	}
+    private boolean uriTrackingEnabled() {
+        return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).uriTrackFilename != null;
+    }
 	
 	private boolean shouldOutputExtReport() {
 		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).extensiveReport;
@@ -247,27 +218,13 @@ public class VocEvaluate {
 		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).writeGraphs;
 	}
 	
-	private void writeToFiles(Collection<String> dotGraphs, String fileName) 
-		throws IOException
-	{
-		int i = 0;
-		Iterator<String> it = dotGraphs.iterator();
-		while (it.hasNext()) {
-			String dotGraph = it.next();
-			FileWriter writer = new FileWriter(new File(fileName +"_"+ i +".dot"));	
-			writer.write(dotGraph);
-			writer.close();
-			i++;
-		}
-	}
-	
-	private List<MeasureDescription> extractMeasures()
+	private Set<MeasureDescription> extractMeasures()
 		throws UnsupportedMeasureIdException
 	{
-		List<MeasureDescription> resultingMeasures;
+		Set<MeasureDescription> resultingMeasures;
 		
-		List<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
-		List<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
+		Set<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
+		Set<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
 
 		if (!selectedMeasures.isEmpty()) {
 			resultingMeasures = selectedMeasures;
@@ -283,13 +240,13 @@ public class VocEvaluate {
 		return resultingMeasures;
 	}
 	
-	private List<MeasureDescription> getMeasures(String ids) throws UnsupportedMeasureIdException
+	private Set<MeasureDescription> getMeasures(String ids) throws UnsupportedMeasureIdException
 	{
 		if (ids == null || ids.isEmpty()) {
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 		
-		List<MeasureDescription> measures = new ArrayList<MeasureDescription>();
+		Set<MeasureDescription> measures = new HashSet<MeasureDescription>();
 		StringTokenizer tokenizer = new StringTokenizer(ids, ",");
 		while (tokenizer.hasMoreElements()) {
 			measures.add(MeasureDescription.findById(tokenizer.nextToken()));
@@ -298,8 +255,8 @@ public class VocEvaluate {
 		return measures;
 	}
 	
-	private List<MeasureDescription> getAllMeasuresForCommand() {
-		List<MeasureDescription> measuresForCommand = new ArrayList<MeasureDescription>();
+	private Set<MeasureDescription> getAllMeasuresForCommand() {
+		Set<MeasureDescription> measuresForCommand = new HashSet<MeasureDescription>();
 		
 		for (MeasureDescription measureDesc : MeasureDescription.values()) {
 			String command = jc.getParsedCommand();
