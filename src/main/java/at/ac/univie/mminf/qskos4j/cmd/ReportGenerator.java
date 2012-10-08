@@ -27,13 +27,33 @@ public class ReportGenerator {
     void outputURITrackingReport(File uriTrackFile) throws IOException
     {
         Map<String, Collection<String>> conceptIssuesMapping = collectIssuesForConcepts(uriTrackFile);
+
+        outputCsvHeader();
+        outputIssuesAsCsv(conceptIssuesMapping);
+    }
+
+    private void outputCsvHeader() {
+        System.out.print("Concept;");
+        for (MeasureDescription measure : measures) {
+            System.out.print(measure.getId() + ";");
+        }
+        System.out.println();
+    }
+
+    private void outputIssuesAsCsv(Map<String, Collection<String>> conceptIssuesMapping) {
         for (String conceptSubstring : conceptIssuesMapping.keySet()) {
             Collection<String> issues = conceptIssuesMapping.get(conceptSubstring);
 
-            if (!issues.isEmpty()) {
-                System.out.println("Concept (containing) '" +conceptSubstring+ "':");
-                System.out.println("\tOccurs in issue(s): " + issues.toString());
+            System.out.print(conceptSubstring + ";");
+            for (MeasureDescription measure : measures) {
+                for (String issue : issues) {
+                    if (issue.contains(measure.getId())) {
+                        System.out.print(issue);
+                    }
+                }
+                System.out.print(";");
             }
+            System.out.println();
         }
     }
 
@@ -41,12 +61,12 @@ public class ReportGenerator {
     {
         Map<String, Collection<String>> uriSubstringToIssuesMapping = new LinkedHashMap<String, Collection<String>>();
 
-
         for (MeasureDescription measure : measures) {
             ConceptIterator conceptIterator = new ConceptIterator(uriTrackFile);
 
             try {
                 Result<?> result = invoker.getMeasureResult(measure);
+
                 String report = result.getExtensiveReport();
                 addConceptOccurences(uriSubstringToIssuesMapping, measure, report, conceptIterator);
             }
@@ -73,10 +93,26 @@ public class ReportGenerator {
                 uriSubstringToIssuesMapping.put(conceptSubString, containingMeasures);
             }
 
-            if (report.contains(conceptSubString)) {
-                containingMeasures.add(measure.getId());
+            int conceptPosInReport = report.indexOf(conceptSubString);
+            if (conceptPosInReport != -1) {
+                String measureId = measure.getId();
+
+                if (measure == MeasureDescription.WEAKLY_CONNECTED_COMPONENTS) {
+                    measureId += "(" +getWccSize(conceptPosInReport, report)+ ")";
+                }
+
+                containingMeasures.add(measureId);
             }
         }
+    }
+
+    private String getWccSize(int conceptPosInReport, String report) {
+        String WCC_SIZE_DESC = "size: ";
+
+        int sizeDescPos = report.lastIndexOf(WCC_SIZE_DESC, conceptPosInReport);
+        int newLinePos = report.indexOf("\n", sizeDescPos);
+
+        return report.substring(sizeDescPos + WCC_SIZE_DESC.length(), newLinePos);
     }
 
     void outputIssuesReport(boolean outputExtendedReport, boolean shouldWriteGraphs)
