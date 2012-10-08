@@ -57,7 +57,7 @@ public enum MeasureDescription {
 		"Undocumented Concepts",
 		"Finds concepts that don't use any SKOS documentation properties",
 		"findUndocumentedConcepts"),
-	LABEL_CONFLICTS("lc",	
+	LABEL_CONFLICTS("lac",
 		"Label Conflicts",
 		"Finds concepts with similar (identical) labels",
 		"findLabelConflicts"),
