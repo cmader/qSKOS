@@ -1,16 +1,14 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.io.IOException;
-import java.util.Collection;
-
+import at.ac.univie.mminf.qskos4j.QSkos;
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
+import java.io.IOException;
+import java.util.Collection;
 
 
 public class ConceptSchemesWithoutTopConceptTest extends IssueTestCase {
@@ -24,7 +22,7 @@ public class ConceptSchemesWithoutTopConceptTest extends IssueTestCase {
 	
 	@Test
 	public void testConceptSchemesWithoutTopConceptsCount() throws OpenRDFException {
-		Collection<URI> conceptSchemes = qSkosMissingTopConcepts.findOmittedTopConcepts().getData();
+		Collection<Value> conceptSchemes = qSkosMissingTopConcepts.findOmittedTopConcepts().getData();
 		Assert.assertEquals(2, conceptSchemes.size());
 	}
 	

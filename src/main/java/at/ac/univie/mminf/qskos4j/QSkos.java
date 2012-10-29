@@ -18,6 +18,7 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.sparql.SPARQLRepository;
 import org.openrdf.rio.RDFFormat;
@@ -211,7 +212,7 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public CollectionResult<URI> findConceptSchemes() throws OpenRDFException
+	public CollectionResult<Value> findConceptSchemes() throws OpenRDFException
 	{
 		return new RelationStatisticsFinder(vocabRepository).findConceptSchemes();
 	}
@@ -440,7 +441,7 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public CollectionResult<URI> findOmittedTopConcepts() throws OpenRDFException {
+	public CollectionResult<Value> findOmittedTopConcepts() throws OpenRDFException {
 		return new ConceptSchemeChecker(vocabRepository).findOmittedTopConcepts(findConceptSchemes().getData());
 	}
 	

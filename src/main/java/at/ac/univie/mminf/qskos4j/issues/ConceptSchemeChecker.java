@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
@@ -23,13 +24,13 @@ public class ConceptSchemeChecker extends Issue {
 		super(vocabRepository);
 	}
 
-	public CollectionResult<URI> findOmittedTopConcepts(Collection<URI> allConceptSchemes) 
+	public CollectionResult<Value> findOmittedTopConcepts(Collection<Value> allConceptSchemes)
 		throws OpenRDFException
 	{
 		RepositoryConnection connection = vocabRepository.getRepository().getConnection();
-		Collection<URI> csWithOmittedTopConcepts = new HashSet<URI>();
+		Collection<Value> csWithOmittedTopConcepts = new HashSet<Value>();
 		
-		for (URI conceptScheme : allConceptSchemes) {
+		for (Value conceptScheme : allConceptSchemes) {
 			BooleanQuery hasTopConceptQuery = connection.prepareBooleanQuery(
 				QueryLanguage.SPARQL, 
 				createConceptSchemeWithoutTopConceptQuery(conceptScheme));
@@ -39,10 +40,10 @@ public class ConceptSchemeChecker extends Issue {
 			}
 		}
 		
-		return new CollectionResult<URI>(csWithOmittedTopConcepts);
+		return new CollectionResult<Value>(csWithOmittedTopConcepts);
 	}
 	
-	private String createConceptSchemeWithoutTopConceptQuery(URI conceptScheme) {
+	private String createConceptSchemeWithoutTopConceptQuery(Value conceptScheme) {
 		return SparqlPrefix.SKOS+
 			"ASK {" +
 				"<"+conceptScheme.stringValue()+"> (skos:hasTopConcept|^skos:topConceptOf)+ ?topConcept"+

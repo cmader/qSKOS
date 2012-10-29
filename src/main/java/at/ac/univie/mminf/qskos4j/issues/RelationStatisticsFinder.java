@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
@@ -101,10 +102,10 @@ public class RelationStatisticsFinder extends Issue {
 			"}";
 	}
 	
-	public CollectionResult<URI> findConceptSchemes() throws OpenRDFException
+	public CollectionResult<Value> findConceptSchemes() throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createConceptSchemeQuery());		
-		return new CollectionResult<URI>(identifyResources(result));
+		return new CollectionResult<Value>(identifyResources(result));
 	}
 	
 	private String createConceptSchemeQuery() {
@@ -126,13 +127,12 @@ public class RelationStatisticsFinder extends Issue {
 		return new NumberResult<Long>(countResults(result));
 	}
 	
-	public Collection<URI> identifyResources(TupleQueryResult result) throws QueryEvaluationException 
+	public Collection<Value> identifyResources(TupleQueryResult result) throws QueryEvaluationException
 	{
-		Collection<URI> allResources = new HashSet<URI>();
+		Collection<Value> allResources = new HashSet<Value>();
 		
 		while (result.hasNext()) {
-			URI resource = (URI) result.next().getValue("resource");
-			allResources.add(resource);
+            allResources.add(result.next().getValue("resource"));
 		}
 		
 		return allResources;
