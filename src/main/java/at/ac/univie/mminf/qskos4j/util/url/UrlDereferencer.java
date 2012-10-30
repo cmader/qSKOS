@@ -46,7 +46,7 @@ public class UrlDereferencer {
 		logger.debug("dereferencing: " +url.toString());
 		
 		HttpGet httpGet = new HttpGet(url.toURI());
-		httpGet.setHeader("Accept", "application/rdf+xml,text/html,application/xhtml+xml,application/xml,text/plain,*/*");
+        httpGet.setHeader("Accept", "text/html,application/xhtml+xml,application/xml,text/plain,*/*;q=0.5");
 
         AbstractHttpClient httpClient = createParameterizedHttpClient();
         HttpResponse response = httpClient.execute(httpGet);
