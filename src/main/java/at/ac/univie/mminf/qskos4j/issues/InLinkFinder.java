@@ -107,10 +107,16 @@ public class InLinkFinder extends Issue {
 
         RepositoryConnection connection = endpoint.getConnection();
 
-        TupleQueryResult result = connection.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
-        addToConceptsRankMap(concept, result);
-
-        connection.close();
+        try {
+            TupleQueryResult result = connection.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
+            addToConceptsRankMap(concept, result);
+        }
+        catch (Exception e) {
+            logger.error("Error evaluating query '" +query);
+        }
+        finally {
+            connection.close();
+        }
 	}
 	
 	private void addToConceptsRankMap(URI concept, TupleQueryResult result) 

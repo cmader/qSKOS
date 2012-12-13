@@ -16,10 +16,10 @@ public class ReportGenerator {
 
     private Logger logger = (Logger) LoggerFactory.getLogger(ReportGenerator.class);
 
-    private Set<MeasureDescription> measures;
+    private Collection<MeasureDescription> measures;
     private MeasureInvoker invoker;
 
-    public ReportGenerator(MeasureInvoker invoker, Set<MeasureDescription> measures) {
+    public ReportGenerator(MeasureInvoker invoker, Collection<MeasureDescription> measures) {
         this.measures = measures;
         this.invoker = invoker;
     }

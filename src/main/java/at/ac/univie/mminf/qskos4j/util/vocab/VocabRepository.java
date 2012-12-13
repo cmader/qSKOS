@@ -1,20 +1,10 @@
 package at.ac.univie.mminf.qskos4j.util.vocab;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.GraphQuery;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -22,6 +12,10 @@ import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.sail.memory.MemoryStore;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class VocabRepository {
 

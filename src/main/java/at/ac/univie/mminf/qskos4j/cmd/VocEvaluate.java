@@ -218,10 +218,10 @@ public class VocEvaluate {
 		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).writeGraphs;
 	}
 	
-	private Set<MeasureDescription> extractMeasures()
+	private Collection<MeasureDescription> extractMeasures()
 		throws UnsupportedMeasureIdException
 	{
-		Set<MeasureDescription> resultingMeasures;
+		Collection<MeasureDescription> resultingMeasures;
 		
 		Set<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
 		Set<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
@@ -255,8 +255,8 @@ public class VocEvaluate {
 		return measures;
 	}
 	
-	private Set<MeasureDescription> getAllMeasuresForCommand() {
-		Set<MeasureDescription> measuresForCommand = new HashSet<MeasureDescription>();
+	private Collection<MeasureDescription> getAllMeasuresForCommand() {
+		List<MeasureDescription> measuresForCommand = new ArrayList<MeasureDescription>();
 		
 		for (MeasureDescription measureDesc : MeasureDescription.values()) {
 			String command = jc.getParsedCommand();
