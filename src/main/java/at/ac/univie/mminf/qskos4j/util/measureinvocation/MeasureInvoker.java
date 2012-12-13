@@ -2,11 +2,14 @@ package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.result.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
 public class MeasureInvoker {
 
+    private final Logger logger = LoggerFactory.getLogger(MeasureInvoker.class);
     private QSkos qskos;
 
     public MeasureInvoker(QSkos qskos) {
@@ -25,7 +28,12 @@ public class MeasureInvoker {
         try {
             for (Method method : qskos.getClass().getMethods()) {
                 if (method.getName().equals(methodName)) {
-                    return (Result<?>) method.invoke(qskos);
+
+                    logger.debug("invoking method '" +method.getName()+ "'");
+                    Object invocationResult = method.invoke(qskos);
+                    logger.debug("invocation done");
+
+                    return (Result<?>) invocationResult;
                 }
             }
         }

@@ -50,6 +50,9 @@ public class VocEvaluate {
         @Parameter(names = {"-np", "--no-progress"}, description = "Suppresses output of a progress indicator")
         private boolean noProgressBar = false;
 
+        @Parameter(names = {"-d", "--debug"}, description = "Enable additional informative/debug output")
+        private boolean debug;
+
     }
 	
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
@@ -137,7 +140,7 @@ public class VocEvaluate {
 			if (parsedCommand instanceof CommandAnalyze) {
 				outputMeasureDescription(MeasureType.ISSUE);	
 			}
-			else if (parsedCommand instanceof CommandSummarize) {
+			else {
 				outputMeasureDescription(MeasureType.STATISTICS);	
 			}
 		}
@@ -188,6 +191,8 @@ public class VocEvaluate {
 	}
 	
 	private void setup() throws OpenRDFException, IOException {
+        setupLogging();
+
 		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
 		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
@@ -204,7 +209,13 @@ public class VocEvaluate {
         if (!uriTrackingEnabled() && !parsedCommand.noProgressBar) {
             qskos.setProgressMonitor(new ConsoleProgressMonitor());
         }
-	}
+    }
+
+    private void setupLogging() {
+        if (parsedCommand.debug) {
+            System.setProperty("root-level", "DEBUG");
+        }
+    }
 
     private boolean uriTrackingEnabled() {
         return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).uriTrackFilename != null;
