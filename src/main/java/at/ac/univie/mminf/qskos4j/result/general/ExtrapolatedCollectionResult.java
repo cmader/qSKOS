@@ -16,14 +16,14 @@ public class ExtrapolatedCollectionResult<T> extends CollectionResult<T> {
 	public String getShortReport() {
 		long elementCount = getData().size();
 		
-		String report = "count: "+elementCount;
+		StringBuilder report = new StringBuilder("count: "+elementCount);
 		
 		if (subsetSize_percent != null) {
 			elementCount *= 100 / subsetSize_percent;
-			report += ", extrapolated: " +elementCount;
+			report.append(", extrapolated: " +elementCount);
 		}
 		
-		return report;
+		return report.toString();
 	}
 
 }

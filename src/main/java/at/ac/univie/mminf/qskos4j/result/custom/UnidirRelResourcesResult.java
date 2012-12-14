@@ -21,13 +21,13 @@ public class UnidirRelResourcesResult extends Result<Map<Pair<Resource>, String>
 
 	@Override
 	public String getExtensiveReport() {
-		String extensiveReport = "";
+		StringBuilder extensiveReport = new StringBuilder();
 		
 		for (Pair<Resource> concepts : getData().keySet()) {
-			extensiveReport += "concepts: " +concepts.toString()+ ", related by: '" +getData().get(concepts)+ "'\n";
+			extensiveReport.append("concepts: " +concepts.toString()+ ", related by: '" +getData().get(concepts)+ "'\n");
 		}
 
-		return extensiveReport;
+		return extensiveReport.toString();
 	}
 
 }

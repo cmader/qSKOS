@@ -34,16 +34,18 @@ public class ValuelessAssocRelationsResult extends Result<Collection<Pair<URI>>>
 
 	@Override
 	public String getExtensiveReport() {
-        String extensiveReport = "";
+        StringBuilder extensiveReport = new StringBuilder();
 
 		for (Pair<URI> relatedUris : getData()) {
 			String label1 = getLabelForUri(relatedUris.getFirst());
             String label2 = getLabelForUri(relatedUris.getSecond());
-			extensiveReport += relatedUris.getFirst() +" ("+ label1 +") related to "+ relatedUris.getSecond()
-                    +" ("+ label2+ ")\n";
+			extensiveReport.append(
+                relatedUris.getFirst()+
+                " ("+ label1 +") related to "+ relatedUris.getSecond()+
+                " ("+ label2+ ")\n");
 		}
 		
-		return extensiveReport;
+		return extensiveReport.toString();
 	}
 
     private String getLabelForUri(URI uri) {

@@ -21,15 +21,15 @@ public class ConceptLabelsResult extends Result<Map<URI, Collection<String>>> {
 
 	@Override
 	public String getExtensiveReport() {
-		String extensiveReport = "";
+		StringBuilder extensiveReport = new StringBuilder();
 		
 		for (URI concept : getData().keySet()) {
 			Collection<String> labels = getData().get(concept);
 			
-			extensiveReport += "concept: '" +concept.stringValue()+ "', labels: " +labels.toString()+ "\n";
+			extensiveReport.append("concept: '" +concept.stringValue()+ "', labels: " +labels.toString()+ "\n");
 		}
 		
-		return extensiveReport;
+		return extensiveReport.toString();
 	}
 
 }

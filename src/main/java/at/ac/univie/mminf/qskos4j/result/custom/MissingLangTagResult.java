@@ -22,15 +22,15 @@ public class MissingLangTagResult extends Result<Map<Resource, Collection<Litera
 
 	@Override
 	public String getExtensiveReport() {
-		String extensiveReport = "";
+        StringBuilder extensiveReport = new StringBuilder();
 		
 		for (Resource resource : getData().keySet()) {
 			Collection<Literal> affectedLiterals = getData().get(resource);
 			
-			extensiveReport += "resource: '" +resource+ "', affected literals: " +affectedLiterals.toString()+ "\n";
+			extensiveReport.append("resource: '" +resource+ "', affected literals: " +affectedLiterals.toString()+ "\n");
 		}
 		
-		return extensiveReport;
+		return extensiveReport.toString();
 	}
 
 }

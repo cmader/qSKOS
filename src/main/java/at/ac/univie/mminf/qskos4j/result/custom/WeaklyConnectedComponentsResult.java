@@ -30,24 +30,24 @@ public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resour
 	}
 		
 	private String generateReport(boolean overviewOnly) {
-		String report = "";
+		StringBuilder report = new StringBuilder();
 		long compCount = 1;
 		
 		if (overviewOnly) {
-			report += "count: " +getData().size();
+			report.append("count: " +getData().size());
 		}
 		
 		for (Set<Resource> component : getData()) {
-			report += "\ncomponent " +compCount+ ", size: " +component.size();
+			report.append("\ncomponent " +compCount+ ", size: " +component.size());
 			if (!overviewOnly) {
                 for (Resource resource : component) {
-                    report += "\n\t" +resource.toString();
+                    report.append("\n\t" +resource.toString());
                 }
 			}
 			compCount++;
 		}
 		
-		return report;
+		return report.toString();
 	}
 
 	@Override

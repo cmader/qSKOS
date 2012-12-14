@@ -2,6 +2,8 @@ package at.ac.univie.mminf.qskos4j.result.custom;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.openrdf.model.Resource;
 
@@ -21,15 +23,13 @@ public class IncompleteLangCovResult extends Result<Map<Resource, Collection<Str
 
 	@Override
 	public String getExtensiveReport() {
-		String extensiveReport = "";
-		
-		for (Resource resource : getData().keySet()) {
-			Collection<String> missingLangs = getData().get(resource);
-			
-			extensiveReport += "concept: '" +resource.stringValue()+ "', not covered languages: " +missingLangs.toString()+ "\n";
+        StringBuilder extensiveReport = new StringBuilder();
+
+        for (Entry<Resource, Collection<String>> entry : getData().entrySet()) {
+			extensiveReport.append("concept: '" +entry.getKey().stringValue()+ "', not covered languages: " +entry.getValue().toString()+ "\n");
 		}
 
-		return extensiveReport;
+		return extensiveReport.toString();
 	}
 
 }

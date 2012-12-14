@@ -95,13 +95,13 @@ public class ReportGenerator {
 
             int conceptPosInReport = report.indexOf(conceptSubString);
             if (conceptPosInReport != -1) {
-                String measureId = measure.getId();
+                StringBuilder measureId = new StringBuilder(measure.getId());
 
                 if (measure == MeasureDescription.WEAKLY_CONNECTED_COMPONENTS) {
-                    measureId += "(" +getWccSize(conceptPosInReport, report)+ ")";
+                    measureId.append("(" +getWccSize(conceptPosInReport, report)+ ")");
                 }
 
-                containingMeasures.add(measureId);
+                containingMeasures.add(measureId.toString());
             }
         }
     }
@@ -125,6 +125,7 @@ public class ReportGenerator {
                 System.out.println(result.getShortReport());
 
                 if (outputExtendedReport) {
+                    logger.debug("generating extensive report");
                     System.out.println(result.getExtensiveReport());
                 }
 
