@@ -342,8 +342,8 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public ConceptLabelsResult findAmbiguouslyPreflabeledConcepts() throws OpenRDFException {
-		return new AmbiguousLabelFinder(vocabRepository).findAmbiguouslyPreflabeledConcepts();
+	public ResourceLabelsResult findAmbiguouslyPreflabeledResources() throws OpenRDFException {
+		return new AmbiguousLabelFinder(vocabRepository).findAmbiguouslyPreflabeledResources();
 	}
 	
 	/**
@@ -353,7 +353,7 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public ConceptLabelsResult findDisjointLabelsViolations() throws OpenRDFException {
+	public ResourceLabelsResult findDisjointLabelsViolations() throws OpenRDFException {
 		return new AmbiguousLabelFinder(vocabRepository).findDisjointLabelsViolations();
 	}
 	

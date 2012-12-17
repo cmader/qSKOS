@@ -24,7 +24,7 @@ public class AmbiguousLabelTest extends IssueTestCase {
 	
 	@Test
 	public void testUniquePrefLabels() throws OpenRDFException {
-		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findAmbiguouslyPreflabeledConcepts().getData();
+		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findAmbiguouslyPreflabeledResources().getData();
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA"));
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA2"));

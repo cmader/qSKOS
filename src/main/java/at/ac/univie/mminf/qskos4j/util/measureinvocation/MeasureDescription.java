@@ -128,13 +128,13 @@ public enum MeasureDescription {
 		"Covers condition S46 from the SKOS reference document",	
 		"findExactVsAssociativeMappingClashes"),
 	
-	AMBIGUOUS_PREFLABELED_CONCEPTS("apc",
-		"Ambiguously Preflabeled Concepts",
-		"Finds concepts with more then one prefLabel per language",	
-		"findAmbiguouslyPreflabeledConcepts"),
+	AMBIGUOUS_PREFLABELED_CONCEPTS("apr",
+		"Ambiguously Preflabeled Resources",
+		"Finds resources with more then one prefLabel per language",
+		"findAmbiguouslyPreflabeledResources"),
 	DISJOINT_LABELS_VIOLATION("dlv",
 		"Disjoint Labels Violation",
-		"Finds concepts with identical entries for different label types",
+		"Finds resources with identical entries for different label types",
 		"findDisjointLabelsViolations");
 		
 	public enum MeasureType {STATISTICS, ISSUE}

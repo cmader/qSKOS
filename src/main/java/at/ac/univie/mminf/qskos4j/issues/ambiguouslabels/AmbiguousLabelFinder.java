@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import at.ac.univie.mminf.qskos4j.result.custom.ResourceLabelsResult;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
@@ -13,39 +14,38 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.custom.ConceptLabelsResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class AmbiguousLabelFinder extends Issue {
 
-	private Map<URI, Collection<String>> ambiguouslyLabeledConcepts, conceptLanguages;
+	private Map<URI, Collection<String>> ambiguouslyLabeledResources, conceptLanguages;
 	
 	public AmbiguousLabelFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
 	}
 	
-	public ConceptLabelsResult findAmbiguouslyPreflabeledConcepts() throws OpenRDFException 
+	public ResourceLabelsResult findAmbiguouslyPreflabeledResources() throws OpenRDFException
 	{
-        ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
+        ambiguouslyLabeledResources = new HashMap<URI, Collection<String>>();
 
 		TupleQueryResult result = vocabRepository.query(createNotUniquePrefLabelsQuery());
         createAmbigPrefLabelMap(result);
 		
-		return new ConceptLabelsResult(ambiguouslyLabeledConcepts);
+		return new ResourceLabelsResult(ambiguouslyLabeledResources);
 	}
 	
 	private String createNotUniquePrefLabelsQuery() {
 		return SparqlPrefix.SKOS +
-			"SELECT ?concept ?prefLabel WHERE "+
+			"SELECT ?resource ?prefLabel WHERE "+
 			"{" +
-				"?concept skos:prefLabel ?prefLabel . " +
+				"?resource skos:prefLabel ?prefLabel . " +
 				"{"+
-					"SELECT ?concept WHERE " +
+					"SELECT ?resource WHERE " +
 					"{"+
-						"?concept skos:prefLabel ?somePrefLabel . " +
+						"?resource skos:prefLabel ?somePrefLabel . " +
 					"}" +
-					"GROUP BY ?concept "+
+					"GROUP BY ?resource "+
 					"HAVING (COUNT(?somePrefLabel) > 1)" +
 				"}" +
 			"}";
@@ -58,14 +58,14 @@ public class AmbiguousLabelFinder extends Issue {
 
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
-			URI concept = (URI) queryResult.getValue("concept");
+			URI resource = (URI) queryResult.getValue("resource");
 			Literal prefLabel = (Literal) queryResult.getValue("prefLabel"); 
 
 			String lang = prefLabel.getLanguage();
 			lang = lang == null ? "" : lang;
 
-            if (isAmbiguous(concept, lang)) {
-                addToAmbiguouslyLabeledConceptsMap(concept, prefLabel);
+            if (isAmbiguous(resource, lang)) {
+                addToAmbiguouslyLabeledConceptsMap(resource, prefLabel);
             }
 		}
 	}
@@ -85,43 +85,42 @@ public class AmbiguousLabelFinder extends Issue {
 	
 	private void addToAmbiguouslyLabeledConceptsMap(URI concept, Literal prefLabel)
 	{		
-		Collection<String> ambiguousLabels = ambiguouslyLabeledConcepts.get(concept);
+		Collection<String> ambiguousLabels = ambiguouslyLabeledResources.get(concept);
 		if (ambiguousLabels == null) {
 			ambiguousLabels = new HashSet<String>();
-			ambiguouslyLabeledConcepts.put(concept, ambiguousLabels);
+			ambiguouslyLabeledResources.put(concept, ambiguousLabels);
 		}
 		ambiguousLabels.add(prefLabel.stringValue());
 	}
 	
-	public ConceptLabelsResult findDisjointLabelsViolations() throws OpenRDFException 
+	public ResourceLabelsResult findDisjointLabelsViolations() throws OpenRDFException
 	{
-		ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
+		ambiguouslyLabeledResources = new HashMap<URI, Collection<String>>();
 		
 		TupleQueryResult result = vocabRepository.query(createNotDisjointLabelsQuery());
-		addNotDisjointLabelsToAmbiguouslyLabeledConceptsMap(result);
+		addNotDisjointLabelsToAmbiguouslyLabeledResourceMap(result);
 		
-		return new ConceptLabelsResult(ambiguouslyLabeledConcepts);
+		return new ResourceLabelsResult(ambiguouslyLabeledResources);
 	}
 	
 	private String createNotDisjointLabelsQuery() {
 		return SparqlPrefix.SKOS +
-			"SELECT DISTINCT ?concept ?prefLabel ?altLabel ?hiddenLabel "+
+			"SELECT DISTINCT ?resource ?prefLabel ?altLabel ?hiddenLabel "+
 			"{" +
-			"{?concept skos:prefLabel ?prefLabel ." +
-			"?concept skos:altLabel ?altLabel . " +
-			"OPTIONAL {?concept skos:hiddenLabel ?hiddenLabel}} UNION "+
-			"{?concept skos:prefLabel ?prefLabel ." +
-			"?concept skos:hiddenLabel ?hiddenLabel ." +
-			"OPTIONAL {?concept skos:altLabel ?altLabel}} UNION "+
-			"{?concept skos:altLabel ?altLabel . " +
-			"?concept skos:hiddenLabel ?hiddenLabel ." +
-			"OPTIONAL {?concept skos:prefLabel ?prefLabel}}" +
+			"{?resource skos:prefLabel ?prefLabel ." +
+			"?resource skos:altLabel ?altLabel . " +
+			"OPTIONAL {?resource skos:hiddenLabel ?hiddenLabel}} UNION "+
+			"{?resource skos:prefLabel ?prefLabel ." +
+			"?resource skos:hiddenLabel ?hiddenLabel ." +
+			"OPTIONAL {?resource skos:altLabel ?altLabel}} UNION "+
+			"{?resource skos:altLabel ?altLabel . " +
+			"?resource skos:hiddenLabel ?hiddenLabel ." +
+			"OPTIONAL {?resource skos:prefLabel ?prefLabel}}" +
 			"}" +
-			"ORDER BY ?concept";
+			"ORDER BY ?resource";
 	}
 	
-	private void addNotDisjointLabelsToAmbiguouslyLabeledConceptsMap(
-		TupleQueryResult result) 
+	private void addNotDisjointLabelsToAmbiguouslyLabeledResourceMap(TupleQueryResult result)
 		throws QueryEvaluationException
 	{
 		NonDisjointLabelFinder ndlf = null;
@@ -129,9 +128,9 @@ public class AmbiguousLabelFinder extends Issue {
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
 			
-			URI concept = (URI) queryResult.getValue("concept");
-			if (ndlf == null || !ndlf.getConcept().equals(concept)) {
-				ndlf = new NonDisjointLabelFinder(concept);
+			URI resource = (URI) queryResult.getValue("resource");
+			if (ndlf == null || !ndlf.getConcept().equals(resource)) {
+				ndlf = new NonDisjointLabelFinder(resource);
 			}
 			
 			Literal prefLabel = (Literal) queryResult.getValue("prefLabel");
@@ -139,13 +138,13 @@ public class AmbiguousLabelFinder extends Issue {
 			Literal hiddenLabel = (Literal) queryResult.getValue("hiddenLabel");
 			
 			if (!ndlf.addPrefLabelAndCheckIfDisjoint(prefLabel)) {
-				addToAmbiguouslyLabeledConceptsMap(concept, prefLabel);
+				addToAmbiguouslyLabeledConceptsMap(resource, prefLabel);
 			}
 			if (!ndlf.addAltLabelAndCheckIfDisjoint(altLabel)) {
-				addToAmbiguouslyLabeledConceptsMap(concept, altLabel);
+				addToAmbiguouslyLabeledConceptsMap(resource, altLabel);
 			}
 			if (!ndlf.addHiddenLabelAndCheckIfDisjoint(hiddenLabel)) {
-				addToAmbiguouslyLabeledConceptsMap(concept, hiddenLabel);
+				addToAmbiguouslyLabeledConceptsMap(resource, hiddenLabel);
 			}
 		}
 	}
