@@ -28,6 +28,8 @@ public class AmbiguousLabelTest extends IssueTestCase {
 		
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA"));
 		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA2"));
+        Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA3"));
+        Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA4"));
 		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptB"));
 		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptC"));
 		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptG"));

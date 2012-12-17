@@ -19,7 +19,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class AmbiguousLabelFinder extends Issue {
 
-	private Map<URI, Collection<String>> ambiguouslyLabeledConcepts;
+	private Map<URI, Collection<String>> ambiguouslyLabeledConcepts, conceptLanguages;
 	
 	public AmbiguousLabelFinder(VocabRepository vocabRepository) {
 		super(vocabRepository);
@@ -27,10 +27,10 @@ public class AmbiguousLabelFinder extends Issue {
 	
 	public ConceptLabelsResult findAmbiguouslyPreflabeledConcepts() throws OpenRDFException 
 	{
-		ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
-		
+        ambiguouslyLabeledConcepts = new HashMap<URI, Collection<String>>();
+
 		TupleQueryResult result = vocabRepository.query(createNotUniquePrefLabelsQuery());
-		addPrefLabelsToAmbiguouslyLabeledConceptsMap(result);
+        createAmbigPrefLabelMap(result);
 		
 		return new ConceptLabelsResult(ambiguouslyLabeledConcepts);
 	}
@@ -51,30 +51,37 @@ public class AmbiguousLabelFinder extends Issue {
 			"}";
 	}
 	
-	private void addPrefLabelsToAmbiguouslyLabeledConceptsMap(TupleQueryResult result) 
+	private void createAmbigPrefLabelMap(TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
-		URI prevConcept = null;
-		String prevLang = "";
-		
+        conceptLanguages = new HashMap<URI, Collection<String>>();
+
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
 			URI concept = (URI) queryResult.getValue("concept");
 			Literal prefLabel = (Literal) queryResult.getValue("prefLabel"); 
-			
-			//System.out.println("concept: " +concept.stringValue()+ ", label: " +prefLabel.stringValue());
-			
+
 			String lang = prefLabel.getLanguage();
 			lang = lang == null ? "" : lang;
-			
-			if (prevConcept != null && concept.equals(prevConcept) && lang.equals(prevLang)) {
-				addToAmbiguouslyLabeledConceptsMap(concept, prefLabel);
-			}
-			
-			prevConcept = concept;
-			prevLang = lang;
+
+            if (isAmbiguous(concept, lang)) {
+                addToAmbiguouslyLabeledConceptsMap(concept, prefLabel);
+            }
 		}
 	}
+
+    private boolean isAmbiguous(URI concept, String langTag) {
+        Collection<String> languages = conceptLanguages.get(concept);
+        if (languages != null && languages.contains(langTag)) {
+            return true;
+        }
+        else {
+            if (languages == null) languages = new HashSet<String>();
+            languages.add(langTag);
+            conceptLanguages.put(concept, languages);
+            return false;
+        }
+    }
 	
 	private void addToAmbiguouslyLabeledConceptsMap(URI concept, Literal prefLabel)
 	{		

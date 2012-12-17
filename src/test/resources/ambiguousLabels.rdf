@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
 	
 	<!-- Error, prefLabel defined multiple times in same language -->
 	<rdf:Description rdf:about="conceptA">
@@ -16,7 +16,22 @@
 		<skos:prefLabel xml:lang="de">Konzept A2</skos:prefLabel>
   </rdf:Description>
 
-	<!-- Ok, prefLabels have different language tag -->
+    <!-- Error, prefLabel defined multiple times in same language, ordered differently than for conceptA2 -->
+    <rdf:Description rdf:about="conceptA3">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">Concept A3</skos:prefLabel>
+        <skos:prefLabel xml:lang="de">Konzept A3</skos:prefLabel>
+        <skos:prefLabel xml:lang="en">Concept A3, ambiguous</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Error, two prefLabels without language tag -->
+    <rdf:Description rdf:about="conceptA4">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel>Concept A3</skos:prefLabel>
+        <skos:prefLabel>Konzept A3</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Ok, prefLabels have different language tag -->
 	<rdf:Description rdf:about="conceptB">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel>Concept B</skos:prefLabel>
