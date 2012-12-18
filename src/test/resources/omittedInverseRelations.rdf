@@ -58,4 +58,32 @@
 		<skos:related rdf:resource="conceptQ"/>
 	</rdf:Description>
 
+    <!-- Case 8; error -->
+    <rdf:Description rdf:about="conceptS">
+        <skos:exactMatch rdf:resource="conceptT"/>
+    </rdf:Description>
+
+    <!-- Case 9; ok -->
+    <rdf:Description rdf:about="conceptU">
+        <skos:exactMatch rdf:resource="conceptV"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptV">
+        <skos:exactMatch rdf:resource="conceptU"/>
+    </rdf:Description>
+
+    <!-- Case 10; error -->
+    <rdf:Description rdf:about="conceptW">
+        <skos:closeMatch rdf:resource="conceptX"/>
+    </rdf:Description>
+
+    <!-- Case 11; ok -->
+    <rdf:Description rdf:about="conceptY">
+        <skos:closeMatch rdf:resource="conceptZ"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptZ">
+        <skos:closeMatch rdf:resource="conceptY"/>
+    </rdf:Description>
+
 </rdf:RDF>
