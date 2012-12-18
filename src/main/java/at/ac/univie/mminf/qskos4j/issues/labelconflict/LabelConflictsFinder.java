@@ -109,14 +109,19 @@ public class LabelConflictsFinder extends Issue {
 			BindingSet queryResult = result.next();
 
 			for (String bindingName : queryResult.getBindingNames()) {
-				Literal literal = (Literal) queryResult.getValue(bindingName);
-				
-				SkosLabel skosLabel = new SkosLabel(
-					concept,
-					literal, 
-					getLabelTypeForBindingName(bindingName));
-					
-				ret.add(skosLabel);
+                try {
+                    Literal literal = (Literal) queryResult.getValue(bindingName);
+
+                    SkosLabel skosLabel = new SkosLabel(
+                        concept,
+                        literal,
+                        getLabelTypeForBindingName(bindingName));
+
+                    ret.add(skosLabel);
+                }
+                catch (ClassCastException e) {
+                    logger.info("literal label expected for concept " +concept.toString()+ ", " +e.toString());
+                }
 			}			
 		}
 		

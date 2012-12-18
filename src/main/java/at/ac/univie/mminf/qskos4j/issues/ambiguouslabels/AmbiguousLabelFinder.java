@@ -16,9 +16,12 @@ import org.openrdf.query.TupleQueryResult;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AmbiguousLabelFinder extends Issue {
 
+    private final Logger logger = LoggerFactory.getLogger(AmbiguousLabelFinder.class);
 	private Map<URI, Collection<String>> ambiguouslyLabeledResources, conceptLanguages;
 	
 	public AmbiguousLabelFinder(VocabRepository vocabRepository) {
@@ -127,25 +130,31 @@ public class AmbiguousLabelFinder extends Issue {
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
-			
+
 			URI resource = (URI) queryResult.getValue("resource");
 			if (ndlf == null || !ndlf.getConcept().equals(resource)) {
 				ndlf = new NonDisjointLabelFinder(resource);
 			}
-			
-			Literal prefLabel = (Literal) queryResult.getValue("prefLabel");
-			Literal altLabel = (Literal) queryResult.getValue("altLabel");
-			Literal hiddenLabel = (Literal) queryResult.getValue("hiddenLabel");
-			
-			if (!ndlf.addPrefLabelAndCheckIfDisjoint(prefLabel)) {
-				addToAmbiguouslyLabeledConceptsMap(resource, prefLabel);
-			}
-			if (!ndlf.addAltLabelAndCheckIfDisjoint(altLabel)) {
-				addToAmbiguouslyLabeledConceptsMap(resource, altLabel);
-			}
-			if (!ndlf.addHiddenLabelAndCheckIfDisjoint(hiddenLabel)) {
-				addToAmbiguouslyLabeledConceptsMap(resource, hiddenLabel);
-			}
+
+            try {
+                Literal prefLabel = (Literal) queryResult.getValue("prefLabel");
+                Literal altLabel = (Literal) queryResult.getValue("altLabel");
+                Literal hiddenLabel = (Literal) queryResult.getValue("hiddenLabel");
+
+                if (!ndlf.addPrefLabelAndCheckIfDisjoint(prefLabel)) {
+                    addToAmbiguouslyLabeledConceptsMap(resource, prefLabel);
+                }
+                if (!ndlf.addAltLabelAndCheckIfDisjoint(altLabel)) {
+                    addToAmbiguouslyLabeledConceptsMap(resource, altLabel);
+                }
+                if (!ndlf.addHiddenLabelAndCheckIfDisjoint(hiddenLabel)) {
+                    addToAmbiguouslyLabeledConceptsMap(resource, hiddenLabel);
+                }
+            }
+            catch (ClassCastException e) {
+                logger.info("literal label expected for resource " +resource.toString()+ ", " +e.toString());
+            }
+
 		}
 	}
 
