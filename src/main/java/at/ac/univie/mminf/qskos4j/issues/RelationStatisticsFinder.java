@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
@@ -102,10 +103,10 @@ public class RelationStatisticsFinder extends Issue {
 			"}";
 	}
 	
-	public CollectionResult<Value> findConceptSchemes() throws OpenRDFException
+	public CollectionResult<Resource> findConceptSchemes() throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createConceptSchemeQuery());		
-		return new CollectionResult<Value>(identifyResources(result));
+		return new CollectionResult<Resource>(identifyResources(result));
 	}
 	
 	private String createConceptSchemeQuery() {
@@ -127,12 +128,19 @@ public class RelationStatisticsFinder extends Issue {
 		return new NumberResult<Long>(countResults(result));
 	}
 	
-	public Collection<Value> identifyResources(TupleQueryResult result) throws QueryEvaluationException
+	public Collection<Resource> identifyResources(TupleQueryResult result) throws QueryEvaluationException
 	{
-		Collection<Value> allResources = new HashSet<Value>();
+		Collection<Resource> allResources = new HashSet<Resource>();
 		
 		while (result.hasNext()) {
-            allResources.add(result.next().getValue("resource"));
+            Value conceptScheme = result.next().getValue("resource");
+
+            try {
+                allResources.add((Resource) conceptScheme);
+            }
+            catch (ClassCastException e) {
+                logger.info("resource expected for conceptscheme " +conceptScheme.toString()+ ", " +e.toString());
+            }
 		}
 		
 		return allResources;

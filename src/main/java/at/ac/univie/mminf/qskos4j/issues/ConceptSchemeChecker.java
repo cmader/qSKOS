@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
@@ -24,23 +25,24 @@ public class ConceptSchemeChecker extends Issue {
 		super(vocabRepository);
 	}
 
-	public CollectionResult<Value> findOmittedTopConcepts(Collection<Value> allConceptSchemes)
+	public CollectionResult<Resource> findOmittedTopConcepts(Collection<Resource> allConceptSchemes)
 		throws OpenRDFException
 	{
 		RepositoryConnection connection = vocabRepository.getRepository().getConnection();
-		Collection<Value> csWithOmittedTopConcepts = new HashSet<Value>();
+		Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
 		
-		for (Value conceptScheme : allConceptSchemes) {
-			BooleanQuery hasTopConceptQuery = connection.prepareBooleanQuery(
-				QueryLanguage.SPARQL, 
-				createConceptSchemeWithoutTopConceptQuery(conceptScheme));
+		for (Resource conceptScheme : allConceptSchemes) {
+
+            BooleanQuery hasTopConceptQuery = connection.prepareBooleanQuery(
+				QueryLanguage.SPARQL,
+                createConceptSchemeWithoutTopConceptQuery(conceptScheme));
 			
 			if (!hasTopConceptQuery.evaluate()) {
 				csWithOmittedTopConcepts.add(conceptScheme);
 			}
 		}
 		
-		return new CollectionResult<Value>(csWithOmittedTopConcepts);
+		return new CollectionResult<Resource>(csWithOmittedTopConcepts);
 	}
 	
 	private String createConceptSchemeWithoutTopConceptQuery(Value conceptScheme) {

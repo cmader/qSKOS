@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class ConceptSchemesWithoutTopConceptTest extends IssueTestCase {
 	
 	@Test
 	public void testConceptSchemesWithoutTopConceptsCount() throws OpenRDFException {
-		Collection<Value> conceptSchemes = qSkosMissingTopConcepts.findOmittedTopConcepts().getData();
+		Collection<Resource> conceptSchemes = qSkosMissingTopConcepts.findOmittedTopConcepts().getData();
 		Assert.assertEquals(2, conceptSchemes.size());
 	}
 	
