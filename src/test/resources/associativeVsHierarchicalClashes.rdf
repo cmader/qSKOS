@@ -53,7 +53,7 @@
 
 <!-- case 7, error;
 	This includes two cycles! It should produce an error because of the broader chain 
-	connecting 26 with 27 but	no stack overflow -->
+	connecting 26 with 27 but no stack overflow -->
 <rdf:Description rdf:about="26">
 	<skos:broader rdf:resource="28"/>
 	<skos:related rdf:resource="27"/>
@@ -75,5 +75,16 @@
 <rdf:Description rdf:about="30">
 	<skos:broader rdf:resource="29"/>
 </rdf:Description>
+
+<!-- case 8 error -->
+<rdf:Description rdf:about="31">
+    <skos:broader rdf:resource="32"/>
+    <skos:related rdf:resource="33"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="33">
+    <skos:narrower rdf:resource="32"/>
+</rdf:Description>
+
 
 </rdf:RDF>
