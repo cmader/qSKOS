@@ -128,8 +128,8 @@ public enum MeasureDescription {
 		"Covers condition S46 from the SKOS reference document",	
 		"findExactVsAssociativeMappingClashes"),
 	
-	AMBIGUOUSLY_PREFLABELED_RESOURCES("apr",
-		"Ambiguously Preflabeled Resources",
+	AMBIGUOUSLY_LABELED_RESOURCES("alr",
+		"Ambiguously Labeled Resources",
 		"Finds resources with more then one prefLabel per language",
 		"findAmbiguouslyPreflabeledResources"),
 	DISJOINT_LABELS_VIOLATION("dlv",
