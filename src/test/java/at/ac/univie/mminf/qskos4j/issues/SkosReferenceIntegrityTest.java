@@ -25,7 +25,7 @@ public class SkosReferenceIntegrityTest extends IssueTestCase {
 	@Test
 	public void testAssociativeVsHierarchicalClashes() throws OpenRDFException {
 		Collection<Pair<URI>> assHierClashes = qSkosAssVsHierClashes.findAssociativeVsHierarchicalClashes().getData();
-		Assert.assertEquals(6, assHierClashes.size());
+		Assert.assertEquals(10, assHierClashes.size());
 	}
 	
 	@Test

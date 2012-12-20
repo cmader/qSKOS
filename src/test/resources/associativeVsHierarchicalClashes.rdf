@@ -52,7 +52,7 @@
 </rdf:Description>
 
 <!-- case 7, error;
-	This includes two cycles! It should produce an error because of the broader chain 
+	This includes two cycles! It should produce an error because of the broader chain
 	connecting 26 with 27 but no stack overflow -->
 <rdf:Description rdf:about="26">
 	<skos:broader rdf:resource="28"/>
@@ -84,6 +84,38 @@
 
 <rdf:Description rdf:about="33">
     <skos:narrower rdf:resource="32"/>
+</rdf:Description>
+
+<!-- case 9 error, test for matching properties -->
+<rdf:Description rdf:about="34">
+    <skos:broader rdf:resource="35"/>
+    <skos:relatedMatch rdf:resource="35"/>
+</rdf:Description>
+
+<!-- case 10 error, test for matching properties -->
+<rdf:Description rdf:about="36">
+    <skos:broadMatch rdf:resource="37"/>
+    <skos:related rdf:resource="37"/>
+</rdf:Description>
+
+<!-- case 11 error, test for matching properties -->
+<rdf:Description rdf:about="38">
+    <skos:broader rdf:resource="39"/>
+    <skos:relatedMatch rdf:resource="40"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="39">
+    <skos:broader rdf:resource="40"/>
+</rdf:Description>
+
+<!-- case 12 error, test for matching properties -->
+<rdf:Description rdf:about="41">
+    <skos:broadMatch rdf:resource="42"/>
+    <skos:related rdf:resource="43"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="42">
+    <skos:broadMatch rdf:resource="43"/>
 </rdf:Description>
 
 
