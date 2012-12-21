@@ -28,19 +28,18 @@ public class LabelConflictsTest extends IssueTestCase {
 	
 	@Test
 	public void testLabelConflictCount_1() throws OpenRDFException {
-		Collection<LabelConflict> allRelatedConcepts = qSkosComponents.findLabelConflicts().getData();
+		Collection<LabelConflict> allLabelConflicts = qSkosComponents.findLabelConflicts().getData();
 		
-		Assert.assertEquals(2, allRelatedConcepts.size());
-		Assert.assertEquals(4, getDifferentConcepts(allRelatedConcepts).size());
+		Assert.assertEquals(2, allLabelConflicts.size());
+		Assert.assertEquals(4, getDifferentConcepts(allLabelConflicts).size());
 	}
 
-	private Collection<URI> getDifferentConcepts(Collection<LabelConflict> allRelatedConcepts) 
+	private Collection<URI> getDifferentConcepts(Collection<LabelConflict> labelConflicts)
 	{
 		Set<URI> ret = new HashSet<URI>();
 		
-		for (LabelConflict relatedConcepts : allRelatedConcepts) {
-			ret.add(relatedConcepts.getConcept1());
-			ret.add(relatedConcepts.getConcept2());
+		for (LabelConflict labelConflict : labelConflicts) {
+			ret.addAll(labelConflict.getAffectedConcepts());
 		}
 		
 		return ret;

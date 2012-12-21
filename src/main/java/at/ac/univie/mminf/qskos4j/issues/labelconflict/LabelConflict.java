@@ -3,57 +3,32 @@ package at.ac.univie.mminf.qskos4j.issues.labelconflict;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.SkosLabel.LabelType;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class LabelConflict {
 
-	private URI concept1, concept2;
-	private Literal label1, label2;
-	private LabelType label1Type, label2Type;
-	
-	LabelConflict(
-		URI concept1, 
-		URI concept2, 
-		Literal label1,
-		Literal label2,
-		LabelType label1Type,
-		LabelType label2Type)
+    private Literal literal;
+    private Set<LabeledConcept> labeledConcepts;
+
+	LabelConflict(Literal literal, Set<LabeledConcept> labeledConcepts)
 	{
-		this.concept1 = concept1;
-		this.concept2 = concept2;
-		this.label1 = label1;
-		this.label2 = label2;
-		this.label1Type = label1Type;
-		this.label2Type = label2Type;
+        this.literal = literal;
+        this.labeledConcepts = labeledConcepts;
 	}
 
-	public URI getConcept1() {
-		return concept1;
-	}
+    public Set<URI> getAffectedConcepts() {
+        Set<URI> affectedConcepts = new HashSet<URI>();
 
-	public URI getConcept2() {
-		return concept2;
-	}
+        for (LabeledConcept labeledConcept : labeledConcepts) {
+            affectedConcepts.add(labeledConcept.getConcept());
+        }
+        return affectedConcepts;
+    }
 
-	public Literal getLabel1() {
-		return label1;
-	}
-
-	public Literal getLabel2() {
-		return label2;
-	}
-
-	public LabelType getLabel1Type() {
-		return label1Type;
-	}
-
-	public LabelType getLabel2Type() {
-		return label2Type;
-	}
-		
 	@Override
 	public String toString() {
-		return concept1 +"("+label1+") <-> "+ concept2 +"("+label2+")";
+		return literal.toString() +": "+ labeledConcepts.toString();
 	}
 }

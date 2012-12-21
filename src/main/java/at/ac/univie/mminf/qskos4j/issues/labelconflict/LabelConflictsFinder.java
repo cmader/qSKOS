@@ -1,38 +1,29 @@
 package at.ac.univie.mminf.qskos4j.issues.labelconflict;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.SkosLabel.LabelType;
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabeledConcept.LabelType;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.openrdf.OpenRDFException;
+import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.TupleQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class LabelConflictsFinder extends Issue {
 
 	private final Logger logger = LoggerFactory.getLogger(LabelConflictsFinder.class);
 
-	private Set<LabelConflict> allRelatedConcepts;
-	private Map<URI, Set<SkosLabel>> conceptLabels;
+	private Set<LabelConflict> labelConflicts;
+	private Map<Literal, Set<LabeledConcept>> conceptLabels;
 	
 	public LabelConflictsFinder(VocabRepository vocabRepository) 
 	{
@@ -42,55 +33,47 @@ public class LabelConflictsFinder extends Issue {
 	public CollectionResult<LabelConflict> findLabelConflicts(Collection<URI> concepts) 
 		throws OpenRDFException
 	{
-		if (allRelatedConcepts == null) {
+		if (labelConflicts == null) {
 			generateConceptsLabelMap(concepts);
-			compareConceptLabels();
+            generateLabelConflictResults();
 		}
-		return new CollectionResult<LabelConflict>(allRelatedConcepts);
+		return new CollectionResult<LabelConflict>(labelConflicts);
 	}
 	
 	private void generateConceptsLabelMap(Collection<URI> concepts)
 	{
-		conceptLabels = new HashMap<URI, Set<SkosLabel>>();
-		
-		logger.debug("Collecting label info");
-		for (URI concept : concepts) {
+		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
+
+        progressMonitor.setTaskDescription("Finding label conflicts");
+        Iterator<URI> it = new MonitoredIterator<URI>(concepts, progressMonitor);
+
+		while (it.hasNext()) {
+            URI concept = it.next();
+
             try {
 			    TupleQueryResult resultLabels1 = vocabRepository.query(createConceptLabelQuery(concept));
-                Set<SkosLabel> skosLabels = createSkosLabelsFromResult(concept, resultLabels1);
-                conceptLabels.put(concept, skosLabels);
+                Set<LabeledConcept> labeledConcepts = createLabeledConceptsFromResult(concept, resultLabels1);
+                addToLabelsMap(labeledConcepts);
             }
             catch (OpenRDFException e) {
                 logger.error("Error finding labels of concept '" +concept+ "'");
             }
 		}
-		logger.debug("Finished collecting label info");
 	}
-	
-	private void compareConceptLabels() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
-	{
-		allRelatedConcepts = new HashSet<LabelConflict>();
-		List<URI> allConcepts = new ArrayList<URI>(conceptLabels.keySet());
-		
-		int i = 0;
-		Iterator<URI> it = new MonitoredIterator<URI>(allConcepts, progressMonitor);
-		while (it.hasNext()) {
-			URI concept1 = it.next();
 
-			Set<SkosLabel> skosLabels1 = conceptLabels.get(concept1);
-			
-			for (int k = i + 1; k < allConcepts.size(); k++) {
-				URI concept2 = allConcepts.get(k);
-				Set<SkosLabel> skosLabels2 = conceptLabels.get(concept2);
-												
-				compareSkosLabels(skosLabels1, skosLabels2);
-			}
-			
-			i++;
-		}		
-	}
-	
+    private void addToLabelsMap(Set<LabeledConcept> labels) {
+        for (LabeledConcept label : labels) {
+            SimilarityLiteral literal = new SimilarityLiteral(label.getLiteral());
+
+            Set<LabeledConcept> affectedConcepts = conceptLabels.get(literal);
+            if (affectedConcepts == null) {
+                affectedConcepts = new HashSet<LabeledConcept>();
+            }
+            affectedConcepts.add(label);
+            conceptLabels.put(literal, affectedConcepts);
+        }
+    }
+
 	private String createConceptLabelQuery(URI concept) {
 		return SparqlPrefix.SKOS+ 
 			"SELECT ?prefLabel ?altLabel ?hiddenLabel "+
@@ -100,10 +83,10 @@ public class LabelConflictsFinder extends Issue {
 				"{<"+concept.stringValue()+"> skos:hiddenLabel ?hiddenLabel .}}";
 	}
 	
-	private Set<SkosLabel> createSkosLabelsFromResult(URI concept, TupleQueryResult result) 
+	private Set<LabeledConcept> createLabeledConceptsFromResult(URI concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
-		Set<SkosLabel> ret = new HashSet<SkosLabel>();
+		Set<LabeledConcept> ret = new HashSet<LabeledConcept>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -112,7 +95,7 @@ public class LabelConflictsFinder extends Issue {
                 try {
                     Literal literal = (Literal) queryResult.getValue(bindingName);
 
-                    SkosLabel skosLabel = new SkosLabel(
+                    LabeledConcept skosLabel = new LabeledConcept(
                         concept,
                         literal,
                         getLabelTypeForBindingName(bindingName));
@@ -140,35 +123,16 @@ public class LabelConflictsFinder extends Issue {
 		}
 		return null;
 	}
-	
-	private void compareSkosLabels(Set<SkosLabel> labels1, Set<SkosLabel> labels2) 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException
-	{		
-		for (SkosLabel label1 : labels1) {
-			for (SkosLabel label2 : labels2) {
-				
-				if (labelsAreSimilar(label1.getLiteral(), label2.getLiteral())) 
-				{
-					LabelConflict relatedConcepts =
-						new LabelConflict(
-							label1.getConcept(), 
-							label2.getConcept(), 
-							label1.getLiteral(), 
-							label2.getLiteral(), 
-							label1.getLabelType(), 
-							label2.getLabelType());
-					
-					allRelatedConcepts.add(relatedConcepts);
-				}
-			}
-		}
-	}
 
-	private boolean labelsAreSimilar(Literal lit1, Literal lit2) {
-		if (lit1.getLabel().isEmpty() || lit2.getLabel().isEmpty()) {
-			return false;
-		}
-		return lit1.equals(lit2);
-	}
+    private void generateLabelConflictResults() {
+        labelConflicts = new HashSet<LabelConflict>();
+
+        for (Entry<Literal, Set<LabeledConcept>> entry : conceptLabels.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                labelConflicts.add(new LabelConflict(entry.getKey(), entry.getValue()));
+            }
+        }
+
+    }
 	
 }
