@@ -6,4 +6,5 @@
 target/
 doc/
 *.jar
-*.rdf
+.idea*
+*.iml
