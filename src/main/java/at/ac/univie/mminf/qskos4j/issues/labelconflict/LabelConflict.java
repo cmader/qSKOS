@@ -10,19 +10,19 @@ import java.util.Set;
 public class LabelConflict {
 
     private Literal literal;
-    private Set<LabeledConcept> labeledConcepts;
+    private Set<LabeledResource> labeledConcepts;
 
-	LabelConflict(Literal literal, Set<LabeledConcept> labeledConcepts)
+	LabelConflict(Literal literal, Set<LabeledResource> labeledConcepts)
 	{
         this.literal = literal;
         this.labeledConcepts = labeledConcepts;
 	}
 
-    public Set<URI> getAffectedConcepts() {
+    public Set<URI> getAffectedResources() {
         Set<URI> affectedConcepts = new HashSet<URI>();
 
-        for (LabeledConcept labeledConcept : labeledConcepts) {
-            affectedConcepts.add(labeledConcept.getConcept());
+        for (LabeledResource labeledConcept : labeledConcepts) {
+            affectedConcepts.add(labeledConcept.getResource());
         }
         return affectedConcepts;
     }

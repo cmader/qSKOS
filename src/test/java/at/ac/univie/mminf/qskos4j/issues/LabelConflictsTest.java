@@ -39,7 +39,7 @@ public class LabelConflictsTest extends IssueTestCase {
 		Set<URI> ret = new HashSet<URI>();
 		
 		for (LabelConflict labelConflict : labelConflicts) {
-			ret.addAll(labelConflict.getAffectedConcepts());
+			ret.addAll(labelConflict.getAffectedResources());
 		}
 		
 		return ret;

@@ -2,15 +2,15 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 
+import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import org.openrdf.model.URI;
 
 
 public class AmbiguousLabelTest extends IssueTestCase {
@@ -24,36 +24,41 @@ public class AmbiguousLabelTest extends IssueTestCase {
 	
 	@Test
 	public void testUniquePrefLabels() throws OpenRDFException {
-		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findAmbiguouslyPreflabeledResources().getData();
+		Collection<LabelConflict> ambiguousConcepts = qSkosAmbiguousLabels.findAmbiguouslyPreflabeledResources().getData();
 		
-		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA"));
-		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA2"));
-        Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA3"));
-        Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptA4"));
-		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptB"));
-		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptC"));
-		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptG"));
+		Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptA"));
+		Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptA2"));
+        Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptA3"));
+        Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptA4"));
+		Assert.assertFalse(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptB"));
+		Assert.assertFalse(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptC"));
+		Assert.assertFalse(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptG"));
 	}
 	
 	@Test 
 	public void testDisjointLabels() throws OpenRDFException {
-		Map<URI, Collection<String>> ambiguousConcepts = qSkosAmbiguousLabels.findDisjointLabelsViolations().getData();
+        Collection<LabelConflict> ambiguousConcepts = qSkosAmbiguousLabels.findDisjointLabelsViolations().getData();
 		
-		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptD"));
-		Assert.assertNull(getEntryForUriSuffix(ambiguousConcepts, "conceptE"));
-		Assert.assertNotNull(getEntryForUriSuffix(ambiguousConcepts, "conceptF"));
-	}
+		Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptD"));
+		Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptF"));
+        Assert.assertFalse(uriSuffixIsPartOfConflict(ambiguousConcepts, "conceptE"));
+    }
 	
-	private Collection<String> getEntryForUriSuffix(
-		Map<URI, Collection<String>> map,
+	private boolean uriSuffixIsPartOfConflict(
+        Collection<LabelConflict> conflicts,
 		String suffix)
 	{
-		for (URI resource : map.keySet()) {
-			if (resource.stringValue().endsWith(suffix)) {
-				return map.get(resource);
-			}
-		}
-		return null;
+        if (conflicts != null) {
+            for (LabelConflict conflict : conflicts) {
+                for (URI resource : conflict.getAffectedResources()) {
+                    if (resource.stringValue().endsWith(suffix)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+		return false;
 	}
 	
 }
