@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.labelconflict;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabeledConcept.LabelType;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -23,18 +22,20 @@ public class LabelConflictsFinder extends Issue {
 	private final Logger logger = LoggerFactory.getLogger(LabelConflictsFinder.class);
 
 	private Set<LabelConflict> labelConflicts;
-	private Map<Literal, Set<LabeledConcept>> conceptLabels;
+	private Map<Literal, Set<LabeledResource>> conceptLabels;
 	
 	public LabelConflictsFinder(VocabRepository vocabRepository) 
 	{
 		super(vocabRepository);
 	}
-	
-	public CollectionResult<LabelConflict> findLabelConflicts(Collection<URI> concepts) 
+
+    public CollectionResult<LabelConflict> findLabelConflicts(Collection<URI> concepts)
 		throws OpenRDFException
 	{
 		if (labelConflicts == null) {
-			generateConceptsLabelMap(concepts);
+            if (conceptLabels == null) {
+			    generateConceptsLabelMap(concepts);
+            }
             generateLabelConflictResults();
 		}
 		return new CollectionResult<LabelConflict>(labelConflicts);
@@ -42,17 +43,17 @@ public class LabelConflictsFinder extends Issue {
 	
 	private void generateConceptsLabelMap(Collection<URI> concepts)
 	{
-		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
+		conceptLabels = new HashMap<Literal, Set<LabeledResource>>();
 
-        progressMonitor.setTaskDescription("Finding label conflicts");
+        progressMonitor.setTaskDescription("Collecting resource labels");
         Iterator<URI> it = new MonitoredIterator<URI>(concepts, progressMonitor);
 
 		while (it.hasNext()) {
             URI concept = it.next();
 
             try {
-			    TupleQueryResult resultLabels1 = vocabRepository.query(createConceptLabelQuery(concept));
-                Set<LabeledConcept> labeledConcepts = createLabeledConceptsFromResult(concept, resultLabels1);
+			    TupleQueryResult resultLabels = vocabRepository.query(createConceptLabelQuery(concept));
+                Set<LabeledResource> labeledConcepts = createLabeledConceptsFromResult(concept, resultLabels);
                 addToLabelsMap(labeledConcepts);
             }
             catch (OpenRDFException e) {
@@ -61,17 +62,27 @@ public class LabelConflictsFinder extends Issue {
 		}
 	}
 
-    private void addToLabelsMap(Set<LabeledConcept> labels) {
-        for (LabeledConcept label : labels) {
+    private void addToLabelsMap(Set<LabeledResource> labels) {
+        for (LabeledResource label : labels) {
             SimilarityLiteral literal = new SimilarityLiteral(label.getLiteral());
 
-            Set<LabeledConcept> affectedConcepts = conceptLabels.get(literal);
+            Set<LabeledResource> affectedConcepts = conceptLabels.get(literal);
             if (affectedConcepts == null) {
-                affectedConcepts = new HashSet<LabeledConcept>();
+                affectedConcepts = new HashSet<LabeledResource>();
             }
-            affectedConcepts.add(label);
+
+            // We're not interested in conflicts within the same concept
+            addIfResourceUnique(label, affectedConcepts);
+
             conceptLabels.put(literal, affectedConcepts);
         }
+    }
+
+    private void addIfResourceUnique(LabeledResource newLabeledResource, Set<LabeledResource> otherLabeledResources) {
+        for (LabeledResource labeledResource : otherLabeledResources) {
+            if (labeledResource.getResource().equals(newLabeledResource.getResource())) return;
+        }
+        otherLabeledResources.add(newLabeledResource);
     }
 
 	private String createConceptLabelQuery(URI concept) {
@@ -83,10 +94,10 @@ public class LabelConflictsFinder extends Issue {
 				"{<"+concept.stringValue()+"> skos:hiddenLabel ?hiddenLabel .}}";
 	}
 	
-	private Set<LabeledConcept> createLabeledConceptsFromResult(URI concept, TupleQueryResult result)
+	private Set<LabeledResource> createLabeledConceptsFromResult(URI concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
-		Set<LabeledConcept> ret = new HashSet<LabeledConcept>();
+		Set<LabeledResource> ret = new HashSet<LabeledResource>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -95,7 +106,7 @@ public class LabelConflictsFinder extends Issue {
                 try {
                     Literal literal = (Literal) queryResult.getValue(bindingName);
 
-                    LabeledConcept skosLabel = new LabeledConcept(
+                    LabeledResource skosLabel = new LabeledResource(
                         concept,
                         literal,
                         getLabelTypeForBindingName(bindingName));
@@ -127,12 +138,11 @@ public class LabelConflictsFinder extends Issue {
     private void generateLabelConflictResults() {
         labelConflicts = new HashSet<LabelConflict>();
 
-        for (Entry<Literal, Set<LabeledConcept>> entry : conceptLabels.entrySet()) {
-            if (entry.getValue().size() > 1) {
-                labelConflicts.add(new LabelConflict(entry.getKey(), entry.getValue()));
+        for (Set<LabeledResource> conflicts : conceptLabels.values()) {
+            if (conflicts.size() > 1) {
+                labelConflicts.add(new LabelConflict(conflicts));
             }
         }
-
     }
-	
+
 }

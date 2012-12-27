@@ -341,7 +341,7 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public ResourceLabelsResult findAmbiguouslyPreflabeledResources() throws OpenRDFException {
+	public CollectionResult<LabelConflict> findAmbiguouslyPreflabeledResources() throws OpenRDFException {
 		return new AmbiguousLabelFinder(vocabRepository).findAmbiguouslyPreflabeledResources();
 	}
 	
@@ -352,7 +352,7 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public ResourceLabelsResult findDisjointLabelsViolations() throws OpenRDFException {
+	public CollectionResult<LabelConflict> findDisjointLabelsViolations() throws OpenRDFException {
 		return new AmbiguousLabelFinder(vocabRepository).findDisjointLabelsViolations();
 	}
 	

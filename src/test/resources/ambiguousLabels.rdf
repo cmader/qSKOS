@@ -13,6 +13,7 @@
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>		
 		<skos:prefLabel xml:lang="fr">Concept A2</skos:prefLabel>
 		<skos:prefLabel xml:lang="fr">Concept A2, ambiguous</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">Concept A2, one more ambiguous</skos:prefLabel>
 		<skos:prefLabel xml:lang="de">Konzept A2</skos:prefLabel>
   </rdf:Description>
 
@@ -45,10 +46,6 @@
 		<skos:prefLabel xml:lang="de">Konzept C</skos:prefLabel>
 	</rdf:Description>
 
-	<!-- OK, only one prefLabel -->
-	<rdf:Description rdf:about="conceptG"
-		skos:prefLabel="Concept G"/>
-
 	<!-- Error, prefLabel, altLabel and hiddenLabel must be pairwise disjoint -->	
 	<rdf:Description rdf:about="conceptD">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
@@ -70,5 +67,14 @@
 		<skos:prefLabel xml:lang="en">Concept F</skos:prefLabel>
 		<skos:hiddenLabel xml:lang="en">Concept F</skos:hiddenLabel>
 	</rdf:Description>
+
+    <!-- OK, only one prefLabel -->
+    <rdf:Description rdf:about="conceptG" skos:prefLabel="Concept G"/>
+
+    <!-- OK, prefLabel not disjoint with conceptG but OK for S13 and S14 -->
+    <rdf:Description rdf:about="conceptH">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel>Concept G</skos:prefLabel>
+    </rdf:Description>
 
 </rdf:RDF>

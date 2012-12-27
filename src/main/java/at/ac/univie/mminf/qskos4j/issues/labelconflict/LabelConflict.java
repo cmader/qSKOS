@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.labelconflict;
 
-import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 
 import java.util.HashSet;
@@ -9,26 +8,42 @@ import java.util.Set;
 
 public class LabelConflict {
 
-    private Literal literal;
-    private Set<LabeledConcept> labeledConcepts;
+    private Set<LabeledResource> conflicts;
 
-	LabelConflict(Literal literal, Set<LabeledConcept> labeledConcepts)
+    public LabelConflict() {
+        conflicts = new HashSet<LabeledResource>();
+    }
+
+	LabelConflict(Set<LabeledResource> conflicts)
 	{
-        this.literal = literal;
-        this.labeledConcepts = labeledConcepts;
+        this.conflicts = conflicts;
 	}
 
-    public Set<URI> getAffectedConcepts() {
-        Set<URI> affectedConcepts = new HashSet<URI>();
+    public Set<URI> getAffectedResources() {
+        Set<URI> affectedResources = new HashSet<URI>();
 
-        for (LabeledConcept labeledConcept : labeledConcepts) {
-            affectedConcepts.add(labeledConcept.getConcept());
+        for (LabeledResource labeledConcept : conflicts) {
+            affectedResources.add(labeledConcept.getResource());
         }
-        return affectedConcepts;
+        return affectedResources;
+    }
+
+    public void add(LabeledResource labeledResource) {
+        conflicts.add(labeledResource);
     }
 
 	@Override
 	public String toString() {
-		return literal.toString() +": "+ labeledConcepts.toString();
+        return conflicts.toString();
 	}
+
+    @Override
+    public int hashCode() {
+        return conflicts.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return conflicts.equals(obj);
+    }
 }
