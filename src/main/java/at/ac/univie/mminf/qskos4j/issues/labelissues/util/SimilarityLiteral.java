@@ -1,11 +1,11 @@
-package at.ac.univie.mminf.qskos4j.issues.labelconflict;
+package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.impl.LiteralImpl;
 
-class SimilarityLiteral extends LiteralImpl{
+public class SimilarityLiteral extends LiteralImpl{
 
-    SimilarityLiteral(Literal literal) {
+    public SimilarityLiteral(Literal literal) {
         super();
         setLabel(literal.getLabel());
         setLanguage(literal.getLanguage());
@@ -14,11 +14,7 @@ class SimilarityLiteral extends LiteralImpl{
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof SimilarityLiteral)) {
-            return false;
-        }
-
-        return isSimilar((SimilarityLiteral) obj);
+        return obj instanceof SimilarityLiteral && isSimilar((SimilarityLiteral) obj);
     }
 
     private boolean isSimilar(SimilarityLiteral other) {

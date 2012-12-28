@@ -1,9 +1,9 @@
 package at.ac.univie.mminf.qskos4j;
 
 import at.ac.univie.mminf.qskos4j.issues.*;
-import at.ac.univie.mminf.qskos4j.issues.ambiguouslabels.AmbiguousLabelFinder;
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflictsFinder;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.*;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.custom.*;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
@@ -59,6 +59,7 @@ public class QSkos {
 	
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
+    private ResourceLabelsCollector resourceLabelsCollector;
 	private String authResourceIdentifier;
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
@@ -114,6 +115,7 @@ public class QSkos {
 		componentFinder = new ComponentFinder(vocabRepository);
 		redundantAssociativeRelationsFinder = new ValuelessAssociativeRelationsFinder(vocabRepository);
 		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);
+        resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
 		
 		progressMonitor = new DummyProgressMonitor();
 	}
@@ -342,7 +344,7 @@ public class QSkos {
 	 * @throws OpenRDFException
 	 */
 	public CollectionResult<LabelConflict> findAmbiguouslyPreflabeledResources() throws OpenRDFException {
-		return new AmbiguousLabelFinder(vocabRepository).findAmbiguouslyPreflabeledResources();
+		return new AmbiguousLabelFinder(vocabRepository, resourceLabelsCollector).findAmbiguouslyPreflabeledResources();
 	}
 	
 	/**
@@ -353,7 +355,7 @@ public class QSkos {
 	 * @throws OpenRDFException
 	 */
 	public CollectionResult<LabelConflict> findDisjointLabelsViolations() throws OpenRDFException {
-		return new AmbiguousLabelFinder(vocabRepository).findDisjointLabelsViolations();
+		return new NonDisjointLabelsFinder(vocabRepository, resourceLabelsCollector).findDisjointLabelsViolations();
 	}
 	
 	/**

@@ -13,7 +13,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
 
 public class LabelConflictsTest extends IssueTestCase {
 

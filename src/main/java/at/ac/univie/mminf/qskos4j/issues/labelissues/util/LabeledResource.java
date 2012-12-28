@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.issues.labelconflict;
+package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;

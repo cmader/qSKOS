@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 import java.io.IOException;
 import java.util.Collection;
 
-import at.ac.univie.mminf.qskos4j.issues.labelconflict.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

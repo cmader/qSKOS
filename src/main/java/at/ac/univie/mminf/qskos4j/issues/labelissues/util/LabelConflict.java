@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.issues.labelconflict;
+package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
 
 import org.openrdf.model.URI;
 
@@ -14,7 +14,7 @@ public class LabelConflict {
         conflicts = new HashSet<LabeledResource>();
     }
 
-	LabelConflict(Set<LabeledResource> conflicts)
+	public LabelConflict(Set<LabeledResource> conflicts)
 	{
         this.conflicts = conflicts;
 	}
@@ -44,6 +44,6 @@ public class LabelConflict {
 
     @Override
     public boolean equals(Object obj) {
-        return conflicts.equals(obj);
+        return obj instanceof LabeledResource && conflicts.equals(obj);
     }
 }

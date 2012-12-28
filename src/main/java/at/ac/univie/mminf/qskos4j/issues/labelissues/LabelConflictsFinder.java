@@ -1,6 +1,10 @@
-package at.ac.univie.mminf.qskos4j.issues.labelconflict;
+package at.ac.univie.mminf.qskos4j.issues.labelissues;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelType;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabeledResource;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.SimilarityLiteral;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -15,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 public class LabelConflictsFinder extends Issue {
 
@@ -24,7 +27,7 @@ public class LabelConflictsFinder extends Issue {
 	private Set<LabelConflict> labelConflicts;
 	private Map<Literal, Set<LabeledResource>> conceptLabels;
 	
-	public LabelConflictsFinder(VocabRepository vocabRepository) 
+	public LabelConflictsFinder(VocabRepository vocabRepository)
 	{
 		super(vocabRepository);
 	}

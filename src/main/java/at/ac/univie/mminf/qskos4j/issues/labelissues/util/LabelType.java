@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.issues.labelconflict;
+package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
 
 public enum LabelType {
 
