@@ -1,9 +1,8 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
+import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 
 public class ConsoleProgressMonitor implements IProgressMonitor {
 

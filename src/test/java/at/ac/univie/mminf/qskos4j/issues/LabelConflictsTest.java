@@ -1,19 +1,17 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-
-import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
 
 public class LabelConflictsTest extends IssueTestCase {
 
@@ -31,12 +29,12 @@ public class LabelConflictsTest extends IssueTestCase {
 		Collection<LabelConflict> allLabelConflicts = qSkosComponents.findLabelConflicts().getData();
 		
 		Assert.assertEquals(2, allLabelConflicts.size());
-		Assert.assertEquals(4, getDifferentConcepts(allLabelConflicts).size());
+		Assert.assertEquals(4, getDifferentResources(allLabelConflicts).size());
 	}
 
-	private Collection<URI> getDifferentConcepts(Collection<LabelConflict> labelConflicts)
+	private Collection<Resource> getDifferentResources(Collection<LabelConflict> labelConflicts)
 	{
-		Set<URI> ret = new HashSet<URI>();
+		Set<Resource> ret = new HashSet<Resource>();
 		
 		for (LabelConflict labelConflict : labelConflicts) {
 			ret.addAll(labelConflict.getAffectedResources());

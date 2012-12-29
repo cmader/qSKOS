@@ -1,11 +1,5 @@
 package at.ac.univie.mminf.qskos4j.util.graph;
 
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.DOTExporter;
@@ -14,6 +8,12 @@ import org.jgrapht.ext.StringEdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.jgrapht.graph.DirectedSubgraph;
 import org.openrdf.model.Resource;
+
+import java.io.StringWriter;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class GraphExporter {
 
@@ -47,7 +47,7 @@ public class GraphExporter {
 			new IntegerNameProvider<Resource>(),
 			new URIVertexNameProvider(),
 			new StringEdgeNameProvider<NamedEdge>()
-		).export(outputWriter, (DirectedGraph<Resource, NamedEdge>) componentGraph);
+		).export(outputWriter, componentGraph);
 		
 		return outputWriter.toString();
 	}

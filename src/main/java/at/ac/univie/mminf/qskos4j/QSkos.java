@@ -1,7 +1,9 @@
 package at.ac.univie.mminf.qskos4j;
 
 import at.ac.univie.mminf.qskos4j.issues.*;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.*;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.AmbiguousLabelFinder;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.LabelConflictsFinder;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.NonDisjointLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.result.Result;

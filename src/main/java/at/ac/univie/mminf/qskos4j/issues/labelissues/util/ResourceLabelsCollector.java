@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
@@ -60,7 +60,7 @@ public class ResourceLabelsCollector {
     {
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
-            URI resource = (URI) queryResult.getValue("resource");
+            Resource resource = (Resource) queryResult.getValue("resource");
 
             try {
                 Literal label = (Literal) queryResult.getValue("label");

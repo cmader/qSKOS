@@ -1,17 +1,9 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -20,10 +12,9 @@ import org.openrdf.query.TupleQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * Identifies all skos:Concepts in the repository passed to the constructor

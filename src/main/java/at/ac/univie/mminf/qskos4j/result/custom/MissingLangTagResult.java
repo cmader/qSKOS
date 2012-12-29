@@ -1,13 +1,12 @@
 package at.ac.univie.mminf.qskos4j.result.custom;
 
-import java.util.Collection;
-import java.util.Map;
-
+import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 
-import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import java.util.Collection;
+import java.util.Map;
 
 public class MissingLangTagResult extends Result<Map<Resource, Collection<Literal>>> {
 
@@ -27,7 +26,7 @@ public class MissingLangTagResult extends Result<Map<Resource, Collection<Litera
 		for (Resource resource : getData().keySet()) {
 			Collection<Literal> affectedLiterals = getData().get(resource);
 			
-			extensiveReport.append("resource: '" +resource+ "', affected literals: " +affectedLiterals.toString()+ "\n");
+			extensiveReport.append("resource: '").append(resource).append("', affected literals: ").append(affectedLiterals.toString()).append("\n");
 		}
 		
 		return extensiveReport.toString();

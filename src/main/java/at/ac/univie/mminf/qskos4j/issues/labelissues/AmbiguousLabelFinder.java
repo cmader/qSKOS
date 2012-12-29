@@ -8,7 +8,7 @@ import at.ac.univie.mminf.qskos4j.issues.labelissues.util.ResourceLabelsCollecto
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class AmbiguousLabelFinder extends Issue {
 
-    private Map<URI, LabelConflict> ambigPrefLabels;
+    private Map<Resource, LabelConflict> ambigPrefLabels;
     private ResourceLabelsCollector resourceLabelsCollector;
 
 	public AmbiguousLabelFinder(VocabRepository vocabRepository, ResourceLabelsCollector resourceLabelsCollector) {
@@ -28,35 +28,35 @@ public class AmbiguousLabelFinder extends Issue {
 	public CollectionResult<LabelConflict> findAmbiguouslyPreflabeledResources() throws OpenRDFException
 	{
         if (ambigPrefLabels == null) {
-            Map<URI, Collection<LabeledResource>> prefLabelsByUri = orderPrefLabelsByUri();
+            Map<Resource, Collection<LabeledResource>> prefLabelsByUri = orderPrefLabelsByResource();
             extractPrefLabelConflicts(prefLabelsByUri);
         }
 
 		return new CollectionResult<LabelConflict>(ambigPrefLabels.values());
 	}
 
-    private Map<URI, Collection<LabeledResource>> orderPrefLabelsByUri() {
-        Map<URI, Collection<LabeledResource>> prefLabelsByUri = new HashMap<URI, Collection<LabeledResource>>();
+    private Map<Resource, Collection<LabeledResource>> orderPrefLabelsByResource() {
+        Map<Resource, Collection<LabeledResource>> prefLabelsByResource = new HashMap<Resource, Collection<LabeledResource>>();
 
         for (LabeledResource labeledResource : resourceLabelsCollector.getLabeledResources()) {
             if (labeledResource.getLabelType() != LabelType.PREF_LABEL) continue;
 
-            Collection<LabeledResource> labeledResourcesOfUri = prefLabelsByUri.get(labeledResource.getResource());
+            Collection<LabeledResource> labeledResourcesOfUri = prefLabelsByResource.get(labeledResource.getResource());
             if (labeledResourcesOfUri == null) {
                 labeledResourcesOfUri = new ArrayList<LabeledResource>();
-                prefLabelsByUri.put(labeledResource.getResource(), labeledResourcesOfUri);
+                prefLabelsByResource.put(labeledResource.getResource(), labeledResourcesOfUri);
             }
 
             labeledResourcesOfUri.add(labeledResource);
         }
 
-        return prefLabelsByUri;
+        return prefLabelsByResource;
     }
 
-    private void extractPrefLabelConflicts(Map<URI, Collection<LabeledResource>> prefLabelsByUri) {
-        ambigPrefLabels = new HashMap<URI, LabelConflict>();
+    private void extractPrefLabelConflicts(Map<Resource, Collection<LabeledResource>> prefLabelsByResource) {
+        ambigPrefLabels = new HashMap<Resource, LabelConflict>();
 
-        for (Map.Entry<URI, Collection<LabeledResource>> entry : prefLabelsByUri.entrySet()) {
+        for (Map.Entry<Resource, Collection<LabeledResource>> entry : prefLabelsByResource.entrySet()) {
             LabelConflict labelConflict = findPrefLabelConflict(entry.getValue());
             if (labelConflict != null) {
                 ambigPrefLabels.put(entry.getKey(), labelConflict);

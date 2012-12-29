@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,8 +19,8 @@ public class LabelConflict {
         this.conflicts = conflicts;
 	}
 
-    public Set<URI> getAffectedResources() {
-        Set<URI> affectedResources = new HashSet<URI>();
+    public Set<Resource> getAffectedResources() {
+        Set<Resource> affectedResources = new HashSet<Resource>();
 
         for (LabeledResource labeledConcept : conflicts) {
             affectedResources.add(labeledConcept.getResource());

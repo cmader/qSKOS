@@ -1,12 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
+import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
@@ -14,12 +10,10 @@ import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-
-import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class LanguageCoverageChecker extends Issue {
 

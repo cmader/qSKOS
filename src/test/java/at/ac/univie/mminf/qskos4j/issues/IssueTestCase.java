@@ -1,15 +1,14 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
+import at.ac.univie.mminf.qskos4j.QSkos;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.openrdf.OpenRDFException;
 import org.openrdf.rio.RDFFormat;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 
 @Ignore

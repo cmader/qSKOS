@@ -1,10 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
+import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.util.language.LanguageTag;
@@ -15,9 +13,10 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class LanguageTagChecker extends Issue {
 

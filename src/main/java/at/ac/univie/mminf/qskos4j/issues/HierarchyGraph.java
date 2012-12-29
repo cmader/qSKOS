@@ -1,5 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -9,10 +12,6 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
-
-import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 
 public class HierarchyGraph {
 
@@ -55,7 +54,7 @@ public class HierarchyGraph {
 	}
 	
 	private String createHierarchicalGraphQuery(String skosHierarchyProperties) {
-		String query = SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
+		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource ?otherResource "+
 			"FROM <" +vocabRepository.getVocabContext()+ "> "+
 			"FROM <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
@@ -63,8 +62,6 @@ public class HierarchyGraph {
 			"WHERE {?resource ?hierarchyRelation ?otherResource . "+
 				"?hierarchyRelation rdfs:subPropertyOf* ?skosHierarchyRelation . "+
 				"FILTER (?skosHierarchyRelation IN (" +skosHierarchyProperties+ "))}";
-				
-		return query;
 	}
 	
 	private void addResultsToGraph(TupleQueryResult result, boolean invertEdges) 

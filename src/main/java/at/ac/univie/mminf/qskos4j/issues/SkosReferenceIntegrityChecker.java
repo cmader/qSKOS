@@ -1,10 +1,11 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.DijkstraShortestPath;
@@ -14,12 +15,10 @@ import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
 
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.util.Pair;
-import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class SkosReferenceIntegrityChecker extends Issue {
 

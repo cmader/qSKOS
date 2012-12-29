@@ -1,15 +1,15 @@
 package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
 
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 
 public class LabeledResource {
 
 	private Literal literal;
 	private LabelType labelType;
-    private URI resource;
+    private Resource resource;
 	
-	public LabeledResource(URI resource, Literal literal, LabelType labelType)
+	public LabeledResource(Resource resource, Literal literal, LabelType labelType)
 	{
         this.resource = resource;
 		this.literal = literal;
@@ -20,7 +20,7 @@ public class LabeledResource {
 		return literal;
 	}
 
-    public URI getResource() {
+    public Resource getResource() {
         return resource;
     }
 

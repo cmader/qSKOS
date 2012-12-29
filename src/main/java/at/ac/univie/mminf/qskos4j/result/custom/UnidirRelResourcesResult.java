@@ -1,12 +1,11 @@
 package at.ac.univie.mminf.qskos4j.result.custom;
 
-import java.util.Map;
-
-import org.openrdf.model.Resource;
-
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
+import org.openrdf.model.Resource;
+
+import java.util.Map;
 
 public class UnidirRelResourcesResult extends Result<Map<Pair<Resource>, String>> {
 
@@ -24,7 +23,7 @@ public class UnidirRelResourcesResult extends Result<Map<Pair<Resource>, String>
 		StringBuilder extensiveReport = new StringBuilder();
 		
 		for (Pair<Resource> concepts : getData().keySet()) {
-			extensiveReport.append("concepts: " +concepts.toString()+ ", related by: '" +getData().get(concepts)+ "'\n");
+			extensiveReport.append("concepts: ").append(concepts.toString()).append(", related by: '").append(getData().get(concepts)).append("'\n");
 		}
 
 		return extensiveReport.toString();

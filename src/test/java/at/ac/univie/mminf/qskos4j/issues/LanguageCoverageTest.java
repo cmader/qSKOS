@@ -1,18 +1,17 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
+import at.ac.univie.mminf.qskos4j.QSkos;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 
 public class LanguageCoverageTest extends IssueTestCase {

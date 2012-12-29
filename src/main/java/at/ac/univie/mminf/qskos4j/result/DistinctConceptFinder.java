@@ -1,12 +1,11 @@
 package at.ac.univie.mminf.qskos4j.result;
 
+import at.ac.univie.mminf.qskos4j.util.Pair;
+import org.openrdf.model.URI;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.openrdf.model.URI;
-
-import at.ac.univie.mminf.qskos4j.util.Pair;
 
 public class DistinctConceptFinder {
 

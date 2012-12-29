@@ -1,21 +1,20 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.util.Collection;
-import java.util.HashSet;
-
+import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 public class RelationStatisticsFinder extends Issue {
 

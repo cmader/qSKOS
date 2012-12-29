@@ -1,13 +1,11 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
-import java.net.URL;
-
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
+import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription.MeasureType;
 import junit.framework.Assert;
-
 import org.junit.Test;
 
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription.MeasureType;
+import java.net.URL;
 
 public class IssueInvocationTest {
 

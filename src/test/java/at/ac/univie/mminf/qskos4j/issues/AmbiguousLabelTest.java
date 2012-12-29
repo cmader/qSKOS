@@ -1,16 +1,15 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.io.IOException;
-import java.util.Collection;
-
+import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
-import org.openrdf.model.URI;
+import java.io.IOException;
+import java.util.Collection;
 
 
 public class AmbiguousLabelTest extends IssueTestCase {
@@ -51,7 +50,7 @@ public class AmbiguousLabelTest extends IssueTestCase {
 	{
         if (conflicts != null) {
             for (LabelConflict conflict : conflicts) {
-                for (URI resource : conflict.getAffectedResources()) {
+                for (Resource resource : conflict.getAffectedResources()) {
                     if (resource.stringValue().endsWith(suffix)) {
                         return true;
                     }

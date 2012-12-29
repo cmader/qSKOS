@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j.result.general;
 
-import java.util.Collection;
-
 import at.ac.univie.mminf.qskos4j.result.Result;
+
+import java.util.Collection;
 
 /**
  * Result class that holds a collection of objects of interest
@@ -27,7 +27,7 @@ public class CollectionResult<T> extends Result<Collection<T>> {
         StringBuilder report = new StringBuilder();
 
         for (T dataItem : getData()) {
-            report.append("\n" + dataItem.toString());
+            report.append("\n").append(dataItem.toString());
         }
 
         return report.toString();

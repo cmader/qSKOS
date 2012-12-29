@@ -1,9 +1,10 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
+import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -13,14 +14,12 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
-
-import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
-import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Identifies all weakly connected components in the repository passed to the constructor

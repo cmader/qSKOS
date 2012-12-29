@@ -1,14 +1,13 @@
 package at.ac.univie.mminf.qskos4j.result.custom;
 
-import java.util.Collection;
-import java.util.Set;
-
-import org.jgrapht.DirectedGraph;
-import org.openrdf.model.Resource;
-
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import org.jgrapht.DirectedGraph;
+import org.openrdf.model.Resource;
+
+import java.util.Collection;
+import java.util.Set;
 
 public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resource>>
 {
@@ -34,14 +33,14 @@ public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resour
 		long compCount = 1;
 		
 		if (overviewOnly) {
-			report.append("count: " +getData().size());
+			report.append("count: ").append(getData().size());
 		}
 		
 		for (Set<Resource> component : getData()) {
-			report.append("\ncomponent " +compCount+ ", size: " +component.size());
+			report.append("\ncomponent ").append(compCount).append(", size: ").append(component.size());
 			if (!overviewOnly) {
                 for (Resource resource : component) {
-                    report.append("\n\t" +resource.toString());
+                    report.append("\n\t").append(resource.toString());
                 }
 			}
 			compCount++;

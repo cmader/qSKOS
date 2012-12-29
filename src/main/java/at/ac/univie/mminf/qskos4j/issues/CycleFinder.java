@@ -1,17 +1,16 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import at.ac.univie.mminf.qskos4j.result.custom.HierarchyCycleResult;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 
-import at.ac.univie.mminf.qskos4j.result.custom.HierarchyCycleResult;
-import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Identifies hierarchical inconsistencies in the repository passed to the constructor 
