@@ -13,6 +13,7 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,13 +25,12 @@ public class InLinkFinder extends Issue {
 	private final Logger logger = LoggerFactory.getLogger(InLinkFinder.class);
 	
 	private Collection<URI> authoritativeConcepts;
-	private Collection<Repository> repositories;
+	private Collection<RepositoryConnection> connections;
 	private Map<URI, Set<URI>> conceptReferencingResources = new HashMap<URI, Set<URI>>();
     private Integer queryDelayMillis;
 	
-	public InLinkFinder(
-		VocabRepository vocabRepository,
-		Collection<Repository> repositories) 
+	public InLinkFinder(VocabRepository vocabRepository, Collection<Repository> repositories)
+        throws RepositoryException
 	{
 		super(vocabRepository);
 		
@@ -38,7 +38,10 @@ public class InLinkFinder extends Issue {
 			logger.warn("no repository for querying defined");
 		}
 		else {
-			this.repositories = repositories;
+            connections = new ArrayList<RepositoryConnection>();
+            for (Repository repository : repositories) {
+                connections.add(repository.getConnection());
+            }
 		}
 	}
 
@@ -79,9 +82,9 @@ public class InLinkFinder extends Issue {
 	
 	private void rankConcept(URI concept)
 	{
-		for (Repository sparqlEndpoint : repositories) {
+		for (RepositoryConnection connection : connections) {
             try {
-			    rankConceptByEndpoint(concept, sparqlEndpoint);
+                rankConceptForConnection(concept, connection);
             }
             catch (OpenRDFException e) {
                 logger.error("Error ranking concept '" +concept+ "', " + e.toString());
@@ -89,7 +92,7 @@ public class InLinkFinder extends Issue {
 		}
 	}
 	
-	private void rankConceptByEndpoint(URI concept, Repository endpoint)
+	private void rankConceptForConnection(URI concept, RepositoryConnection connection)
           throws OpenRDFException
 	{
 		String query = "SELECT distinct ?resource WHERE " +
@@ -105,17 +108,12 @@ public class InLinkFinder extends Issue {
             // ignore this exception
         }
 
-        RepositoryConnection connection = endpoint.getConnection();
-
         try {
             TupleQueryResult result = connection.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
             addToConceptsRankMap(concept, result);
         }
         catch (Exception e) {
             logger.error("Error evaluating query '" +query);
-        }
-        finally {
-            connection.close();
         }
 	}
 	

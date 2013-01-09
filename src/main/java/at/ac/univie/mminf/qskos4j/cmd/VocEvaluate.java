@@ -233,9 +233,9 @@ public class VocEvaluate {
 		throws UnsupportedMeasureIdException
 	{
 		Collection<MeasureDescription> resultingMeasures;
-		
-		Set<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
-		Set<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
+
+        Collection<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
+        Collection<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
 
 		if (!selectedMeasures.isEmpty()) {
 			resultingMeasures = selectedMeasures;
@@ -251,13 +251,13 @@ public class VocEvaluate {
 		return resultingMeasures;
 	}
 	
-	private Set<MeasureDescription> getMeasures(String ids) throws UnsupportedMeasureIdException
+	private Collection<MeasureDescription> getMeasures(String ids) throws UnsupportedMeasureIdException
 	{
 		if (ids == null || ids.isEmpty()) {
 			return Collections.emptySet();
 		}
 		
-		Set<MeasureDescription> measures = new HashSet<MeasureDescription>();
+		Collection<MeasureDescription> measures = new ArrayList<MeasureDescription>();
 		StringTokenizer tokenizer = new StringTokenizer(ids, ",");
 		while (tokenizer.hasMoreElements()) {
 			measures.add(MeasureDescription.findById(tokenizer.nextToken()));
