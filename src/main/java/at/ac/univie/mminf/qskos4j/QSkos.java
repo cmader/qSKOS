@@ -434,7 +434,7 @@ public class QSkos {
 		UndocumentedConceptsChecker docCovChecker = 
 			new UndocumentedConceptsChecker(vocabRepository);
 		docCovChecker.setProgressMonitor(progressMonitor);
-		return docCovChecker.findUndocumentedConcepts(findInvolvedConcepts().getData());
+		return docCovChecker.findUndocumentedConcepts(findAuthoritativeConcepts().getData());
 	}
 	
 	/**

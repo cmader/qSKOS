@@ -33,13 +33,13 @@ public class UndocumentedConceptsChecker extends Issue {
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<Resource> findUndocumentedConcepts(Collection<URI> allConcepts) 
+	public CollectionResult<Resource> findUndocumentedConcepts(Collection<URI> autoritativeConcepts)
 		throws OpenRDFException
 	{
 		connection = vocabRepository.getRepository().getConnection();
 		List<Resource> undocumentedConcepts = new ArrayList<Resource>();
 		
-		Iterator<URI> conceptIt = new MonitoredIterator<URI>(allConcepts, progressMonitor);
+		Iterator<URI> conceptIt = new MonitoredIterator<URI>(autoritativeConcepts, progressMonitor);
 		while (conceptIt.hasNext()) {
 			Resource concept = conceptIt.next();
 			if (!isConceptDocumented(concept)) {
