@@ -15,12 +15,13 @@ import java.util.Map;
 
 public class OmittedOrInvalidLanguageTagTest extends IssueTestCase {
 
-	private QSkos qSkosComponents, qSkosDeprecatedAndIllegal;
+	private QSkos qSkosComponents, qSkosDeprecatedAndIllegal, qSkosLangTags;
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosComponents = setUpInstance("components.rdf");
 		qSkosDeprecatedAndIllegal = setUpInstance("deprecatedAndIllegalTerms.rdf");
+        qSkosLangTags = setUpInstance("languageTags.rdf");
 	}
 	
 	@Test
@@ -45,4 +46,13 @@ public class OmittedOrInvalidLanguageTagTest extends IssueTestCase {
 		}
 		return literalCount;
 	}
+
+    @Test
+    public void testMissingLangTagCount_3() throws OpenRDFException {
+        Map<Resource, Collection<Literal>> missingLangTags = qSkosLangTags.findOmittedOrInvalidLanguageTags().getData();
+
+        // expected result should be 0, but current implementatin relies on org.openrdf.model.util.language.Iso639 checks
+        Assert.assertEquals(5, countEntries(missingLangTags.values()));
+    }
+
 }
