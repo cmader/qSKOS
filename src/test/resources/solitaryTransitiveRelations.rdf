@@ -4,29 +4,61 @@
 	<!-- Case 1; error -->
 	<rdf:Description rdf:about="conceptA">
 		<skos:broaderTransitive rdf:resource="conceptB"/>
-  </rdf:Description>
+    </rdf:Description>
 
 	<!-- Case 2; error -->
 	<rdf:Description rdf:about="conceptC">
 		<skos:narrowerTransitive rdf:resource="conceptD"/>
-  </rdf:Description>
+    </rdf:Description>
 
 	<!-- Case 3; ok -->
 	<rdf:Description rdf:about="conceptE">
 		<skos:broaderTransitive rdf:resource="conceptF"/>
-  </rdf:Description>
+    </rdf:Description>
 
 	<rdf:Description rdf:about="conceptE">
 		<skos:broader rdf:resource="conceptF"/>		
-  </rdf:Description>
+    </rdf:Description>
 
 	<!-- Case 4; ok -->
 	<rdf:Description rdf:about="conceptG">
 		<skos:narrowerTransitive rdf:resource="conceptH"/>
-  </rdf:Description>
+    </rdf:Description>
 
 	<rdf:Description rdf:about="conceptH">
-		<skos:broader rdf:resource="conceptG"/>		
-  </rdf:Description>
+	    <skos:broader rdf:resource="conceptG"/>
+    </rdf:Description>
+
+    <!-- Case 5; error -->
+    <rdf:Description rdf:about="conceptI">
+        <skos:broader rdf:resource="conceptJ"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptJ">
+        <skos:broaderTransitive rdf:resource="conceptK"/>
+    </rdf:Description>
+
+    <!-- Case 6; error -->
+    <rdf:Description rdf:about="conceptL">
+        <skos:broader rdf:resource="conceptM"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptN">
+        <skos:narrowerTransitive rdf:resource="conceptM"/>
+    </rdf:Description>
+
+    <!-- Case 7; ok -->
+    <rdf:Description rdf:about="conceptO">
+        <skos:broader rdf:resource="conceptP"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptP">
+        <skos:broader rdf:resource="conceptQ"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptO">
+        <skos:broaderTransitive rdf:resource="conceptQ"/>
+    </rdf:Description>
+
 
 </rdf:RDF>

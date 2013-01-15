@@ -45,7 +45,7 @@ public class SolitaryTransitiveRelationsFinder extends Issue {
 
 				"WHERE {" +
 					"?resource1 " +transitiveNontransiviteInverseProperties[0]+ " ?resource2 . "+
-					"FILTER NOT EXISTS {?resource1 "+transitiveNontransiviteInverseProperties[1]+ "|^"+transitiveNontransiviteInverseProperties[2]+" ?resource2}" +
+					"FILTER NOT EXISTS {?resource1 ("+transitiveNontransiviteInverseProperties[1]+ "|^"+transitiveNontransiviteInverseProperties[2]+")* ?resource2}" +
 					"}";
 	}
 	

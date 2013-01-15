@@ -24,7 +24,7 @@ public class SolelyTransitivelyRelatedConceptsTest extends IssueTestCase {
 	public void testSolitaryTransitiveRelationsCount() throws OpenRDFException {
 		Collection<Pair<URI>> solitaryTransitiveRelations = 
 			qSkosSolitaryTransitiveRelations.findSolelyTransitivelyRelatedConcepts().getData();
-		Assert.assertEquals(2, solitaryTransitiveRelations.size());
+		Assert.assertEquals(4, solitaryTransitiveRelations.size());
 	}
 	
 }
