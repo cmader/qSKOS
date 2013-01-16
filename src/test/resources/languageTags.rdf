@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xml:base="http://mminf.univie.ac.at/vocab/">
+
+    <rdf:Description rdf:about="conceptA">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">conceptA</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- OK, valid language tags -->
+    <rdf:Description rdf:about="conceptB">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="bm">conceptB</skos:prefLabel>
+        <skos:altLabel xml:lang="ff">conceptB</skos:altLabel>
+    </rdf:Description>
+
+    <!-- OK, valid language tags -->
+    <rdf:Description rdf:about="conceptC">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="jv">conceptC</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- OK, valid language tags -->
+    <rdf:Description rdf:about="conceptD">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="ht">conceptD</skos:prefLabel>
+        <skos:altLabel xml:lang="wa">conceptD</skos:altLabel>
+    </rdf:Description>
+
+</rdf:RDF>
