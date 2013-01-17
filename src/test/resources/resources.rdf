@@ -18,7 +18,22 @@
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	</rdf:Description>
 
-	<!-- should be ok -->
+    <!-- ERROR, URI typo -->
+    <rdf:Description rdf:about="htp://www.google.com">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </rdf:Description>
+
+    <!-- TODO: ERROR, URI whitespace, not detected so far -->
+    <rdf:Description rdf:about="http://www.google. com">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </rdf:Description>
+
+    <!-- ERROR, HTTP schema omitted -->
+    <rdf:Description rdf:about="www.google.com">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </rdf:Description>
+
+    <!-- should be ok -->
 	<rdf:Description rdf:about="http://dbpedia.org/resource/Category:Judges_of_the_United_States_Court_of_International_Trade">
 		<skos:prefLabel>test</skos:prefLabel>
 	</rdf:Description>

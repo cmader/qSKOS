@@ -38,7 +38,7 @@ public class BrokenLinksTest extends IssueTestCase {
 	@Test
 	public void testResourcesNonHttpUriCount() throws OpenRDFException {
 		Assert.assertEquals(
-			2, 
+			4,
 			qSkosExtResources.findNonHttpResources().getData().size());
 	}
 
