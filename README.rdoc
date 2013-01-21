@@ -4,20 +4,20 @@ qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wik
 
 == Installation
 
-=== Download
-
-If you cannot or do not want to checkout the source code using {git}[http://git-scm.com/], you can get the packaged source as {zip file}[https://github.com/cmader/qSKOS/archive/master.zip].
-
-=== Build from source
-
-==== Requirements
+=== Requirements
 
 * Verify that Java v.1.6 or greater is installed: <tt>javac -version</tt>
 * Make sure Maven v.3.0 or greater is installed: <tt>mvn -v</tt>
+* Optional: Make sure you have the current version of the {git version control system}[http://git-scm.com/] installed on your system.
 
-==== Building qSKOS
+=== 1) Get the source code
 
-* Clone the project (<tt>git clone git@github.com:cmader/qSKOS.git</tt>) or download the source code as described above.
+You have two options:
+* Clone the project (<tt>git clone https://github.com/cmader/qSKOS.git</tt>) to your system using git.
+* Download the packaged source files as {zip archive}[https://github.com/cmader/qSKOS/archive/master.zip] and extract it to a properly named directory, e.g., +qSKOS+.
+
+=== 2) Build the tool
+
 * Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>. Wait for tests and build to complete.
 * Two jar files are now located in the +qSKOS+ directory:
   * <tt>qSKOS-cmd.jar</tt>: The *executable* jar file that can directly be used for vocabulary evaluation
