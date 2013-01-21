@@ -57,18 +57,18 @@ or
 
 Here's an excerpt from the output:
 
-  ID: apc
-  Name: Ambiguously Preflabeled Concepts
-  Description: Finds concepts with more then one prefLabel per language
+  ID: alr
+  Name: Ambiguously Labeled Resources
+  Description: Finds resources with more then one prefLabel per language
 
 Every property/issue is identified by an ID string, has a name and a description. For more detailed information on the quality issues see the qSKOS {wiki page}[https://github.com/cmader/qSKOS/wiki/Quality-Issues].
 
 ==== 4) Testing for a specific issue or a subset of issues
 Specific issues can be tested by passing the <tt>-c</tt> parameter followed by one or more (comma-separated) issue IDs (see example above). Keep in mind, that the <tt>-c</tt> parameter has to be placed between between the +analyze+ command and the vocabulary file like this:
 
-<tt>java -jar qSKOS-cmd.jar analyze -c lc,apc ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze -c lc,alr ipsv_skos.rdf</tt>
 
-The command above triggers analysis of the "Label Conflicts" and "Ambiguously Preflabeled Concepts" issues. In a very similar way it is possible to explicitly *exclude* issues from testing. For example, the command
+The command above triggers analysis of the "Label Conflicts" and "Ambiguously Labeled Resources" issues. In a very similar way it is possible to explicitly *exclude* issues from testing. For example, the command
 
 <tt>java -jar qSKOS-cmd.jar analyze -dc mil ipsv_skos.rdf</tt>
 
@@ -78,11 +78,6 @@ checks for all issues except "Missing In-Links".
 In most cases it is not sufficient to know about the presence and number of quality issues but also which resource cause these potential problems. This can be reported by using the <tt>-e</tt> (extensive) command line switch.
 
 For example, the command <tt>java -jar qSKOS-cmd.jar analyze -c usr ipsv_skos.rdf</tt> reports one "Undefined SKOS Resources". Issuing the command <tt>java -jar qSKOS-cmd.jar analyze -e -c usr ipsv_skos.rdf</tt> (mind the additional <tt>-e</tt> parameter after the +analyze+ command) reports the resource (<tt>http://www.w3.org/2004/02/skos/core#prefSymbol</tt>) causing a potential problem.
-
-==== 6) Suppressing informative output
-Some issues provide additional informative output about their processing steps which you can observe on the console as those lines containing the text <tt>INFO</tt>. This is useful for interactive use of qSKOS but can be distracting when concise quality issue reports should be generated. The <tt>-q</tt> (quiet) command line switch suppresses output of any additional information at processing time.
-
-The command <tt>java -jar qSKOS-cmd.jar summarize -c ac ipsv_skos.rdf</tt> reports all authoritative conceps in the vocabulary. However, it also produces additional informative output regarding what concept URIs are considered authoritative. Using <tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf</tt> (mind the additional <tt>-q</tt> parameter) only outputs the report results.
 
 == FAQ
 
@@ -94,7 +89,9 @@ qSKOS is to some extent able to perform this distinction by examining the host p
 === How can I write the report to a file?
 Report output is performed directly on the console (+stdout+). If you want them to be contained in text files, you can use the output redirection operator (<tt>></tt>) of your operating system's command line shell. Here's an example:
 
-<tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report. 
+<tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report.
+
+A command-line parameter that might be handy when redirecting qSKOS' output into a file is <tt>-np</tt>. It suppresses output of the progress indicator which is thus not written into the generated report.
 
 === What version of qSKOS do I use?
 Simply pass the command line switch <tt>-v</tt> like this:
