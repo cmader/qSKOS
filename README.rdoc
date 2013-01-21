@@ -6,7 +6,7 @@ qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wik
 
 === Download
 
-Binary releases can be downloaded directly from this repository's {download section}[https://github.com/cmader/qSKOS/downloads]. If you cannot or do not want to use {git}[http://git-scm.com/], you can get the packaged source as {zip}[https://github.com/cmader/qSKOS/zipball/master] or {gzipped tar}[https://github.com/cmader/qSKOS/tarball/master] file.
+If you cannot or do not want to checkout the source code using {git}[http://git-scm.com/], you can get the packaged source as {zip file}[https://github.com/cmader/qSKOS/archive/master.zip].
 
 === Build from source
 
