@@ -38,7 +38,16 @@ public class MissingInLinkTest extends IssueTestCase {
 		Assert.assertEquals(2, conceptsMissingInLinks.size());		
 	}
 
-	@Test
+    @Test
+    public void testInLinksAsBnf() throws OpenRDFException {
+        qSkosRankConcepts.setAuthoritativeResourceIdentifier("data.bnf.fr");
+
+        Collection<URI> conceptsMissingInLinks = qSkosRankConcepts.findMissingInLinks().getData();
+        Assert.assertEquals(1, conceptsMissingInLinks.size());
+    }
+
+
+        @Test
 	public void testInLinksAsLocal() throws OpenRDFException {
 		qSkosRankConcepts.setAuthoritativeResourceIdentifier("myvocab.org");
 		
