@@ -140,4 +140,4 @@ A subset of the quality issues qSKOS supports (including an analysis of several 
 
 == Copyright
 
-Copyright (c) 2011, 2012 Christian Mader. See LICENSE.html for details
+Copyright (c) 2011, 2012, 2013 Christian Mader. See LICENSE.txt for details
