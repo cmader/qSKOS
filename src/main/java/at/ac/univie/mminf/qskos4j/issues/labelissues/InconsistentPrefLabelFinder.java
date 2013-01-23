@@ -15,17 +15,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AmbiguousLabelFinder extends Issue {
+public class InconsistentPrefLabelFinder extends Issue {
 
     private Map<Resource, LabelConflict> ambigPrefLabels;
     private ResourceLabelsCollector resourceLabelsCollector;
 
-	public AmbiguousLabelFinder(VocabRepository vocabRepository, ResourceLabelsCollector resourceLabelsCollector) {
+	public InconsistentPrefLabelFinder(VocabRepository vocabRepository, ResourceLabelsCollector resourceLabelsCollector) {
 		super(vocabRepository);
         this.resourceLabelsCollector = resourceLabelsCollector;
 	}
 	
-	public CollectionResult<LabelConflict> findAmbiguouslyPreflabeledResources() throws OpenRDFException
+	public CollectionResult<LabelConflict> findInconsistentPrefLabels() throws OpenRDFException
 	{
         if (ambigPrefLabels == null) {
             Map<Resource, Collection<LabeledResource>> prefLabelsByUri = orderPrefLabelsByResource();

@@ -9,11 +9,11 @@ import org.openrdf.model.Resource;
 import java.util.Collection;
 import java.util.Set;
 
-public class WeaklyConnectedComponentsResult extends CollectionResult<Set<Resource>>
+public class ClustersResult extends CollectionResult<Set<Resource>>
 {
 	private DirectedGraph<Resource, NamedEdge> graph;
 	
-	public WeaklyConnectedComponentsResult(Collection<Set<Resource>> data, DirectedGraph<Resource, NamedEdge> graph) {
+	public ClustersResult(Collection<Set<Resource>> data, DirectedGraph<Resource, NamedEdge> graph) {
 		super(data);
 		this.graph = graph;
 	}

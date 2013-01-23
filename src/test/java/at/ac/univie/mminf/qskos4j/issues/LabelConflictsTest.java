@@ -26,7 +26,7 @@ public class LabelConflictsTest extends IssueTestCase {
 	
 	@Test
 	public void testLabelConflictCount_1() throws OpenRDFException {
-		Collection<LabelConflict> allLabelConflicts = qSkosComponents.findLabelConflicts().getData();
+		Collection<LabelConflict> allLabelConflicts = qSkosComponents.findOverlappingLabels().getData();
 		
 		Assert.assertEquals(2, allLabelConflicts.size());
 		Assert.assertEquals(4, getDifferentResources(allLabelConflicts).size());
@@ -45,6 +45,6 @@ public class LabelConflictsTest extends IssueTestCase {
 	
 	@Test
 	public void testLabelConflictCount_2() throws OpenRDFException {
-		Assert.assertEquals(0, qSkosRelatedConcepts.findLabelConflicts().getData().size());
+		Assert.assertEquals(0, qSkosRelatedConcepts.findOverlappingLabels().getData().size());
 	}
 }

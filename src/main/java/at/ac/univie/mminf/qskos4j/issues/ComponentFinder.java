@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.result.custom.WeaklyConnectedComponentsResult;
+import at.ac.univie.mminf.qskos4j.result.custom.ClustersResult;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -35,14 +35,14 @@ public class ComponentFinder extends Issue {
 		super(vocabRepository);
 	}
 	
-	public WeaklyConnectedComponentsResult findComponents(Collection<URI> allConcepts) 
+	public ClustersResult findClusters(Collection<URI> allConcepts)
 		throws OpenRDFException 
 	{
 		if (graph == null) {
 			createGraph(allConcepts);
 		}
 		
-		return new WeaklyConnectedComponentsResult(
+		return new ClustersResult(
 			new ConnectivityInspector<Resource, NamedEdge>(graph).connectedSets(),
 			graph);
 	}

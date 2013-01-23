@@ -27,8 +27,8 @@ public class SkosReferenceIntegrityChecker extends Issue {
 		super(vocabRepository);
 	}
 
-	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes(
-		DirectedGraph<Resource, NamedEdge> hierarchyGraph) throws OpenRDFException
+	public CollectionResult<Pair<URI>> findRelationClashes(
+            DirectedGraph<Resource, NamedEdge> hierarchyGraph) throws OpenRDFException
 	{
 		Collection<Pair<URI>> clashes = new HashSet<Pair<URI>>();
 		
@@ -93,7 +93,7 @@ public class SkosReferenceIntegrityChecker extends Issue {
 		return true;
 	}
 	
-	public CollectionResult<Pair<URI>> findExactVsAssociativeMappingClashes()
+	public CollectionResult<Pair<URI>> findMappingClashes()
 		throws OpenRDFException
 	{
 		TupleQueryResult result = vocabRepository.query(createExVsAssMappingQuery());
