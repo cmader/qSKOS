@@ -25,7 +25,7 @@ public class AmbiguousLabelFinder extends Issue {
         this.resourceLabelsCollector = resourceLabelsCollector;
 	}
 	
-	public CollectionResult<LabelConflict> findAmbiguouslyPreflabeledResources() throws OpenRDFException
+	public CollectionResult<LabelConflict> findInconsistentPrefLabels() throws OpenRDFException
 	{
         if (ambigPrefLabels == null) {
             Map<Resource, Collection<LabeledResource>> prefLabelsByUri = orderPrefLabelsByResource();

@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j;
 
 import at.ac.univie.mminf.qskos4j.issues.*;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.AmbiguousLabelFinder;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.LabelConflictsFinder;
+import at.ac.univie.mminf.qskos4j.issues.labelissues.OverlappingLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.NonDisjointLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.ResourceLabelsCollector;
@@ -237,14 +237,14 @@ public class QSkos {
     }
 	
 	/**
-	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Weakly_Connected_Components">
-	 * Weakly Connected Components</a>.
+	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disconnected_Concept_Clusters">
+	 * Disconnected Concept Clusters</a>.
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public WeaklyConnectedComponentsResult findComponents() throws OpenRDFException {
+	public ClustersResult findClusters() throws OpenRDFException {
 		componentFinder.setProgressMonitor(progressMonitor);
-		return componentFinder.findComponents(findInvolvedConcepts().getData());
+		return componentFinder.findClusters(findInvolvedConcepts().getData());
 	}
 	
 	/**
@@ -345,8 +345,8 @@ public class QSkos {
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public CollectionResult<LabelConflict> findAmbiguouslyPreflabeledResources() throws OpenRDFException {
-		return new AmbiguousLabelFinder(vocabRepository, resourceLabelsCollector).findAmbiguouslyPreflabeledResources();
+	public CollectionResult<LabelConflict> findInconsistentPrefLabels() throws OpenRDFException {
+		return new AmbiguousLabelFinder(vocabRepository, resourceLabelsCollector).findInconsistentPrefLabels();
 	}
 	
 	/**
@@ -373,15 +373,15 @@ public class QSkos {
 	
 	/**
 	 * Finds concepts having the same preferred labels (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Label_Conflicts">Label Conflicts</a>
+	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public CollectionResult<LabelConflict> findLabelConflicts() throws OpenRDFException {
-		LabelConflictsFinder labelConflictsFinder = new LabelConflictsFinder(vocabRepository);
-		labelConflictsFinder.setProgressMonitor(progressMonitor);
-		return labelConflictsFinder.findLabelConflicts(findAuthoritativeConcepts().getData());
+	public CollectionResult<LabelConflict> findOverlappingLabels() throws OpenRDFException {
+		OverlappingLabelsFinder overlappingLabelsFinder = new OverlappingLabelsFinder(vocabRepository);
+		overlappingLabelsFinder.setProgressMonitor(progressMonitor);
+		return overlappingLabelsFinder.findOverlappingLabels(findAuthoritativeConcepts().getData());
 	}
 	
 	/**
@@ -460,23 +460,23 @@ public class QSkos {
 	}
 	
 	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Associative_vs_Hierarchical_Relation_Clashes">Associative vs. Hierarchical Relation Clashes</a>.
+	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Relation_Clashes">Associative vs. Hierarchical Relation Clashes</a>.
 	 *
 	 * @throws OpenRDFException
 	 */
-	public CollectionResult<Pair<URI>> findAssociativeVsHierarchicalClashes() throws OpenRDFException {
+	public CollectionResult<Pair<URI>> findRelationClashes() throws OpenRDFException {
 		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = new SkosReferenceIntegrityChecker(vocabRepository);
 		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
-		return skosReferenceIntegrityChecker.findAssociativeVsHierarchicalClashes(getHierarchyGraph());
+		return skosReferenceIntegrityChecker.findRelationClashes(getHierarchyGraph());
 	}
 	
 	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Exact_vs_Associative_and_Hierarchical_Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
+	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
 	 * 
 	 * @throws OpenRDFException
 	 */
-	public CollectionResult<Pair<URI>> findExactVsAssociativeMappingClashes() throws OpenRDFException {
-		return new SkosReferenceIntegrityChecker(vocabRepository).findExactVsAssociativeMappingClashes();
+	public CollectionResult<Pair<URI>> findMappingClashes() throws OpenRDFException {
+		return new SkosReferenceIntegrityChecker(vocabRepository).findMappingClashes();
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class ComponentsTest extends IssueTestCase {
 	@Test
 	public void testComponentCount() throws OpenRDFException {
 		long conceptCount = qSkosComponents.findInvolvedConcepts().getData().size();
-		Collection<Set<Resource>> components = qSkosComponents.findComponents().getData();
+		Collection<Set<Resource>> components = qSkosComponents.findClusters().getData();
 
 		Assert.assertEquals(7, components.size());
 		Assert.assertTrue(getVertexCount(components) <= conceptCount);

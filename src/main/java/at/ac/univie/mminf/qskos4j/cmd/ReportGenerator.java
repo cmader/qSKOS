@@ -97,8 +97,8 @@ public class ReportGenerator {
             if (conceptPosInReport != -1) {
                 StringBuilder measureId = new StringBuilder(measure.getId());
 
-                if (measure == MeasureDescription.WEAKLY_CONNECTED_COMPONENTS) {
-                    measureId.append("(" +getWccSize(conceptPosInReport, report)+ ")");
+                if (measure == MeasureDescription.DISCONNECTED_CONCEPT_CLUSTERS) {
+                    measureId.append("(").append(getWccSize(conceptPosInReport, report)).append(")");
                 }
 
                 containingMeasures.add(measureId.toString());

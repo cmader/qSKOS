@@ -44,7 +44,7 @@ public class SkosXlTest extends IssueTestCase {
 	public void labelConflictCount() throws OpenRDFException {
 		Assert.assertEquals(
 			1,
-			qSkosXl.findLabelConflicts().getData().size());
+			qSkosXl.findOverlappingLabels().getData().size());
 	}
 
 }

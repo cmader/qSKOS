@@ -29,7 +29,7 @@ public class UriTrackingTest extends IssueTestCase {
 
         Set<MeasureDescription> measures = new HashSet<MeasureDescription>();
 
-        measures.add(MeasureDescription.WEAKLY_CONNECTED_COMPONENTS);
+        measures.add(MeasureDescription.DISCONNECTED_CONCEPT_CLUSTERS);
         measures.add(MeasureDescription.INCOMPLETE_LANG_COVERAGE);
 
         reportGenerator = new ReportGenerator(
@@ -45,7 +45,7 @@ public class UriTrackingTest extends IssueTestCase {
         try {
             Map<String, Collection<String>> issuesForConcepts = reportGenerator.collectIssuesForConcepts(uriTrackFile);
 
-            Assert.assertTrue(allConceptsAreInOneWcc(issuesForConcepts));
+            Assert.assertTrue(allConceptsAreInOneCluster(issuesForConcepts));
             Assert.assertTrue(oneConceptHasNoUncoveredLanguages(issuesForConcepts));
         }
         catch (IOException e) {
@@ -53,14 +53,14 @@ public class UriTrackingTest extends IssueTestCase {
         }
     }
 
-    private boolean allConceptsAreInOneWcc(Map<String, Collection<String>> issuesForConcepts) {
+    private boolean allConceptsAreInOneCluster(Map<String, Collection<String>> issuesForConcepts) {
         boolean wccIssueFound;
 
         for (Collection<String> issuesOfConcept : issuesForConcepts.values()) {
             wccIssueFound = false;
 
             for (String issue : issuesOfConcept) {
-                if (issue.contains(MeasureDescription.WEAKLY_CONNECTED_COMPONENTS.getId())) {
+                if (issue.contains(MeasureDescription.DISCONNECTED_CONCEPT_CLUSTERS.getId())) {
                     wccIssueFound = true;
                 }
             }

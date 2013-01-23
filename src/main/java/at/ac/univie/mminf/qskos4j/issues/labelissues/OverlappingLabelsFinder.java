@@ -20,19 +20,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class LabelConflictsFinder extends Issue {
+public class OverlappingLabelsFinder extends Issue {
 
-	private final Logger logger = LoggerFactory.getLogger(LabelConflictsFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(OverlappingLabelsFinder.class);
 
 	private Set<LabelConflict> labelConflicts;
 	private Map<Literal, Set<LabeledResource>> conceptLabels;
 	
-	public LabelConflictsFinder(VocabRepository vocabRepository)
+	public OverlappingLabelsFinder(VocabRepository vocabRepository)
 	{
 		super(vocabRepository);
 	}
 
-    public CollectionResult<LabelConflict> findLabelConflicts(Collection<URI> concepts)
+    public CollectionResult<LabelConflict> findOverlappingLabels(Collection<URI> concepts)
 		throws OpenRDFException
 	{
 		if (labelConflicts == null) {
