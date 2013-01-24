@@ -1,9 +1,10 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
+import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -16,21 +17,28 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-public class OutLinkFinder extends Issue {
+public class MissingOutLinks extends Issue {
 
-    private final Logger logger = LoggerFactory.getLogger(OutLinkFinder.class);
+    private final Logger logger = LoggerFactory.getLogger(MissingOutLinks.class);
 
     private String authResourceIdentifier;
+    private Collection<URI> autoritativeConcepts;
 	private Map<URI, Collection<URL>> extResourcesForConcept;
 	
-	public OutLinkFinder(VocabRepository vocabRepository) {
-		super(vocabRepository);
+	public MissingOutLinks() {
+		super("mol", "Missing Out-Links", "Finds concepts that are not linked to other vocabularies on the Web");
 	}
-	
-	public CollectionResult<URI> findMissingOutLinks(
-		Collection<URI> autoritativeConcepts,
-		String authResourceIdentifier)
-	{
+
+    public void setAuthResourceIdentifier(String authResourceIdentifier) {
+        this.authResourceIdentifier = authResourceIdentifier;
+    }
+
+    public void setAutoritativeConcepts(Collection<URI> autoritativeConcepts) {
+        this.autoritativeConcepts = autoritativeConcepts;
+    }
+
+    @Override
+    public Result<?> invoke() {
 		extResourcesForConcept = new HashMap<URI, Collection<URL>>();
 		this.authResourceIdentifier = authResourceIdentifier;
 		
@@ -129,5 +137,5 @@ public class OutLinkFinder extends Issue {
 		
 		return unlinkedConcepts;
 	}
-	
+
 }

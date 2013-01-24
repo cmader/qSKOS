@@ -6,6 +6,7 @@ import at.ac.univie.mminf.qskos4j.issues.labelissues.OverlappingLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.NonDisjointLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.custom.*;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
@@ -274,7 +275,7 @@ public class QSkos {
 	 * @throws OpenRDFException
 	 */
 	public CollectionResult<URI> findMissingOutLinks() throws OpenRDFException {
-		OutLinkFinder extResourcesFinder = new OutLinkFinder(vocabRepository);
+		MissingOutLinks extResourcesFinder = new MissingOutLinks(vocabRepository);
 		
 		extResourcesFinder.setProgressMonitor(progressMonitor);
 		return extResourcesFinder.findMissingOutLinks(
