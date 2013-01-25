@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +20,8 @@ public class LabelConflictsTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosComponents = setUpInstance("components.rdf");
-		qSkosRelatedConcepts = setUpInstance("relatedConcepts.rdf");
+		qSkosComponents = setUpIssue("components.rdf");
+		qSkosRelatedConcepts = setUpIssue("relatedConcepts.rdf");
 		qSkosRelatedConcepts.setAuthoritativeResourceIdentifier("http://aims.fao.org/aos/agrovoc");
 	}
 	

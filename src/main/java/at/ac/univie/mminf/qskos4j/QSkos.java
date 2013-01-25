@@ -1,6 +1,9 @@
 package at.ac.univie.mminf.qskos4j;
 
 import at.ac.univie.mminf.qskos4j.issues.*;
+import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
+import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
+import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.InconsistentPrefLabelFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.OverlappingLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.NonDisjointLabelsFinder;
@@ -51,17 +54,11 @@ public class QSkos {
     private final static int EXT_ACCESS_MILLIS = 1500;
 	
 	private Collection<Repository> otherRepositories = new HashSet<Repository>();
-	
-	private BrokenLinksFinder brokenLinksFinder;
-	private ConceptFinder conceptFinder;
-	private ComponentFinder componentFinder;
-	private ValuelessAssociativeRelationsFinder redundantAssociativeRelationsFinder;
-	private LanguageCoverageChecker languageCoverageChecker;
-	
+
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
     private ResourceLabelsCollector resourceLabelsCollector;
-	private String authResourceIdentifier;
+	private String baseURI;
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
 	
@@ -106,91 +103,25 @@ public class QSkos {
 		logger.info("initializing vocabulary from file '" +rdfFile.getName()+ "'...");
 		
 		vocabRepository = new VocabRepository(rdfFile, baseURI, dataFormat);
-		extractAuthResourceIdentifier(baseURI);
-		setup();
-	}
-	
-	private void setup() {
-        conceptFinder = new ConceptFinder();
-
-        issuesToTest.add(new MissingOutLinks());
-        issuesToTest.add(conceptFinder);
-
-        for (Issue issue : issuesToTest) {
-            issue.setVocabRepository(vocabRepository);
-            issue.setConceptFinder(conceptFinder);
-        }
-
-        // TODO: convert this stuff to new pluggable issues
-		brokenLinksFinder = new BrokenLinksFinder(vocabRepository);
-		conceptFinder = new ConceptFinder(vocabRepository);
-		componentFinder = new ComponentFinder(vocabRepository);
-		redundantAssociativeRelationsFinder = new ValuelessAssociativeRelationsFinder(vocabRepository);
-		languageCoverageChecker = new LanguageCoverageChecker(vocabRepository);
-        resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
-		
-		progressMonitor = new DummyProgressMonitor();
+		this.baseURI = baseURI;
 	}
 
+    public void addIssue(Issue issue) {
+        issuesToTest.add(issue);
+        issue.setVocabRepository(vocabRepository);
+    }
 
+	public void addAllIssues() {
+        issuesToTest.clear();
 
-	private void extractAuthResourceIdentifier(String baseUri) {
-		if (baseUri != null) {
-			try {
-				authResourceIdentifier = new java.net.URI(baseUri).getHost();
-			} 
-			catch (URISyntaxException e) {
-				// cannot guess authoritative resource identifier
-			}
-		}
+        InvolvedConcepts involvedConcepts = new InvolvedConcepts();
+
+        addIssue(involvedConcepts);
+        addIssue(new AuthoritativeConcepts(involvedConcepts, baseURI));
+        addIssue(new OrphanConcepts(involvedConcepts));
+        addIssue(new MissingOutLinks());
 	}
-	
-	/**
-	 * Finds all <a href="http://www.w3.org/TR/skos-reference/#concepts">SKOS Concepts</a> involved in the vocabulary.
-	 * 
-	 * @return {@link CollectionResult} of all found concept URIs
-	 * @throws OpenRDFException if querying the local repository fails
-	 */
-	public CollectionResult<URI> findInvolvedConcepts() throws OpenRDFException
-	{
-		if (involvedConcepts == null) {
-			involvedConcepts = conceptFinder.findInvolvedConcepts();
-		}
-		
-		return involvedConcepts;
-	}
-	
-	/**
-	 * Finds all "authoritative concepts". See the <a href="https://github.com/cmader/qSKOS/blob/master/README.rdoc">
-	 * qSKOS readme</a> for further information.
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public CollectionResult<URI> findAuthoritativeConcepts() throws OpenRDFException {
-		conceptFinder.setProgressMonitor(progressMonitor);
-		
-		if (authoritativeConcepts == null) {
-			authoritativeConcepts = conceptFinder.findAuthoritativeConcepts(authResourceIdentifier);
-			
-			if (authResourceIdentifier == null) {
-				authResourceIdentifier = conceptFinder.getAuthoritativeResourceIdentifier();
-			}
-			
-		}
-		return authoritativeConcepts;
-	}
-		
-	/**
-	 * Further info on <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Orphan_Concepts">Orphan
-	 * Concepts</a>.
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public CollectionResult<URI> findOrphanConcepts() throws OpenRDFException
-	{
-		return conceptFinder.findOrphanConcepts();
-	}
-	
+
 	/**
 	 * Finds the number of relations involving SKOS lexical labels (prefLabel, altLabel, hiddenLabel). 
 	 * 

@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class AmbiguousLabelTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosAmbiguousLabels = setUpInstance("ambiguousLabels.rdf");
+		qSkosAmbiguousLabels = setUpIssue("ambiguousLabels.rdf");
 	}
 	
 	@Test

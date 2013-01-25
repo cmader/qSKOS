@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class UndocumentedConceptsTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosDocumentedConcepts = setUpInstance("documentedConcepts.rdf");
+		qSkosDocumentedConcepts = setUpIssue("documentedConcepts.rdf");
 	}
 	
 	@Test

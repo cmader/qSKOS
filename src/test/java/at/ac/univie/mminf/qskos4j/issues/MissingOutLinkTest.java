@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +18,8 @@ public class MissingOutLinkTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosComponents = setUpInstance("components.rdf");
-		qSkosConcepts = setUpInstance("concepts.rdf");
+		qSkosComponents = setUpIssue("components.rdf");
+		qSkosConcepts = setUpIssue("concepts.rdf");
 	}
 	
 	@Test

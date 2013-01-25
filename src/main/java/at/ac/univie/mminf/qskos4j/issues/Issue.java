@@ -42,6 +42,7 @@ public abstract class Issue<T extends Result<?>> {
 
 	public void setVocabRepository(VocabRepository vocabRepository) {
 		this.vocabRepository = vocabRepository;
+        reset();
 	}
 	
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
