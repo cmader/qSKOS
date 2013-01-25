@@ -35,16 +35,6 @@ public class ConceptFinder extends Issue {
 		super(vocabRepository);
 	}
 	
-	public CollectionResult<URI> findInvolvedConcepts() 
-		throws OpenRDFException 
-	{
-		TupleQueryResult result = vocabRepository.query(createConceptsQuery());
-		Set<URI> foundConcepts = getConceptURIs(result); 
-		involvedConcepts = foundConcepts;  
-		
-		return new CollectionResult<URI>(foundConcepts);
-	}
-	
 	public CollectionResult<URI> findOrphanConcepts()
 		throws OpenRDFException
 	{
@@ -87,86 +77,8 @@ public class ConceptFinder extends Issue {
 		return new CollectionResult<URI>(authoritativeConcepts);
 	}
 	
-	private void extractAuthoritativeConceptsFromInvolved() 
-	{		
-		if (authResourceIdentifier == null || authResourceIdentifier.isEmpty())
-		{
-			guessAuthoritativeResourceIdentifier();
-		}
-		
-		authoritativeConcepts = new HashSet<URI>();
-		
-		for (URI concept : involvedConcepts) {
-			String lowerCaseUriValue = concept.toString().toLowerCase();
-			
-			if (lowerCaseUriValue.contains(authResourceIdentifier.toLowerCase())) 
-			{
-				authoritativeConcepts.add(concept);
-			}
-		}
-	}
-	
-	private void guessAuthoritativeResourceIdentifier() {
-		HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
-		
-		Iterator<URI> resourcesListIt = new MonitoredIterator<URI>(
-			involvedConcepts,
-			progressMonitor,
-			"guessing publishing host");
-		
-		while (resourcesListIt.hasNext()) {
-			try {
-				URL url = new URL(resourcesListIt.next().stringValue());
-				hostNameOccurencies.put(url.getHost());
-			}
-			catch (MalformedURLException e) {
-				// ignore this exception and continue with next concept
-			}
-		}
-		
-		authResourceIdentifier = hostNameOccurencies.getMostOftenOccuringHostName();
-		logger.info("Guessed authoritative resource identifier: '" +authResourceIdentifier+ "'");
-	}
-		
-	private String createConceptsQuery() {
-		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
-			"SELECT DISTINCT ?concept "+
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
-			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
-			
-			"WHERE {" +
-				"{?concept rdf:type/rdfs:subClassOf* skos:Concept} UNION "+
-				"{?concept skos:topConceptOf ?conceptScheme} UNION "+
-				"{?conceptScheme skos:hasTopConcept ?concept} UNION "+
-				
-				"{"+
-					"GRAPH <" +vocabRepository.SKOS_GRAPH_URL+ "> {"+
-						"?semRelSubProp rdfs:subPropertyOf+ skos:semanticRelation ."+
-					"}" +			
-					"{" +
-						"{?x ?semRelSubProp ?concept . } UNION "+
-						"{?concept ?semRelSubProp ?x . } UNION " +
-						"{?concept ?p ?x . ?p rdfs:subPropertyOf+ ?semRelSubProp} UNION " +
-						"{?x ?p ?concept . ?p rdfs:subPropertyOf+ ?semRelSubProp}" +
-					"}"+
-				"}" +
-			"}";
-	}
-	
-	private Set<URI> getConceptURIs(TupleQueryResult result) throws QueryEvaluationException {
-		Set<URI> ret = new HashSet<URI>();
-		
-		while (result.hasNext()) {
-			Value concept = result.next().getValue("concept");
-			
-			if (concept instanceof URI) {
-				ret.add((URI) concept);
-			}
-		}
-		
-		return ret;
-	}
-	
+
+
 	public String getAuthoritativeResourceIdentifier() {
 		return authResourceIdentifier;
 	}

@@ -3,46 +3,36 @@ package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 public enum MeasureDescription {
 
 	// Statistics
-	TOTAL_CONCEPTS("c", 
-		"All Concepts", 
-		"Finds all SKOS concepts involved in the vocabulary", 
-		"findInvolvedConcepts",
-		MeasureType.STATISTICS),
-	AUTHORITATIVE_CONCEPTS("ac", 
-		"Authoritative Concepts", 
-		"Finds all authoritative concepts in the vocabulary", 
-		"findAuthoritativeConcepts",
-		MeasureType.STATISTICS),
 	LABELS_COUNT("cl",
 		"Concept Labels",
 		"Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
 		"findLexicalRelationsCount",
-		MeasureType.STATISTICS),
+		IssueType.STATISTICS),
 	SEMANTIC_RELATIONS_COUNT("sr",
 		"Semantic Relations Count",
 		"Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",
 		"findSemanticRelationsCount",
-		MeasureType.STATISTICS),
+		IssueType.STATISTICS),
 	AGGREGATION_RELATIONS_COUNT("ar",
 		"Aggregation Relations Count",
 		"Counts the statements relating resources to ConceptSchemes or Collections",
 		"findAggregationRelations",
-		MeasureType.STATISTICS),
+		IssueType.STATISTICS),
 	CONCEPT_SCHEME("cs",
 		"Concept Schemes",
 		"Finds the involved ConceptSchemes",
 		"findConceptSchemes",
-		MeasureType.STATISTICS),
+		IssueType.STATISTICS),
 	COLLECTION_COUNT("cc",
 		"Collection Count",
 		"Counts the involved Collections",
 		"findCollectionCount",
-		MeasureType.STATISTICS),
+		IssueType.STATISTICS),
     HTTP_URI_COUNT("huc",
         "HTTP URI Count",
         "Counts the total number of HTTP URIs",
         "findAllHttpUriCount",
-        MeasureType.STATISTICS),
+        IssueType.STATISTICS),
 	
 	// Labeling and Documentation Issues
 	OMITTED_OR_INVALID_LANG_TAGS("oilt",
@@ -137,10 +127,10 @@ public enum MeasureDescription {
 		"Finds resources with identical entries for different label types",
 		"findDisjointLabelsViolations");
 		
-	public enum MeasureType {STATISTICS, ISSUE}
+	public enum IssueType {STATISTICS, ISSUE}
 	
 	private String id, name, description, qSkosMethodName;
-	private MeasureType type = MeasureType.ISSUE;
+	private IssueType type = IssueType.ISSUE;
 	
 	MeasureDescription(String id, String name, String description, String qSkosMethodName) {
 		this.id = id;
@@ -149,7 +139,7 @@ public enum MeasureDescription {
 		this.qSkosMethodName = qSkosMethodName;		
 	}
 	
-	MeasureDescription(String id, String name, String description, String qSkosMethodName, MeasureType type) {
+	MeasureDescription(String id, String name, String description, String qSkosMethodName, IssueType type) {
 		this(id, name, description, qSkosMethodName);
 		this.type = type;
 	}
@@ -170,7 +160,7 @@ public enum MeasureDescription {
 		return qSkosMethodName;
 	}
 	
-	public MeasureType getType() {
+	public IssueType getType() {
 		return type;
 	}
 	

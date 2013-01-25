@@ -21,28 +21,21 @@ public class MissingOutLinks extends Issue {
 
     private final Logger logger = LoggerFactory.getLogger(MissingOutLinks.class);
 
-    private String authResourceIdentifier;
-    private Collection<URI> autoritativeConcepts;
 	private Map<URI, Collection<URL>> extResourcesForConcept;
 	
 	public MissingOutLinks() {
-		super("mol", "Missing Out-Links", "Finds concepts that are not linked to other vocabularies on the Web");
+		super("mol",
+              "Missing Out-Links",
+              "Finds concepts that are not linked to other vocabularies on the Web",
+              IssueType.ANALYTICAL
+        );
 	}
-
-    public void setAuthResourceIdentifier(String authResourceIdentifier) {
-        this.authResourceIdentifier = authResourceIdentifier;
-    }
-
-    public void setAutoritativeConcepts(Collection<URI> autoritativeConcepts) {
-        this.autoritativeConcepts = autoritativeConcepts;
-    }
 
     @Override
     public Result<?> invoke() {
 		extResourcesForConcept = new HashMap<URI, Collection<URL>>();
-		this.authResourceIdentifier = authResourceIdentifier;
-		
-		findResourcesForConcepts(autoritativeConcepts);
+
+		findResourcesForConcepts(conceptFinder.getAuthoritativeConcepts());
 		
 		return new CollectionResult<URI>(extractUnlinkedConcepts());
 	}
@@ -114,8 +107,10 @@ public class MissingOutLinks extends Issue {
 		return validExternalResources;
 	}
 	
-	private boolean isExternalResource(URL url) {		
-		if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {
+	private boolean isExternalResource(URL url) {
+        String authResourceIdentifier = conceptFinder.getAuthoritativeResourceIdentifier();
+
+        if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {
 			return !url.toString().toLowerCase().contains(authResourceIdentifier.toLowerCase());
 		}
 		

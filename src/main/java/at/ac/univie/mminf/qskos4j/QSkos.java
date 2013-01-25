@@ -31,9 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Main class intended for easy interaction with qSKOS. On instantiation an in-memory ("local") repository 
@@ -68,7 +66,8 @@ public class QSkos {
 	private Float randomSubsetSize_percent;
 	
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
-	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph; 
+	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph;
+    private Collection<Issue> issuesToTest = Collections.EMPTY_LIST;
 
 	/**
 	 * Constructs a QSkos object and initializes it with content from the passed RDF vocabulary.
@@ -107,12 +106,22 @@ public class QSkos {
 		logger.info("initializing vocabulary from file '" +rdfFile.getName()+ "'...");
 		
 		vocabRepository = new VocabRepository(rdfFile, baseURI, dataFormat);
-		
 		extractAuthResourceIdentifier(baseURI);
-		init();
+		setup();
 	}
 	
-	private void init() {
+	private void setup() {
+        conceptFinder = new ConceptFinder();
+
+        issuesToTest.add(new MissingOutLinks());
+        issuesToTest.add(conceptFinder);
+
+        for (Issue issue : issuesToTest) {
+            issue.setVocabRepository(vocabRepository);
+            issue.setConceptFinder(conceptFinder);
+        }
+
+        // TODO: convert this stuff to new pluggable issues
 		brokenLinksFinder = new BrokenLinksFinder(vocabRepository);
 		conceptFinder = new ConceptFinder(vocabRepository);
 		componentFinder = new ComponentFinder(vocabRepository);
@@ -122,7 +131,9 @@ public class QSkos {
 		
 		progressMonitor = new DummyProgressMonitor();
 	}
-	
+
+
+
 	private void extractAuthResourceIdentifier(String baseUri) {
 		if (baseUri != null) {
 			try {
@@ -481,11 +492,13 @@ public class QSkos {
 	}
 
 	/**
-	 * Set am IProgressMonitor that is notified on changes in the evaluation progress of Issues.
+	 * Set an IProgressMonitor that is notified on changes in the evaluation progress for every managed issues.
 	 * @param progressMonitor monitor instance to be notified
 	 */
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
-		this.progressMonitor = progressMonitor;
+        for (Issue issue : issuesToTest) {
+            issue.setProgressMonitor(progressMonitor);
+        }
 	}
 	
 	/**

@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription.MeasureType;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -28,7 +27,7 @@ public class IssueInvocationTest {
 		}
 	}
 	
-	private String findCommand(MeasureType type) {
+	private String findCommand(MeasureDescription.IssueType type) {
 		switch (type)
 		{
 		case ISSUE:

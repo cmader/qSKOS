@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription.MeasureType;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;
@@ -138,10 +137,10 @@ public class VocEvaluate {
 	{
 		if (parsedCommand.vocabFilenames == null) {
 			if (parsedCommand instanceof CommandAnalyze) {
-				outputMeasureDescription(MeasureType.ISSUE);	
+				outputMeasureDescription(MeasureDescription.IssueType.ISSUE);
 			}
 			else {
-				outputMeasureDescription(MeasureType.STATISTICS);	
+				outputMeasureDescription(MeasureDescription.IssueType.STATISTICS);
 			}
 		}
 		else {
@@ -150,7 +149,7 @@ public class VocEvaluate {
 		}
 	}
 
-	private void outputMeasureDescription(MeasureType constraintType) {
+	private void outputMeasureDescription(MeasureDescription.IssueType constraintType) {
 		Iterator<MeasureDescription> descIt = Arrays.asList(MeasureDescription.values()).iterator();
 		
 		while (descIt.hasNext()) {
@@ -272,8 +271,8 @@ public class VocEvaluate {
 		for (MeasureDescription measureDesc : MeasureDescription.values()) {
 			String command = jc.getParsedCommand();
 			
-			if ((measureDesc.getType() == MeasureType.ISSUE && command.equals(CMD_NAME_ANALYZE)) ||
-				(measureDesc.getType() == MeasureType.STATISTICS && command.equals(CMD_NAME_SUMMARIZE))) 
+			if ((measureDesc.getType() == MeasureDescription.IssueType.ISSUE && command.equals(CMD_NAME_ANALYZE)) ||
+				(measureDesc.getType() == MeasureDescription.IssueType.STATISTICS && command.equals(CMD_NAME_SUMMARIZE)))
 			{
 				measuresForCommand.add(measureDesc);
 			}
