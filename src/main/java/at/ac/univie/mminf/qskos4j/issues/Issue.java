@@ -9,7 +9,7 @@ import org.openrdf.model.URI;
 import java.util.Collection;
 import java.util.Collections;
 
-public abstract class Issue<T> {
+public abstract class Issue<T extends Result<?>> {
 
     public enum IssueType {STATISTICAL, ANALYTICAL}
 
@@ -18,7 +18,7 @@ public abstract class Issue<T> {
 
     private String id, name, description;
     private IssueType type;
-    private Result<T> result;
+    private T result;
 
     protected Issue(String id, String name, String description, IssueType type) {
         this.id = id;
@@ -27,9 +27,9 @@ public abstract class Issue<T> {
         this.type = type;
     }
 
-    protected abstract Result<T> invoke() throws OpenRDFException;
+    protected abstract T invoke() throws OpenRDFException;
 
-    public final Result<T> getResult() throws OpenRDFException {
+    public final T getResult() throws OpenRDFException {
         if (result == null) {
             result = invoke();
         }
