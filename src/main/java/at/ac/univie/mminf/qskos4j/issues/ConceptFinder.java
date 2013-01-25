@@ -38,29 +38,10 @@ public class ConceptFinder extends Issue {
 	public CollectionResult<URI> findOrphanConcepts()
 		throws OpenRDFException
 	{
-		TupleQueryResult result = vocabRepository.query(createLooseConceptsQuery());
-		Set<URI> connectedConcepts = getConceptURIs(result);
-		
-		if (involvedConcepts == null) {
-			findInvolvedConcepts();
-		}
-		
-		Set<URI> looseConcepts = new HashSet<URI>(involvedConcepts);
-		looseConcepts.removeAll(connectedConcepts);
 
-		return new CollectionResult<URI>(looseConcepts);	
 	}
 	
-	private String createLooseConceptsQuery() {
-		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
-			"SELECT DISTINCT ?concept ?semanticRelation ?otherConcept WHERE" +
-			"{" +
-				"{?concept ?semanticRelation ?otherConcept . ?semanticRelation rdfs:subPropertyOf+ skos:semanticRelation}" +
-				"UNION" +
-				"{?otherConcept ?semanticRelation ?concept . ?semanticRelation rdfs:subPropertyOf+ skos:semanticRelation}" +
-			"}";				
-	}
-	
+
 	public CollectionResult<URI> findAuthoritativeConcepts(
 		String authResourceIdentifier) throws OpenRDFException
 	{
