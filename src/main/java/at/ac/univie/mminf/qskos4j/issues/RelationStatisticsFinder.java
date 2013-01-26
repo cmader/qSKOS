@@ -24,46 +24,7 @@ public class RelationStatisticsFinder extends Issue {
 		super(vocabRepository);
 	}
 	
-	public NumberResult<Long> findLexicalRelationsCount(Collection<URI> allConcepts) 
-	{
-		long relationsCount = 0; 
-		
-		for (URI concept : allConcepts) {
-            try {
-			    TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));
-                relationsCount += countResults(result);
-            }
-            catch (OpenRDFException e) {
-                logger.error("Error finding labels for concept '" +concept+ "'");
-            }
-		}
-		
-		return new NumberResult<Long>(relationsCount);
-	}
-	
-	private String createLexicalLabelQuery(URI concept) {
-		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
-			"SELECT DISTINCT ?skoslabelType ?literal WHERE {" +
-				"<" +concept.stringValue()+ "> ?skoslabelType ?literal ." +
-				"{?skoslabelType rdfs:subPropertyOf* skos:prefLabel}" +
-				"UNION" +
-				"{?skoslabelType rdfs:subPropertyOf* skos:altLabel}" +
-				"UNION" +
-				"{?skoslabelType rdfs:subPropertyOf* skos:hiddenLabel}" +
-			"}";	
-	}
-			
-	private long countResults(TupleQueryResult result) throws QueryEvaluationException 
-	{
-		long count = 0;
-		
-		while (result.hasNext()) {
-			count++;
-			result.next();
-		}
-		
-		return count;
-	}
+
 	
 	public NumberResult<Long> findSemanticRelationsCount() 
 		throws OpenRDFException

@@ -1,9 +1,9 @@
-package at.ac.univie.mminf.qskos4j.issues.labelissues;
+package at.ac.univie.mminf.qskos4j.issues.labels;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabeledResource;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledResource;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;

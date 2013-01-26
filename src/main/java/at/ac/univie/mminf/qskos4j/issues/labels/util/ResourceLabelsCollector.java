@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
+package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;

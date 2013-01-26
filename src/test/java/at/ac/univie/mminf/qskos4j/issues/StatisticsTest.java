@@ -23,34 +23,7 @@ public class StatisticsTest extends IssueTestCase {
 		qSkosAggregations = setUpIssue("aggregations.rdf");
 	}
 	
-	@Test
-	public void testConceptCount_1() throws OpenRDFException
-	{
-		Collection<URI> involvedConcepts = qSkosConcepts.findInvolvedConcepts().getData();
-		Assert.assertEquals(10, involvedConcepts.size());
-	}
-	
-	@Test
-	public void testConceptCount_2() throws OpenRDFException
-	{
-		Collection<URI> involvedConcepts = qSkosComponents.findInvolvedConcepts().getData(); 
-		Assert.assertEquals(21, involvedConcepts.size());		
-	}
-	
-	@Test 
-	public void testAuthoritativeConceptsCount() throws OpenRDFException
-	{
-		qSkosConcepts.setAuthoritativeResourceIdentifier("zbw.eu");
-		Collection<URI> authoritativeConcepts = qSkosConcepts.findAuthoritativeConcepts().getData();
-		Assert.assertEquals(9, authoritativeConcepts.size());
-	}
-	
-	@Test
-	public void testLexicalRelationsCount() throws OpenRDFException
-	{
-		Assert.assertEquals(29, qSkosComponents.findLexicalRelationsCount().getData().longValue());
-	}
-	
+
 	@Test
 	public void testSemanticRelationsCount() throws OpenRDFException
 	{

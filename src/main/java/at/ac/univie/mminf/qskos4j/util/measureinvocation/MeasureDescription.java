@@ -3,11 +3,6 @@ package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 public enum MeasureDescription {
 
 	// Statistics
-	LABELS_COUNT("cl",
-		"Concept Labels",
-		"Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
-		"findLexicalRelationsCount",
-		IssueType.STATISTICS),
 	SEMANTIC_RELATIONS_COUNT("sr",
 		"Semantic Relations Count",
 		"Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",

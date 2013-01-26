@@ -4,11 +4,12 @@ import at.ac.univie.mminf.qskos4j.issues.*;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.InconsistentPrefLabelFinder;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.OverlappingLabelsFinder;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.NonDisjointLabelsFinder;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabelFinder;
+import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
+import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabelsFinder;
+import at.ac.univie.mminf.qskos4j.issues.labels.NonDisjointLabelsFinder;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.custom.*;
@@ -17,7 +18,6 @@ import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.progress.DummyProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
@@ -106,12 +105,7 @@ public class QSkos {
 		this.baseURI = baseURI;
 	}
 
-    public void addIssue(Issue issue) {
-        issuesToTest.add(issue);
-        issue.setVocabRepository(vocabRepository);
-    }
-
-	public void addAllIssues() {
+	private void addAllIssues() {
         issuesToTest.clear();
 
         InvolvedConcepts involvedConcepts = new InvolvedConcepts();
@@ -120,18 +114,22 @@ public class QSkos {
         addIssue(new AuthoritativeConcepts(involvedConcepts, baseURI));
         addIssue(new OrphanConcepts(involvedConcepts));
         addIssue(new MissingOutLinks());
+        addIssue(new LexicalRelations(involvedConcepts));
 	}
 
-	/**
-	 * Finds the number of relations involving SKOS lexical labels (prefLabel, altLabel, hiddenLabel). 
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public NumberResult<Long> findLexicalRelationsCount() throws OpenRDFException
-	{
-		return new RelationStatisticsFinder(vocabRepository).findLexicalRelationsCount(findInvolvedConcepts().getData());
-	}
-	
+    private void addIssue(Issue issue) {
+        issuesToTest.add(issue);
+        issue.setVocabRepository(vocabRepository);
+    }
+
+    public void invokeAllIssues() {
+        addAllIssues();
+
+        for (Issue issue : issuesToTest) {
+            issue.getResult();
+        }
+    }
+
 	/**
 	 * Finds the number of triples involving (subproperties of) skos:semanticRelation.
 	 *

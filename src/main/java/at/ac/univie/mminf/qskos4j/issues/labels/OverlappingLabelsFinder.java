@@ -1,10 +1,10 @@
-package at.ac.univie.mminf.qskos4j.issues.labelissues;
+package at.ac.univie.mminf.qskos4j.issues.labels;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelConflict;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabelType;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.LabeledResource;
-import at.ac.univie.mminf.qskos4j.issues.labelissues.util.SimilarityLiteral;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledResource;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
