@@ -1,5 +1,6 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
@@ -10,88 +11,52 @@ import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
-public class BrokenLinksFinder extends Issue {
+/**
+ * Created by christian
+ * Date: 26.01.13
+ * Time: 16:29
+ *
+ * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Broken_Links">Broken Links</a>.
+ */
+public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 	
-	private final Logger logger = LoggerFactory.getLogger(BrokenLinksFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(BrokenLinks.class);
 	private final String NO_CONTENT_TYPE = "n/a";
 	
 	private Map<URL, String> urlAvailability = new HashMap<URL, String>();
-	private Set<URI> httpURIs;
 	private Set<String> invalidResources = new HashSet<String>();
-	
-	public BrokenLinksFinder(VocabRepository vocabRepository) {
-		super(vocabRepository);
+    private HttpURIs httpURIs;
+    private Integer extAccessDelayMillis;
+    private Float randomSubsetSize_percent;
+
+    public BrokenLinks(HttpURIs httpURIs) {
+		super("bl",
+              "Broken Links",
+              "Checks dereferencability of all links",
+              IssueType.ANALYTICAL
+        );
+
+        this.httpURIs = httpURIs;
 	}
-	
-	public ExtrapolatedCollectionResult<URL> findBrokenLinks(
-		Float randomSubsetSize_percent,
-		Integer urlDereferencingDelayMillis) throws OpenRDFException 
-	{
-		createAvailabilityMap(randomSubsetSize_percent, urlDereferencingDelayMillis);
+
+    @Override
+    protected ExtrapolatedCollectionResult<URL> invoke() throws OpenRDFException {
+        dereferenceURIs();
 		return new ExtrapolatedCollectionResult<URL>(collectUnavailableURLs(), randomSubsetSize_percent);
 	}
-	
-	private void createAvailabilityMap(
-		Float randomSubsetSize_percent,
-		Integer urlDereferencingDelayMillis) throws OpenRDFException
-	{
-		findAllHttpURIs();
-		dereferenceURIs(randomSubsetSize_percent, urlDereferencingDelayMillis);
-	}
-	
-	public CollectionResult<String> findNonHttpResources() throws OpenRDFException 
-	{
-		TupleQueryResult result = vocabRepository.query(createNonHttpUriQuery());
-		Collection<String> nonHttpUriSet = createNonHttpUriSet(result);
-		return new CollectionResult<String>(nonHttpUriSet);
-	}
-	
-	private String createNonHttpUriQuery() {
-		return "SELECT DISTINCT ?iri WHERE " +
-			"{" +
-				"?iri ?p ?obj ." +
-				"FILTER isIRI(?iri)"+ 
-			"}";
-	}
-	
-	private Collection<String> createNonHttpUriSet(TupleQueryResult result)
-		throws OpenRDFException
-	{
-		Set<String> nonHttpURIs = new HashSet<String>();
-		
-		while (result.hasNext()) {
-			Value iri = result.next().getValue("iri");
-			String iriValue = iri.stringValue().toLowerCase();
-			if (!iriValue.contains("http://") && !iriValue.contains("https://")) {
-				nonHttpURIs.add(iri.stringValue());
-			}
-		}
-		
-		return nonHttpURIs;
-	}
-	
 
-		
-
-	
-
-
-	private void dereferenceURIs(Float randomSubsetSize_percent, Integer urlDereferencingDelayMillis) 
+	private void dereferenceURIs() throws OpenRDFException
 	{
-		Set<URI> urisToBeDereferenced = collectUrisToBeDereferenced(randomSubsetSize_percent);
+		Collection<URI> urisToBeDereferenced = collectUrisToBeDereferenced(randomSubsetSize_percent);
 		Iterator<URI> it = new MonitoredIterator<URI>(urisToBeDereferenced, progressMonitor);
 		
 		int i = 1;
@@ -103,7 +68,7 @@ public class BrokenLinksFinder extends Issue {
 			
 			// delay to avoid flooding the vocabulary host  
 			try {
-				Thread.sleep(urlDereferencingDelayMillis);
+				Thread.sleep(extAccessDelayMillis);
 			} 
 			catch (InterruptedException e) {
 				// ignore this exception
@@ -113,12 +78,12 @@ public class BrokenLinksFinder extends Issue {
 		}
 	}
 	
-	private Set<URI> collectUrisToBeDereferenced(Float randomSubsetSize_percent) {
+	private Collection<URI> collectUrisToBeDereferenced(Float randomSubsetSize_percent) throws OpenRDFException {
 		if (randomSubsetSize_percent == null) {
-			return httpURIs;
+			return httpURIs.getResult().getData();
 		}
 
-        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs, randomSubsetSize_percent);
+        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs.getResult().getData(), randomSubsetSize_percent);
         logger.info("using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
 
 		return urisToBeDereferenced;
@@ -163,4 +128,13 @@ public class BrokenLinksFinder extends Issue {
 		
 		return unavailableURLs;
 	}
+
+    public void setExtAccessDelayMillis(int delayMillis) {
+        extAccessDelayMillis = delayMillis;
+    }
+
+    public void setSubsetSize(Float subsetSizePercent) {
+        randomSubsetSize_percent = subsetSizePercent;
+    }
+
 }

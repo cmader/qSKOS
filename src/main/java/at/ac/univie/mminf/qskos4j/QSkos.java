@@ -13,6 +13,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.NonDisjointLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.result.Result;
@@ -60,7 +61,6 @@ public class QSkos {
 
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
-    private ResourceLabelsCollector resourceLabelsCollector;
 	private String baseURI;
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
@@ -113,18 +113,26 @@ public class QSkos {
         issuesToTest.clear();
 
         InvolvedConcepts involvedConcepts = new InvolvedConcepts();
+        AuthoritativeConcepts authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts, baseURI);
+        HttpURIs httpURIs = new HttpURIs();
 
         addIssue(involvedConcepts);
-        addIssue(new AuthoritativeConcepts(involvedConcepts, baseURI));
+        addIssue(authoritativeConcepts);
         addIssue(new OrphanConcepts(involvedConcepts));
-        addIssue(new MissingOutLinks());
+        addIssue(new MissingOutLinks(authoritativeConcepts));
         addIssue(new LexicalRelations(involvedConcepts));
         addIssue(new SemanticRelations());
         addIssue(new AggregationRelations());
         addIssue(new ConceptSchemes());
         addIssue(new at.ac.univie.mminf.qskos4j.issues.count.Collections());
-        addIssue(new HttpURIs());
+        addIssue(httpURIs);
         addIssue(new DisconnectedConceptClusters(involvedConcepts));
+        addIssue(new MissingOutLinks(authoritativeConcepts));
+
+        BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
+        brokenLinks.setSubsetSize(randomSubsetSize_percent);
+        brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
+        addIssue(brokenLinks);
 
 	}
 
@@ -138,16 +146,11 @@ public class QSkos {
         addAllIssues();
 
         for (Issue issue : issuesToTest) {
-            issue.getResult();
+            //issue.getResult();
         }
     }
 
-	/**
-	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Cyclic_Hierarchical_Relations">
-	 * Cyclic Hierarchical Relations</a>.
-	 * 
-	 * @throws OpenRDFException
-	 */
+    /*
 	public CollectionResult<Set<Resource>> findHierarchicalCycles() throws OpenRDFException {
 		return new CycleFinder(getHierarchyGraph()).findCycleContainingComponents();
 	}
@@ -160,133 +163,106 @@ public class QSkos {
 		}
 		return hierarchyGraph;
 	}
-	
-	/**
-	 * Finds concepts without links to "external" resources (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_OutLinks">Missing Out-Links</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public CollectionResult<URI> findMissingOutLinks() throws OpenRDFException {
-		MissingOutLinks extResourcesFinder = new MissingOutLinks(vocabRepository);
-		
-		extResourcesFinder.setProgressMonitor(progressMonitor);
-		return extResourcesFinder.findMissingOutLinks(
-			findAuthoritativeConcepts().getData(),
-			authResourceIdentifier);
-	}
-	
-	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Broken_Links">Broken Links</a>.
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public ExtrapolatedCollectionResult<URL> findBrokenLinks() throws OpenRDFException 
+
+	public ExtrapolatedCollectionResult<URL> findBrokenLinks() throws OpenRDFException
 	{
 		brokenLinksFinder.setProgressMonitor(progressMonitor);
 		return brokenLinksFinder.findBrokenLinks(randomSubsetSize_percent, extAccessDelayMillis);
 	}
 	
-	/**
-	 * Finds resources not within the HTTP URI scheme (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-HTTP_URI_Scheme_Violation">HTTP URI Scheme Violation</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	 */
 	public CollectionResult<String> findNonHttpResources() throws OpenRDFException {
 		brokenLinksFinder.setProgressMonitor(progressMonitor);
 		return brokenLinksFinder.findNonHttpResources();
 	}
-	
+	*/
+
 	/**
 	 * Finds resources not defined in the SKOS ontology (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undefined_SKOS_Resources">Undefined SKOS Resources</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<URI> findUndefinedSkosResources() throws OpenRDFException {
 		return new SkosTermsChecker(vocabRepository).findUndefinedSkosResources();
 	}
+     */
 
 	/**
 	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">
 	 * Omitted or Invalid Language Tags</a>.
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public MissingLangTagResult findOmittedOrInvalidLanguageTags() throws OpenRDFException {
 		return new LanguageTagChecker(vocabRepository).findOmittedOrInvalidLanguageTags();
 	}
-	
-	/**
+    */
+
+
+    /**
 	 * Finds all concepts with incomplete language coverage (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Incomplete_Language_Coverage">Incomplete Language Coverage</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public IncompleteLangCovResult findIncompleteLanguageCoverage() throws OpenRDFException {
 		languageCoverageChecker.setProgressMonitor(progressMonitor);
 		return languageCoverageChecker.findIncompleteLanguageCoverage(findInvolvedConcepts().getData());
 	}
-	
+     */
+
 	/**
 	 * Finds concepts with more than one preferred label (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Inconsistent_Preferred_Labels">Inconsistent Preferred Labels</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<LabelConflict> findInconsistentPrefLabels() throws OpenRDFException {
 		return new InconsistentPrefLabelFinder(vocabRepository, resourceLabelsCollector).findInconsistentPrefLabels();
 	}
-	
+     */
+
 	/**
 	 * Finds concepts having identical entries for prefLabel, altLabel or hiddenLabel (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disjoint_Labels_Violation-2">Disjoint Labels Violation</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<LabelConflict> findDisjointLabelsViolations() throws OpenRDFException {
 		return new NonDisjointLabelsFinder(vocabRepository, resourceLabelsCollector).findDisjointLabelsViolations();
 	}
-	
+     */
+
 	/**
 	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Valueless_Associative_Relations">Valueless Associative Relations</a>.
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public Result<Collection<Pair<URI>>> findValuelessAssociativeRelations() throws OpenRDFException {
 		return new ValuelessAssocRelationsResult(
             redundantAssociativeRelationsFinder.findValuelessAssociativeRelations(),
             vocabRepository);
 	}
-	
+     */
+
 	/**
 	 * Finds concepts having the same preferred labels (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<LabelConflict> findOverlappingLabels() throws OpenRDFException {
 		OverlappingLabelsFinder overlappingLabelsFinder = new OverlappingLabelsFinder(vocabRepository);
 		overlappingLabelsFinder.setProgressMonitor(progressMonitor);
 		return overlappingLabelsFinder.findOverlappingLabels(findAuthoritativeConcepts().getData());
 	}
-	
+     */
+
 	/**
 	 * Finds concepts that aren't referred by other vocabularies on the Web (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_InLinks">Missing In-Links</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
-	public CollectionResult<URI> findMissingInLinks() throws OpenRDFException 
+	public CollectionResult<URI> findMissingInLinks() throws OpenRDFException
 	{
 		InLinkFinder inLinkFinder = new InLinkFinder(
 			vocabRepository, 
@@ -298,81 +274,82 @@ public class QSkos {
             randomSubsetSize_percent,
             extAccessDelayMillis);
 	}
-	
+     */
+
 	/**
 	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Unidirectionally_Related_Concepts">Unidirectionally Related Concepts</a>.
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public UnidirRelResourcesResult findUnidirectionallyRelatedConcepts() throws OpenRDFException {
 		return new InverseRelationsChecker(vocabRepository).findUnidirectionallyRelatedConcepts();
 	}
-	
+     */
+
 	/**
 	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Solely_Transitively_Related_Concepts">Solely Transitively Related Concepts</a>.
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<Pair<URI>> findSolelyTransitivelyRelatedConcepts() throws OpenRDFException {
 		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolelyTransitivelyRelatedConcepts();
 	}
-	
+     */
+
 	/**
 	 * Finds concepts lacking documentation information (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undocumented_Concepts">Undocumented Concepts</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
-	public CollectionResult<Resource> findUndocumentedConcepts() throws OpenRDFException 
+	public CollectionResult<Resource> findUndocumentedConcepts() throws OpenRDFException
 	{
 		UndocumentedConceptsChecker docCovChecker = 
 			new UndocumentedConceptsChecker(vocabRepository);
 		docCovChecker.setProgressMonitor(progressMonitor);
 		return docCovChecker.findUndocumentedConcepts(findAuthoritativeConcepts().getData());
 	}
-	
+     */
+
 	/**
 	 * Finds concept schemes without top concepts (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_Top_Concepts">Omitted Top Concepts</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<Resource> findOmittedTopConcepts() throws OpenRDFException {
 		return new ConceptSchemeChecker(vocabRepository).findOmittedTopConcepts(findConceptSchemes().getData());
 	}
-	
+     */
+
 	/**
 	 * Finds top concepts that have broader concepts (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Top_Concepts_Having_Broader_Concepts">Top Concepts Having Broader Concepts</a>
 	 * ).
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<URI> findTopConceptsHavingBroaderConcepts() throws OpenRDFException {
 		return new ConceptSchemeChecker(vocabRepository).findTopConceptsHavingBroaderConcepts();
 	}
-	
+     */
+
 	/**
 	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Relation_Clashes">Associative vs. Hierarchical Relation Clashes</a>.
 	 *
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<Pair<URI>> findRelationClashes() throws OpenRDFException {
 		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = new SkosReferenceIntegrityChecker(vocabRepository);
 		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
 		return skosReferenceIntegrityChecker.findRelationClashes(getHierarchyGraph());
 	}
-	
+     */
+
 	/**
 	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
 	 * 
 	 * @throws OpenRDFException
-	 */
 	public CollectionResult<Pair<URI>> findMappingClashes() throws OpenRDFException {
 		return new SkosReferenceIntegrityChecker(vocabRepository).findMappingClashes();
 	}
+     */
 
 	/**
 	 * Set an IProgressMonitor that is notified on changes in the evaluation progress for every managed issues.
@@ -381,7 +358,7 @@ public class QSkos {
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
         this.progressMonitor = progressMonitor;
 	}
-	
+
 	/**
 	 * Adds a SPARQL endpoint for estimation of in-links.
 	 * 
@@ -397,17 +374,6 @@ public class QSkos {
 	 */
 	public void addRepositoryLoopback() {
 		otherRepositories.add(vocabRepository.getRepository());
-	}
-	
-	/**
-	 * Sets a string that is used to identify if an URI is authoritative. This is required to, e.g., find all
-	 * out-links to distinguish between URIs in the vocabulary namespace and other resources on the Web.   
-	 * 
-	 * @param authResourceIdentifier a string, usually a substring of an URI in the vocabulary's namespace,
-	 * that uniquely identifies an authoritative URI.
-	 */
-	public void setAuthoritativeResourceIdentifier(String authResourceIdentifier) {
-		this.authResourceIdentifier = authResourceIdentifier;
 	}
 	
 	/**

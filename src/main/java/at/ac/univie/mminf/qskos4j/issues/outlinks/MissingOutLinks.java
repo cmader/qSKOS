@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
@@ -17,40 +18,46 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-public class MissingOutLinks extends Issue {
+/**
+ * Finds concepts without links to "external" resources (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_OutLinks">Missing Out-Links</a>.
+ */
+public class MissingOutLinks extends Issue<CollectionResult<Value>> {
 
     private final Logger logger = LoggerFactory.getLogger(MissingOutLinks.class);
 
-	private Map<URI, Collection<URL>> extResourcesForConcept;
+	private Map<Value, Collection<URL>> extResourcesForConcept;
+    private AuthoritativeConcepts authoritativeConcepts;
 	
-	public MissingOutLinks() {
+	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
 		super("mol",
               "Missing Out-Links",
               "Finds concepts that are not linked to other vocabularies on the Web",
               IssueType.ANALYTICAL
         );
+
+        this.authoritativeConcepts = authoritativeConcepts;
 	}
 
     @Override
-    public Result<?> invoke() {
-		extResourcesForConcept = new HashMap<URI, Collection<URL>>();
+    public CollectionResult<Value> invoke() throws OpenRDFException {
+		extResourcesForConcept = new HashMap<Value, Collection<URL>>();
 
-		findResourcesForConcepts(conceptFinder.getAuthoritativeConcepts());
+		findResourcesForConcepts(authoritativeConcepts.getResult().getData());
 		
-		return new CollectionResult<URI>(extractUnlinkedConcepts());
+		return new CollectionResult<Value>(extractUnlinkedConcepts());
 	}
 	
-	private void findResourcesForConcepts(Collection<URI> concepts)
+	private void findResourcesForConcepts(Collection<Value> concepts)
 	{
-		Iterator<URI> conceptIt = new MonitoredIterator<URI>(concepts, progressMonitor, "finding resources");
+		Iterator<Value> conceptIt = new MonitoredIterator<Value>(concepts, progressMonitor, "finding resources");
 		
 		while (conceptIt.hasNext()) {
-			URI concept = conceptIt.next();			
+            Value concept = conceptIt.next();
 			extResourcesForConcept.put(concept, findExternalResourcesForConcept(concept));
 		}
 	}
 	
-	private Collection<URL> findExternalResourcesForConcept(URI concept) 
+	private Collection<URL> findExternalResourcesForConcept(Value concept)
 	{
         List<URL> resourceList = new ArrayList<URL>();
 		String query = createIRIQuery(concept); 
@@ -66,7 +73,7 @@ public class MissingOutLinks extends Issue {
 		return extractExternalResources(resourceList);
 	}
 	
-	private String createIRIQuery(URI concept) {
+	private String createIRIQuery(Value concept) {
 		return "SELECT DISTINCT ?iri "+
 				"FROM <" +vocabRepository.getVocabContext()+ "> "+
 				"WHERE {{<"+concept.stringValue()+"> ?p ?iri .} UNION "+
@@ -108,7 +115,7 @@ public class MissingOutLinks extends Issue {
 	}
 	
 	private boolean isExternalResource(URL url) {
-        String authResourceIdentifier = conceptFinder.getAuthoritativeResourceIdentifier();
+        String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {
 			return !url.toString().toLowerCase().contains(authResourceIdentifier.toLowerCase());
@@ -121,10 +128,10 @@ public class MissingOutLinks extends Issue {
 		return !url.toString().contains(SparqlPrefix.SKOS.getNameSpace());
 	}
 	
-	private Collection<URI> extractUnlinkedConcepts() {
-		Collection<URI> unlinkedConcepts = new HashSet<URI>();
+	private Collection<Value> extractUnlinkedConcepts() {
+		Collection<Value> unlinkedConcepts = new HashSet<Value>();
 		
-		for (URI concept : extResourcesForConcept.keySet()) {
+		for (Value concept : extResourcesForConcept.keySet()) {
 			if (extResourcesForConcept.get(concept).isEmpty()) {
 				unlinkedConcepts.add(concept);
 			}
