@@ -1,21 +1,24 @@
 package at.ac.univie.mminf.qskos4j;
 
 import at.ac.univie.mminf.qskos4j.issues.*;
+import at.ac.univie.mminf.qskos4j.issues.clusters.ClustersResult;
+import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
+import at.ac.univie.mminf.qskos4j.issues.count.*;
 import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabelFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.NonDisjointLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.custom.*;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
@@ -34,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.Collections;
 
 /**
  * Main class intended for easy interaction with qSKOS. On instantiation an in-memory ("local") repository 
@@ -115,11 +119,19 @@ public class QSkos {
         addIssue(new OrphanConcepts(involvedConcepts));
         addIssue(new MissingOutLinks());
         addIssue(new LexicalRelations(involvedConcepts));
+        addIssue(new SemanticRelations());
+        addIssue(new AggregationRelations());
+        addIssue(new ConceptSchemes());
+        addIssue(new at.ac.univie.mminf.qskos4j.issues.count.Collections());
+        addIssue(new HttpURIs());
+        addIssue(new DisconnectedConceptClusters(involvedConcepts));
+
 	}
 
     private void addIssue(Issue issue) {
         issuesToTest.add(issue);
         issue.setVocabRepository(vocabRepository);
+        issue.setProgressMonitor(progressMonitor);
     }
 
     public void invokeAllIssues() {
@@ -130,64 +142,6 @@ public class QSkos {
         }
     }
 
-	/**
-	 * Finds the number of triples involving (subproperties of) skos:semanticRelation.
-	 *
-	 * @throws OpenRDFException
-	 */
-	public NumberResult<Long> findSemanticRelationsCount() throws OpenRDFException
-	{
-		return new RelationStatisticsFinder(vocabRepository).findSemanticRelationsCount();
-	}
-	
-	/**
-	 * Finds the number of triples that assign concepts to concept schemes or lists.
-	 *
-	 * @throws OpenRDFException
-	 */
-	public NumberResult<Long> findAggregationRelations() throws OpenRDFException
-	{
-		return new RelationStatisticsFinder(vocabRepository).findAggregationRelationsCount();
-	}
-	
-	/**
-	 * Finds the number of SKOS <a href="http://www.w3.org/TR/skos-reference/#schemes">
-	 * ConceptSchemes</a>.
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public CollectionResult<Resource> findConceptSchemes() throws OpenRDFException
-	{
-		return new RelationStatisticsFinder(vocabRepository).findConceptSchemes();
-	}
-	
-	/**
-	 * Finds the number of SKOS <a href="http://www.w3.org/TR/skos-reference/#collections">
-	 * Collections</a>.
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public NumberResult<Long> findCollectionCount() throws OpenRDFException
-	{
-		return new RelationStatisticsFinder(vocabRepository).findCollectionCount();
-	}
-
-    public NumberResult<Integer> findAllHttpUriCount() throws OpenRDFException
-    {
-        return new NumberResult<Integer>(brokenLinksFinder.findAllHttpURIs().size());
-    }
-	
-	/**
-	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disconnected_Concept_Clusters">
-	 * Disconnected Concept Clusters</a>.
-	 * 
-	 * @throws OpenRDFException
-	 */
-	public ClustersResult findClusters() throws OpenRDFException {
-		componentFinder.setProgressMonitor(progressMonitor);
-		return componentFinder.findClusters(findInvolvedConcepts().getData());
-	}
-	
 	/**
 	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Cyclic_Hierarchical_Relations">
 	 * Cyclic Hierarchical Relations</a>.
@@ -425,9 +379,7 @@ public class QSkos {
 	 * @param progressMonitor monitor instance to be notified
 	 */
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
-        for (Issue issue : issuesToTest) {
-            issue.setProgressMonitor(progressMonitor);
-        }
+        this.progressMonitor = progressMonitor;
 	}
 	
 	/**

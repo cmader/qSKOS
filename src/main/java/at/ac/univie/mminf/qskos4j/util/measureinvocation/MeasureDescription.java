@@ -2,33 +2,6 @@ package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 
 public enum MeasureDescription {
 
-	// Statistics
-	SEMANTIC_RELATIONS_COUNT("sr",
-		"Semantic Relations Count",
-		"Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",
-		"findSemanticRelationsCount",
-		IssueType.STATISTICS),
-	AGGREGATION_RELATIONS_COUNT("ar",
-		"Aggregation Relations Count",
-		"Counts the statements relating resources to ConceptSchemes or Collections",
-		"findAggregationRelations",
-		IssueType.STATISTICS),
-	CONCEPT_SCHEME("cs",
-		"Concept Schemes",
-		"Finds the involved ConceptSchemes",
-		"findConceptSchemes",
-		IssueType.STATISTICS),
-	COLLECTION_COUNT("cc",
-		"Collection Count",
-		"Counts the involved Collections",
-		"findCollectionCount",
-		IssueType.STATISTICS),
-    HTTP_URI_COUNT("huc",
-        "HTTP URI Count",
-        "Counts the total number of HTTP URIs",
-        "findAllHttpUriCount",
-        IssueType.STATISTICS),
-	
 	// Labeling and Documentation Issues
 	OMITTED_OR_INVALID_LANG_TAGS("oilt",
 		"Omitted or Invalid Language Tags",
@@ -48,15 +21,7 @@ public enum MeasureDescription {
 		"findOverlappingLabels"),
 				
 	// Structural Issues		
-	ORPHAN_CONCEPTS("oc", 
-		"Orphan Concepts", 
-		"Finds all orphan concepts, i.e. those not having semantic relationships to other concepts", 
-		"findOrphanConcepts"),
-	DISCONNECTED_CONCEPT_CLUSTERS("dcc",
-		"Disconnected Concept Clusters",
-		"Finds sets of concepts that are isolated from the rest of the vocabulary",
-		"findClusters"),
-	CYCLIC_HIERARCHICAL_RELATIONS("chr", 
+	CYCLIC_HIERARCHICAL_RELATIONS("chr",
 		"Cyclic Hierarchical Relations", 
 		"Finds all hierarchy cycle containing components", 
 		"findHierarchicalCycles"),

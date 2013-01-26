@@ -1,19 +1,20 @@
-package at.ac.univie.mminf.qskos4j.result.custom;
+package at.ac.univie.mminf.qskos4j.issues.clusters;
 
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Value;
 
 import java.util.Collection;
 import java.util.Set;
 
-public class ClustersResult extends CollectionResult<Set<Resource>>
+public class ClustersResult extends CollectionResult<Set<Value>>
 {
-	private DirectedGraph<Resource, NamedEdge> graph;
+	private DirectedGraph<Value, NamedEdge> graph;
 	
-	public ClustersResult(Collection<Set<Resource>> data, DirectedGraph<Resource, NamedEdge> graph) {
+	ClustersResult(Collection<Set<Value>> data, DirectedGraph<Value, NamedEdge> graph) {
 		super(data);
 		this.graph = graph;
 	}
@@ -36,10 +37,10 @@ public class ClustersResult extends CollectionResult<Set<Resource>>
 			report.append("count: ").append(getData().size());
 		}
 		
-		for (Set<Resource> component : getData()) {
+		for (Set<Value> component : getData()) {
 			report.append("\ncomponent ").append(compCount).append(", size: ").append(component.size());
 			if (!overviewOnly) {
-                for (Resource resource : component) {
+                for (Value resource : component) {
                     report.append("\n\t").append(resource.toString());
                 }
 			}

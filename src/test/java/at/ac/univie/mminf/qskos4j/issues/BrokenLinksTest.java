@@ -43,18 +43,6 @@ public class BrokenLinksTest extends IssueTestCase {
 			qSkosExtResources.findNonHttpResources().getData().size());
 	}
 
-    @Test
-    public void testConceptsHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(
-                21,
-                (int) qSkosConcepts.findAllHttpUriCount().getData());
-    }
 
-    @Test
-    public void testResourcesHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(
-            8,
-            (int) qSkosExtResources.findAllHttpUriCount().getData());
-    }
 
 }

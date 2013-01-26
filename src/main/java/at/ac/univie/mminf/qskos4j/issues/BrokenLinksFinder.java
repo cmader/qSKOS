@@ -83,53 +83,11 @@ public class BrokenLinksFinder extends Issue {
 		return nonHttpURIs;
 	}
 	
-	public Set<URI> findAllHttpURIs()
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
-	{
-        if (httpURIs != null) {
-            return httpURIs;
-        }
 
-        httpURIs = new HashSet<URI>();
-		TupleQueryResult result = vocabRepository.query(createIRIQuery());
 		
-		while (result.hasNext()) {
-			Value iri = result.next().getValue("iri");
-			addToUrlList(iri);
-		}
-		return httpURIs;
-	}
-	
-	private void addToUrlList(Value iri) {
-		try {
-			URI uri = new URI(iri.stringValue());
 
-			if (uri.getScheme().startsWith("http")) {
-				httpURIs.add(pruneFragment(uri));
-			}
-		} 
-		catch (URISyntaxException e) {
-			invalidResources.add(iri.toString());
-		}
-	}
-		
-	private URI pruneFragment(URI uri) throws URISyntaxException 
-	{
-		if (uri.getFragment() != null) {
-			int hashIndex = uri.toString().indexOf("#");
-			return new URI(uri.toString().substring(0, hashIndex));
-		}
-		return uri;
-	}
 	
-	private String createIRIQuery() {
-		return "SELECT DISTINCT ?iri "+
-		"FROM <" +vocabRepository.getVocabContext()+ "> "+
-		"WHERE {{{?s ?p ?iri .} UNION "+
-			"{?iri ?p ?o .} UNION "+
-			"{?s ?iri ?p .}} "+
-			"FILTER isIRI(?iri)}";
-	}
+
 
 	private void dereferenceURIs(Float randomSubsetSize_percent, Integer urlDereferencingDelayMillis) 
 	{
