@@ -1,5 +1,6 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.relations;
 
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -13,14 +14,20 @@ import org.openrdf.query.TupleQueryResult;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class ValuelessAssociativeRelationsFinder extends Issue {
+/**
+* Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Valueless_Associative_Relations">Valueless Associative Relations</a>.
+*/
+public class ValuelessAssociativeRelations extends Issue<CollectionResult<Pair<URI>>> {
 
-	public ValuelessAssociativeRelationsFinder(VocabRepository vocabRepository) {
-		super(vocabRepository);
-	}
+    public ValuelessAssociativeRelations() {
+        super("var",
+              "Valueless Associative Relations",
+              "Two concepts are sibling, but also connected by an associative relation",
+              IssueType.ANALYTICAL);
+    }
 
-	public CollectionResult<Pair<URI>> findValuelessAssociativeRelations() throws OpenRDFException 
-	{
+    @Override
+    protected CollectionResult<Pair<URI>> invoke() throws OpenRDFException {
 		Collection<Pair<URI>> redundantAssociativeRelations = new HashSet<Pair<URI>>();
 		
 		TupleQueryResult result = vocabRepository.query(createRedundantAssociativeRelationsQuery());
@@ -60,5 +67,5 @@ public class ValuelessAssociativeRelationsFinder extends Issue {
 			allResults.add(new Pair<URI>(child, otherchild));
 		}
 	}
-		
+
 }

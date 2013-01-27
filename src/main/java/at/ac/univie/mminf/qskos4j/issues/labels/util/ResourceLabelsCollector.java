@@ -18,14 +18,10 @@ public class ResourceLabelsCollector {
 
     private final Logger logger = LoggerFactory.getLogger(ResourceLabelsCollector.class);
 
-    private Collection<LabeledResource> labeledResources;
+    private Collection<LabeledConcept> labeledResources;
     private VocabRepository vocabRepository;
 
-    public ResourceLabelsCollector(VocabRepository vocabRepository) {
-        this.vocabRepository = vocabRepository;
-    }
-
-    public Collection<LabeledResource> getLabeledResources() {
+    public Collection<LabeledConcept> getLabeledResources() {
         if (labeledResources == null) {
             createLabeledResources();
         }
@@ -33,7 +29,7 @@ public class ResourceLabelsCollector {
     }
 
     private void createLabeledResources() {
-        labeledResources = new HashSet<LabeledResource>();
+        labeledResources = new HashSet<LabeledConcept>();
 
         for (LabelType labelType : LabelType.values()) {
             String labelQuery = createLabelQuery(labelType);
@@ -66,12 +62,16 @@ public class ResourceLabelsCollector {
                 Literal label = (Literal) queryResult.getValue("label");
 
                 if (label != null) {
-                    labeledResources.add(new LabeledResource(resource, label, labelType));
+                    labeledResources.add(new LabeledConcept(resource, label, labelType));
                 }
             }
             catch (ClassCastException e) {
                 logger.info("literal label expected for resource " +resource.toString()+ ", " +e.toString());
             }
         }
+    }
+
+    public void setVocabRepository(VocabRepository vocabRepository) {
+        this.vocabRepository = vocabRepository;
     }
 }

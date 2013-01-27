@@ -1,5 +1,8 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.inlinks;
 
+import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
@@ -20,20 +23,35 @@ import org.slf4j.LoggerFactory;
 import java.net.URISyntaxException;
 import java.util.*;
 
-public class InLinkFinder extends Issue {
+/**
+* Finds concepts that aren't referred by other vocabularies on the Web (
+* <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_InLinks">Missing In-Links</a>
+* ).
+*/
+public class MissingInLinks extends Issue<CollectionResult<Value>> {
 
-	private final Logger logger = LoggerFactory.getLogger(InLinkFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
 	
-	private Collection<URI> authoritativeConcepts;
+	private AuthoritativeConcepts authoritativeConcepts;
 	private Collection<RepositoryConnection> connections;
-	private Map<URI, Set<URI>> conceptReferencingResources = new HashMap<URI, Set<URI>>();
+	private Map<Value, Set<URI>> conceptReferencingResources = new HashMap<Value, Set<URI>>();
     private Integer queryDelayMillis;
+    private Float randomSubsetSize_percent;
 	
-	public InLinkFinder(VocabRepository vocabRepository, Collection<Repository> repositories)
-        throws RepositoryException
+	public MissingInLinks(AuthoritativeConcepts authoritativeConcepts, Collection<Repository> repositories)
+        throws OpenRDFException
 	{
-		super(vocabRepository);
-		
+        super("mil",
+              "Missing In-Links",
+              "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
+              IssueType.ANALYTICAL);
+
+        this.authoritativeConcepts = authoritativeConcepts;
+        addConnections(repositories);
+    }
+
+    private void addConnections(Collection<Repository> repositories) throws OpenRDFException
+    {
 		if (repositories == null || repositories.isEmpty()) {
 			logger.warn("no repository for querying defined");
 		}
@@ -45,21 +63,15 @@ public class InLinkFinder extends Issue {
 		}
 	}
 
-    public CollectionResult<URI> findMissingInLinks(
-        Collection<URI> authoritativeConcepts,
-        Float randomSubsetSize_percent,
-        Integer queryDelayMillis) throws OpenRDFException
-    {
-        this.queryDelayMillis = queryDelayMillis;
-        this.authoritativeConcepts = authoritativeConcepts;
-
-        Collection<URI> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
+    @Override
+    protected CollectionResult<Value> invoke() throws OpenRDFException {
+        Collection<Value> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
             logger.info("using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
         }
 
-        Iterator<URI> conceptIt = new MonitoredIterator<URI>(
+        Iterator<Value> conceptIt = new MonitoredIterator<Value>(
                 conceptsToCheck,
                 progressMonitor,
                 "finding In-Links");
@@ -68,19 +80,20 @@ public class InLinkFinder extends Issue {
             rankConcept(conceptIt.next());
         }
 
-        return new ExtrapolatedCollectionResult<URI>(extractUnreferencedConcepts(), randomSubsetSize_percent);
+        return new ExtrapolatedCollectionResult<Value>(extractUnreferencedConcepts(), randomSubsetSize_percent);
     }
 
-	private Collection<URI> getConceptsToCheck(Float randomSubsetSize_percent) {
+	private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
+    {
 		if (randomSubsetSize_percent == null) {
-			return authoritativeConcepts;
+			return authoritativeConcepts.getResult().getData();
 		}
 		else {
-			return new RandomSubSet<URI>(authoritativeConcepts, randomSubsetSize_percent);
+			return new RandomSubSet<Value>(authoritativeConcepts.getResult().getData(), randomSubsetSize_percent);
 		}
 	}
 	
-	private void rankConcept(URI concept)
+	private void rankConcept(Value concept)
 	{
 		for (RepositoryConnection connection : connections) {
             try {
@@ -92,7 +105,7 @@ public class InLinkFinder extends Issue {
 		}
 	}
 	
-	private void rankConceptForConnection(URI concept, RepositoryConnection connection)
+	private void rankConceptForConnection(Value concept, RepositoryConnection connection)
           throws OpenRDFException
 	{
 		String query = "SELECT distinct ?resource WHERE " +
@@ -117,7 +130,7 @@ public class InLinkFinder extends Issue {
         }
 	}
 	
-	private void addToConceptsRankMap(URI concept, TupleQueryResult result) 
+	private void addToConceptsRankMap(Value concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
 		Set<URI> referencingResourcesOnOtherHost = 
@@ -132,7 +145,7 @@ public class InLinkFinder extends Issue {
 	}
 	
 	private Set<URI> getReferencingResourcesOnOtherHost(
-		URI concept,
+            Value concept,
 		TupleQueryResult result) throws QueryEvaluationException 
 	{
 		Set<URI> referencingResourcesOnOtherHost = new HashSet<URI>();
@@ -141,8 +154,9 @@ public class InLinkFinder extends Issue {
 			Value referencingResource = result.next().getValue("resource");
 			
 			try {
-				if (referencingResource instanceof URI && 
-					isDistinctHost(concept, (URI) referencingResource)) 
+				if (referencingResource instanceof URI &&
+                    concept instanceof URI &&
+					isDistinctHost((URI) concept, (URI) referencingResource))
 				{
 					referencingResourcesOnOtherHost.add((URI) referencingResource); 
 				}
@@ -163,10 +177,10 @@ public class InLinkFinder extends Issue {
 		return !host.equalsIgnoreCase(otherHost);		
 	}
 	
-	private Collection<URI> extractUnreferencedConcepts() {
-		Collection<URI> unrefConcepts = new HashSet<URI>();
+	private Collection<Value> extractUnreferencedConcepts() {
+		Collection<Value> unrefConcepts = new HashSet<Value>();
 		
-		for (URI concept : conceptReferencingResources.keySet()) {
+		for (Value concept : conceptReferencingResources.keySet()) {
 			if (conceptReferencingResources.get(concept).isEmpty()) {
 				unrefConcepts.add(concept);
 			}
@@ -174,4 +188,13 @@ public class InLinkFinder extends Issue {
 		
 		return unrefConcepts;
 	}
+
+    public void setQueryDelayMillis(int delayMillis) {
+        queryDelayMillis = delayMillis;
+    }
+
+    public void setSubsetSize(Float subsetSizePercent) {
+        randomSubsetSize_percent = subsetSizePercent;
+    }
+
 }

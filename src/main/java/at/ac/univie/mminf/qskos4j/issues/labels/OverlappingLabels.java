@@ -1,17 +1,17 @@
 package at.ac.univie.mminf.qskos4j.issues.labels;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
-import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledResource;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
@@ -20,43 +20,48 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class OverlappingLabelsFinder extends Issue {
+/**
+ * Finds concepts having the same preferred labels (
+ * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
+ * ).
+ */
+public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
 
-	private final Logger logger = LoggerFactory.getLogger(OverlappingLabelsFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(OverlappingLabels.class);
 
 	private Set<LabelConflict> labelConflicts;
-	private Map<Literal, Set<LabeledResource>> conceptLabels;
-	
-	public OverlappingLabelsFinder(VocabRepository vocabRepository)
-	{
-		super(vocabRepository);
-	}
+	private Map<Literal, Set<LabeledConcept>> conceptLabels;
+    private InvolvedConcepts involvedConcepts;
 
-    public CollectionResult<LabelConflict> findOverlappingLabels(Collection<URI> concepts)
-		throws OpenRDFException
-	{
-		if (labelConflicts == null) {
-            if (conceptLabels == null) {
-			    generateConceptsLabelMap(concepts);
-            }
-            generateLabelConflictResults();
-		}
+    public OverlappingLabels(InvolvedConcepts involvedConcepts) {
+        super("ol",
+              "Overlapping Labels",
+              "Finds concepts with similar (identical) labels",
+              IssueType.ANALYTICAL);
+        this.involvedConcepts = involvedConcepts;
+    }
+
+    @Override
+    protected CollectionResult<LabelConflict> invoke() throws OpenRDFException {
+        generateConceptsLabelMap();
+        generateLabelConflictResults();
+
 		return new CollectionResult<LabelConflict>(labelConflicts);
 	}
 	
-	private void generateConceptsLabelMap(Collection<URI> concepts)
+	private void generateConceptsLabelMap() throws OpenRDFException
 	{
-		conceptLabels = new HashMap<Literal, Set<LabeledResource>>();
+		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
 
         progressMonitor.setTaskDescription("Collecting resource labels");
-        Iterator<URI> it = new MonitoredIterator<URI>(concepts, progressMonitor);
+        Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getResult().getData(), progressMonitor);
 
 		while (it.hasNext()) {
-            URI concept = it.next();
+            Value concept = it.next();
 
             try {
 			    TupleQueryResult resultLabels = vocabRepository.query(createConceptLabelQuery(concept));
-                Set<LabeledResource> labeledConcepts = createLabeledConceptsFromResult(concept, resultLabels);
+                Set<LabeledConcept> labeledConcepts = createLabeledConceptsFromResult(concept, resultLabels);
                 addToLabelsMap(labeledConcepts);
             }
             catch (OpenRDFException e) {
@@ -65,13 +70,13 @@ public class OverlappingLabelsFinder extends Issue {
 		}
 	}
 
-    private void addToLabelsMap(Set<LabeledResource> labels) {
-        for (LabeledResource label : labels) {
+    private void addToLabelsMap(Set<LabeledConcept> labels) {
+        for (LabeledConcept label : labels) {
             SimilarityLiteral literal = new SimilarityLiteral(label.getLiteral());
 
-            Set<LabeledResource> affectedConcepts = conceptLabels.get(literal);
+            Set<LabeledConcept> affectedConcepts = conceptLabels.get(literal);
             if (affectedConcepts == null) {
-                affectedConcepts = new HashSet<LabeledResource>();
+                affectedConcepts = new HashSet<LabeledConcept>();
             }
 
             // We're not interested in conflicts within the same concept
@@ -81,14 +86,14 @@ public class OverlappingLabelsFinder extends Issue {
         }
     }
 
-    private void addIfResourceUnique(LabeledResource newLabeledResource, Set<LabeledResource> otherLabeledResources) {
-        for (LabeledResource labeledResource : otherLabeledResources) {
-            if (labeledResource.getResource().equals(newLabeledResource.getResource())) return;
+    private void addIfResourceUnique(LabeledConcept newLabeledResource, Set<LabeledConcept> otherLabeledResources) {
+        for (LabeledConcept labeledResource : otherLabeledResources) {
+            if (labeledResource.getConcept().equals(newLabeledResource.getConcept())) return;
         }
         otherLabeledResources.add(newLabeledResource);
     }
 
-	private String createConceptLabelQuery(URI concept) {
+	private String createConceptLabelQuery(Value concept) {
 		return SparqlPrefix.SKOS+ 
 			"SELECT ?prefLabel ?altLabel ?hiddenLabel "+
 				"FROM <" +vocabRepository.getVocabContext()+ "> "+
@@ -97,10 +102,10 @@ public class OverlappingLabelsFinder extends Issue {
 				"{<"+concept.stringValue()+"> skos:hiddenLabel ?hiddenLabel .}}";
 	}
 	
-	private Set<LabeledResource> createLabeledConceptsFromResult(URI concept, TupleQueryResult result)
+	private Set<LabeledConcept> createLabeledConceptsFromResult(Value concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
-		Set<LabeledResource> ret = new HashSet<LabeledResource>();
+		Set<LabeledConcept> ret = new HashSet<LabeledConcept>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -109,7 +114,7 @@ public class OverlappingLabelsFinder extends Issue {
                 try {
                     Literal literal = (Literal) queryResult.getValue(bindingName);
 
-                    LabeledResource skosLabel = new LabeledResource(
+                    LabeledConcept skosLabel = new LabeledConcept(
                         concept,
                         literal,
                         getLabelTypeForBindingName(bindingName));
@@ -141,7 +146,7 @@ public class OverlappingLabelsFinder extends Issue {
     private void generateLabelConflictResults() {
         labelConflicts = new HashSet<LabelConflict>();
 
-        for (Set<LabeledResource> conflicts : conceptLabels.values()) {
+        for (Set<LabeledConcept> conflicts : conceptLabels.values()) {
             if (conflicts.size() > 1) {
                 labelConflicts.add(new LabelConflict(conflicts));
             }

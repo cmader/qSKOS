@@ -1,30 +1,25 @@
 package at.ac.univie.mminf.qskos4j;
 
 import at.ac.univie.mminf.qskos4j.issues.*;
-import at.ac.univie.mminf.qskos4j.issues.clusters.ClustersResult;
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
 import at.ac.univie.mminf.qskos4j.issues.count.*;
 import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
-import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabelFinder;
+import at.ac.univie.mminf.qskos4j.issues.inlinks.MissingInLinks;
+import at.ac.univie.mminf.qskos4j.issues.labels.DisjointLabelsViolations;
+import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
-import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabelsFinder;
-import at.ac.univie.mminf.qskos4j.issues.labels.NonDisjointLabelsFinder;
-import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
-import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
 import at.ac.univie.mminf.qskos4j.issues.language.LanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.NonHttpResources;
-import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.result.custom.*;
+import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
-import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -40,7 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.Collections;
 
@@ -136,11 +130,20 @@ public class QSkos {
         addIssue(new NonHttpResources());
         addIssue(new OmittedOrInvalidLanguageTags());
         addIssue(new LanguageCoverage(involvedConcepts));
+        addIssue(new InconsistentPrefLabels());
+        addIssue(new DisjointLabelsViolations());
+        addIssue(new OverlappingLabels(involvedConcepts));
+        addIssue(new ValuelessAssociativeRelations());
 
         BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
         brokenLinks.setSubsetSize(randomSubsetSize_percent);
         brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
         addIssue(brokenLinks);
+
+        MissingInLinks missingInLinks = new MissingInLinks(authoritativeConcepts);
+        missingInLinks.setQueryDelayMillis(extAccessDelayMillis);
+        missingInLinks.setSubsetSize(randomSubsetSize_percent);
+        addIssue(missingInLinks);
 
 	}
 
@@ -178,72 +181,6 @@ public class QSkos {
 	 * @throws OpenRDFException
 	public CollectionResult<URI> findUndefinedSkosResources() throws OpenRDFException {
 		return new SkosTermsChecker(vocabRepository).findUndefinedSkosResources();
-	}
-     */
-
-	/**
-	 * Finds concepts with more than one preferred label (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Inconsistent_Preferred_Labels">Inconsistent Preferred Labels</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<LabelConflict> findInconsistentPrefLabels() throws OpenRDFException {
-		return new InconsistentPrefLabelFinder(vocabRepository, resourceLabelsCollector).findInconsistentPrefLabels();
-	}
-     */
-
-	/**
-	 * Finds concepts having identical entries for prefLabel, altLabel or hiddenLabel (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disjoint_Labels_Violation-2">Disjoint Labels Violation</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<LabelConflict> findDisjointLabelsViolations() throws OpenRDFException {
-		return new NonDisjointLabelsFinder(vocabRepository, resourceLabelsCollector).findDisjointLabelsViolations();
-	}
-     */
-
-	/**
-	 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Valueless_Associative_Relations">Valueless Associative Relations</a>.
-	 * 
-	 * @throws OpenRDFException
-	public Result<Collection<Pair<URI>>> findValuelessAssociativeRelations() throws OpenRDFException {
-		return new ValuelessAssocRelationsResult(
-            redundantAssociativeRelationsFinder.findValuelessAssociativeRelations(),
-            vocabRepository);
-	}
-     */
-
-	/**
-	 * Finds concepts having the same preferred labels (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<LabelConflict> findOverlappingLabels() throws OpenRDFException {
-		OverlappingLabelsFinder overlappingLabelsFinder = new OverlappingLabelsFinder(vocabRepository);
-		overlappingLabelsFinder.setProgressMonitor(progressMonitor);
-		return overlappingLabelsFinder.findOverlappingLabels(findAuthoritativeConcepts().getData());
-	}
-     */
-
-	/**
-	 * Finds concepts that aren't referred by other vocabularies on the Web (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_InLinks">Missing In-Links</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<URI> findMissingInLinks() throws OpenRDFException
-	{
-		InLinkFinder inLinkFinder = new InLinkFinder(
-			vocabRepository, 
-			otherRepositories);
-		inLinkFinder.setProgressMonitor(progressMonitor);
-
-        return inLinkFinder.findMissingInLinks(
-            findAuthoritativeConcepts().getData(),
-            randomSubsetSize_percent,
-            extAccessDelayMillis);
 	}
      */
 

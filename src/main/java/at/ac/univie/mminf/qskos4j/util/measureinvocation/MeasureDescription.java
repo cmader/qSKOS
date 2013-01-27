@@ -7,16 +7,9 @@ public enum MeasureDescription {
 		"Undocumented Concepts",
 		"Finds concepts that don't use any SKOS documentation properties",
 		"findUndocumentedConcepts"),
-	OVERLAPPING_LABELS("ol",
-		"Overlapping Labels",
-		"Finds concepts with similar (identical) labels",
-		"findOverlappingLabels"),
+
 				
-	// Structural Issues		
-	VALUELESS_ASSOCIATIVE_RELATIONS("var",
-		"Valueless Associative Relations", 
-		"Two concepts are sibling, but also connected by an associative relation", 
-		"findValuelessAssociativeRelations"),
+	// Structural Issues
 	SOLELY_TRANSITIVELY_RELATED_CONCEPTS("strc",
 		"Solely Transitively Related Concepts",
 		"Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
@@ -57,15 +50,9 @@ public enum MeasureDescription {
 		"Mapping Clashes",
 		"Covers condition S46 from the SKOS reference document (Exact vs. Associative and Hierarchical Mapping Clashes)",
 		"findMappingClashes"),
-	
-	INCONSISTENT_PREFERRED_LABELS("ipl",
-		"Inconsistent Preferred Labels",
-		"Finds resources with more then one prefLabel per language",
-		"findInconsistentPrefLabels"),
-	DISJOINT_LABELS_VIOLATION("dlv",
-		"Disjoint Labels Violation",
-		"Finds resources with identical entries for different label types",
-		"findDisjointLabelsViolations");
+
+
+
 		
 	public enum IssueType {STATISTICS, ISSUE}
 	

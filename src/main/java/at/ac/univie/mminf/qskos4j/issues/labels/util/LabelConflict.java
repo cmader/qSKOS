@@ -8,13 +8,13 @@ import java.util.Set;
 
 public class LabelConflict {
 
-    private Set<LabeledResource> conflicts;
+    private Set<LabeledConcept> conflicts;
 
     public LabelConflict() {
-        conflicts = new HashSet<LabeledResource>();
+        conflicts = new HashSet<LabeledConcept>();
     }
 
-	public LabelConflict(Set<LabeledResource> conflicts)
+	public LabelConflict(Set<LabeledConcept> conflicts)
 	{
         this.conflicts = conflicts;
 	}
@@ -22,13 +22,13 @@ public class LabelConflict {
     public Set<Resource> getAffectedResources() {
         Set<Resource> affectedResources = new HashSet<Resource>();
 
-        for (LabeledResource labeledConcept : conflicts) {
-            affectedResources.add(labeledConcept.getResource());
+        for (LabeledConcept labeledConcept : conflicts) {
+            affectedResources.add(labeledConcept.getConcept());
         }
         return affectedResources;
     }
 
-    public void add(LabeledResource labeledResource) {
+    public void add(LabeledConcept labeledResource) {
         conflicts.add(labeledResource);
     }
 
@@ -44,6 +44,6 @@ public class LabelConflict {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof LabeledResource && conflicts.equals(obj);
+        return obj instanceof LabeledConcept && conflicts.equals(obj);
     }
 }
