@@ -1,12 +1,13 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.language;
 
-import at.ac.univie.mminf.qskos4j.result.custom.IncompleteLangCovResult;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
@@ -15,35 +16,44 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class LanguageCoverageChecker extends Issue {
+/**
+ * Finds all concepts with incomplete language coverage (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Incomplete_Language_Coverage">Incomplete Language Coverage</a>
+ */
+public class LanguageCoverage extends Issue<IncompleteLangCovResult> {
 
-    private final Logger logger = LoggerFactory.getLogger(LanguageCoverageChecker.class);
+    private final Logger logger = LoggerFactory.getLogger(LanguageCoverage.class);
 
-	private Map<Resource, Collection<String>> languageCoverage, incompleteLanguageCoverage;
+	private Map<Value, Collection<String>> languageCoverage, incompleteLanguageCoverage;
 	private Set<String> distinctLanguages;
-	
-	public LanguageCoverageChecker(VocabRepository vocabRepository) {
-		super(vocabRepository);
-	}
+    private InvolvedConcepts involvedConcepts;
 
-	public IncompleteLangCovResult findIncompleteLanguageCoverage(
-		Collection<URI> concepts) throws OpenRDFException 
-	{
-		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
+    public LanguageCoverage(InvolvedConcepts involvedConcepts) {
+        super("ilc",
+              "Incomplete Language Coverage",
+              "Finds concepts lacking description in languages that are present for other concepts",
+              IssueType.ANALYTICAL
+        );
+
+        this.involvedConcepts = involvedConcepts;
+    }
+
+    @Override
+    protected IncompleteLangCovResult invoke() throws OpenRDFException {
+		incompleteLanguageCoverage = new HashMap<Value, Collection<String>>();
 		
-		checkLanguageCoverage(concepts);
+		checkLanguageCoverage();
 		generateIncompleteLanguageCoverageMap();
 		
 		return new IncompleteLangCovResult(incompleteLanguageCoverage);
 	}
 	
-	private void checkLanguageCoverage(Collection<URI> concepts)
+	private void checkLanguageCoverage() throws OpenRDFException
 	{
-		languageCoverage = new HashMap<Resource, Collection<String>>();
+		languageCoverage = new HashMap<Value, Collection<String>>();
 		
-		Iterator<URI> it = new MonitoredIterator<URI>(concepts, progressMonitor);
+		Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getResult().getData(), progressMonitor);
 		while (it.hasNext()) {
-			URI concept = it.next();
+            Value concept = it.next();
 
             try {
 			    TupleQueryResult result = vocabRepository.query(createLanguageLiteralQuery(concept));
@@ -55,7 +65,7 @@ public class LanguageCoverageChecker extends Issue {
 		}
 	}
 	
-	private String createLanguageLiteralQuery(URI concept) {
+	private String createLanguageLiteralQuery(Value concept) {
 		return "SELECT DISTINCT ?literal "+
 			"FROM <" +vocabRepository.getVocabContext()+ "> "+
 			"WHERE {" +
@@ -65,7 +75,7 @@ public class LanguageCoverageChecker extends Issue {
 			"}";
 	}
 	
-	private void addToLanguageCoverageMap(URI concept, TupleQueryResult result) 
+	private void addToLanguageCoverageMap(Value concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
 		while (result.hasNext()) {
@@ -78,11 +88,11 @@ public class LanguageCoverageChecker extends Issue {
 		}
 	}
 	
-	private void addToLanguageCoverageMap(Resource resource, String langTag) {
-		Collection<String> langTags = languageCoverage.get(resource);
+	private void addToLanguageCoverageMap(Value value, String langTag) {
+		Collection<String> langTags = languageCoverage.get(value);
 		if (langTags == null) {
 			langTags = new HashSet<String>();
-			languageCoverage.put(resource, langTags);
+			languageCoverage.put(value, langTags);
 		}
 		langTags.add(langTag);
 	}
@@ -95,9 +105,9 @@ public class LanguageCoverageChecker extends Issue {
 	}
 	
 	private void generateIncompleteLanguageCoverageMap() {
-		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
+		incompleteLanguageCoverage = new HashMap<Value, Collection<String>>();
 		
-		for (Resource resource : languageCoverage.keySet()) {
+		for (Value resource : languageCoverage.keySet()) {
 			Collection<String> coveredLanguages = languageCoverage.get(resource);
 			Collection<String> notCoveredLanguages = getNotCoveredLanguages(coveredLanguages);
 			if (!notCoveredLanguages.isEmpty()) {
@@ -111,5 +121,5 @@ public class LanguageCoverageChecker extends Issue {
 		ret.removeAll(coveredLanguages);
 		return ret;
 	}
-	
+
 }

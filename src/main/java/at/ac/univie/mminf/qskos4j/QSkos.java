@@ -7,15 +7,19 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
 import at.ac.univie.mminf.qskos4j.issues.count.*;
+import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
 import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabelFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.NonDisjointLabelsFinder;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.language.LanguageCoverage;
+import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.NonHttpResources;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.custom.*;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
@@ -128,6 +132,10 @@ public class QSkos {
         addIssue(httpURIs);
         addIssue(new DisconnectedConceptClusters(involvedConcepts));
         addIssue(new MissingOutLinks(authoritativeConcepts));
+        addIssue(new HierarchicalCycles());
+        addIssue(new NonHttpResources());
+        addIssue(new OmittedOrInvalidLanguageTags());
+        addIssue(new LanguageCoverage(involvedConcepts));
 
         BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
         brokenLinks.setSubsetSize(randomSubsetSize_percent);
@@ -150,11 +158,8 @@ public class QSkos {
         }
     }
 
+
     /*
-	public CollectionResult<Set<Resource>> findHierarchicalCycles() throws OpenRDFException {
-		return new CycleFinder(getHierarchyGraph()).findCycleContainingComponents();
-	}
-	
 	private DirectedMultigraph<Resource, NamedEdge> getHierarchyGraph() 
 		throws OpenRDFException
 	{
@@ -162,17 +167,6 @@ public class QSkos {
 			hierarchyGraph = new HierarchyGraph(vocabRepository).createGraph();
 		}
 		return hierarchyGraph;
-	}
-
-	public ExtrapolatedCollectionResult<URL> findBrokenLinks() throws OpenRDFException
-	{
-		brokenLinksFinder.setProgressMonitor(progressMonitor);
-		return brokenLinksFinder.findBrokenLinks(randomSubsetSize_percent, extAccessDelayMillis);
-	}
-	
-	public CollectionResult<String> findNonHttpResources() throws OpenRDFException {
-		brokenLinksFinder.setProgressMonitor(progressMonitor);
-		return brokenLinksFinder.findNonHttpResources();
 	}
 	*/
 
@@ -184,29 +178,6 @@ public class QSkos {
 	 * @throws OpenRDFException
 	public CollectionResult<URI> findUndefinedSkosResources() throws OpenRDFException {
 		return new SkosTermsChecker(vocabRepository).findUndefinedSkosResources();
-	}
-     */
-
-	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">
-	 * Omitted or Invalid Language Tags</a>.
-	 * 
-	 * @throws OpenRDFException
-	public MissingLangTagResult findOmittedOrInvalidLanguageTags() throws OpenRDFException {
-		return new LanguageTagChecker(vocabRepository).findOmittedOrInvalidLanguageTags();
-	}
-    */
-
-
-    /**
-	 * Finds all concepts with incomplete language coverage (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Incomplete_Language_Coverage">Incomplete Language Coverage</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public IncompleteLangCovResult findIncompleteLanguageCoverage() throws OpenRDFException {
-		languageCoverageChecker.setProgressMonitor(progressMonitor);
-		return languageCoverageChecker.findIncompleteLanguageCoverage(findInvolvedConcepts().getData());
 	}
      */
 
@@ -306,17 +277,6 @@ public class QSkos {
 			new UndocumentedConceptsChecker(vocabRepository);
 		docCovChecker.setProgressMonitor(progressMonitor);
 		return docCovChecker.findUndocumentedConcepts(findAuthoritativeConcepts().getData());
-	}
-     */
-
-	/**
-	 * Finds concept schemes without top concepts (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_Top_Concepts">Omitted Top Concepts</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<Resource> findOmittedTopConcepts() throws OpenRDFException {
-		return new ConceptSchemeChecker(vocabRepository).findOmittedTopConcepts(findConceptSchemes().getData());
 	}
      */
 

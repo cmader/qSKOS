@@ -1,8 +1,8 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.language;
 
-import at.ac.univie.mminf.qskos4j.result.custom.MissingLangTagResult;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.util.language.LanguageTag;
@@ -18,17 +18,23 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class LanguageTagChecker extends Issue {
+/**
+* Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">Omitted or Invalid Language Tags</a>.
+*/
+public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagResult> {
 
 	private Map<Resource, Collection<Literal>> missingLangTags;
-	
-	public LanguageTagChecker(VocabRepository vocabRepository) {
-		super(vocabRepository);
-	}
-	
-	public MissingLangTagResult findOmittedOrInvalidLanguageTags() 
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
-	{
+
+    public OmittedOrInvalidLanguageTags() {
+        super("oilt",
+              "Omitted or Invalid Language Tags",
+              "Finds omitted or invalid language tags of text literals",
+              IssueType.ANALYTICAL
+        );
+    }
+
+    @Override
+    protected MissingLangTagResult invoke() throws OpenRDFException {
 		if (missingLangTags == null) {
 			TupleQueryResult result = vocabRepository.query(createMissingLangTagQuery());
 			generateMissingLangTagMap(result);
@@ -93,5 +99,5 @@ public class LanguageTagChecker extends Issue {
 		}
 		literals.add(literal);
 	}
-	
+
 }

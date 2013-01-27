@@ -3,14 +3,6 @@ package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 public enum MeasureDescription {
 
 	// Labeling and Documentation Issues
-	OMITTED_OR_INVALID_LANG_TAGS("oilt",
-		"Omitted or Invalid Language Tags",
-		"Finds omitted or invalid language tags of text literals",
-		"findOmittedOrInvalidLanguageTags"),
-	INCOMPLETE_LANG_COVERAGE("ilc",	
-		"Incomplete Language Coverage",
-		"Finds concepts lacking description in languages that are present for other concepts",
-		"findIncompleteLanguageCoverage"),
 	UNDOCUMENTED_CONCEPTS("uc",
 		"Undocumented Concepts",
 		"Finds concepts that don't use any SKOS documentation properties",
@@ -21,11 +13,7 @@ public enum MeasureDescription {
 		"findOverlappingLabels"),
 				
 	// Structural Issues		
-	CYCLIC_HIERARCHICAL_RELATIONS("chr",
-		"Cyclic Hierarchical Relations", 
-		"Finds all hierarchy cycle containing components", 
-		"findHierarchicalCycles"),
-	VALUELESS_ASSOCIATIVE_RELATIONS("var", 
+	VALUELESS_ASSOCIATIVE_RELATIONS("var",
 		"Valueless Associative Relations", 
 		"Two concepts are sibling, but also connected by an associative relation", 
 		"findValuelessAssociativeRelations"),
@@ -61,10 +49,6 @@ public enum MeasureDescription {
 		"Unidirectionally Related Concepts",
 		"Concepts not including reciprocal relations",	
 		"findUnidirectionallyRelatedConcepts"),		
-	HTTP_URI_SCHEME_VIOLATION("husv",
-		"HTTP URI Scheme Violation",
-		"Finds triple subjects that are no HTTP URIs",
-		"findNonHttpResources"),
 	RELATION_CLASHES("rc",
 		"Relation Clashes",
 		"Covers condition S27 from the SKOS reference document (Associative vs. Hierarchical Relation Clashes)",

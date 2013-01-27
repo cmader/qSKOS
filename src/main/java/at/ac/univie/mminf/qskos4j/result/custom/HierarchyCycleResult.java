@@ -5,15 +5,16 @@ import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Value;
 
 import java.util.Collection;
 import java.util.Set;
 
-public class HierarchyCycleResult extends CollectionResult<Set<Resource>> {
+public class HierarchyCycleResult extends CollectionResult<Set<Value>> {
 
-	private DirectedGraph<Resource, NamedEdge> graph;
+	private DirectedGraph<Value, NamedEdge> graph;
 	
-	public HierarchyCycleResult(Collection<Set<Resource>> data, DirectedGraph<Resource, NamedEdge> graph) {
+	public HierarchyCycleResult(Collection<Set<Value>> data, DirectedGraph<Value, NamedEdge> graph) {
 		super(data);
 		this.graph = graph;
 	}

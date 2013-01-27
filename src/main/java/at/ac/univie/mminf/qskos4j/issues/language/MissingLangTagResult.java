@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.result.custom;
+package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class MissingLangTagResult extends Result<Map<Resource, Collection<Literal>>> {
 
-	public MissingLangTagResult(Map<Resource, Collection<Literal>> data) {
+	MissingLangTagResult(Map<Resource, Collection<Literal>> data) {
 		super(data);
 	}
 
