@@ -113,6 +113,7 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
      */
     public void setAuthResourceIdentifier(String authResourceIdentifier) {
         this.authResourceIdentifier = authResourceIdentifier;
+        reset();
     }
 
     public String getAuthResourceIdentifier() {

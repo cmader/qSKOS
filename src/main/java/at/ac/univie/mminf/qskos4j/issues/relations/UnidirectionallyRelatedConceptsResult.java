@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.result.custom;
+package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
@@ -7,9 +7,9 @@ import org.openrdf.model.Resource;
 
 import java.util.Map;
 
-public class UnidirRelResourcesResult extends Result<Map<Pair<Resource>, String>> {
+public class UnidirectionallyRelatedConceptsResult extends Result<Map<Pair<Resource>, String>> {
 
-	public UnidirRelResourcesResult(Map<Pair<Resource>, String> data) {
+	public UnidirectionallyRelatedConceptsResult(Map<Pair<Resource>, String> data) {
 		super(data);
 	}
 

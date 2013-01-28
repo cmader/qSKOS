@@ -17,6 +17,7 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,23 +32,27 @@ import java.util.*;
 public class MissingInLinks extends Issue<CollectionResult<Value>> {
 
 	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
-	
+
 	private AuthoritativeConcepts authoritativeConcepts;
 	private Collection<RepositoryConnection> connections;
 	private Map<Value, Set<URI>> conceptReferencingResources = new HashMap<Value, Set<URI>>();
-    private Integer queryDelayMillis;
+    private Integer queryDelayMillis = 0;
     private Float randomSubsetSize_percent;
-	
-	public MissingInLinks(AuthoritativeConcepts authoritativeConcepts, Collection<Repository> repositories)
-        throws OpenRDFException
-	{
+
+    public MissingInLinks(AuthoritativeConcepts authoritativeConcepts) {
         super("mil",
-              "Missing In-Links",
-              "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
-              IssueType.ANALYTICAL);
+                "Missing In-Links",
+                "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
+                IssueType.ANALYTICAL);
 
         this.authoritativeConcepts = authoritativeConcepts;
-        addConnections(repositories);
+    }
+
+	public MissingInLinks(AuthoritativeConcepts authoritativeConcepts, Collection<Repository> otherRepositories)
+        throws OpenRDFException
+	{
+        this(authoritativeConcepts);
+        addConnections(otherRepositories);
     }
 
     private void addConnections(Collection<Repository> repositories) throws OpenRDFException
@@ -195,6 +200,23 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
 
     public void setSubsetSize(Float subsetSizePercent) {
         randomSubsetSize_percent = subsetSizePercent;
+    }
+
+    /**
+     * Adds the repository containing the vocabulary that's about to test to the list of
+     * other repositories. This is only useful for in-link testing purposes.
+     */
+    public void addRepositoryLoopback() throws OpenRDFException {
+        connections.add(vocabRepository.getRepository().getConnection());
+    }
+
+    /**
+     * Adds a SPARQL endpoint for estimation of in-links.
+     *
+     * @param endpointUrl SPARL endpoint URL
+     */
+    public void addSparqlEndPoint(String endpointUrl) throws OpenRDFException {
+        connections.add(new SPARQLRepository(endpointUrl).getConnection());
     }
 
 }

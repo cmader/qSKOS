@@ -55,7 +55,7 @@ public class QSkos {
      */
     private final static int EXT_ACCESS_MILLIS = 1500;
 	
-	private Collection<Repository> otherRepositories = new HashSet<Repository>();
+
 
 	private VocabRepository vocabRepository;
 	private IProgressMonitor progressMonitor;
@@ -185,15 +185,6 @@ public class QSkos {
      */
 
 	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Unidirectionally_Related_Concepts">Unidirectionally Related Concepts</a>.
-	 * 
-	 * @throws OpenRDFException
-	public UnidirRelResourcesResult findUnidirectionallyRelatedConcepts() throws OpenRDFException {
-		return new InverseRelationsChecker(vocabRepository).findUnidirectionallyRelatedConcepts();
-	}
-     */
-
-	/**
 	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Solely_Transitively_Related_Concepts">Solely Transitively Related Concepts</a>.
 	 * 
 	 * @throws OpenRDFException
@@ -254,23 +245,6 @@ public class QSkos {
 	 */
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
         this.progressMonitor = progressMonitor;
-	}
-
-	/**
-	 * Adds a SPARQL endpoint for estimation of in-links.
-	 * 
-	 * @param endpointUrl SPARL endpoint URL
-	 */
-	public void addSparqlEndPoint(String endpointUrl) {
-		otherRepositories.add(new SPARQLRepository(endpointUrl));
-	}
-	
-	/**
-	 * Adds the repository containing the vocabulary that's about to test to the list of
-	 * other repositories. This is only useful for in-link testing purposes.
-	 */
-	public void addRepositoryLoopback() {
-		otherRepositories.add(vocabRepository.getRepository());
 	}
 	
 	/**

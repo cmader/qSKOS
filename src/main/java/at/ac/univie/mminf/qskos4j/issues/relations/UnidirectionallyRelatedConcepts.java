@@ -1,9 +1,8 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.relations;
 
-import at.ac.univie.mminf.qskos4j.result.custom.UnidirRelResourcesResult;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
@@ -16,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InverseRelationsChecker extends Issue {
+/**
+ * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Unidirectionally_Related_Concepts">Unidirectionally Related Concepts</a>.
+ */
+ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelatedConceptsResult> {
 
 	private String[][] inversePropertyPairs = {
 		{"skos:broader", "skos:narrower"}, 
@@ -29,22 +31,24 @@ public class InverseRelationsChecker extends Issue {
         {"skos:closeMatch", "skos:closeMatch"}
     };
 
-    private final Logger logger = LoggerFactory.getLogger(InverseRelationsChecker.class);
+    private final Logger logger = LoggerFactory.getLogger(UnidirectionallyRelatedConcepts.class);
 	private Map<Pair<Resource>, String> omittedInverseRelations = new HashMap<Pair<Resource>, String>();
 
-	public InverseRelationsChecker(VocabRepository vocabRepository) {
-		super(vocabRepository);
-	}
+    public UnidirectionallyRelatedConcepts() {
+        super("urc",
+              "Unidirectionally Related Concepts",
+              "Concepts not including reciprocal relations",
+              IssueType.ANALYTICAL);
+    }
 
-	public UnidirRelResourcesResult findUnidirectionallyRelatedConcepts() 
-		throws OpenRDFException
-	{
+    @Override
+    protected UnidirectionallyRelatedConceptsResult invoke() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
 			TupleQueryResult result = vocabRepository.query(createOmittedRelationsQuery(inversePropertyPair));
 			addToOmittedInverseRelationsMap(result, inversePropertyPair);
 		}
 		
-		return new UnidirRelResourcesResult(omittedInverseRelations);
+		return new UnidirectionallyRelatedConceptsResult(omittedInverseRelations);
 	}
 	
 	private String createOmittedRelationsQuery(String[] inverseRelations) {

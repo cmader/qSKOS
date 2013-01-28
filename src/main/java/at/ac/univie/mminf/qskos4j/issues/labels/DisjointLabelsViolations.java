@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * Finds concepts having identical entries for prefLabel, altLabel or hiddenLabel (
- * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disjoint_Labels_Violation-2">Disjoint Labels Violation</a>
+ * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disjoint_Labels_Violation">Disjoint Labels Violation</a>
  * ).
  */
 public class DisjointLabelsViolations extends Issue<CollectionResult<LabelConflict>> {

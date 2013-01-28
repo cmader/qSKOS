@@ -24,24 +24,12 @@ public enum MeasureDescription {
 		"findTopConceptsHavingBroaderConcepts"),	
 		
 	// Linked Data Specific Issues
-	MISSING_INLINKS("mil",
-		"Missing In-Links",
-		"Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
-		"findMissingInLinks"),	
-	LINK_TARGET_AVAILABILITY("bl",
-		"Broken Links",
-		"Checks dereferencability of all links",
-		"findBrokenLinks"),
 	UNDEFINED_SKOS_RESOURCES("usr",
 		"Undefined SKOS Resources",
 		"Finds 'invented' new terms within the SKOS namespace or deprecated properties",	
 		"findUndefinedSkosResources"),
 		
-	// Other Issues	
-	UNIDIRECTIONALLY_RELATED_CONCEPTS("urc",
-		"Unidirectionally Related Concepts",
-		"Concepts not including reciprocal relations",	
-		"findUnidirectionallyRelatedConcepts"),		
+	// Other Issues
 	RELATION_CLASHES("rc",
 		"Relation Clashes",
 		"Covers condition S27 from the SKOS reference document (Associative vs. Hierarchical Relation Clashes)",
