@@ -161,18 +161,6 @@ public class QSkos {
         }
     }
 
-
-    /*
-	private DirectedMultigraph<Resource, NamedEdge> getHierarchyGraph() 
-		throws OpenRDFException
-	{
-		if (hierarchyGraph == null) {
-			hierarchyGraph = new HierarchyGraph(vocabRepository).createGraph();
-		}
-		return hierarchyGraph;
-	}
-	*/
-
 	/**
 	 * Finds resources not defined in the SKOS ontology (
 	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undefined_SKOS_Resources">Undefined SKOS Resources</a>
