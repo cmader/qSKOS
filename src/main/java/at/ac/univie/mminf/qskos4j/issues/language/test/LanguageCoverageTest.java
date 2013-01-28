@@ -1,17 +1,14 @@
 package at.ac.univie.mminf.qskos4j.issues.language.test;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.language.LanguageCoverage;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
-import java.awt.image.ComponentSampleModel;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

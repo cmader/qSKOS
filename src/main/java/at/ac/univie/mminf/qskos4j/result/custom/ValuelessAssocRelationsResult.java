@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.result.custom;
 
-import at.ac.univie.mminf.qskos4j.result.DistinctConceptFinder;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -10,6 +9,8 @@ import org.openrdf.model.URI;
 import org.openrdf.query.TupleQueryResult;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ValuelessAssocRelationsResult extends Result<Collection<Pair<URI>>> {
 
@@ -29,8 +30,19 @@ public class ValuelessAssocRelationsResult extends Result<Collection<Pair<URI>>>
 	}
 
 	private int getConceptCount() {
-		return DistinctConceptFinder.getDistinctConceptsFromPairs(getData()).size();
+		return getDistinctConceptsFromPairs(getData()).size();
 	}
+
+    private Collection<URI> getDistinctConceptsFromPairs(Collection<Pair<URI>> conceptURIs) {
+        Set<URI> distinctConcepts = new HashSet<URI>();
+
+        for (Pair<URI> pair : conceptURIs) {
+            distinctConcepts.add(pair.getFirst());
+            distinctConcepts.add(pair.getSecond());
+        }
+
+        return distinctConcepts;
+    }
 
 	@Override
 	public String getExtensiveReport() {

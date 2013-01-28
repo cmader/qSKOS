@@ -1,14 +1,12 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts.test;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.io.IOException;

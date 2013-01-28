@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.util.test;
+package at.ac.univie.mminf.qskos4j.util;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;

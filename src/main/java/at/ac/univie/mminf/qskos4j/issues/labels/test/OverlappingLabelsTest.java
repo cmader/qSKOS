@@ -1,10 +1,9 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.test;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

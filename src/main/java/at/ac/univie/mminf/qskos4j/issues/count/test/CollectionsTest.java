@@ -1,16 +1,11 @@
 package at.ac.univie.mminf.qskos4j.issues.count.test;
 
-import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.issues.count.AggregationRelations;
 import at.ac.univie.mminf.qskos4j.issues.count.Collections;
-import at.ac.univie.mminf.qskos4j.issues.count.SemanticRelations;
-import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.query.TupleQueryResult;
 
 import java.io.IOException;
 

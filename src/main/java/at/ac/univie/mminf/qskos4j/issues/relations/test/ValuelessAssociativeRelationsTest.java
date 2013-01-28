@@ -1,9 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues.relations.test;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
 import at.ac.univie.mminf.qskos4j.util.Pair;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

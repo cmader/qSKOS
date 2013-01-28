@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import junit.framework.Assert;

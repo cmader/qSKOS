@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

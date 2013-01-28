@@ -1,10 +1,9 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.test;
 
 import at.ac.univie.mminf.qskos4j.issues.labels.DisjointLabelsViolations;
-import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.UriSuffixFinder;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

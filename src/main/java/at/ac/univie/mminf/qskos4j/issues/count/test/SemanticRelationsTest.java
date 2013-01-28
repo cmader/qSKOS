@@ -1,9 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.count.test;
 
-import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.count.SemanticRelations;
-import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.outlinks.test;
 
-import at.ac.univie.mminf.qskos4j.issues.count.ConceptSchemes;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
-import at.ac.univie.mminf.qskos4j.util.test.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
