@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.result.custom;
+package at.ac.univie.mminf.qskos4j.issues.cycles;
 
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;

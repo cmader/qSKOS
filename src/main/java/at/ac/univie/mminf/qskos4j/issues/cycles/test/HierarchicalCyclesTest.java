@@ -6,4 +6,5 @@ package at.ac.univie.mminf.qskos4j.issues.cycles.test;
  * Time: 00:20
  */
 public class HierarchicalCyclesTest {
+
 }

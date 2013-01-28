@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.result.custom;
+package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.Pair;

@@ -20,7 +20,7 @@ public class HierarchyGraph {
 	private final String skosBroaderProperties = "skos:broader, skos:broaderTransitive, skos:broadMatch";
 	private final String skosNarrowerProperties = "skos:narrower, skos:narrowerTransitive, skos:narrowMatch";	
 
-	private DirectedMultigraph<Resource, NamedEdge> graph = new DirectedMultigraph<Resource, NamedEdge>(NamedEdge.class);
+	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 	private VocabRepository vocabRepository;
 	
 	public HierarchyGraph(VocabRepository vocabRepository) 
@@ -29,7 +29,7 @@ public class HierarchyGraph {
 		this.vocabRepository = vocabRepository;
 	}
 
-	public DirectedMultigraph<Resource, NamedEdge> createGraph() throws OpenRDFException 
+	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
 	{
 		addResultsToGraph(findTriples(HierarchyStyle.BROADER), false);
 		addResultsToGraph(findTriples(HierarchyStyle.NARROWER), true);
