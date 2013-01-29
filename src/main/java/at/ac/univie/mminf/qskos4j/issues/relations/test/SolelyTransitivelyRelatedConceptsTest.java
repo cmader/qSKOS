@@ -1,6 +1,7 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.relations.test;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.issues.relations.SolelyTransitivelyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import org.junit.Assert;
@@ -14,18 +15,18 @@ import java.util.Collection;
 
 public class SolelyTransitivelyRelatedConceptsTest extends IssueTestCase {
 
-	private QSkos qSkosSolitaryTransitiveRelations;
+	private SolelyTransitivelyRelatedConcepts solelyTransitivelyRelatedConcepts;
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosSolitaryTransitiveRelations = setUpIssue("solitaryTransitiveRelations.rdf");
+        solelyTransitivelyRelatedConcepts = (SolelyTransitivelyRelatedConcepts) setUpIssue(
+            "solitaryTransitiveRelations.rdf",
+            new SolelyTransitivelyRelatedConcepts());
 	}
 
 	@Test
 	public void testSolitaryTransitiveRelationsCount() throws OpenRDFException {
-		Collection<Pair<URI>> solitaryTransitiveRelations = 
-			qSkosSolitaryTransitiveRelations.findSolelyTransitivelyRelatedConcepts().getData();
-		Assert.assertEquals(4, solitaryTransitiveRelations.size());
+		Assert.assertEquals(4, solelyTransitivelyRelatedConcepts.getResult().getData().size());
 	}
 	
 }

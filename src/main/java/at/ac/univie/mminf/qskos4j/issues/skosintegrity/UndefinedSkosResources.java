@@ -16,16 +16,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class SkosTermsChecker extends Issue {
+/**
+ * Finds resources not defined in the SKOS ontology (
+ * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undefined_SKOS_Resources">Undefined SKOS Resources</a>
+ * ).
+ */
+public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 
 	private Map<URI, Collection<URI>> deprecatedProperties, illegalTerms;
-	
-	public SkosTermsChecker(VocabRepository vocabRepository) {
-		super(vocabRepository);
-	}
-	
-	public CollectionResult<URI> findUndefinedSkosResources() throws OpenRDFException
-	{
+
+    public UndefinedSkosResources() {
+        super("usr",
+              "Undefined SKOS Resources",
+              "Finds 'invented' new terms within the SKOS namespace or deprecated properties",
+              IssueType.ANALYTICAL
+        );
+    }
+
+    @Override
+    protected CollectionResult<URI> invoke() throws OpenRDFException {
 		findDeprecatedProperties();
 		findIllegalTerms();
 		
@@ -137,4 +146,5 @@ public class SkosTermsChecker extends Issue {
 		
 		return undefRes;
 	}
+
 }

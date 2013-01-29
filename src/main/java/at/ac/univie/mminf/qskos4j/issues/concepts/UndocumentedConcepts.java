@@ -4,10 +4,10 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryConnection;
@@ -15,13 +15,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class UndocumentedConceptsChecker extends Issue {
+/**
+ * Finds concepts lacking documentation information (
+ * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undocumented_Concepts">Undocumented Concepts</a>
+ * ).
+ */
+public class UndocumentedConcepts extends Issue<CollectionResult<Value>> {
 
-    private final Logger logger = LoggerFactory.getLogger(UndocumentedConceptsChecker.class);
+    private final Logger logger = LoggerFactory.getLogger(UndocumentedConcepts.class);
+
+    private AuthoritativeConcepts authoritativeConcepts;
 
 	private String[] documentationProperties = {
 		"skos:note", "skos:changeNote", "skos:definition", "skos:editorialNote",
@@ -29,29 +35,36 @@ public class UndocumentedConceptsChecker extends Issue {
 	};
 	
 	private RepositoryConnection connection;
-	
-	public UndocumentedConceptsChecker(VocabRepository vocabRepository) {
-		super(vocabRepository);
-	}
-	
-	public CollectionResult<Resource> findUndocumentedConcepts(Collection<URI> autoritativeConcepts)
-		throws OpenRDFException
-	{
+
+    public UndocumentedConcepts(AuthoritativeConcepts authoritativeConcepts) {
+        super("uc",
+              "Undocumented Concepts",
+              "Finds concepts that don't use any SKOS documentation properties",
+              IssueType.ANALYTICAL
+        );
+        this.authoritativeConcepts = authoritativeConcepts;
+    }
+
+    @Override
+    protected CollectionResult<Value> invoke() throws OpenRDFException {
 		connection = vocabRepository.getRepository().getConnection();
-		List<Resource> undocumentedConcepts = new ArrayList<Resource>();
+		List<Value> undocumentedConcepts = new ArrayList<Value>();
 		
-		Iterator<URI> conceptIt = new MonitoredIterator<URI>(autoritativeConcepts, progressMonitor);
+		Iterator<Value> conceptIt = new MonitoredIterator<Value>(
+            authoritativeConcepts.getResult().getData(),
+            progressMonitor);
+
 		while (conceptIt.hasNext()) {
-			Resource concept = conceptIt.next();
+            Value concept = conceptIt.next();
 			if (!isConceptDocumented(concept)) {
 				undocumentedConcepts.add(concept);
 			}
 		}
 		
-		return new CollectionResult<Resource>(undocumentedConcepts);
+		return new CollectionResult<Value>(undocumentedConcepts);
 	}
 	
-	private boolean isConceptDocumented(Resource concept) 
+	private boolean isConceptDocumented(Value concept)
 		throws OpenRDFException 
 	{		
 		for (String docProperty : documentationProperties) {
@@ -63,7 +76,7 @@ public class UndocumentedConceptsChecker extends Issue {
 		return false;
 	}
 	
-	private boolean conceptHasProperty(Resource concept, String property)
+	private boolean conceptHasProperty(Value concept, String property)
 	{
         try {
             BooleanQuery graphQuery = connection.prepareBooleanQuery(
@@ -77,7 +90,7 @@ public class UndocumentedConceptsChecker extends Issue {
         return false;
 	}
 	
-	private String createPropertyQuery(Resource concept, String property) {
+	private String createPropertyQuery(Value concept, String property) {
 		return SparqlPrefix.SKOS + "ASK {<"+concept.stringValue()+"> " +property+ "?o}";
 	}
 

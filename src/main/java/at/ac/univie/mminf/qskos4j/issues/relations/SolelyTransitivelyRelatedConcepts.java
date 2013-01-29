@@ -14,21 +14,27 @@ import org.openrdf.query.TupleQueryResult;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SolitaryTransitiveRelationsFinder extends Issue {
+/**
+ * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Solely_Transitively_Related_Concepts">Solely Transitively Related Concepts</a>.
+ */
+public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Pair<URI>>> {
 
 	private String[][] transitiveNontransiviteInverseProperties = {
 			{"skos:broaderTransitive", "skos:broader", "skos:narrower"},
 			{"skos:narrowerTransitive", "skos:narrower", "skos:broader"}};
 	
 	private Set<Pair<URI>> solitaryTransitiveRelations = new HashSet<Pair<URI>>();
-	
-	public SolitaryTransitiveRelationsFinder(VocabRepository vocabRepository) {
-		super(vocabRepository);
-	}
-	
-	public CollectionResult<Pair<URI>> findSolelyTransitivelyRelatedConcepts()  
-		throws OpenRDFException
-	{
+
+    public SolelyTransitivelyRelatedConcepts() {
+        super("strc",
+              "Solely Transitively Related Concepts",
+              "Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
+              IssueType.ANALYTICAL
+        );
+    }
+
+    @Override
+    protected CollectionResult<Pair<URI>> invoke() throws OpenRDFException {
 		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
 			TupleQueryResult result = vocabRepository.query(createSolitaryTransitiveRelationsQuery(transitivePropertyPair));
 			addToResults(result);			
@@ -61,5 +67,5 @@ public class SolitaryTransitiveRelationsFinder extends Issue {
 			solitaryTransitiveRelations.add(new Pair<URI>(resource1, resource2));
 		}
 	}
-	
+
 }

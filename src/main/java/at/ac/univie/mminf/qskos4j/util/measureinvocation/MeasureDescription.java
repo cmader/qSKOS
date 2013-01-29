@@ -2,18 +2,7 @@ package at.ac.univie.mminf.qskos4j.util.measureinvocation;
 
 public enum MeasureDescription {
 
-	// Labeling and Documentation Issues
-	UNDOCUMENTED_CONCEPTS("uc",
-		"Undocumented Concepts",
-		"Finds concepts that don't use any SKOS documentation properties",
-		"findUndocumentedConcepts"),
-
-				
 	// Structural Issues
-	SOLELY_TRANSITIVELY_RELATED_CONCEPTS("strc",
-		"Solely Transitively Related Concepts",
-		"Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
-		"findSolelyTransitivelyRelatedConcepts"),
 	OMITTED_TOP_CONCEPTS("otc",
 		"Omitted Top Concepts",
 		"Finds skos:ConceptSchemes without top concepts",
@@ -22,12 +11,6 @@ public enum MeasureDescription {
 		"Top Concepts Having Broader Concepts",
 		"Finds top concepts internal to the vocabulary hierarchy tree",
 		"findTopConceptsHavingBroaderConcepts"),	
-		
-	// Linked Data Specific Issues
-	UNDEFINED_SKOS_RESOURCES("usr",
-		"Undefined SKOS Resources",
-		"Finds 'invented' new terms within the SKOS namespace or deprecated properties",	
-		"findUndefinedSkosResources"),
 		
 	// Other Issues
 	RELATION_CLASHES("rc",

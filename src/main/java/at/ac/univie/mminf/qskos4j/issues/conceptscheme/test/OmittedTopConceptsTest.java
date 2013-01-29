@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.conceptscheme.test;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 
-public class ConceptSchemesWithoutTopConceptTest extends IssueTestCase {
+public class OmittedTopConceptsTest extends IssueTestCase {
 
 	private QSkos qSkosMissingTopConcepts;
 	

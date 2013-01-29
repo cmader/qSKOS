@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
+import at.ac.univie.mminf.qskos4j.issues.concepts.UndocumentedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.count.*;
 import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
 import at.ac.univie.mminf.qskos4j.issues.inlinks.MissingInLinks;
@@ -18,7 +19,9 @@ import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.NonHttpResources;
+import at.ac.univie.mminf.qskos4j.issues.relations.SolelyTransitivelyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
+import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
@@ -134,6 +137,9 @@ public class QSkos {
         addIssue(new DisjointLabelsViolations());
         addIssue(new OverlappingLabels(involvedConcepts));
         addIssue(new ValuelessAssociativeRelations());
+        addIssue(new UndefinedSkosResources());
+        addIssue(new UndocumentedConcepts(authoritativeConcepts));
+        addIssue(new SolelyTransitivelyRelatedConcepts());
 
         BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
         brokenLinks.setSubsetSize(randomSubsetSize_percent);
@@ -160,41 +166,6 @@ public class QSkos {
             //issue.getResult();
         }
     }
-
-	/**
-	 * Finds resources not defined in the SKOS ontology (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undefined_SKOS_Resources">Undefined SKOS Resources</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<URI> findUndefinedSkosResources() throws OpenRDFException {
-		return new SkosTermsChecker(vocabRepository).findUndefinedSkosResources();
-	}
-     */
-
-	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Solely_Transitively_Related_Concepts">Solely Transitively Related Concepts</a>.
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<Pair<URI>> findSolelyTransitivelyRelatedConcepts() throws OpenRDFException {
-		return new SolitaryTransitiveRelationsFinder(vocabRepository).findSolelyTransitivelyRelatedConcepts();
-	}
-     */
-
-	/**
-	 * Finds concepts lacking documentation information (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undocumented_Concepts">Undocumented Concepts</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<Resource> findUndocumentedConcepts() throws OpenRDFException
-	{
-		UndocumentedConceptsChecker docCovChecker = 
-			new UndocumentedConceptsChecker(vocabRepository);
-		docCovChecker.setProgressMonitor(progressMonitor);
-		return docCovChecker.findUndocumentedConcepts(findAuthoritativeConcepts().getData());
-	}
-     */
 
 	/**
 	 * Finds top concepts that have broader concepts (
