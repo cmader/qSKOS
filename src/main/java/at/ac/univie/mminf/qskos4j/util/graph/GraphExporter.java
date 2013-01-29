@@ -7,7 +7,6 @@ import org.jgrapht.ext.IntegerNameProvider;
 import org.jgrapht.ext.StringEdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.jgrapht.graph.DirectedSubgraph;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 import java.io.StringWriter;

@@ -4,10 +4,6 @@ import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-
-import java.util.Collection;
-import java.util.Collections;
 
 public abstract class Issue<T extends Result<?>> {
 

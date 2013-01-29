@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j;
 
-import at.ac.univie.mminf.qskos4j.issues.*;
+import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
@@ -9,7 +10,8 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.UndocumentedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.OmittedTopConcepts;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.TopConceptsHavingBroaderConcepts;
-import at.ac.univie.mminf.qskos4j.issues.count.*;
+import at.ac.univie.mminf.qskos4j.issues.count.AggregationRelations;
+import at.ac.univie.mminf.qskos4j.issues.count.SemanticRelations;
 import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
 import at.ac.univie.mminf.qskos4j.issues.inlinks.MissingInLinks;
 import at.ac.univie.mminf.qskos4j.issues.labels.DisjointLabelsViolations;
@@ -36,14 +38,10 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
-import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.print.event.PrintJobAttributeEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
 import java.util.Collections;
 
 /**

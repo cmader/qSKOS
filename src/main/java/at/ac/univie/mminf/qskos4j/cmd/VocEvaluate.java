@@ -2,9 +2,6 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -87,16 +84,13 @@ public class VocEvaluate {
 		catch (OpenRDFException rdfException) {
 			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
 		} 
-		catch (QSKOSMethodInvocationException methInvExc) {
-			System.out.println("Error invoking method: " +methInvExc.getMethodName());
-		} 
-		catch (UnsupportedMeasureIdException measureIdExc) {
+		catch (UnsupportedIssueIdException measureIdExc) {
 			System.out.println("Unsupported measure id: " +measureIdExc.getUnsupportedId());
 		} 
 	}
 		
 	public VocEvaluate(String[] args) 
-		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException  
+		throws OpenRDFException, IOException, UnsupportedIssueIdException
 	{
 		parseCmdParams(args);
 		
@@ -135,7 +129,7 @@ public class VocEvaluate {
 	}
 		
 	private void listIssuesOrEvaluate() 
-		throws OpenRDFException, IOException, UnsupportedMeasureIdException, QSKOSMethodInvocationException 
+		throws OpenRDFException, IOException, UnsupportedIssueIdException
 	{
 		if (parsedCommand.vocabFilenames == null) {
 			if (parsedCommand instanceof CommandAnalyze) {
@@ -170,7 +164,7 @@ public class VocEvaluate {
 	}
 	
 	private void evaluate() 
-		throws OpenRDFException, IOException, UnsupportedMeasureIdException
+		throws OpenRDFException, IOException, UnsupportedIssueIdException
 	{
 		setup();
 
@@ -229,7 +223,7 @@ public class VocEvaluate {
 	}
 	
 	private Collection<Issue> extractMeasures()
-		throws UnsupportedMeasureIdException
+		throws UnsupportedIssueIdException
 	{
 		Collection<Issue> resultingIssues;
 
@@ -250,7 +244,7 @@ public class VocEvaluate {
 		return resultingIssues;
 	}
 	
-	private Collection<Issue> getIssues(String ids) throws UnsupportedMeasureIdException
+	private Collection<Issue> getIssues(String ids) throws UnsupportedIssueIdException
 	{
 		if (ids == null || ids.isEmpty()) {
 			return Collections.emptySet();

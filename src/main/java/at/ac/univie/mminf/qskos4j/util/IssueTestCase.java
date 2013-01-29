@@ -1,7 +1,5 @@
 package at.ac.univie.mminf.qskos4j.util;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.junit.Assert;
 import org.junit.Ignore;

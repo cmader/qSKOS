@@ -14,14 +14,17 @@ public class InvalidCharactersTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        qSkosInvalidCharacters = new QSkos(setUpRepository("invalidCharacters.rdf"));
+        qSkosInvalidCharacters = new QSkos();
+        qSkosInvalidCharacters.setVocabRepository(setUpRepository("invalidCharacters.rdf"));
     }
 
     @Test
     public void testAllIssues() throws OpenRDFException {
         // all issues must run without exception
         try {
-            qSkosInvalidCharacters.invokeAllIssues();
+            for (Issue issue : qSkosInvalidCharacters.getAllIssues()) {
+                issue.getResult();
+            }
         }
         catch (Exception e) {
             Assert.fail(e.toString());

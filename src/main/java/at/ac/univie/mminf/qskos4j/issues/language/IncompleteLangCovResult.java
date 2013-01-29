@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 import java.util.Collection;

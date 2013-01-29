@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 import java.util.HashSet;
