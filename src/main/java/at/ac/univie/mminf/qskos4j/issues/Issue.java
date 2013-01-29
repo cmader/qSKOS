@@ -51,4 +51,30 @@ public abstract class Issue<T extends Result<?>> {
     public final VocabRepository getVocabRepository() {
         return vocabRepository;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public final IssueType getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", type=" + type +
+            '}';
+    }
 }

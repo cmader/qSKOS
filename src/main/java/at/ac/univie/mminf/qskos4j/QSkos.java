@@ -40,6 +40,7 @@ import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.print.event.PrintJobAttributeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -72,58 +73,17 @@ public class QSkos {
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
 	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph;
     private Collection<Issue> issuesToTest = Collections.EMPTY_LIST;
+    private Collection<String> sparqlEndpointUrls = Collections.EMPTY_LIST;
 
-	/**
-	 * Constructs a QSkos object and initializes it with content from the passed RDF vocabulary.
-	 * 
-	 * @param rdfFile rdfFile a file holding a SKOS vocabulary
-	 * @throws OpenRDFException if errors when initializing local repository 
-	 * @throws IOException if problems occur reading the passed vocabulary file
-	 */
-	public QSkos(File rdfFile) 
-		throws OpenRDFException, IOException
-	{
-		this(rdfFile, null, null);
-	}
-	
-	/**
-	 * Constructs a QSkos object and initializes it with content from the passed RDF vocabulary and
-	 * explicitly stating the RDF serialization format.
-	 * 
-	 * @param rdfFile rdfFile a file holding a SKOS vocabulary
-	 * @param dataFormat RDF serialization format of the passed vocabulary
-	 * @throws OpenRDFException if errors when initializing temporal repository
-	 * @throws IOException if problems occur reading the passed vocabulary file
-	 */
-	public QSkos(File rdfFile,
-		RDFFormat dataFormat) 
-		throws OpenRDFException, IOException
-	{
-		this(rdfFile, null, dataFormat);
-	}
-	
-	private QSkos(File rdfFile,
-		String baseURI,
-		RDFFormat dataFormat) 
-		throws OpenRDFException, IOException 
-	{
-		logger.info("initializing vocabulary from file '" +rdfFile.getName()+ "'...");
-		
-		vocabRepository = new VocabRepository(rdfFile, baseURI, dataFormat);
-		this.baseURI = baseURI;
-	}
-
-    public QSkos(VocabRepository vocabRepository) {
-        this.vocabRepository = vocabRepository;
-    }
-
-	private void addAllIssues() throws OpenRDFException {
+	public void addAllIssues() throws OpenRDFException {
         issuesToTest.clear();
         HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
         ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
 
         InvolvedConcepts involvedConcepts = new InvolvedConcepts(vocabRepository);
-        AuthoritativeConcepts authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts, baseURI);
+        AuthoritativeConcepts authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
+        authoritativeConcepts.setBaseURI(baseURI);
+        authoritativeConcepts.setAuthResourceIdentifier(authResourceIdentifier);
         HttpURIs httpURIs = new HttpURIs(vocabRepository);
 
         addIssue(involvedConcepts);
@@ -165,6 +125,9 @@ public class QSkos {
         MissingInLinks missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(extAccessDelayMillis);
         missingInLinks.setSubsetSize(randomSubsetSize_percent);
+        for (String sparqlEndpointUrl : sparqlEndpointUrls) {
+            missingInLinks.addSparqlEndPoint(sparqlEndpointUrl);
+        }
         addIssue(missingInLinks);
 
 	}
@@ -172,14 +135,6 @@ public class QSkos {
     private void addIssue(Issue issue) {
         issuesToTest.add(issue);
         issue.setProgressMonitor(progressMonitor);
-    }
-
-    public void invokeAllIssues() throws OpenRDFException {
-        addAllIssues();
-
-        for (Issue issue : issuesToTest) {
-            //issue.getResult();
-        }
     }
 
     public Collection<Issue> getAllIssues() {
@@ -223,10 +178,24 @@ public class QSkos {
      */
     public void setAuthResourceIdentifier(String authResourceIdentifier) {
         this.authResourceIdentifier = authResourceIdentifier;
+    }
 
+    public void setBaseURI(String baseURI) {
+        this.baseURI = baseURI;
+    }
+
+    private void resetIssues() {
         for (Issue issue : issuesToTest) {
             issue.reset();
         }
+    }
+
+    public void setVocabRepository(VocabRepository vocabRepository) {
+        this.vocabRepository = vocabRepository;
+    }
+
+    public void addSparqlEndPoint(String endpointUrl) {
+        sparqlEndpointUrls.add(endpointUrl);
     }
 
 }

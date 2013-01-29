@@ -1,9 +1,10 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
+import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
 import ch.qos.logback.classic.Logger;
+import org.openrdf.OpenRDFException;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -15,12 +16,10 @@ public class ReportGenerator {
 
     private Logger logger = (Logger) LoggerFactory.getLogger(ReportGenerator.class);
 
-    private Collection<MeasureDescription> measures;
-    private MeasureInvoker invoker;
+    private Collection<Issue> issues;
 
-    public ReportGenerator(MeasureInvoker invoker, Collection<MeasureDescription> measures) {
-        this.measures = measures;
-        this.invoker = invoker;
+    public ReportGenerator(Collection<Issue> issues) {
+        this.issues = issues;
     }
 
     void outputURITrackingReport(File uriTrackFile) throws IOException
@@ -33,21 +32,20 @@ public class ReportGenerator {
 
     private void outputCsvHeader() {
         System.out.print("Concept;");
-        for (MeasureDescription measure : measures) {
-            System.out.print(measure.getId() + ";");
+        for (Issue issue : issues) {
+            System.out.print(issue.getId() + ";");
         }
         System.out.println();
     }
 
     private void outputIssuesAsCsv(Map<String, Collection<String>> conceptIssuesMapping) {
-        for (String conceptSubstring : conceptIssuesMapping.keySet()) {
-            Collection<String> issues = conceptIssuesMapping.get(conceptSubstring);
+        for (Map.Entry<String, Collection<String>> entry : conceptIssuesMapping.entrySet()) {
+            System.out.print(entry.getKey() + ";");
 
-            System.out.print(conceptSubstring + ";");
-            for (MeasureDescription measure : measures) {
-                for (String issue : issues) {
-                    if (issue.contains(measure.getId())) {
-                        System.out.print(issue);
+            for (Issue issue : issues) {
+                for (String issueForConcept : entry.getValue()) {
+                    if (issueForConcept.contains(issue.getId())) {
+                        System.out.print(issueForConcept);
                     }
                 }
                 System.out.print(";");
@@ -60,17 +58,17 @@ public class ReportGenerator {
     {
         Map<String, Collection<String>> uriSubstringToIssuesMapping = new LinkedHashMap<String, Collection<String>>();
 
-        for (MeasureDescription measure : measures) {
+        for (Issue issue : issues) {
             ConceptIterator conceptIterator = new ConceptIterator(uriTrackFile);
 
             try {
-                Result<?> result = invoker.getMeasureResult(measure);
+                Result<?> result = issue.getResult();
 
                 String report = result.getExtensiveReport();
-                addConceptOccurences(uriSubstringToIssuesMapping, measure, report, conceptIterator);
+                addConceptOccurences(uriSubstringToIssuesMapping, issue, report, conceptIterator);
             }
-            catch (QSKOSMethodInvocationException e) {
-                logger.error("Error invoking measure " +measure.getName()+ " (" +measure.getId()+ ")");
+            catch (OpenRDFException e) {
+                logger.error("Error invoking measure " +issue.getName()+ " (" +issue.getId()+ ")");
             }
         }
 
@@ -79,7 +77,7 @@ public class ReportGenerator {
 
     private void addConceptOccurences(
         Map<String, Collection<String>> uriSubstringToIssuesMapping,
-        MeasureDescription measure,
+        Issue issue,
         String report,
         ConceptIterator conceptIterator)
     {
@@ -94,9 +92,9 @@ public class ReportGenerator {
 
             int conceptPosInReport = report.indexOf(conceptSubString);
             if (conceptPosInReport != -1) {
-                StringBuilder measureId = new StringBuilder(measure.getId());
+                StringBuilder measureId = new StringBuilder(issue.getId());
 
-                if (measure == MeasureDescription.DISCONNECTED_CONCEPT_CLUSTERS) {
+                if (issue instanceof DisconnectedConceptClusters) {
                     measureId.append("(").append(getWccSize(conceptPosInReport, report)).append(")");
                 }
 
@@ -116,11 +114,11 @@ public class ReportGenerator {
 
     void outputIssuesReport(boolean outputExtendedReport, boolean shouldWriteGraphs)
     {
-        for (MeasureDescription measure : measures) {
-            System.out.println("--- " +measure.getName());
+        for (Issue issue : issues) {
+            System.out.println("--- " +issue.getName());
 
             try {
-                Result<?> result = invoker.getMeasureResult(measure);
+                Result<?> result = issue.getResult();
                 System.out.println(result.getShortReport());
 
                 if (outputExtendedReport) {
@@ -130,16 +128,16 @@ public class ReportGenerator {
 
                 if (shouldWriteGraphs) {
                     try {
-                        writeGraphsToFiles(result.getAsDOT(), measure.getId());
+                        writeGraphsToFiles(result.getAsDOT(), issue.getId());
                     }
                     catch (IOException e) {
-                        logger.error("error writing graph file for issue " +measure.getId(), e);
+                        logger.error("error writing graph file for issue " +issue.getId(), e);
                     }
 
                 }
 
             }
-            catch (QSKOSMethodInvocationException e) {
+            catch (OpenRDFException e) {
                 logger.error("Error getting measure result", e);
             }
         }

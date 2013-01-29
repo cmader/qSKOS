@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -107,6 +108,7 @@ public class VocEvaluate {
 			jc.usage();
 		}
 		else {
+            qskos = new QSkos();
 			listIssuesOrEvaluate();	
 		}		
 	}
@@ -137,10 +139,10 @@ public class VocEvaluate {
 	{
 		if (parsedCommand.vocabFilenames == null) {
 			if (parsedCommand instanceof CommandAnalyze) {
-				outputMeasureDescription(Issue.IssueType.ANALYTICAL);
+				outputIssueDetails(Issue.IssueType.ANALYTICAL);
 			}
 			else {
-				outputMeasureDescription(Issue.IssueType.STATISTICAL);
+				outputIssueDetails(Issue.IssueType.STATISTICAL);
 			}
 		}
 		else {
@@ -149,17 +151,13 @@ public class VocEvaluate {
 		}
 	}
 
-	private void outputMeasureDescription(Issue.IssueType constraintType) {
-		Iterator<MeasureDescription> descIt = Arrays.asList(MeasureDescription.values()).iterator();
-		
-		while (descIt.hasNext()) {
-			MeasureDescription measureDesc = descIt.next();
-			
-			if (measureDesc.getType() == constraintType) {
+	private void outputIssueDetails(Issue.IssueType constraintType) {
+		for (Issue issue : qskos.getAllIssues()) {
+			if (issue.getType() == constraintType) {
 				System.out.println("---");
-				System.out.println("ID: " +measureDesc.getId());
-				System.out.println("Name: " +measureDesc.getName());
-				System.out.println("Description: " +measureDesc.getDescription());
+				System.out.println("ID: " +issue.getId());
+				System.out.println("Name: " +issue.getName());
+				System.out.println("Description: " +issue.getDescription());
 			}
 		}
 	}
@@ -176,10 +174,7 @@ public class VocEvaluate {
 	{
 		setup();
 
-        reportGenerator = new ReportGenerator(
-            new MeasureInvoker(qskos),
-            extractMeasures()
-        );
+        reportGenerator = new ReportGenerator(extractMeasures());
 
         if (uriTrackingEnabled()) {
             reportGenerator.outputURITrackingReport(new File(((CommandAnalyze) parsedCommand).uriTrackFilename));
@@ -192,8 +187,13 @@ public class VocEvaluate {
 	private void setup() throws OpenRDFException, IOException {
         setupLogging();
 
-		qskos = new QSkos(new File(parsedCommand.vocabFilenames.get(0)));
-		qskos.setAuthoritativeResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
+        VocabRepository vocabRepo = new VocabRepository(
+            new File(parsedCommand.vocabFilenames.get(0)),
+            null,
+            null
+        );
+		qskos.setVocabRepository(vocabRepo);
+		qskos.setAuthResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
         qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
 
@@ -202,7 +202,7 @@ public class VocEvaluate {
 		}
 		
 		if (parsedCommand.enableSkosXl) {
-			qskos.enableSkosXlSupport();
+            vocabRepo.enableSkosXlSupport();
 		}
 
         if (!uriTrackingEnabled() && !parsedCommand.noProgressBar) {
@@ -228,57 +228,61 @@ public class VocEvaluate {
 		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).writeGraphs;
 	}
 	
-	private Collection<MeasureDescription> extractMeasures()
+	private Collection<Issue> extractMeasures()
 		throws UnsupportedMeasureIdException
 	{
-		Collection<MeasureDescription> resultingMeasures;
+		Collection<Issue> resultingIssues;
 
-        Collection<MeasureDescription> selectedMeasures = getMeasures(parsedCommand.selectedIds);
-        Collection<MeasureDescription> excludedMeasures = getMeasures(parsedCommand.excludedIds);
+        Collection<Issue> selectedIssues = getIssues(parsedCommand.selectedIds);
+        Collection<Issue> excludedIssues = getIssues(parsedCommand.excludedIds);
 
-		if (!selectedMeasures.isEmpty()) {
-			resultingMeasures = selectedMeasures;
+		if (!selectedIssues.isEmpty()) {
+			resultingIssues = selectedIssues;
 		}
-		else if (!excludedMeasures.isEmpty()) {
-			resultingMeasures = getAllMeasuresForCommand();
-			resultingMeasures.removeAll(excludedMeasures);
+		else if (!excludedIssues.isEmpty()) {
+			resultingIssues = getAllIssuesForCommand();
+			resultingIssues.removeAll(excludedIssues);
 		}
 		else {
-			resultingMeasures = getAllMeasuresForCommand();
+			resultingIssues = getAllIssuesForCommand();
 		}
 		
-		return resultingMeasures;
+		return resultingIssues;
 	}
 	
-	private Collection<MeasureDescription> getMeasures(String ids) throws UnsupportedMeasureIdException
+	private Collection<Issue> getIssues(String ids) throws UnsupportedMeasureIdException
 	{
 		if (ids == null || ids.isEmpty()) {
 			return Collections.emptySet();
 		}
 		
-		Collection<MeasureDescription> measures = new ArrayList<MeasureDescription>();
+		Collection<Issue> issues = new ArrayList<Issue>();
 		StringTokenizer tokenizer = new StringTokenizer(ids, ",");
 		while (tokenizer.hasMoreElements()) {
-			measures.add(MeasureDescription.findById(tokenizer.nextToken()));
+            for (Issue issue : qskos.getAllIssues()) {
+                if (issue.getId().equalsIgnoreCase(tokenizer.nextToken())) {
+                    issues.add(issue);
+                }
+            }
 		}
 		
-		return measures;
+		return issues;
 	}
 	
-	private Collection<MeasureDescription> getAllMeasuresForCommand() {
-		List<MeasureDescription> measuresForCommand = new ArrayList<MeasureDescription>();
+	private Collection<Issue> getAllIssuesForCommand() {
+		List<Issue> issuesForCommand = new ArrayList<Issue>();
 		
-		for (MeasureDescription measureDesc : MeasureDescription.values()) {
+		for (Issue issue : qskos.getAllIssues()) {
 			String command = jc.getParsedCommand();
 			
-			if ((measureDesc.getType() == MeasureDescription.IssueType.ISSUE && command.equals(CMD_NAME_ANALYZE)) ||
-				(measureDesc.getType() == MeasureDescription.IssueType.STATISTICS && command.equals(CMD_NAME_SUMMARIZE)))
+			if ((issue.getType() == Issue.IssueType.ANALYTICAL && command.equals(CMD_NAME_ANALYZE)) ||
+				(issue.getType() == Issue.IssueType.STATISTICAL && command.equals(CMD_NAME_SUMMARIZE)))
 			{
-				measuresForCommand.add(measureDesc);
+				issuesForCommand.add(issue);
 			}
 		}
 		
-		return measuresForCommand;
+		return issuesForCommand;
 	}
 
 }

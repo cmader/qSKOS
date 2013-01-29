@@ -1,8 +1,10 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
+import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
+import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,28 +14,26 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 public class UriTrackingTest extends IssueTestCase {
 
-    private QSkos qSkosComponents;
     private ReportGenerator reportGenerator;
     private File uriTrackFile;
+    private Issue disconnectedConceptClusters, incompleteLanguageCoverage;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        qSkosComponents = setUpRepository("components.rdf");
+        InvolvedConcepts involvedConcepts = new InvolvedConcepts(setUpRepository("components.rdf"));
 
-        Set<MeasureDescription> measures = new HashSet<MeasureDescription>();
+        disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
+        incompleteLanguageCoverage = new IncompleteLanguageCoverage(involvedConcepts);
+        Collection<Issue> issues = Collections.EMPTY_LIST;
+        issues.add(disconnectedConceptClusters);
+        issues.add(incompleteLanguageCoverage);
 
-        measures.add(MeasureDescription.DISCONNECTED_CONCEPT_CLUSTERS);
-        measures.add(MeasureDescription.INCOMPLETE_LANG_COVERAGE);
-
-        reportGenerator = new ReportGenerator(
-            new MeasureInvoker(qSkosComponents),
-            measures);
+        reportGenerator = new ReportGenerator(issues);
 
         URL uriTrackFileUrl = getClass().getResource("/uriTrackFile.txt");
         uriTrackFile = new File(uriTrackFileUrl.getFile());
@@ -59,7 +59,7 @@ public class UriTrackingTest extends IssueTestCase {
             wccIssueFound = false;
 
             for (String issue : issuesOfConcept) {
-                if (issue.contains(MeasureDescription.DISCONNECTED_CONCEPT_CLUSTERS.getId())) {
+                if (issue.contains(disconnectedConceptClusters.getId())) {
                     wccIssueFound = true;
                 }
             }
@@ -77,7 +77,7 @@ public class UriTrackingTest extends IssueTestCase {
             boolean noUncoveredLanguages = true;
 
             for (String issue : issuesForConcepts.get(concept)) {
-                if (issue.contains(MeasureDescription.INCOMPLETE_LANG_COVERAGE.getId())) {
+                if (issue.contains(incompleteLanguageCoverage.getId())) {
                     noUncoveredLanguages = false;
                 }
             }
