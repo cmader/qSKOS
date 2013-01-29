@@ -24,9 +24,9 @@ public class OmittedOrInvalidLanguageTagsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        oiltComponents = (OmittedOrInvalidLanguageTags) setUpRepository("components.rdf", new OmittedOrInvalidLanguageTags());
-        oiltDeprecatedAndIllegal = (OmittedOrInvalidLanguageTags) setUpRepository("deprecatedAndIllegalTerms.rdf", new OmittedOrInvalidLanguageTags());
-        oiltLangTags = (OmittedOrInvalidLanguageTags) setUpRepository("languageTags.rdf", new OmittedOrInvalidLanguageTags());
+        oiltComponents = new OmittedOrInvalidLanguageTags(setUpRepository("components.rdf"));
+        oiltDeprecatedAndIllegal = new OmittedOrInvalidLanguageTags(setUpRepository("deprecatedAndIllegalTerms.rdf"));
+        oiltLangTags = new OmittedOrInvalidLanguageTags(setUpRepository("languageTags.rdf"));
     }
 
     @Test

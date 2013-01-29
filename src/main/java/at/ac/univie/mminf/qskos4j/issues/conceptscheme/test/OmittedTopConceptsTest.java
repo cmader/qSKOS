@@ -17,9 +17,7 @@ public class OmittedTopConceptsTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        omittedTopConcepts = (OmittedTopConcepts) setUpRepository(
-                "missingTopConcepts.rdf",
-                new OmittedTopConcepts(new ConceptSchemes()));
+        omittedTopConcepts = new OmittedTopConcepts(new ConceptSchemes(setUpRepository("missingTopConcepts.rdf")));
 	}
 	
 	@Test

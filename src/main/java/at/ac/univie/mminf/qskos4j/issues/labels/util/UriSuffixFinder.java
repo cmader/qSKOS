@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
 import org.openrdf.model.Resource;
+import org.openrdf.model.Value;
 
 import java.util.Collection;
 
@@ -10,7 +11,7 @@ public class UriSuffixFinder {
     {
         if (conflicts != null) {
             for (LabelConflict conflict : conflicts) {
-                for (Resource resource : conflict.getAffectedResources()) {
+                for (Value resource : conflict.getAffectedResources()) {
                     if (resource.stringValue().endsWith(uriSuffix)) {
                         return true;
                     }

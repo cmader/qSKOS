@@ -3,7 +3,6 @@ package at.ac.univie.mminf.qskos4j.issues.skosintegrity.test;
 import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +16,7 @@ public class RelationClashesTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        VocabRepository repo = setUpRepository("associativeVsHierarchicalClashes.rdf");
-        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(repo);
-        relationClashes = new RelationClashes(repo, hierarchyGraphBuilder);
+        relationClashes = new RelationClashes(new HierarchyGraphBuilder(setUpRepository("associativeVsHierarchicalClashes.rdf")));
     }
 
     @Test

@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.labels.test;
 
 import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.UriSuffixFinder;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import org.junit.Assert;
@@ -18,7 +19,7 @@ public class InconsistentPrefLabelsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        inconsistentPrefLabels = new InconsistentPrefLabels(setUpRepository("ambiguousLabels.rdf"));
+        inconsistentPrefLabels = new InconsistentPrefLabels(new ResourceLabelsCollector(setUpRepository("ambiguousLabels.rdf")));
     }
 
     @Test
