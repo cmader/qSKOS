@@ -19,12 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * 	 * Finds top concepts that have broader concepts (
- * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Top_Concepts_Having_Broader_Concepts">Top Concepts Having Broader Concepts</a>
- * ).
-
- */
 public class ConceptSchemeChecker extends Issue<CollectionResult<Resource>> {
 
 	public ConceptSchemeChecker(VocabRepository vocabRepository) {
