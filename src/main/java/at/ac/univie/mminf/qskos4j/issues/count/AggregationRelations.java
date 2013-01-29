@@ -4,6 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.TupleQueryResult;
 
@@ -16,8 +17,9 @@ import org.openrdf.query.TupleQueryResult;
  */
 public class AggregationRelations extends Issue<NumberResult<Long>> {
 
-    public AggregationRelations() {
-        super("ar",
+    public AggregationRelations(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "ar",
               "Aggregation Relations Count",
               "Counts the statements relating resources to ConceptSchemes or Collections",
               IssueType.STATISTICAL

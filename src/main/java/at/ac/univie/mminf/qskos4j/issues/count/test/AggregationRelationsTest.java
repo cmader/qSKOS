@@ -21,7 +21,7 @@ public class AggregationRelationsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        aggregationRelations = (AggregationRelations) setUpIssue("aggregations.rdf", new SemanticRelations());
+        aggregationRelations = (AggregationRelations) setUpRepository("aggregations.rdf", new SemanticRelations());
     }
 
 

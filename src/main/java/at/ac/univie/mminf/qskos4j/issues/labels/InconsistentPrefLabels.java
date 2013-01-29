@@ -25,12 +25,14 @@ public class InconsistentPrefLabels extends Issue<CollectionResult<LabelConflict
     private Map<Value, LabelConflict> ambigPrefLabels;
     private ResourceLabelsCollector resourceLabelsCollector;
 
-    public InconsistentPrefLabels() {
-        super("ipl",
+    public InconsistentPrefLabels(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "ipl",
               "Inconsistent Preferred Labels",
               "Finds resources with more then one prefLabel per language",
               IssueType.ANALYTICAL);
-        resourceLabelsCollector =  new ResourceLabelsCollector();
+
+        resourceLabelsCollector =  new ResourceLabelsCollector(vocabRepo);
     }
 
     @Override
@@ -102,9 +104,4 @@ public class InconsistentPrefLabels extends Issue<CollectionResult<LabelConflict
         return false;
     }
 
-    @Override
-    public void setVocabRepository(VocabRepository vocabRepository) {
-        super.setVocabRepository(vocabRepository);
-        resourceLabelsCollector.setVocabRepository(vocabRepository);
-    }
 }

@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.TupleQueryResult;
@@ -19,8 +20,9 @@ import java.util.Set;
  */
 public class NonHttpResources extends Issue<CollectionResult<String>> {
 
-    public NonHttpResources() {
-        super("husv",
+    public NonHttpResources(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "husv",
               "HTTP URI Scheme Violation",
               "Finds triple subjects that are no HTTP URIs",
               IssueType.ANALYTICAL

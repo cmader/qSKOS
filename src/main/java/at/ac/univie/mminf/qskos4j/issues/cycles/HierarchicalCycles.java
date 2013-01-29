@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles;
 
-import at.ac.univie.mminf.qskos4j.issues.HierarchyGraph;
+import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
@@ -8,7 +8,6 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 import java.util.ArrayList;
@@ -25,18 +24,21 @@ import java.util.Set;
 public class HierarchicalCycles extends Issue<CollectionResult<Set<Value>>> {
 
     private DirectedGraph<Value, NamedEdge> hierarchyGraph;
+    private HierarchyGraphBuilder hierarchyGraphBuilder;
 
-    public HierarchicalCycles() {
-        super("chr",
+    public HierarchicalCycles(HierarchyGraphBuilder hierarchyGraphBuilder) {
+        super(hierarchyGraphBuilder.getVocabRepository(),
+              "chr",
               "Cyclic Hierarchical Relations",
               "Finds all hierarchy cycle containing components",
               IssueType.ANALYTICAL
         );
+        this.hierarchyGraphBuilder = hierarchyGraphBuilder;
     }
 
     @Override
     protected CollectionResult<Set<Value>> invoke() throws OpenRDFException {
-        hierarchyGraph = new HierarchyGraph(vocabRepository).createGraph();
+        hierarchyGraph = hierarchyGraphBuilder.createGraph();
         Set<Value> nodesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
         List<Set<Value>> cycleContainingComponents = trackNodesInCycles(nodesInCycles);
 

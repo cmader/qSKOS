@@ -18,8 +18,8 @@ public class SkosReferenceIntegrityTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosAssVsHierClashes = setUpIssue("associativeVsHierarchicalClashes.rdf");
-		qSkosExactVsAssMappingClashes = setUpIssue("exactVsAssociativeMappingClashes.rdf");
+		qSkosAssVsHierClashes = setUpRepository("associativeVsHierarchicalClashes.rdf");
+		qSkosExactVsAssMappingClashes = setUpRepository("exactVsAssociativeMappingClashes.rdf");
 	}
 	
 	@Test

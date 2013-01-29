@@ -1,8 +1,9 @@
-package at.ac.univie.mminf.qskos4j.issues.count;
+package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
@@ -25,11 +26,12 @@ public class ConceptSchemes extends Issue<CollectionResult<Resource>> {
 
     private final Logger logger = LoggerFactory.getLogger(ConceptSchemes.class);
 
-    public ConceptSchemes() {
-        super("cs",
+    public ConceptSchemes(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "cs",
               "Concept Schemes",
               "Finds the involved ConceptSchemes",
-                IssueType.STATISTICAL
+              IssueType.STATISTICAL
         );
     }
 

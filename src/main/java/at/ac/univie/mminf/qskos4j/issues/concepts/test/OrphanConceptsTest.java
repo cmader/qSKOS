@@ -23,8 +23,8 @@ public class OrphanConceptsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        orphanConcepts1 = (OrphanConcepts) setUpIssue("concepts.rdf", new OrphanConcepts(new InvolvedConcepts()));
-        orphanConcepts2 = (OrphanConcepts) setUpIssue("components.rdf", new OrphanConcepts(new InvolvedConcepts()));
+        orphanConcepts1 = (OrphanConcepts) setUpRepository("concepts.rdf", new OrphanConcepts(new InvolvedConcepts()));
+        orphanConcepts2 = (OrphanConcepts) setUpRepository("components.rdf", new OrphanConcepts(new InvolvedConcepts()));
     }
 
     @Test

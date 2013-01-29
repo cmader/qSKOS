@@ -4,6 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.TupleQueryResult;
 
@@ -16,8 +17,9 @@ import org.openrdf.query.TupleQueryResult;
  */
 public class SemanticRelations extends Issue<NumberResult<Long>> {
 
-    public SemanticRelations() {
-        super("sr",
+    public SemanticRelations(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "sr",
               "Semantic Relations Count",
               "Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",
               IssueType.STATISTICAL

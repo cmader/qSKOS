@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
@@ -34,8 +35,9 @@ import java.util.Map;
     private final Logger logger = LoggerFactory.getLogger(UnidirectionallyRelatedConcepts.class);
 	private Map<Pair<Resource>, String> omittedInverseRelations = new HashMap<Pair<Resource>, String>();
 
-    public UnidirectionallyRelatedConcepts() {
-        super("urc",
+    public UnidirectionallyRelatedConcepts(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "urc",
               "Unidirectionally Related Concepts",
               "Concepts not including reciprocal relations",
               IssueType.ANALYTICAL);

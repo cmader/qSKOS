@@ -25,7 +25,7 @@ public class BrokenLinksTest extends IssueTestCase {
     public void setUp() throws OpenRDFException, IOException {
         brokenLinks = new BrokenLinks(new HttpURIs());
         brokenLinks.setExtAccessDelayMillis(0);
-        setUpIssue("resources.rdf", brokenLinks);
+        setUpRepository("resources.rdf", brokenLinks);
     }
 
     @Test

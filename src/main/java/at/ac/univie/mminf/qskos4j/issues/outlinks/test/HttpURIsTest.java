@@ -20,8 +20,8 @@ public class HttpURIsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        httpURIs1 = (HttpURIs) setUpIssue("concepts.rdf", new HttpURIs());
-        httpURIs2 = (HttpURIs) setUpIssue("resources.rdf", new HttpURIs());
+        httpURIs1 = (HttpURIs) setUpRepository("concepts.rdf", new HttpURIs());
+        httpURIs2 = (HttpURIs) setUpRepository("resources.rdf", new HttpURIs());
     }
 
 

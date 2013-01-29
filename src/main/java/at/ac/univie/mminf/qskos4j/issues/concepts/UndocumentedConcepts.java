@@ -4,9 +4,8 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
@@ -28,7 +27,6 @@ public class UndocumentedConcepts extends Issue<CollectionResult<Value>> {
     private final Logger logger = LoggerFactory.getLogger(UndocumentedConcepts.class);
 
     private AuthoritativeConcepts authoritativeConcepts;
-
 	private String[] documentationProperties = {
 		"skos:note", "skos:changeNote", "skos:definition", "skos:editorialNote",
 		"skos:example", "skos:historyNote", "skos:scopeNote"
@@ -37,7 +35,8 @@ public class UndocumentedConcepts extends Issue<CollectionResult<Value>> {
 	private RepositoryConnection connection;
 
     public UndocumentedConcepts(AuthoritativeConcepts authoritativeConcepts) {
-        super("uc",
+        super(authoritativeConcepts.getVocabRepository(),
+              "uc",
               "Undocumented Concepts",
               "Finds concepts that don't use any SKOS documentation properties",
               IssueType.ANALYTICAL

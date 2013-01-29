@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.TupleQueryResult;
@@ -10,7 +10,6 @@ import org.openrdf.query.TupleQueryResult;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -23,8 +22,9 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
     private Set<URI> httpURIs = Collections.EMPTY_SET;
     private Set<String> invalidResources = Collections.EMPTY_SET;
 
-    public HttpURIs() {
-        super("huc",
+    public HttpURIs(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "huc",
               "HTTP URI Count",
               "Counts the total number of HTTP URIs",
               IssueType.STATISTICAL

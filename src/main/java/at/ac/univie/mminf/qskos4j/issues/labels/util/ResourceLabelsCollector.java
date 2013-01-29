@@ -21,6 +21,10 @@ public class ResourceLabelsCollector {
     private Collection<LabeledConcept> labeledResources;
     private VocabRepository vocabRepository;
 
+    public ResourceLabelsCollector(VocabRepository vocabRepository) {
+        this.vocabRepository = vocabRepository;
+    }
+
     public Collection<LabeledConcept> getLabeledResources() {
         if (labeledResources == null) {
             createLabeledResources();
@@ -71,7 +75,4 @@ public class ResourceLabelsCollector {
         }
     }
 
-    public void setVocabRepository(VocabRepository vocabRepository) {
-        this.vocabRepository = vocabRepository;
-    }
 }

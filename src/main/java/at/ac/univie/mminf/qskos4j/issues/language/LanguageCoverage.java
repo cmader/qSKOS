@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
@@ -28,7 +29,8 @@ public class LanguageCoverage extends Issue<IncompleteLangCovResult> {
     private InvolvedConcepts involvedConcepts;
 
     public LanguageCoverage(InvolvedConcepts involvedConcepts) {
-        super("ilc",
+        super(involvedConcepts.getVocabRepository(),
+              "ilc",
               "Incomplete Language Coverage",
               "Finds concepts lacking description in languages that are present for other concepts",
               IssueType.ANALYTICAL

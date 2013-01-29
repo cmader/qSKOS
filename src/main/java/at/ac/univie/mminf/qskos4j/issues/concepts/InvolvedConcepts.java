@@ -4,6 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.TupleQueryResult;
@@ -15,8 +16,13 @@ import java.util.Set;
  */
 public class InvolvedConcepts extends Issue<CollectionResult<Value>> {
 
-    public InvolvedConcepts() {
-        super("c", "All Concepts", "Finds all SKOS concepts involved in the vocabulary", IssueType.STATISTICAL);
+    public InvolvedConcepts(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "c",
+              "All Concepts",
+              "Finds all SKOS concepts involved in the vocabulary",
+              IssueType.STATISTICAL
+        );
     }
 
     @Override

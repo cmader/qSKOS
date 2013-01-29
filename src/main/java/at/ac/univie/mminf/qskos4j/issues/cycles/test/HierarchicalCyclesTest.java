@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles.test;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
@@ -21,8 +20,8 @@ public class HierarchicalCyclesTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        hierarchicalCycles = (HierarchicalCycles) setUpIssue("cycles.rdf", new HierarchicalCycles());
-        hierarchicalCyclesForComponents = (HierarchicalCycles) setUpIssue("components.rdf", new HierarchicalCycles());
+        hierarchicalCycles = (HierarchicalCycles) setUpRepository("cycles.rdf", new HierarchicalCycles());
+        hierarchicalCyclesForComponents = (HierarchicalCycles) setUpRepository("components.rdf", new HierarchicalCycles());
     }
 
     @Test

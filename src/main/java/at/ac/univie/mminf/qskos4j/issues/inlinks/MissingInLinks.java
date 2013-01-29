@@ -40,18 +40,19 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
     private Float randomSubsetSize_percent;
 
     public MissingInLinks(AuthoritativeConcepts authoritativeConcepts) {
-        super("mil",
-                "Missing In-Links",
-                "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
-                IssueType.ANALYTICAL);
+        super(authoritativeConcepts.getVocabRepository(),
+              "mil",
+              "Missing In-Links",
+              "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
+              IssueType.ANALYTICAL);
 
         this.authoritativeConcepts = authoritativeConcepts;
     }
 
-	public MissingInLinks(AuthoritativeConcepts authoritativeConcepts, Collection<Repository> otherRepositories)
+	public MissingInLinks(VocabRepository vocabRepo, AuthoritativeConcepts authoritativeConcepts, Collection<Repository> otherRepositories)
         throws OpenRDFException
 	{
-        this(authoritativeConcepts);
+        this(vocabRepo, authoritativeConcepts);
         addConnections(otherRepositories);
     }
 

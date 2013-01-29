@@ -18,7 +18,7 @@ public class DisjointLabelsViolationsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        disjointLabelsViolations = (DisjointLabelsViolations) setUpIssue("ambiguousLabels.rdf", new DisjointLabelsViolations());
+        disjointLabelsViolations = new DisjointLabelsViolations(setUpRepository("ambiguousLabels.rdf"));
     }
     @Test
     public void testDisjointLabels() throws OpenRDFException {

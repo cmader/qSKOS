@@ -13,7 +13,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-public class HierarchyGraph {
+public class HierarchyGraphBuilder {
 
 	private enum HierarchyStyle {BROADER, NARROWER}
 	
@@ -23,7 +23,7 @@ public class HierarchyGraph {
 	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 	private VocabRepository vocabRepository;
 	
-	public HierarchyGraph(VocabRepository vocabRepository) 
+	public HierarchyGraphBuilder(VocabRepository vocabRepository)
 		throws OpenRDFException
 	{
 		this.vocabRepository = vocabRepository;
@@ -95,5 +95,9 @@ public class HierarchyGraph {
 			graph.addEdge(resourceNode, otherNode, new NamedEdge());
 		}
 	}
-	
+
+    public VocabRepository getVocabRepository() {
+        return vocabRepository;
+    }
+
 }

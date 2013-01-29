@@ -25,7 +25,7 @@ public class AuthoritativeConceptsTest extends IssueTestCase {
     public void setUp() throws OpenRDFException, IOException {
         authoritativeConcepts = new AuthoritativeConcepts(new InvolvedConcepts());
         authoritativeConcepts.setAuthResourceIdentifier("zbw.eu");
-        setUpIssue("concepts.rdf", authoritativeConcepts);
+        setUpRepository("concepts.rdf", authoritativeConcepts);
     }
 
         @Test

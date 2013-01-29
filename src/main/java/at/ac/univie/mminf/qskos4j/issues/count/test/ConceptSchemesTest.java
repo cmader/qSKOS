@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.count.test;
 
-import at.ac.univie.mminf.qskos4j.issues.count.ConceptSchemes;
+import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -20,7 +20,7 @@ public class ConceptSchemesTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        conceptSchemes = (ConceptSchemes) setUpIssue("aggregations.rdf", new ConceptSchemes());
+        conceptSchemes = (ConceptSchemes) setUpRepository("aggregations.rdf", new ConceptSchemes());
     }
 
     @Test

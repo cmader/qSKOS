@@ -18,8 +18,8 @@ public class BrokenLinksTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosConcepts = setUpIssue("concepts.rdf");
-		qSkosExtResources = setUpIssue("resources.rdf");
+		qSkosConcepts = setUpRepository("concepts.rdf");
+		qSkosExtResources = setUpRepository("resources.rdf");
 		qSkosExtResources.setExtAccessDelayMillis(0);
 	}
 	

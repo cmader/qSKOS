@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Value;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -21,13 +22,8 @@ public class OverlappingLabelsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        overlappingLabelsForComponents = (OverlappingLabels) setUpIssue(
-            "components.rdf",
-            new OverlappingLabels(new InvolvedConcepts()));
-
-        overlappingLabelsForRelatedConcepts = (OverlappingLabels) setUpIssue(
-            "relatedConcepts.rdf",
-             new OverlappingLabels(new InvolvedConcepts()));
+        overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts(setUpRepository("components.rdf")));
+        overlappingLabelsForRelatedConcepts = new OverlappingLabels(new InvolvedConcepts(setUpRepository("relatedConcepts.rdf")));
     }
 
     @Test
@@ -38,9 +34,9 @@ public class OverlappingLabelsTest extends IssueTestCase {
         Assert.assertEquals(4, getDifferentResources(allLabelConflicts).size());
     }
 
-    private Collection<Resource> getDifferentResources(Collection<LabelConflict> labelConflicts)
+    private Collection<Value> getDifferentResources(Collection<LabelConflict> labelConflicts)
     {
-        Set<Resource> ret = new HashSet<Resource>();
+        Set<Value> ret = new HashSet<Value>();
 
         for (LabelConflict labelConflict : labelConflicts) {
             ret.addAll(labelConflict.getAffectedResources());

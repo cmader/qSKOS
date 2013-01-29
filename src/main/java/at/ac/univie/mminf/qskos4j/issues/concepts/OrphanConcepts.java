@@ -4,6 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.TupleQueryResult;
@@ -20,7 +21,8 @@ public class OrphanConcepts extends Issue<CollectionResult<Value>> {
     private InvolvedConcepts involvedConcepts;
 
     public OrphanConcepts(InvolvedConcepts involvedConcepts) {
-        super("oc",
+        super(involvedConcepts.getVocabRepository(),
+              "oc",
               "Orphan Concepts",
               "Finds all orphan concepts, i.e. those not having semantic relationships to other concepts",
               IssueType.ANALYTICAL

@@ -6,6 +6,9 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.UndocumentedConcepts;
+import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
+import at.ac.univie.mminf.qskos4j.issues.conceptscheme.OmittedTopConcepts;
+import at.ac.univie.mminf.qskos4j.issues.conceptscheme.TopConceptsHavingBroaderConcepts;
 import at.ac.univie.mminf.qskos4j.issues.count.*;
 import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
 import at.ac.univie.mminf.qskos4j.issues.inlinks.MissingInLinks;
@@ -21,6 +24,8 @@ import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.NonHttpResources;
 import at.ac.univie.mminf.qskos4j.issues.relations.SolelyTransitivelyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
+import at.ac.univie.mminf.qskos4j.issues.skosintegrity.MappingClashes;
+import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
@@ -30,8 +35,6 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.sparql.SPARQLRepository;
 import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +64,7 @@ public class QSkos {
 
 
 	private VocabRepository vocabRepository;
+    private HierarchyGraphBuilder hierarchyGraphBuilder;
 	private IProgressMonitor progressMonitor;
 	private String baseURI;
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
@@ -110,8 +114,9 @@ public class QSkos {
 		this.baseURI = baseURI;
 	}
 
-	private void addAllIssues() {
+	private void addAllIssues() throws OpenRDFException {
         issuesToTest.clear();
+        hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
 
         InvolvedConcepts involvedConcepts = new InvolvedConcepts();
         AuthoritativeConcepts authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts, baseURI);
@@ -124,12 +129,15 @@ public class QSkos {
         addIssue(new LexicalRelations(involvedConcepts));
         addIssue(new SemanticRelations());
         addIssue(new AggregationRelations());
-        addIssue(new ConceptSchemes());
+
+        ConceptSchemes conceptSchemes = new ConceptSchemes();
+        addIssue(conceptSchemes);
+
         addIssue(new at.ac.univie.mminf.qskos4j.issues.count.Collections());
         addIssue(httpURIs);
         addIssue(new DisconnectedConceptClusters(involvedConcepts));
         addIssue(new MissingOutLinks(authoritativeConcepts));
-        addIssue(new HierarchicalCycles());
+        addIssue(new HierarchicalCycles(hierarchyGraphBuilder));
         addIssue(new NonHttpResources());
         addIssue(new OmittedOrInvalidLanguageTags());
         addIssue(new LanguageCoverage(involvedConcepts));
@@ -140,6 +148,10 @@ public class QSkos {
         addIssue(new UndefinedSkosResources());
         addIssue(new UndocumentedConcepts(authoritativeConcepts));
         addIssue(new SolelyTransitivelyRelatedConcepts());
+        addIssue(new OmittedTopConcepts(conceptSchemes));
+        addIssue(new TopConceptsHavingBroaderConcepts());
+        addIssue(new MappingClashes());
+        addIssue(new RelationClashes(hierarchyGraphBuilder));
 
         BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
         brokenLinks.setSubsetSize(randomSubsetSize_percent);
@@ -159,44 +171,13 @@ public class QSkos {
         issue.setProgressMonitor(progressMonitor);
     }
 
-    public void invokeAllIssues() {
+    public void invokeAllIssues() throws OpenRDFException {
         addAllIssues();
 
         for (Issue issue : issuesToTest) {
             //issue.getResult();
         }
     }
-
-	/**
-	 * Finds top concepts that have broader concepts (
-	 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Top_Concepts_Having_Broader_Concepts">Top Concepts Having Broader Concepts</a>
-	 * ).
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<URI> findTopConceptsHavingBroaderConcepts() throws OpenRDFException {
-		return new ConceptSchemeChecker(vocabRepository).findTopConceptsHavingBroaderConcepts();
-	}
-     */
-
-	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Relation_Clashes">Associative vs. Hierarchical Relation Clashes</a>.
-	 *
-	 * @throws OpenRDFException
-	public CollectionResult<Pair<URI>> findRelationClashes() throws OpenRDFException {
-		SkosReferenceIntegrityChecker skosReferenceIntegrityChecker = new SkosReferenceIntegrityChecker(vocabRepository);
-		skosReferenceIntegrityChecker.setProgressMonitor(progressMonitor);
-		return skosReferenceIntegrityChecker.findRelationClashes(getHierarchyGraph());
-	}
-     */
-
-	/**
-	 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
-	 * 
-	 * @throws OpenRDFException
-	public CollectionResult<Pair<URI>> findMappingClashes() throws OpenRDFException {
-		return new SkosReferenceIntegrityChecker(vocabRepository).findMappingClashes();
-	}
-     */
 
 	/**
 	 * Set an IProgressMonitor that is notified on changes in the evaluation progress for every managed issues.

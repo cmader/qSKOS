@@ -26,8 +26,8 @@ public class LanguageCoverageTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        InvolvedConcepts involvedConcepts = (InvolvedConcepts) setUpIssue("components.rdf", new InvolvedConcepts());
-        languageCoverage = (LanguageCoverage) setUpIssue("components.rdf", new LanguageCoverage(involvedConcepts));
+        InvolvedConcepts involvedConcepts = (InvolvedConcepts) setUpRepository("components.rdf", new InvolvedConcepts());
+        languageCoverage = (LanguageCoverage) setUpRepository("components.rdf", new LanguageCoverage(involvedConcepts));
     }
 
     @Test

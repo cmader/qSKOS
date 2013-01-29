@@ -25,14 +25,14 @@ public class MissingOutLinksTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConcepts = (InvolvedConcepts) setUpIssue("components.rdf", new InvolvedConcepts());
-        missingOutLinks1 = (MissingOutLinks) setUpIssue(
-            "components.rdf",
-            new MissingOutLinks(new AuthoritativeConcepts(involvedConcepts)));
+        involvedConcepts = (InvolvedConcepts) setUpRepository("components.rdf", new InvolvedConcepts());
+        missingOutLinks1 = (MissingOutLinks) setUpRepository(
+                "components.rdf",
+                new MissingOutLinks(new AuthoritativeConcepts(involvedConcepts)));
 
-        missingOutLinks2 = (MissingOutLinks) setUpIssue(
-            "concepts.rdf",
-            new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts())));
+        missingOutLinks2 = (MissingOutLinks) setUpRepository(
+                "concepts.rdf",
+                new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts())));
     }
 
     @Test

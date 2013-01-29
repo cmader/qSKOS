@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.slf4j.Logger;
@@ -11,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Finds all "authoritative concepts". See the <a href="https://github.com/cmader/qSKOS/blob/master/README.rdoc">
@@ -25,17 +28,18 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
     private InvolvedConcepts involvedConcepts;
 
     public AuthoritativeConcepts(InvolvedConcepts involvedConcepts) {
-        super("ac",
-                "Authoritative Concepts",
-                "Finds all authoritative concepts in the vocabulary",
-                IssueType.STATISTICAL
+        super(involvedConcepts.getVocabRepository(),
+              "ac",
+              "Authoritative Concepts",
+              "Finds all authoritative concepts in the vocabulary",
+              IssueType.STATISTICAL
         );
 
         this.involvedConcepts = involvedConcepts;
     }
 
-    public AuthoritativeConcepts(InvolvedConcepts involvedConcepts, String baseURI) {
-        this(involvedConcepts);
+    public AuthoritativeConcepts(VocabRepository vocabRepo, InvolvedConcepts involvedConcepts, String baseURI) {
+        this(vocabRepo, involvedConcepts);
         this.baseURI = baseURI;
     }
 

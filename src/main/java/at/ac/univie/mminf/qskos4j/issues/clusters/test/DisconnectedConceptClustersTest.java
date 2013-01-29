@@ -26,9 +26,9 @@ public class DisconnectedConceptClustersTest extends IssueTestCase {
     @Before
     public void setUp() throws OpenRDFException, IOException {
         involvedConcepts = new InvolvedConcepts();
-        disconnectedConceptClusters = (DisconnectedConceptClusters) setUpIssue(
-            "components.rdf",
-            new DisconnectedConceptClusters(involvedConcepts));
+        disconnectedConceptClusters = (DisconnectedConceptClusters) setUpRepository(
+                "components.rdf",
+                new DisconnectedConceptClusters(involvedConcepts));
     }
 
     @Test

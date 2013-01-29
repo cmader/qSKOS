@@ -20,8 +20,8 @@ public class NonHttpResourcesTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        nonHttpResources1 = (NonHttpResources) setUpIssue("concepts.rdf", new NonHttpResources());
-        nonHttpResources2 = (NonHttpResources) setUpIssue("resources.rdf", new NonHttpResources());
+        nonHttpResources1 = (NonHttpResources) setUpRepository("concepts.rdf", new NonHttpResources());
+        nonHttpResources2 = (NonHttpResources) setUpRepository("resources.rdf", new NonHttpResources());
     }
 
 

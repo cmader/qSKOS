@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;

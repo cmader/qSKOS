@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -25,7 +24,7 @@ public class UriTrackingTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        qSkosComponents = setUpIssue("components.rdf");
+        qSkosComponents = setUpRepository("components.rdf");
 
         Set<MeasureDescription> measures = new HashSet<MeasureDescription>();
 

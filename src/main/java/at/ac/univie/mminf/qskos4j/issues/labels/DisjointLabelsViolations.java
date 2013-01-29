@@ -24,12 +24,13 @@ public class DisjointLabelsViolations extends Issue<CollectionResult<LabelConfli
     private Map<Literal, LabelConflict> nonDisjointLabels;
     private ResourceLabelsCollector resourceLabelsCollector;
 
-    public DisjointLabelsViolations() {
-        super("dlv",
+    public DisjointLabelsViolations(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "dlv",
               "Disjoint Labels Violation",
               "Finds resources with identical entries for different label types",
               IssueType.ANALYTICAL);
-        resourceLabelsCollector = new ResourceLabelsCollector();
+        resourceLabelsCollector = new ResourceLabelsCollector(vocabRepo);
     }
 
     @Override
@@ -91,9 +92,4 @@ public class DisjointLabelsViolations extends Issue<CollectionResult<LabelConfli
         return (resource1.getConcept() == resource2.getConcept()) && (resource1.getLabelType() != resource2.getLabelType());
     }
 
-    @Override
-    public void setVocabRepository(VocabRepository vocabRepository) {
-        super.setVocabRepository(vocabRepository);
-        resourceLabelsCollector.setVocabRepository(vocabRepository);
-    }
 }

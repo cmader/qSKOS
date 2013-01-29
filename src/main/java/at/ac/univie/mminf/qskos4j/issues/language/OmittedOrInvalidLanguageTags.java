@@ -2,16 +2,15 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.util.language.LanguageTag;
 import org.openrdf.model.util.language.LanguageTagSyntaxException;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,8 +24,9 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagResult> {
 
 	private Map<Resource, Collection<Literal>> missingLangTags;
 
-    public OmittedOrInvalidLanguageTags() {
-        super("oilt",
+    public OmittedOrInvalidLanguageTags(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "oilt",
               "Omitted or Invalid Language Tags",
               "Finds omitted or invalid language tags of text literals",
               IssueType.ANALYTICAL

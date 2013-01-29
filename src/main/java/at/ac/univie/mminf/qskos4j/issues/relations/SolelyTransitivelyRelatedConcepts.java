@@ -25,8 +25,9 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Pa
 	
 	private Set<Pair<URI>> solitaryTransitiveRelations = new HashSet<Pair<URI>>();
 
-    public SolelyTransitivelyRelatedConcepts() {
-        super("strc",
+    public SolelyTransitivelyRelatedConcepts(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "strc",
               "Solely Transitively Related Concepts",
               "Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
               IssueType.ANALYTICAL

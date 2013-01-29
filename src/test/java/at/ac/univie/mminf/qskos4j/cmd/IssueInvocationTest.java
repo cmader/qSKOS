@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
 import junit.framework.Assert;
 import org.junit.Test;
 

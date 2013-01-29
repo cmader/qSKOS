@@ -21,13 +21,11 @@ public class LexicalRelationsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        lexicalRelations = new LexicalRelations(new InvolvedConcepts());
-        setUpIssue("components.rdf", lexicalRelations);
+        lexicalRelations = new LexicalRelations(new InvolvedConcepts(setUpRepository("components.rdf")));
     }
 
     @Test
-    public void testLexicalRelationsCount() throws OpenRDFException
-    {
+    public void testLexicalRelationsCount() throws OpenRDFException {
         Assert.assertEquals(29, lexicalRelations.getResult().getData().longValue());
     }
 

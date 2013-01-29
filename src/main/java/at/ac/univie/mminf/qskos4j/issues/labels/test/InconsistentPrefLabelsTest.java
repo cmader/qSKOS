@@ -18,7 +18,7 @@ public class InconsistentPrefLabelsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        inconsistentPrefLabels = (InconsistentPrefLabels) setUpIssue("ambiguousLabels.rdf", new InconsistentPrefLabels());
+        inconsistentPrefLabels = new InconsistentPrefLabels(setUpRepository("ambiguousLabels.rdf"));
     }
 
     @Test

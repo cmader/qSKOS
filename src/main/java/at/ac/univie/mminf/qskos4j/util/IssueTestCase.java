@@ -16,15 +16,13 @@ import java.net.URL;
 @Ignore
 public class IssueTestCase {
 	
-	protected Issue setUpIssue(String testFileName, Issue issueToTest)
+	protected VocabRepository setUpRepository(String testFileName)
 		throws OpenRDFException, IOException 
 	{
 		URL conceptsUrl = getClass().getResource("/"+ testFileName);
 		File conceptsFile = new File(conceptsUrl.getFile());
 		Assert.assertNotNull(conceptsFile);
-        issueToTest.setVocabRepository(new VocabRepository(conceptsFile, null, RDFFormat.RDFXML));
-
-        return issueToTest;
+        return new VocabRepository(conceptsFile, null, RDFFormat.RDFXML);
 	}
 	
 }

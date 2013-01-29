@@ -20,7 +20,7 @@ public class SemanticRelationsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        semanticRelations = (SemanticRelations) setUpIssue("components.rdf", new SemanticRelations());
+        semanticRelations = (SemanticRelations) setUpRepository("components.rdf", new SemanticRelations());
     }
 
     @Test

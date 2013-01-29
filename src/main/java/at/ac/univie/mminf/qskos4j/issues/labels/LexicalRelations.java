@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.result.general.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.TupleQueryResult;
@@ -26,10 +27,11 @@ public class LexicalRelations extends Issue<NumberResult<Long>> {
     private InvolvedConcepts involvedConcepts;
 
     public LexicalRelations(InvolvedConcepts involvedConcepts) {
-        super("cl",
+        super(involvedConcepts.getVocabRepository(),
+              "cl",
               "Concept Labels",
               "Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
-                IssueType.STATISTICAL
+              IssueType.STATISTICAL
         );
         this.involvedConcepts = involvedConcepts;
     }

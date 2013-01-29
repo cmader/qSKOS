@@ -2,12 +2,11 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
-import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
@@ -29,7 +28,8 @@ public class MissingOutLinks extends Issue<CollectionResult<Value>> {
     private AuthoritativeConcepts authoritativeConcepts;
 	
 	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
-		super("mol",
+		super(authoritativeConcepts.getVocabRepository(),
+              "mol",
               "Missing Out-Links",
               "Finds concepts that are not linked to other vocabularies on the Web",
               IssueType.ANALYTICAL

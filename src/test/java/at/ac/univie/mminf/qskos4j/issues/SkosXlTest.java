@@ -15,7 +15,7 @@ public class SkosXlTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-		qSkosXl = setUpIssue("skosxl.rdf");
+		qSkosXl = setUpRepository("skosxl.rdf");
 		qSkosXl.enableSkosXlSupport();
 	}
 	

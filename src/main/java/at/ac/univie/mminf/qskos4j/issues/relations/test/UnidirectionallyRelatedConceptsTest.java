@@ -18,9 +18,9 @@ public class UnidirectionallyRelatedConceptsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        unidirectionallyRelatedConcepts = (UnidirectionallyRelatedConcepts) setUpIssue(
-            "omittedInverseRelations.rdf",
-            new UnidirectionallyRelatedConcepts());
+        unidirectionallyRelatedConcepts = (UnidirectionallyRelatedConcepts) setUpRepository(
+                "omittedInverseRelations.rdf",
+                new UnidirectionallyRelatedConcepts());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
-import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureDescription;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
@@ -18,7 +17,7 @@ public class InvalidCharactersTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        qSkosInvalidCharacters = setUpIssue("invalidCharacters.rdf");
+        qSkosInvalidCharacters = setUpRepository("invalidCharacters.rdf");
         qSkosInvalidCharacters.addRepositoryLoopback();
     }
 

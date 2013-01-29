@@ -17,8 +17,8 @@ public class InvolvedConceptsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConcepts1 = (InvolvedConcepts) setUpIssue("concepts.rdf", new InvolvedConcepts());
-        involvedConcepts2 = (InvolvedConcepts) setUpIssue("components.rdf", new InvolvedConcepts());
+        involvedConcepts1 = (InvolvedConcepts) setUpRepository("concepts.rdf", new InvolvedConcepts());
+        involvedConcepts2 = (InvolvedConcepts) setUpRepository("components.rdf", new InvolvedConcepts());
     }
 
     @Test

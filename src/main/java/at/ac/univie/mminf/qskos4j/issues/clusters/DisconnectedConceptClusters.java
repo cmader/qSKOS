@@ -5,12 +5,11 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
@@ -37,7 +36,8 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
     private InvolvedConcepts involvedConcepts;
 
     public DisconnectedConceptClusters(InvolvedConcepts involvedConcepts) {
-        super("dcc",
+        super(involvedConcepts.getVocabRepository(),
+              "dcc",
               "Disconnected Concept Clusters",
               "Finds sets of concepts that are isolated from the rest of the vocabulary",
               IssueType.ANALYTICAL

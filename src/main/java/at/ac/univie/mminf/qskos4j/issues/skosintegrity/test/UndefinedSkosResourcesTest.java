@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.skosintegrity.test;
 
-import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
@@ -19,13 +18,13 @@ public class UndefinedSkosResourcesTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        undefinedSkosResourcesInConcepts = (UndefinedSkosResources) setUpIssue(
-            "concepts.rdf",
-            new UndefinedSkosResources());
+        undefinedSkosResourcesInConcepts = (UndefinedSkosResources) setUpRepository(
+                "concepts.rdf",
+                new UndefinedSkosResources());
 
-        undefinedSkosResourcesInDeprecatedAndIllegal = (UndefinedSkosResources) setUpIssue(
-            "deprecatedAndIllegalTerms.rdf",
-            new UndefinedSkosResources());
+        undefinedSkosResourcesInDeprecatedAndIllegal = (UndefinedSkosResources) setUpRepository(
+                "deprecatedAndIllegalTerms.rdf",
+                new UndefinedSkosResources());
 	}
 	
 	@Test

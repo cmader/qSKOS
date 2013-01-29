@@ -19,8 +19,9 @@ import java.util.HashSet;
 */
 public class ValuelessAssociativeRelations extends Issue<CollectionResult<Pair<URI>>> {
 
-    public ValuelessAssociativeRelations() {
-        super("var",
+    public ValuelessAssociativeRelations(VocabRepository vocabRepo) {
+        super(vocabRepo,
+              "var",
               "Valueless Associative Relations",
               "Two concepts are sibling, but also connected by an associative relation",
               IssueType.ANALYTICAL);

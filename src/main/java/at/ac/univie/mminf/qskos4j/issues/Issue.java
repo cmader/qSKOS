@@ -20,11 +20,12 @@ public abstract class Issue<T extends Result<?>> {
     private IssueType type;
     private T result;
 
-    protected Issue(String id, String name, String description, IssueType type) {
+    protected Issue(VocabRepository vocabRepository, String id, String name, String description, IssueType type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
+        this.vocabRepository = vocabRepository;
     }
 
     protected abstract T invoke() throws OpenRDFException;
@@ -38,15 +39,16 @@ public abstract class Issue<T extends Result<?>> {
 
     public final void reset() {
         result = null;
+        if (progressMonitor != null) {
+            progressMonitor.reset();
+        }
     }
 
-	public void setVocabRepository(VocabRepository vocabRepository) {
-		this.vocabRepository = vocabRepository;
-        reset();
-	}
-	
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;
 	}
 
+    public final VocabRepository getVocabRepository() {
+        return vocabRepository;
+    }
 }
