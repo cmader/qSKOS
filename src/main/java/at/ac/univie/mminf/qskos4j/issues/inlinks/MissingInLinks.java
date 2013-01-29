@@ -49,10 +49,10 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
         this.authoritativeConcepts = authoritativeConcepts;
     }
 
-	public MissingInLinks(VocabRepository vocabRepo, AuthoritativeConcepts authoritativeConcepts, Collection<Repository> otherRepositories)
+	public MissingInLinks(AuthoritativeConcepts authoritativeConcepts, Collection<Repository> otherRepositories)
         throws OpenRDFException
 	{
-        this(vocabRepo, authoritativeConcepts);
+        this(authoritativeConcepts);
         addConnections(otherRepositories);
     }
 

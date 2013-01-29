@@ -18,13 +18,8 @@ public class UndefinedSkosResourcesTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        undefinedSkosResourcesInConcepts = (UndefinedSkosResources) setUpRepository(
-                "concepts.rdf",
-                new UndefinedSkosResources());
-
-        undefinedSkosResourcesInDeprecatedAndIllegal = (UndefinedSkosResources) setUpRepository(
-                "deprecatedAndIllegalTerms.rdf",
-                new UndefinedSkosResources());
+        undefinedSkosResourcesInConcepts = new UndefinedSkosResources(setUpRepository("concepts.rdf"));
+        undefinedSkosResourcesInDeprecatedAndIllegal = new UndefinedSkosResources(setUpRepository("deprecatedAndIllegalTerms.rdf"));
 	}
 	
 	@Test

@@ -13,25 +13,25 @@ import java.util.Collection;
 
 public class InvolvedConceptsTest extends IssueTestCase {
 
-    private InvolvedConcepts involvedConcepts1, involvedConcepts2;
+    private InvolvedConcepts involvedConceptsForConcepts, involvedConceptsForComponents;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConcepts1 = (InvolvedConcepts) setUpRepository("concepts.rdf", new InvolvedConcepts());
-        involvedConcepts2 = (InvolvedConcepts) setUpRepository("components.rdf", new InvolvedConcepts());
+        involvedConceptsForConcepts = new InvolvedConcepts(setUpRepository("concepts.rdf"));
+        involvedConceptsForComponents = new InvolvedConcepts(setUpRepository("components.rdf"));
     }
 
     @Test
     public void testConceptCount_1() throws OpenRDFException
     {
-        Collection<Value> involvedConceptValues = involvedConcepts1.getResult().getData();
+        Collection<Value> involvedConceptValues = involvedConceptsForConcepts.getResult().getData();
         Assert.assertEquals(10, involvedConceptValues.size());
     }
 
     @Test
     public void testConceptCount_2() throws OpenRDFException
     {
-        Collection<Value> involvedConceptValues = involvedConcepts2.getResult().getData();
+        Collection<Value> involvedConceptValues = involvedConceptsForComponents.getResult().getData();
         Assert.assertEquals(21, involvedConceptValues.size());
     }
 }

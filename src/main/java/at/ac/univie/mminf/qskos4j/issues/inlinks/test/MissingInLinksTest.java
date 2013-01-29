@@ -20,10 +20,7 @@ public class MissingInLinksTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        authoritativeConcepts = new AuthoritativeConcepts(new InvolvedConcepts());
-        missingInLinks = (MissingInLinks) setUpRepository(
-                "rankConcepts.rdf",
-                new MissingInLinks(authoritativeConcepts));
+        missingInLinks = new MissingInLinks(new AuthoritativeConcepts(new InvolvedConcepts(setUpRepository("rankConcepts.rdf"))));
         missingInLinks.addRepositoryLoopback();
     }
 

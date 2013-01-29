@@ -75,4 +75,8 @@ public class ResourceLabelsCollector {
         }
     }
 
+    public final VocabRepository getVocabRepository() {
+        return vocabRepository;
+    }
+
 }

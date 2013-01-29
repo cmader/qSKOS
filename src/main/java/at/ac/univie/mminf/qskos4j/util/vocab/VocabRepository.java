@@ -86,7 +86,14 @@ public class VocabRepository {
 		TupleQuery graphQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
 		return graphQuery.evaluate();
 	}
-		
+
+    /**
+     * If this is called, the local repository is complemented with SKOS lexical labels inferred from SKOSXL definitions
+     * as described in the SKOS <a href="http://www.w3.org/TR/skos-reference/#S55">reference document</a> by the axioms
+     * S55-S57
+     *
+     * @throws OpenRDFException if errors when initializing local repository
+     */
 	public void enableSkosXlSupport() 
 		throws OpenRDFException
 	{

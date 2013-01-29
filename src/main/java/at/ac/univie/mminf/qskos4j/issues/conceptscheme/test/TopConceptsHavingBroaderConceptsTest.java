@@ -16,9 +16,7 @@ public class TopConceptsHavingBroaderConceptsTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        topConceptsHavingBroaderConcepts = (TopConceptsHavingBroaderConcepts) setUpRepository(
-                "topConceptsHavingBroaderConcept.rdf",
-                new TopConceptsHavingBroaderConcepts());
+        topConceptsHavingBroaderConcepts = new TopConceptsHavingBroaderConcepts(setUpRepository("topConceptsHavingBroaderConcept.rdf"));
 	}
 	
 	@Test

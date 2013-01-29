@@ -20,7 +20,7 @@ public class ConceptSchemesTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        conceptSchemes = (ConceptSchemes) setUpRepository("aggregations.rdf", new ConceptSchemes());
+        conceptSchemes = new ConceptSchemes(setUpRepository("aggregations.rdf"));
     }
 
     @Test

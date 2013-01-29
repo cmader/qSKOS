@@ -15,9 +15,7 @@ public class SolelyTransitivelyRelatedConceptsTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        solelyTransitivelyRelatedConcepts = (SolelyTransitivelyRelatedConcepts) setUpRepository(
-                "solitaryTransitiveRelations.rdf",
-                new SolelyTransitivelyRelatedConcepts());
+        solelyTransitivelyRelatedConcepts = new SolelyTransitivelyRelatedConcepts(setUpRepository("solitaryTransitiveRelations.rdf"));
 	}
 
 	@Test

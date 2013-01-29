@@ -3,14 +3,12 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,11 +36,6 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
         this.involvedConcepts = involvedConcepts;
     }
 
-    public AuthoritativeConcepts(VocabRepository vocabRepo, InvolvedConcepts involvedConcepts, String baseURI) {
-        this(vocabRepo, involvedConcepts);
-        this.baseURI = baseURI;
-    }
-
     @Override
     protected CollectionResult<Value> invoke() throws OpenRDFException {
         if (authResourceIdentifier == null) {
@@ -53,21 +46,16 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
     }
 
     private void determineAuthResourceIdentifier() throws OpenRDFException {
-        extractAuthResourceIdentifierFromBaseURI();
-        if (authResourceIdentifier == null || authResourceIdentifier.isEmpty()) {
+        try {
+            extractAuthResourceIdentifierFromBaseURI();
+        }
+        catch (Exception e) {
             guessAuthoritativeResourceIdentifier();
         }
     }
 
-    private void extractAuthResourceIdentifierFromBaseURI() {
-        if (baseURI != null) {
-            try {
-                authResourceIdentifier = new java.net.URI(baseURI).getHost();
-            }
-            catch (URISyntaxException e) {
-                // cannot guess authoritative resource identifier
-            }
-        }
+    private void extractAuthResourceIdentifierFromBaseURI() throws Exception{
+        authResourceIdentifier = new java.net.URI(baseURI).getHost();
     }
 
     private void guessAuthoritativeResourceIdentifier() throws OpenRDFException {
@@ -108,13 +96,6 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
         return authoritativeConcepts;
     }
 
-    /**
-     * Sets a string that is used to identify if an URI is authoritative. This is required to, e.g., find all
-     * out-links to distinguish between URIs in the vocabulary namespace and other resources on the Web.
-     *
-     * @param authResourceIdentifier a string, usually a substring of an URI in the vocabulary's namespace,
-     * that uniquely identifies an authoritative URI.
-     */
     public void setAuthResourceIdentifier(String authResourceIdentifier) {
         this.authResourceIdentifier = authResourceIdentifier;
         reset();
@@ -122,6 +103,10 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
 
     public String getAuthResourceIdentifier() {
         return authResourceIdentifier;
+    }
+
+    public void setBaseURI(String baseURI) {
+        this.baseURI = baseURI;
     }
 
 }

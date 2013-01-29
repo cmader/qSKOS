@@ -16,7 +16,8 @@ import at.ac.univie.mminf.qskos4j.issues.labels.DisjointLabelsViolations;
 import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
-import at.ac.univie.mminf.qskos4j.issues.language.LanguageCoverage;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
+import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
@@ -60,15 +61,13 @@ public class QSkos {
      * many queryies to a SPARQL endpoint
      */
     private final static int EXT_ACCESS_MILLIS = 1500;
-	
-
 
 	private VocabRepository vocabRepository;
-    private HierarchyGraphBuilder hierarchyGraphBuilder;
 	private IProgressMonitor progressMonitor;
 	private String baseURI;
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
+    private String authResourceIdentifier;
 	
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
 	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph;
@@ -114,43 +113,48 @@ public class QSkos {
 		this.baseURI = baseURI;
 	}
 
+    public QSkos(VocabRepository vocabRepository) {
+        this.vocabRepository = vocabRepository;
+    }
+
 	private void addAllIssues() throws OpenRDFException {
         issuesToTest.clear();
-        hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
+        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
+        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
 
-        InvolvedConcepts involvedConcepts = new InvolvedConcepts();
+        InvolvedConcepts involvedConcepts = new InvolvedConcepts(vocabRepository);
         AuthoritativeConcepts authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts, baseURI);
-        HttpURIs httpURIs = new HttpURIs();
+        HttpURIs httpURIs = new HttpURIs(vocabRepository);
 
         addIssue(involvedConcepts);
         addIssue(authoritativeConcepts);
         addIssue(new OrphanConcepts(involvedConcepts));
         addIssue(new MissingOutLinks(authoritativeConcepts));
         addIssue(new LexicalRelations(involvedConcepts));
-        addIssue(new SemanticRelations());
-        addIssue(new AggregationRelations());
+        addIssue(new SemanticRelations(vocabRepository));
+        addIssue(new AggregationRelations(vocabRepository));
 
-        ConceptSchemes conceptSchemes = new ConceptSchemes();
+        ConceptSchemes conceptSchemes = new ConceptSchemes(vocabRepository);
         addIssue(conceptSchemes);
 
-        addIssue(new at.ac.univie.mminf.qskos4j.issues.count.Collections());
+        addIssue(new at.ac.univie.mminf.qskos4j.issues.count.Collections(vocabRepository));
         addIssue(httpURIs);
         addIssue(new DisconnectedConceptClusters(involvedConcepts));
         addIssue(new MissingOutLinks(authoritativeConcepts));
         addIssue(new HierarchicalCycles(hierarchyGraphBuilder));
-        addIssue(new NonHttpResources());
-        addIssue(new OmittedOrInvalidLanguageTags());
-        addIssue(new LanguageCoverage(involvedConcepts));
-        addIssue(new InconsistentPrefLabels());
-        addIssue(new DisjointLabelsViolations());
+        addIssue(new NonHttpResources(vocabRepository));
+        addIssue(new OmittedOrInvalidLanguageTags(vocabRepository));
+        addIssue(new IncompleteLanguageCoverage(involvedConcepts));
+        addIssue(new InconsistentPrefLabels(resourceLabelsCollector));
+        addIssue(new DisjointLabelsViolations(resourceLabelsCollector));
         addIssue(new OverlappingLabels(involvedConcepts));
-        addIssue(new ValuelessAssociativeRelations());
-        addIssue(new UndefinedSkosResources());
+        addIssue(new ValuelessAssociativeRelations(vocabRepository));
+        addIssue(new UndefinedSkosResources(vocabRepository));
         addIssue(new UndocumentedConcepts(authoritativeConcepts));
-        addIssue(new SolelyTransitivelyRelatedConcepts());
+        addIssue(new SolelyTransitivelyRelatedConcepts(vocabRepository));
         addIssue(new OmittedTopConcepts(conceptSchemes));
-        addIssue(new TopConceptsHavingBroaderConcepts());
-        addIssue(new MappingClashes());
+        addIssue(new TopConceptsHavingBroaderConcepts(vocabRepository));
+        addIssue(new MappingClashes(vocabRepository));
         addIssue(new RelationClashes(hierarchyGraphBuilder));
 
         BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
@@ -167,7 +171,6 @@ public class QSkos {
 
     private void addIssue(Issue issue) {
         issuesToTest.add(issue);
-        issue.setVocabRepository(vocabRepository);
         issue.setProgressMonitor(progressMonitor);
     }
 
@@ -177,6 +180,10 @@ public class QSkos {
         for (Issue issue : issuesToTest) {
             //issue.getResult();
         }
+    }
+
+    public Collection<Issue> getAllIssues() {
+        return issuesToTest;
     }
 
 	/**
@@ -206,17 +213,20 @@ public class QSkos {
 	public void setSubsetSize(Float subsetSizePercent) {
 		randomSubsetSize_percent = subsetSizePercent;
 	}
-	
-	/**
-	 * If this is called, the local repository is complemented with SKOS lexical labels inferred from SKOSXL definitions 
-	 * as described in the SKOS <a href="http://www.w3.org/TR/skos-reference/#S55">reference document</a> by the axioms
-	 * S55-S57
-	 * 
-	 * @throws OpenRDFException if errors when initializing local repository
-	 */
-	public void enableSkosXlSupport() throws OpenRDFException {
-		logger.info("inferring SKOSXL triples");
-		vocabRepository.enableSkosXlSupport();
-	}
-		
+
+    /**
+     * Sets a string that is used to identify if an URI is authoritative. This is required to, e.g., find all
+     * out-links to distinguish between URIs in the vocabulary namespace and other resources on the Web.
+     *
+     * @param authResourceIdentifier a string, usually a substring of an URI in the vocabulary's namespace,
+     * that uniquely identifies an authoritative URI.
+     */
+    public void setAuthResourceIdentifier(String authResourceIdentifier) {
+        this.authResourceIdentifier = authResourceIdentifier;
+
+        for (Issue issue : issuesToTest) {
+            issue.reset();
+        }
+    }
+
 }

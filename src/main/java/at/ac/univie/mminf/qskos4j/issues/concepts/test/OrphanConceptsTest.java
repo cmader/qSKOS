@@ -19,23 +19,23 @@ import java.util.Collection;
  */
 public class OrphanConceptsTest extends IssueTestCase {
 
-    private OrphanConcepts orphanConcepts1, orphanConcepts2;
+    private OrphanConcepts orphanConceptsForConcepts, orphanConceptsForComponents;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        orphanConcepts1 = (OrphanConcepts) setUpRepository("concepts.rdf", new OrphanConcepts(new InvolvedConcepts()));
-        orphanConcepts2 = (OrphanConcepts) setUpRepository("components.rdf", new OrphanConcepts(new InvolvedConcepts()));
+        orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts(setUpRepository("concepts.rdf")));
+        orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts(setUpRepository("components.rdf")));
     }
 
     @Test
     public void testConceptsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConcepts1.getResult().getData();
+        Collection<Value> orphanConceptValues = orphanConceptsForConcepts.getResult().getData();
         Assert.assertEquals(7, orphanConceptValues.size());
     }
 
     @Test
     public void testComponentsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConcepts2.getResult().getData();
+        Collection<Value> orphanConceptValues = orphanConceptsForComponents.getResult().getData();
         Assert.assertEquals(2, orphanConceptValues.size());
     }
 }

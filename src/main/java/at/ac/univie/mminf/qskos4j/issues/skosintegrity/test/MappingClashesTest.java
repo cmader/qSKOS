@@ -15,9 +15,7 @@ public class MappingClashesTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        mappingClashes = (MappingClashes) setUpRepository(
-                "exactVsAssociativeMappingClashes.rdf",
-                new MappingClashes());
+        mappingClashes = new MappingClashes(setUpRepository("exactVsAssociativeMappingClashes.rdf"));
     }
 
     @Test

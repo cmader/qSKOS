@@ -3,11 +3,8 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
@@ -20,15 +17,15 @@ import java.util.*;
 /**
  * Finds all concepts with incomplete language coverage (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Incomplete_Language_Coverage">Incomplete Language Coverage</a>
  */
-public class LanguageCoverage extends Issue<IncompleteLangCovResult> {
+public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
 
-    private final Logger logger = LoggerFactory.getLogger(LanguageCoverage.class);
+    private final Logger logger = LoggerFactory.getLogger(IncompleteLanguageCoverage.class);
 
 	private Map<Value, Collection<String>> languageCoverage, incompleteLanguageCoverage;
 	private Set<String> distinctLanguages;
     private InvolvedConcepts involvedConcepts;
 
-    public LanguageCoverage(InvolvedConcepts involvedConcepts) {
+    public IncompleteLanguageCoverage(InvolvedConcepts involvedConcepts) {
         super(involvedConcepts.getVocabRepository(),
               "ilc",
               "Incomplete Language Coverage",

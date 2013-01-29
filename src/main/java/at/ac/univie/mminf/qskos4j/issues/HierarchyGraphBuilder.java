@@ -31,9 +31,11 @@ public class HierarchyGraphBuilder {
 
 	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
 	{
-		addResultsToGraph(findTriples(HierarchyStyle.BROADER), false);
-		addResultsToGraph(findTriples(HierarchyStyle.NARROWER), true);
-		
+        if (graph != null) {
+            addResultsToGraph(findTriples(HierarchyStyle.BROADER), false);
+            addResultsToGraph(findTriples(HierarchyStyle.NARROWER), true);
+        }
+
 		return graph;
 	}
 	

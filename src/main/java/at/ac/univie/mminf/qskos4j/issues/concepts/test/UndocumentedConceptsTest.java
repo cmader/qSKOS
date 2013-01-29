@@ -18,9 +18,7 @@ public class UndocumentedConceptsTest extends IssueTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        undocumentedConcepts = (UndocumentedConcepts) setUpRepository(
-                "documentedConcepts.rdf",
-                new UndocumentedConcepts(new AuthoritativeConcepts(new InvolvedConcepts())));
+        undocumentedConcepts = new UndocumentedConcepts(new AuthoritativeConcepts(new InvolvedConcepts(setUpRepository("documentedConcepts.rdf"))));
 	}
 	
 	@Test

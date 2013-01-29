@@ -20,7 +20,7 @@ public class CollectionsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        collections = (Collections) setUpRepository("aggregations.rdf", new Collections());
+        collections = new Collections(setUpRepository("aggregations.rdf"));
     }
 
     @Test

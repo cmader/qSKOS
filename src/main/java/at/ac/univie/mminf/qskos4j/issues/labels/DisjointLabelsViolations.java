@@ -24,13 +24,13 @@ public class DisjointLabelsViolations extends Issue<CollectionResult<LabelConfli
     private Map<Literal, LabelConflict> nonDisjointLabels;
     private ResourceLabelsCollector resourceLabelsCollector;
 
-    public DisjointLabelsViolations(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public DisjointLabelsViolations(ResourceLabelsCollector resourceLabelsCollector) {
+        super(resourceLabelsCollector.getVocabRepository(),
               "dlv",
               "Disjoint Labels Violation",
               "Finds resources with identical entries for different label types",
               IssueType.ANALYTICAL);
-        resourceLabelsCollector = new ResourceLabelsCollector(vocabRepo);
+        this.resourceLabelsCollector = resourceLabelsCollector;
     }
 
     @Override

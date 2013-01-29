@@ -18,9 +18,7 @@ public class ValuelessAssociativeRelationsTest extends IssueTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        valuelessAssociativeRelations = (ValuelessAssociativeRelations) setUpRepository(
-                "redundantAssociativeRelations.rdf",
-                new ValuelessAssociativeRelations());
+        valuelessAssociativeRelations = new ValuelessAssociativeRelations(setUpRepository("redundantAssociativeRelations.rdf"));
     }
 
     @Test

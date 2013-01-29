@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.MeasureInvoker;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.QSKOSMethodInvocationException;
 import at.ac.univie.mminf.qskos4j.util.measureinvocation.UnsupportedMeasureIdException;
@@ -136,10 +137,10 @@ public class VocEvaluate {
 	{
 		if (parsedCommand.vocabFilenames == null) {
 			if (parsedCommand instanceof CommandAnalyze) {
-				outputMeasureDescription(MeasureDescription.IssueType.ISSUE);
+				outputMeasureDescription(Issue.IssueType.ANALYTICAL);
 			}
 			else {
-				outputMeasureDescription(MeasureDescription.IssueType.STATISTICS);
+				outputMeasureDescription(Issue.IssueType.STATISTICAL);
 			}
 		}
 		else {
@@ -148,7 +149,7 @@ public class VocEvaluate {
 		}
 	}
 
-	private void outputMeasureDescription(MeasureDescription.IssueType constraintType) {
+	private void outputMeasureDescription(Issue.IssueType constraintType) {
 		Iterator<MeasureDescription> descIt = Arrays.asList(MeasureDescription.values()).iterator();
 		
 		while (descIt.hasNext()) {

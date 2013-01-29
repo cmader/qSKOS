@@ -16,22 +16,22 @@ import java.io.IOException;
  */
 public class NonHttpResourcesTest extends IssueTestCase {
 
-    private NonHttpResources nonHttpResources1, nonHttpResources2;
+    private NonHttpResources nonHttpResourcesForConcepts, nonHttpResourcesForResources;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        nonHttpResources1 = (NonHttpResources) setUpRepository("concepts.rdf", new NonHttpResources());
-        nonHttpResources2 = (NonHttpResources) setUpRepository("resources.rdf", new NonHttpResources());
+        nonHttpResourcesForConcepts = new NonHttpResources(setUpRepository("concepts.rdf"));
+        nonHttpResourcesForResources = new NonHttpResources(setUpRepository("resources.rdf"));
     }
 
 
     @Test
     public void testConceptsNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(1, nonHttpResources1.getResult().getData().size());
+        Assert.assertEquals(1, nonHttpResourcesForConcepts.getResult().getData().size());
     }
 
     @Test
     public void testResourcesNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(4, nonHttpResources2.getResult().getData().size());
+        Assert.assertEquals(4, nonHttpResourcesForResources.getResult().getData().size());
     }
 }

@@ -8,10 +8,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
 
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Created by christian
@@ -20,32 +18,23 @@ import java.util.Collection;
  */
 public class MissingOutLinksTest extends IssueTestCase {
 
-    private InvolvedConcepts involvedConcepts;
-    private MissingOutLinks missingOutLinks1, missingOutLinks2;
+    private InvolvedConcepts involvedConceptsForComponents;
+    private MissingOutLinks missingOutLinksForComponents, missingOutLinksForConcepts;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConcepts = (InvolvedConcepts) setUpRepository("components.rdf", new InvolvedConcepts());
-        missingOutLinks1 = (MissingOutLinks) setUpRepository(
-                "components.rdf",
-                new MissingOutLinks(new AuthoritativeConcepts(involvedConcepts)));
-
-        missingOutLinks2 = (MissingOutLinks) setUpRepository(
-                "concepts.rdf",
-                new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts())));
+        involvedConceptsForComponents = new InvolvedConcepts(setUpRepository("components.rdf"));
+        missingOutLinksForComponents = new MissingOutLinks(new AuthoritativeConcepts(involvedConceptsForComponents));
+        missingOutLinksForConcepts = new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts(setUpRepository("concepts.rdf"))));
     }
 
     @Test
     public void testComponentsMissingOutLinkCount() throws OpenRDFException {
-        Collection<Value> missingOutLinks = missingOutLinks1.getResult().getData();
-
-        Assert.assertEquals(involvedConcepts.getResult().getData().size(), missingOutLinks.size());
+        Assert.assertEquals(involvedConceptsForComponents.getResult().getData().size(), missingOutLinksForComponents.getResult().getData());
     }
 
     @Test
     public void testConceptsMissingOutLinkCount() throws OpenRDFException {
-        Collection<Value> missingOutLinks = missingOutLinks2.getResult().getData();
-
-        Assert.assertEquals(7, missingOutLinks.size());
+        Assert.assertEquals(7, missingOutLinksForConcepts.getResult().getData().size());
     }
 }
