@@ -46,6 +46,6 @@ public class OverlappingLabelsTest extends IssueTestCase {
 
     @Test
     public void testLabelConflictCount_2() throws OpenRDFException {
-        Assert.assertEquals(0, overlappingLabelsForRelatedConcepts.getResult().getData());
+        Assert.assertEquals(0, overlappingLabelsForRelatedConcepts.getResult().getData().size());
     }
 }

@@ -30,7 +30,7 @@ public class MissingOutLinksTest extends IssueTestCase {
 
     @Test
     public void testComponentsMissingOutLinkCount() throws OpenRDFException {
-        Assert.assertEquals(involvedConceptsForComponents.getResult().getData().size(), missingOutLinksForComponents.getResult().getData());
+        Assert.assertEquals(involvedConceptsForComponents.getResult().getData().size(), missingOutLinksForComponents.getResult().getData().size());
     }
 
     @Test

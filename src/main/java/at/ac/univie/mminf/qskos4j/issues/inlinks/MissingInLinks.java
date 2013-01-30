@@ -12,7 +12,6 @@ import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
@@ -31,7 +30,7 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
 	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
 
 	private AuthoritativeConcepts authoritativeConcepts;
-	private Collection<RepositoryConnection> connections;
+	private Collection<RepositoryConnection> connections = new ArrayList<RepositoryConnection>();
 	private Map<Value, Set<URI>> conceptReferencingResources = new HashMap<Value, Set<URI>>();
     private Integer queryDelayMillis = 0;
     private Float randomSubsetSize_percent;
@@ -45,26 +44,6 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
 
         this.authoritativeConcepts = authoritativeConcepts;
     }
-
-	public MissingInLinks(AuthoritativeConcepts authoritativeConcepts, Collection<Repository> otherRepositories)
-        throws OpenRDFException
-	{
-        this(authoritativeConcepts);
-        addConnections(otherRepositories);
-    }
-
-    private void addConnections(Collection<Repository> repositories) throws OpenRDFException
-    {
-		if (repositories == null || repositories.isEmpty()) {
-			logger.warn("no repository for querying defined");
-		}
-		else {
-            connections = new ArrayList<RepositoryConnection>();
-            for (Repository repository : repositories) {
-                connections.add(repository.getConnection());
-            }
-		}
-	}
 
     @Override
     protected CollectionResult<Value> invoke() throws OpenRDFException {
@@ -98,7 +77,11 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
 	
 	private void rankConcept(Value concept)
 	{
-		for (RepositoryConnection connection : connections) {
+        if (connections.isEmpty()) {
+            logger.warn("no repository for querying defined");
+        }
+
+        for (RepositoryConnection connection : connections) {
             try {
                 rankConceptForConnection(concept, connection);
             }
