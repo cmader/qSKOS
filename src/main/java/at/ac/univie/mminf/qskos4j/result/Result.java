@@ -7,7 +7,7 @@ public abstract class Result<T> {
 
 	private T data;
 
-	public Result(T data) {
+	protected Result(T data) {
 		this.data = data;
 	}
 

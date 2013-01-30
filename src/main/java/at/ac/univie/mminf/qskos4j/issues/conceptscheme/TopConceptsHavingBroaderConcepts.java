@@ -12,7 +12,6 @@ import org.openrdf.query.TupleQueryResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public class TopConceptsHavingBroaderConcepts extends Issue<CollectionResult<Val
     @Override
     protected CollectionResult<Value> invoke() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createTopConceptsHavingBroaderConceptQuery());
-        return new CollectionResult<Value>(createUriResultList(result, "topConcept"));
+        return new CollectionResult<Value>(createUriResultList(result));
     }
 
     private String createTopConceptsHavingBroaderConceptQuery() {
@@ -47,15 +46,13 @@ public class TopConceptsHavingBroaderConcepts extends Issue<CollectionResult<Val
                 "}";
     }
 
-    private Collection<Value> createUriResultList(
-            TupleQueryResult result,
-            String bindingName) throws OpenRDFException
+    private Collection<Value> createUriResultList(TupleQueryResult result) throws OpenRDFException
     {
         List<Value> resultList = new ArrayList<Value>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
-            URI resource = (URI) queryResult.getValue(bindingName);
+            URI resource = (URI) queryResult.getValue("topConcept");
             resultList.add(resource);
         }
 

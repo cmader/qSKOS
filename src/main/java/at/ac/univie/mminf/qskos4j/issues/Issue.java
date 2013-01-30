@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 
@@ -35,7 +35,7 @@ public abstract class Issue<T extends Result<?>> {
         return result;
     }
 
-    public final void reset() {
+    protected final void reset() {
         result = null;
         if (progressMonitor != null) {
             progressMonitor.reset();

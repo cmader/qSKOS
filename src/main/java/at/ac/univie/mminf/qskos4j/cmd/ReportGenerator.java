@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class ReportGenerator {
+class ReportGenerator {
 
     private Logger logger = (Logger) LoggerFactory.getLogger(ReportGenerator.class);
 

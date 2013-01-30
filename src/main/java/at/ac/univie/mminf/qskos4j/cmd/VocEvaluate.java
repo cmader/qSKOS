@@ -15,8 +15,8 @@ import java.util.*;
 
 public class VocEvaluate {
 	
-	public final static String CMD_NAME_ANALYZE = "analyze", 
-							   CMD_NAME_SUMMARIZE = "summarize";
+	private final static String CMD_NAME_ANALYZE = "analyze";
+    private final static String CMD_NAME_SUMMARIZE = "summarize";
 	
 	private static JCommander jc;
 	private CommandSummarize parsedCommand;
@@ -84,13 +84,9 @@ public class VocEvaluate {
 		catch (OpenRDFException rdfException) {
 			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
 		} 
-		catch (UnsupportedIssueIdException measureIdExc) {
-			System.out.println("Unsupported measure id: " +measureIdExc.getUnsupportedId());
-		} 
 	}
 		
-	public VocEvaluate(String[] args) 
-		throws OpenRDFException, IOException, UnsupportedIssueIdException
+	private VocEvaluate(String[] args) throws OpenRDFException, IOException
 	{
 		parseCmdParams(args);
 		
@@ -102,8 +98,7 @@ public class VocEvaluate {
 			jc.usage();
 		}
 		else {
-            qskos = new QSkos();
-			listIssuesOrEvaluate();	
+			listIssuesOrEvaluate();
 		}		
 	}
 	
@@ -128,8 +123,7 @@ public class VocEvaluate {
 		}
 	}
 		
-	private void listIssuesOrEvaluate() 
-		throws OpenRDFException, IOException, UnsupportedIssueIdException
+	private void listIssuesOrEvaluate() throws OpenRDFException, IOException
 	{
 		if (parsedCommand.vocabFilenames == null) {
 			if (parsedCommand instanceof CommandAnalyze) {
@@ -163,8 +157,7 @@ public class VocEvaluate {
 		}		
 	}
 	
-	private void evaluate() 
-		throws OpenRDFException, IOException, UnsupportedIssueIdException
+	private void evaluate() throws OpenRDFException, IOException
 	{
 		setup();
 
@@ -186,7 +179,7 @@ public class VocEvaluate {
             null,
             null
         );
-		qskos.setVocabRepository(vocabRepo);
+		qskos = new QSkos(vocabRepo);
 		qskos.setAuthResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
         qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
@@ -223,7 +216,6 @@ public class VocEvaluate {
 	}
 	
 	private Collection<Issue> extractMeasures()
-		throws UnsupportedIssueIdException
 	{
 		Collection<Issue> resultingIssues;
 
@@ -244,7 +236,7 @@ public class VocEvaluate {
 		return resultingIssues;
 	}
 	
-	private Collection<Issue> getIssues(String ids) throws UnsupportedIssueIdException
+	private Collection<Issue> getIssues(String ids)
 	{
 		if (ids == null || ids.isEmpty()) {
 			return Collections.emptySet();
@@ -253,8 +245,9 @@ public class VocEvaluate {
 		Collection<Issue> issues = new ArrayList<Issue>();
 		StringTokenizer tokenizer = new StringTokenizer(ids, ",");
 		while (tokenizer.hasMoreElements()) {
+            String token = tokenizer.nextToken();
             for (Issue issue : qskos.getAllIssues()) {
-                if (issue.getId().equalsIgnoreCase(tokenizer.nextToken())) {
+                if (issue.getId().equalsIgnoreCase(token)) {
                     issues.add(issue);
                 }
             }

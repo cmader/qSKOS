@@ -23,7 +23,7 @@ public class TupleQueryResultUtil {
             Value concept = result.next().getValue(bindingName);
 
             if (concept instanceof URI) {
-                ret.add((URI) concept);
+                ret.add(concept);
             }
         }
 
