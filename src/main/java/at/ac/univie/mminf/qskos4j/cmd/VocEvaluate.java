@@ -15,8 +15,8 @@ import java.util.*;
 
 public class VocEvaluate {
 	
-	private final static String CMD_NAME_ANALYZE = "analyze";
-    private final static String CMD_NAME_SUMMARIZE = "summarize";
+	public final static String CMD_NAME_ANALYZE = "analyze";
+    public final static String CMD_NAME_SUMMARIZE = "summarize";
 	
 	private static JCommander jc;
 	private CommandSummarize parsedCommand;
@@ -86,7 +86,7 @@ public class VocEvaluate {
 		} 
 	}
 		
-	private VocEvaluate(String[] args) throws OpenRDFException, IOException
+	public VocEvaluate(String[] args) throws OpenRDFException, IOException
 	{
 		parseCmdParams(args);
 		
