@@ -10,6 +10,7 @@ import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +51,7 @@ public class TopConceptsHavingBroaderConcepts extends Issue<CollectionResult<Val
             TupleQueryResult result,
             String bindingName) throws OpenRDFException
     {
-        List<Value> resultList = Collections.EMPTY_LIST;
+        List<Value> resultList = new ArrayList<Value>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();

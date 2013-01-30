@@ -13,6 +13,7 @@ import org.openrdf.OpenRDFException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class UriTrackingTest extends IssueTestCase {
 
         disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
         incompleteLanguageCoverage = new IncompleteLanguageCoverage(involvedConcepts);
-        Collection<Issue> issues = Collections.EMPTY_LIST;
+        Collection<Issue> issues = new ArrayList<Issue>();
         issues.add(disconnectedConceptClusters);
         issues.add(incompleteLanguageCoverage);
 

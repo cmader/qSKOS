@@ -10,6 +10,7 @@ import org.openrdf.query.TupleQueryResult;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -19,8 +20,8 @@ import java.util.Set;
  */
 public class HttpURIs extends Issue<CollectionResult<URI>> {
 
-    private Set<URI> httpURIs = Collections.EMPTY_SET;
-    private Set<String> invalidResources = Collections.EMPTY_SET;
+    private Set<URI> httpURIs = new HashSet<URI>();
+    private Set<String> invalidResources = new HashSet<String>();
 
     public HttpURIs(VocabRepository vocabRepo) {
         super(vocabRepo,

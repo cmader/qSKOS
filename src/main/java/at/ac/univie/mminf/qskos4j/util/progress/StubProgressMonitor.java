@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.util.progress;
 
-public class DummyProgressMonitor implements IProgressMonitor {
+public class StubProgressMonitor implements IProgressMonitor {
 
 	@Override
 	public void onUpdateProgress(float progress) {

@@ -41,6 +41,7 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -70,8 +71,8 @@ public class QSkos {
 	
 	private CollectionResult<URI> involvedConcepts, authoritativeConcepts;
 	private DirectedMultigraph<Resource, NamedEdge> hierarchyGraph;
-    private Collection<Issue> issuesToTest = Collections.EMPTY_LIST;
-    private Collection<String> sparqlEndpointUrls = Collections.EMPTY_LIST;
+    private Collection<Issue> issuesToTest = new ArrayList<Issue>();
+    private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
 	public void addAllIssues() throws OpenRDFException {
         issuesToTest.clear();
