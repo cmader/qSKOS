@@ -23,9 +23,10 @@ import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpUriSchemeViolations;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
-import at.ac.univie.mminf.qskos4j.issues.outlinks.NonHttpResources;
 import at.ac.univie.mminf.qskos4j.issues.relations.SolelyTransitivelyRelatedConcepts;
+import at.ac.univie.mminf.qskos4j.issues.relations.UnidirectionallyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.MappingClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
@@ -61,7 +62,12 @@ public class QSkos {
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
     private String authResourceIdentifier;
-	
+
+    private InvolvedConcepts involvedConcepts;
+    private AuthoritativeConcepts authoritativeConcepts;
+    private ConceptSchemes conceptSchemes;
+    private HttpURIs httpURIs;
+
     private Collection<Issue> issuesToTest = new ArrayList<Issue>();
     private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
@@ -78,50 +84,43 @@ public class QSkos {
 
 	private void addAllIssues() throws OpenRDFException {
         issuesToTest.clear();
-        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
-        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
+        addStatisticalIssues();
+        addAnalyticalIssues();
+        addSkosIntegrityIssues();
+    }
 
-        InvolvedConcepts involvedConcepts = new InvolvedConcepts(vocabRepository);
-        AuthoritativeConcepts authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
+    private void addStatisticalIssues() {
+        involvedConcepts = new InvolvedConcepts(vocabRepository);
+        authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
         authoritativeConcepts.setBaseURI(baseURI);
         authoritativeConcepts.setAuthResourceIdentifier(authResourceIdentifier);
-        HttpURIs httpURIs = new HttpURIs(vocabRepository);
+        conceptSchemes = new ConceptSchemes(vocabRepository);
+        httpURIs = new HttpURIs(vocabRepository);
 
         issuesToTest.add(involvedConcepts);
         issuesToTest.add(authoritativeConcepts);
-        issuesToTest.add(new OrphanConcepts(involvedConcepts));
-        issuesToTest.add(new MissingOutLinks(authoritativeConcepts));
         issuesToTest.add(new LexicalRelations(involvedConcepts));
         issuesToTest.add(new SemanticRelations(vocabRepository));
         issuesToTest.add(new AggregationRelations(vocabRepository));
-
-        ConceptSchemes conceptSchemes = new ConceptSchemes(vocabRepository);
         issuesToTest.add(conceptSchemes);
-
         issuesToTest.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections(vocabRepository));
         issuesToTest.add(httpURIs);
-        issuesToTest.add(new DisconnectedConceptClusters(involvedConcepts));
-        issuesToTest.add(new MissingOutLinks(authoritativeConcepts));
-        issuesToTest.add(new HierarchicalCycles(hierarchyGraphBuilder));
-        issuesToTest.add(new NonHttpResources(vocabRepository));
+    }
+
+    private void addAnalyticalIssues() throws OpenRDFException {
+        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
+
         issuesToTest.add(new OmittedOrInvalidLanguageTags(vocabRepository));
         issuesToTest.add(new IncompleteLanguageCoverage(involvedConcepts));
-        issuesToTest.add(new InconsistentPrefLabels(resourceLabelsCollector));
-        issuesToTest.add(new DisjointLabelsViolations(resourceLabelsCollector));
-        issuesToTest.add(new OverlappingLabels(involvedConcepts));
-        issuesToTest.add(new ValuelessAssociativeRelations(vocabRepository));
-        issuesToTest.add(new UndefinedSkosResources(vocabRepository));
         issuesToTest.add(new UndocumentedConcepts(authoritativeConcepts));
+        issuesToTest.add(new OverlappingLabels(involvedConcepts));
+        issuesToTest.add(new OrphanConcepts(involvedConcepts));
+        issuesToTest.add(new DisconnectedConceptClusters(involvedConcepts));
+        issuesToTest.add(new HierarchicalCycles(hierarchyGraphBuilder));
+        issuesToTest.add(new ValuelessAssociativeRelations(vocabRepository));
         issuesToTest.add(new SolelyTransitivelyRelatedConcepts(vocabRepository));
         issuesToTest.add(new OmittedTopConcepts(conceptSchemes));
         issuesToTest.add(new TopConceptsHavingBroaderConcepts(vocabRepository));
-        issuesToTest.add(new MappingClashes(vocabRepository));
-        issuesToTest.add(new RelationClashes(hierarchyGraphBuilder));
-
-        BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
-        brokenLinks.setSubsetSize(randomSubsetSize_percent);
-        brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
-        issuesToTest.add(brokenLinks);
 
         MissingInLinks missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(extAccessDelayMillis);
@@ -131,7 +130,26 @@ public class QSkos {
         }
         issuesToTest.add(missingInLinks);
 
-	}
+        issuesToTest.add(new MissingOutLinks(authoritativeConcepts));
+
+        BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
+        brokenLinks.setSubsetSize(randomSubsetSize_percent);
+        brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
+        issuesToTest.add(brokenLinks);
+
+        issuesToTest.add(new UndefinedSkosResources(vocabRepository));
+        issuesToTest.add(new UnidirectionallyRelatedConcepts(vocabRepository));
+        issuesToTest.add(new HttpUriSchemeViolations(vocabRepository));
+        issuesToTest.add(new RelationClashes(hierarchyGraphBuilder));
+        issuesToTest.add(new MappingClashes(vocabRepository));
+    }
+
+    private void addSkosIntegrityIssues() {
+        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
+
+        issuesToTest.add(new InconsistentPrefLabels(resourceLabelsCollector));
+        issuesToTest.add(new DisjointLabelsViolations(resourceLabelsCollector));
+    }
 
     public Collection<Issue> getAllIssues() {
         return issuesToTest;

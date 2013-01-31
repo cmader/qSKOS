@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.outlinks.NonHttpResources;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpUriSchemeViolations;
 import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -16,22 +16,22 @@ import java.io.IOException;
  */
 public class NonHttpResourcesTest extends IssueTestCase {
 
-    private NonHttpResources nonHttpResourcesForConcepts, nonHttpResourcesForResources;
+    private HttpUriSchemeViolations httpUriSchemeViolationsForConcepts, httpResourcesForUriSchemeViolations;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        nonHttpResourcesForConcepts = new NonHttpResources(setUpRepository("concepts.rdf"));
-        nonHttpResourcesForResources = new NonHttpResources(setUpRepository("resources.rdf"));
+        httpUriSchemeViolationsForConcepts = new HttpUriSchemeViolations(setUpRepository("concepts.rdf"));
+        httpResourcesForUriSchemeViolations = new HttpUriSchemeViolations(setUpRepository("resources.rdf"));
     }
 
 
     @Test
     public void testConceptsNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(1, nonHttpResourcesForConcepts.getResult().getData().size());
+        Assert.assertEquals(1, httpUriSchemeViolationsForConcepts.getResult().getData().size());
     }
 
     @Test
     public void testResourcesNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(4, nonHttpResourcesForResources.getResult().getData().size());
+        Assert.assertEquals(4, httpResourcesForUriSchemeViolations.getResult().getData().size());
     }
 }

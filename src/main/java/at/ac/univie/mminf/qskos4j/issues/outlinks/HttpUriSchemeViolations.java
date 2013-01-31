@@ -18,9 +18,9 @@ import java.util.Set;
  *
  * Finds resources not within the HTTP URI scheme (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-HTTP_URI_Scheme_Violation">HTTP URI Scheme Violation</a>.
  */
-public class NonHttpResources extends Issue<CollectionResult<String>> {
+public class HttpUriSchemeViolations extends Issue<CollectionResult<String>> {
 
-    public NonHttpResources(VocabRepository vocabRepo) {
+    public HttpUriSchemeViolations(VocabRepository vocabRepo) {
         super(vocabRepo,
               "husv",
               "HTTP URI Scheme Violation",
