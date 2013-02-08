@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.report.NumberReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -15,7 +15,7 @@ import org.openrdf.query.TupleQueryResult;
  *
  * Finds the number of triples involving (subproperties of) skos:semanticRelation.
  */
-public class SemanticRelations extends Issue<NumberResult<Long>> {
+public class SemanticRelations extends Issue<NumberReport<Long>> {
 
     public SemanticRelations(VocabRepository vocabRepo) {
         super(vocabRepo,
@@ -27,9 +27,9 @@ public class SemanticRelations extends Issue<NumberResult<Long>> {
     }
 
     @Override
-    protected NumberResult<Long> invoke() throws OpenRDFException {
+    protected NumberReport<Long> invoke() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createSemanticRelationsQuery());
-        return new NumberResult<Long>(TupleQueryResultUtil.countResults(result));
+        return new NumberReport<Long>(TupleQueryResultUtil.countResults(result));
     }
 
     private String createSemanticRelationsQuery() {

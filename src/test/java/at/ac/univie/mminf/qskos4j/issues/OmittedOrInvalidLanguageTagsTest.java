@@ -55,7 +55,7 @@ public class OmittedOrInvalidLanguageTagsTest extends QskosTestCase {
     public void testMissingLangTagCount_3() throws OpenRDFException {
         Map<Resource, Collection<Literal>> missingLangTags = oiltLangTags.getResult().getData();
 
-        // expected result should be 0, but current implementatin relies on org.openrdf.model.util.language.Iso639 checks
+        // expected value should be 0, but current implementatin relies on org.openrdf.model.util.language.Iso639 checks
         Assert.assertEquals(5, countEntries(missingLangTags.values()));
     }
 

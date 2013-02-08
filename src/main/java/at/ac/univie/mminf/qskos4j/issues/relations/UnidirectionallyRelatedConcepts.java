@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Unidirectionally_Related_Concepts">Unidirectionally Related Concepts</a>.
  */
- public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelatedConceptsResult> {
+ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelatedConceptsReport> {
 
 	private String[][] inversePropertyPairs = {
 		{"skos:broader", "skos:narrower"}, 
@@ -44,13 +44,13 @@ import java.util.Map;
     }
 
     @Override
-    protected UnidirectionallyRelatedConceptsResult invoke() throws OpenRDFException {
+    protected UnidirectionallyRelatedConceptsReport invoke() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
 			TupleQueryResult result = vocabRepository.query(createOmittedRelationsQuery(inversePropertyPair));
 			addToOmittedInverseRelationsMap(result, inversePropertyPair);
 		}
 		
-		return new UnidirectionallyRelatedConceptsResult(omittedInverseRelations);
+		return new UnidirectionallyRelatedConceptsReport(omittedInverseRelations);
 	}
 	
 	private String createOmittedRelationsQuery(String[] inverseRelations) {

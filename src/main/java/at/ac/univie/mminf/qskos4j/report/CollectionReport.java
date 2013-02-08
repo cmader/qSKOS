@@ -1,18 +1,17 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.report;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Collection;
 
 /**
- * Result class that holds a collection of objects of interest
+ * Report class that holds a collection of objects of interest
  * 
  * @author christian
  *
  * @param <T> type of the collection's content
  */
-public class CollectionReport<T> extends Result<Collection<T>> {
+public class CollectionReport<T> extends Report<Collection<T>> {
 
 	public CollectionReport(Collection<T> data) {
 		super(data);

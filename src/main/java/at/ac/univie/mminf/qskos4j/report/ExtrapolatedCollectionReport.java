@@ -1,8 +1,7 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.report;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Collection;
 
 public class ExtrapolatedCollectionReport<T> extends CollectionReport<T> {
@@ -35,7 +34,7 @@ public class ExtrapolatedCollectionReport<T> extends CollectionReport<T> {
 		
 		if (subsetSize_percent != null) {
 			elementCount *= 100 / subsetSize_percent;
-			report.append(", extrapolated: " +elementCount);
+			report.append(", extrapolated: ").append(elementCount);
 		}
 		
 		return report.toString();

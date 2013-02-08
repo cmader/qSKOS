@@ -1,13 +1,11 @@
-package at.ac.univie.mminf.qskos4j.result;
-
-import at.ac.univie.mminf.qskos4j.result.Result;
+package at.ac.univie.mminf.qskos4j.report;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class NumberResult<T extends Number> extends Result<T> {
+public class NumberReport<T extends Number> extends Report<T> {
 
-	public NumberResult(T data) {
+	public NumberReport(T data) {
 		super(data);
 	}
 

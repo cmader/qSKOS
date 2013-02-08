@@ -20,7 +20,7 @@ import java.util.Map;
 /**
 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">Omitted or Invalid Language Tags</a>.
 */
-public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagResult> {
+public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
 
 	private Map<Resource, Collection<Literal>> missingLangTags;
 
@@ -34,12 +34,12 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagResult> {
     }
 
     @Override
-    protected MissingLangTagResult invoke() throws OpenRDFException {
+    protected MissingLangTagReport invoke() throws OpenRDFException {
 		if (missingLangTags == null) {
 			TupleQueryResult result = vocabRepository.query(createMissingLangTagQuery());
 			generateMissingLangTagMap(result);
 		}
-		return new MissingLangTagResult(missingLangTags);
+		return new MissingLangTagReport(missingLangTags);
 	}
 	
 	private String createMissingLangTagQuery() {

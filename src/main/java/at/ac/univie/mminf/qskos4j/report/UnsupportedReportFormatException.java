@@ -1,8 +1,8 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.report;
 
 public class UnsupportedReportFormatException extends RuntimeException {
 
-    public UnsupportedReportFormatException(Result.ReportFormat format) {
+    public UnsupportedReportFormatException(Report.ReportFormat format) {
         super("Unsupported Report Format: '" +format.toString()+ "'");
     }
 

@@ -1,11 +1,13 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles;
 
-import at.ac.univie.mminf.qskos4j.result.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
 import org.openrdf.model.Value;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
@@ -18,9 +20,12 @@ public class HierarchyCycleReport extends CollectionReport<Set<Value>> {
 		this.graph = graph;
 	}
 
-	@Override
-	public Collection<String> getAsDOT() {
-		return new GraphExporter(graph).exportSubGraphs(getData());
-	}
-	
+    @Override
+    public void generateDotReport(BufferedWriter writer) throws IOException {
+        for (String hierarchyCycleDot : new GraphExporter(graph).exportSubGraphs(getData())) {
+            writer.write(hierarchyCycleDot);
+            writer.newLine();
+        }
+    }
+
 }

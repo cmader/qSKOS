@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.clusters;
 
-import at.ac.univie.mminf.qskos4j.result.CollectionReport;
-import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
@@ -43,8 +42,12 @@ public class ClustersReport extends CollectionReport<Set<Value>>
 		osw.write(report.toString());
 	}
 
-	@Override
-	public Collection<String> getAsDOT() {
-		return new GraphExporter(graph).exportSubGraphs(getData());
-	}
+    @Override
+    public void generateDotReport(BufferedWriter writer) throws IOException {
+        for (String dotGraph : new GraphExporter(graph).exportSubGraphs(getData())) {
+            writer.write(dotGraph);
+            writer.newLine();
+        }
+    }
+
 }

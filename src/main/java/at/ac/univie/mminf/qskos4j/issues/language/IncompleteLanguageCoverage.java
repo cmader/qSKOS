@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * Finds all concepts with incomplete language coverage (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Incomplete_Language_Coverage">Incomplete Language Coverage</a>
  */
-public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
+public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovReport> {
 
     private final Logger logger = LoggerFactory.getLogger(IncompleteLanguageCoverage.class);
 
@@ -37,13 +37,13 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
     }
 
     @Override
-    protected IncompleteLangCovResult invoke() throws OpenRDFException {
+    protected IncompleteLangCovReport invoke() throws OpenRDFException {
 		incompleteLanguageCoverage = new HashMap<Value, Collection<String>>();
 		
 		checkLanguageCoverage();
 		generateIncompleteLanguageCoverageMap();
 		
-		return new IncompleteLangCovResult(incompleteLanguageCoverage);
+		return new IncompleteLangCovReport(incompleteLanguageCoverage);
 	}
 	
 	private void checkLanguageCoverage() throws OpenRDFException

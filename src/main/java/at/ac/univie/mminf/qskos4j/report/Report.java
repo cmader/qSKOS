@@ -1,25 +1,29 @@
-package at.ac.univie.mminf.qskos4j.result;
+package at.ac.univie.mminf.qskos4j.report;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.*;
-import java.security.cert.CRLSelector;
-import java.util.Collection;
-import java.util.Collections;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 
-public abstract class Result<T> {
+public abstract class Report<T> {
 
     public enum ReportFormat {TXT, DOT, RDF, PDF}
     public enum ReportStyle {SHORT, EXTENSIVE}
     private T data;
 
-	protected Result(T data) {
+	protected Report(T data) {
 		this.data = data;
 	}
 
 	public T getData() {
 		return data;
 	}
+
+    public final void generateReport(BufferedWriter writer, ReportFormat format) throws IOException
+    {
+        generateReport(writer, format, ReportStyle.SHORT);
+    }
 
     public final void generateReport(BufferedWriter writer, ReportFormat format, ReportStyle style) throws IOException
     {

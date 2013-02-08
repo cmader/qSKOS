@@ -2,13 +2,16 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
-import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import ch.qos.logback.classic.Logger;
 import org.openrdf.OpenRDFException;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 class ReportCollector {
 
@@ -60,9 +63,10 @@ class ReportCollector {
             ConceptIterator conceptIterator = new ConceptIterator(uriTrackFile);
 
             try {
-                BufferedWriter extensiveTextReportStringWriter = new BufferedWriter(new StringWriter());
-                issue.getResult().generateReport(extensiveTextReportStringWriter, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
-                extensiveTextReportStringWriter.close();
+                StringWriter extensiveTextReportStringWriter = new StringWriter();
+                BufferedWriter extensiveTextReportStringBufWriter = new BufferedWriter(extensiveTextReportStringWriter);
+                issue.getResult().generateReport(extensiveTextReportStringBufWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
+                extensiveTextReportStringBufWriter.close();
 
                 addConceptOccurences(uriSubstringToIssuesMapping, issue, extensiveTextReportStringWriter.toString(), conceptIterator);
             }
@@ -113,51 +117,34 @@ class ReportCollector {
 
     void outputIssuesReport(boolean outputExtendedReport, boolean shouldWriteGraphs)
     {
-        BufferedWriter reportStringWriter = new BufferedWriter(new StringWriter());
-
         for (Issue issue : issues) {
             System.out.println("--- " +issue.getName());
 
             try {
-                issue.getResult().generateReport(reportStringWriter, Result.ReportFormat.TXT, Result.ReportStyle.SHORT);
+                StringWriter stringWriter = new StringWriter();
+                BufferedWriter reportStringWriter = new BufferedWriter(stringWriter);
+                issue.getResult().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.SHORT);
 
                 if (outputExtendedReport) {
-                    issue.getResult().generateReport(reportStringWriter, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
+                    reportStringWriter.newLine();
+                    issue.getResult().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
                 }
 
                 reportStringWriter.close();
-                System.out.println(reportStringWriter.toString());
+                System.out.println(stringWriter.toString());
 
                 if (shouldWriteGraphs) {
-                    try {
-                        writeGraphsToFiles(result.getAsDOT(), issue.getId());
-                    }
-                    catch (IOException e) {
-                        logger.error("error writing graph file for issue " +issue.getId(), e);
-                    }
-
+                    BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(issue.getId() + ".dot"));
+                    issue.getResult().generateReport(graphFileWriter, Report.ReportFormat.DOT);
+                    graphFileWriter.close();
                 }
             }
             catch (OpenRDFException rdfEx) {
-                logger.error("Error getting measure result", rdfEx);
+                logger.error("Error getting issue report", rdfEx);
             }
             catch (IOException ioEx) {
                 logger.error("Error generating report output", ioEx);
             }
-        }
-    }
-
-    private void writeGraphsToFiles(Collection<String> dotGraphs, String fileName)
-            throws IOException
-    {
-        int i = 0;
-        Iterator<String> it = dotGraphs.iterator();
-        while (it.hasNext()) {
-            String dotGraph = it.next();
-            FileWriter writer = new FileWriter(new File(fileName +"_"+ i +".dot"));
-            writer.write(dotGraph);
-            writer.close();
-            i++;
         }
     }
 
