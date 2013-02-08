@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
@@ -18,7 +18,7 @@ import java.util.Iterator;
  * Finds all "authoritative concepts". See the <a href="https://github.com/cmader/qSKOS/blob/master/README.rdoc">
  * qSKOS readme</a> for further information.
  */
-public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
+public class AuthoritativeConcepts extends Issue<CollectionReport<Value>> {
 
     private final Logger logger = LoggerFactory.getLogger(AuthoritativeConcepts.class);
 
@@ -37,12 +37,12 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Value>> {
     }
 
     @Override
-    protected CollectionResult<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> invoke() throws OpenRDFException {
         if (authResourceIdentifier == null) {
             determineAuthResourceIdentifier();
         }
 
-        return new CollectionResult<Value>(extractAuthoritativeConceptsFromInvolved());
+        return new CollectionReport<Value>(extractAuthoritativeConceptsFromInvolved());
     }
 
     private void determineAuthResourceIdentifier() throws OpenRDFException {

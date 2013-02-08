@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -15,7 +15,7 @@ import java.util.Set;
  * Finds all "orphan concepts". Further info on <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Orphan_Concepts">Orphan
  * Concepts</a>.
  */
-public class OrphanConcepts extends Issue<CollectionResult<Value>> {
+public class OrphanConcepts extends Issue<CollectionReport<Value>> {
 
     private InvolvedConcepts involvedConcepts;
 
@@ -31,14 +31,14 @@ public class OrphanConcepts extends Issue<CollectionResult<Value>> {
     }
 
     @Override
-    protected CollectionResult<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> invoke() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createOrphanConceptsQuery());
         Set<Value> connectedConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
 
         Set<Value> orphanConcepts = new HashSet<Value>(involvedConcepts.getResult().getData());
         orphanConcepts.removeAll(connectedConcepts);
 
-        return new CollectionResult<Value>(orphanConcepts);
+        return new CollectionReport<Value>(orphanConcepts);
     }
 
     private String createOrphanConceptsQuery() {

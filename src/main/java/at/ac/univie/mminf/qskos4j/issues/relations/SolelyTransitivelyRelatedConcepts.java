@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Solely_Transitively_Related_Concepts">Solely Transitively Related Concepts</a>.
  */
-public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Pair<URI>>> {
+public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionReport<Pair<URI>>> {
 
 	private String[][] transitiveNontransiviteInverseProperties = {
 			{"skos:broaderTransitive", "skos:broader", "skos:narrower"},
@@ -35,13 +35,13 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Pa
     }
 
     @Override
-    protected CollectionResult<Pair<URI>> invoke() throws OpenRDFException {
+    protected CollectionReport<Pair<URI>> invoke() throws OpenRDFException {
 		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
 			TupleQueryResult result = vocabRepository.query(createSolitaryTransitiveRelationsQuery(transitivePropertyPair));
 			addToResults(result);			
 		}
 		
-		return new CollectionResult<Pair<URI>>(solitaryTransitiveRelations);
+		return new CollectionReport<Pair<URI>>(solitaryTransitiveRelations);
 	}
 
 	private String createSolitaryTransitiveRelationsQuery(

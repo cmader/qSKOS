@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class UriTrackingTest extends QskosTestCase {
 
-    private ReportGenerator reportGenerator;
+    private ReportCollector reportCollector;
     private File uriTrackFile;
     private Issue disconnectedConceptClusters, incompleteLanguageCoverage;
 
@@ -33,7 +33,7 @@ public class UriTrackingTest extends QskosTestCase {
         issues.add(disconnectedConceptClusters);
         issues.add(incompleteLanguageCoverage);
 
-        reportGenerator = new ReportGenerator(issues);
+        reportCollector = new ReportCollector(issues);
 
         URL uriTrackFileUrl = getClass().getResource("/uriTrackFile.txt");
         uriTrackFile = new File(uriTrackFileUrl.getFile());
@@ -42,7 +42,7 @@ public class UriTrackingTest extends QskosTestCase {
     @Test
     public void testUriTracking() {
         try {
-            Map<String, Collection<String>> issuesForConcepts = reportGenerator.collectIssuesForConcepts(uriTrackFile);
+            Map<String, Collection<String>> issuesForConcepts = reportCollector.collectIssuesForConcepts(uriTrackFile);
 
             Assert.assertTrue(allConceptsAreInOneCluster(issuesForConcepts));
             Assert.assertTrue(oneConceptHasNoUncoveredLanguages(issuesForConcepts));

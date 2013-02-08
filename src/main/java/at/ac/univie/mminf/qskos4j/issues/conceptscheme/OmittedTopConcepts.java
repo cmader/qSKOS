@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -18,7 +18,7 @@ import java.util.HashSet;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_Top_Concepts">Omitted Top Concepts</a>
  * ).
  */
-public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
+public class OmittedTopConcepts extends Issue<CollectionReport<Resource>> {
 
     private ConceptSchemes conceptSchemes;
 
@@ -33,7 +33,7 @@ public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
     }
 
     @Override
-    protected CollectionResult<Resource> invoke() throws OpenRDFException {
+    protected CollectionReport<Resource> invoke() throws OpenRDFException {
         RepositoryConnection connection = vocabRepository.getRepository().getConnection();
         Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
 
@@ -48,7 +48,7 @@ public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
             }
         }
 
-        return new CollectionResult<Resource>(csWithOmittedTopConcepts);
+        return new CollectionReport<Resource>(csWithOmittedTopConcepts);
     }
 
     private String createConceptSchemeWithoutTopConceptQuery(Value conceptScheme) {

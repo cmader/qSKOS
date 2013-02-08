@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
  */
-public class MappingClashes extends Issue<CollectionResult<Pair<Value>>> {
+public class MappingClashes extends Issue<CollectionReport<Pair<Value>>> {
 
     public MappingClashes(VocabRepository vocabRepo) {
         super(vocabRepo,
@@ -27,11 +27,11 @@ public class MappingClashes extends Issue<CollectionResult<Pair<Value>>> {
     }
 
     @Override
-    protected CollectionResult<Pair<Value>> invoke() throws OpenRDFException {
+    protected CollectionReport<Pair<Value>> invoke() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createExVsAssMappingQuery());
         Collection<Pair<Value>> exactVsAssMappingClashes = TupleQueryResultUtil.createCollectionOfValuePairs(result, "concept1", "concept2");
 
-        return new CollectionResult<Pair<Value>>(exactVsAssMappingClashes);
+        return new CollectionReport<Pair<Value>>(exactVsAssMappingClashes);
     }
 
     private String createExVsAssMappingQuery() {

@@ -23,7 +23,7 @@ public class VocEvaluate {
 	private static JCommander jc;
 	private CommandSummarize parsedCommand;
     private QSkos qskos;
-    private ReportGenerator reportGenerator;
+    private ReportCollector reportCollector;
 	
 	@Parameter(names = {"-v", "--version"}, description = "Outputs version of the tool")
 	private boolean outputVersion = false;
@@ -163,13 +163,13 @@ public class VocEvaluate {
 	{
 		setup();
 
-        reportGenerator = new ReportGenerator(extractMeasures());
+        reportCollector = new ReportCollector(extractMeasures());
 
         if (uriTrackingEnabled()) {
-            reportGenerator.outputURITrackingReport(new File(((CommandAnalyze) parsedCommand).uriTrackFilename));
+            reportCollector.outputURITrackingReport(new File(((CommandAnalyze) parsedCommand).uriTrackFilename));
         }
         else {
-            reportGenerator.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
+            reportCollector.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
         }
 	}
 	

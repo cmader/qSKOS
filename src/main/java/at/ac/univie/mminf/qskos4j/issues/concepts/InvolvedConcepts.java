@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * Finds all <a href="http://www.w3.org/TR/skos-reference/#concepts">SKOS Concepts</a> involved in the vocabulary.
  */
-public class InvolvedConcepts extends Issue<CollectionResult<Value>> {
+public class InvolvedConcepts extends Issue<CollectionReport<Value>> {
 
     public InvolvedConcepts(VocabRepository vocabRepo) {
         super(vocabRepo,
@@ -26,11 +26,11 @@ public class InvolvedConcepts extends Issue<CollectionResult<Value>> {
     }
 
     @Override
-    protected CollectionResult<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> invoke() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createConceptsQuery());
         Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
 
-        return new CollectionResult<Value>(foundConcepts);
+        return new CollectionReport<Value>(foundConcepts);
     }
 
     private String createConceptsQuery() {

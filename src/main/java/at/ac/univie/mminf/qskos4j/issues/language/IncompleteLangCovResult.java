@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import org.openrdf.model.Value;
 
 import java.util.Collection;
@@ -16,7 +16,7 @@ public class IncompleteLangCovResult extends Result<Map<Value, Collection<String
 
 	@Override
 	public String getShortReport() {
-		return new CollectionResult<Value>(getData().keySet()).getShortReport();
+		return new CollectionReport<Value>(getData().keySet()).getShortReport();
 	}
 
 	@Override

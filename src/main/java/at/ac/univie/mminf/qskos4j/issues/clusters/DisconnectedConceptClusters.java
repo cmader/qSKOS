@@ -27,7 +27,7 @@ import java.util.Iterator;
  * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disconnected_Concept_Clusters">
  * Disconnected Concept Clusters</a>.
  */
-public class DisconnectedConceptClusters extends Issue<ClustersResult> {
+public class DisconnectedConceptClusters extends Issue<ClustersReport> {
 
     private final Logger logger = LoggerFactory.getLogger(DisconnectedConceptClusters.class);
 
@@ -45,10 +45,10 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
     }
 
     @Override
-    protected ClustersResult invoke() throws OpenRDFException {
+    protected ClustersReport invoke() throws OpenRDFException {
         createGraph(involvedConcepts.getResult().getData());
 
-        return new ClustersResult(
+        return new ClustersReport(
                 new ConnectivityInspector<Value, NamedEdge>(graph).connectedSets(),
                 graph);
     }

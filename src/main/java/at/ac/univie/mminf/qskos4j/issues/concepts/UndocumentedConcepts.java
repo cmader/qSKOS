@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -21,7 +21,7 @@ import java.util.List;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undocumented_Concepts">Undocumented Concepts</a>
  * ).
  */
-public class UndocumentedConcepts extends Issue<CollectionResult<Value>> {
+public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
 
     private final Logger logger = LoggerFactory.getLogger(UndocumentedConcepts.class);
 
@@ -44,7 +44,7 @@ public class UndocumentedConcepts extends Issue<CollectionResult<Value>> {
     }
 
     @Override
-    protected CollectionResult<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> invoke() throws OpenRDFException {
 		connection = vocabRepository.getRepository().getConnection();
 		List<Value> undocumentedConcepts = new ArrayList<Value>();
 		
@@ -59,7 +59,7 @@ public class UndocumentedConcepts extends Issue<CollectionResult<Value>> {
 			}
 		}
 		
-		return new CollectionResult<Value>(undocumentedConcepts);
+		return new CollectionReport<Value>(undocumentedConcepts);
 	}
 	
 	private boolean isConceptDocumented(Value concept)

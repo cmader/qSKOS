@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
+import sun.org.mozilla.javascript.ErrorReporter;
 
 public abstract class Issue<T extends Result<?>> {
 

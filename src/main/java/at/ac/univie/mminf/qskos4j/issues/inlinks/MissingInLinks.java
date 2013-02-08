@@ -2,8 +2,8 @@ package at.ac.univie.mminf.qskos4j.issues.inlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
-import at.ac.univie.mminf.qskos4j.result.general.ExtrapolatedCollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
+import at.ac.univie.mminf.qskos4j.result.ExtrapolatedCollectionReport;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
@@ -25,7 +25,7 @@ import java.util.*;
 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_InLinks">Missing In-Links</a>
 * ).
 */
-public class MissingInLinks extends Issue<CollectionResult<Value>> {
+public class MissingInLinks extends Issue<CollectionReport<Value>> {
 
 	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
 
@@ -46,7 +46,7 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
     }
 
     @Override
-    protected CollectionResult<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> invoke() throws OpenRDFException {
         Collection<Value> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
@@ -62,7 +62,7 @@ public class MissingInLinks extends Issue<CollectionResult<Value>> {
             rankConcept(conceptIt.next());
         }
 
-        return new ExtrapolatedCollectionResult<Value>(extractUnreferencedConcepts(), randomSubsetSize_percent);
+        return new ExtrapolatedCollectionReport<Value>(extractUnreferencedConcepts(), randomSubsetSize_percent);
     }
 
 	private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException

@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.cycles;
 
 import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
@@ -21,7 +21,7 @@ import java.util.Set;
  *
  * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Cyclic_Hierarchical_Relations">Cyclic Hierarchical Relations</a>.
  */
-public class HierarchicalCycles extends Issue<CollectionResult<Set<Value>>> {
+public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
 
     private DirectedGraph<Value, NamedEdge> hierarchyGraph;
     private HierarchyGraphBuilder hierarchyGraphBuilder;
@@ -37,12 +37,12 @@ public class HierarchicalCycles extends Issue<CollectionResult<Set<Value>>> {
     }
 
     @Override
-    protected CollectionResult<Set<Value>> invoke() throws OpenRDFException {
+    protected CollectionReport<Set<Value>> invoke() throws OpenRDFException {
         hierarchyGraph = hierarchyGraphBuilder.createGraph();
         Set<Value> nodesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
         List<Set<Value>> cycleContainingComponents = trackNodesInCycles(nodesInCycles);
 
-        return new HierarchyCycleResult(cycleContainingComponents, hierarchyGraph);
+        return new HierarchyCycleReport(cycleContainingComponents, hierarchyGraph);
     }
 
     private List<Set<Value>> trackNodesInCycles(Set<Value> nodesInCycles)

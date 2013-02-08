@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
@@ -17,7 +17,7 @@ import java.util.Set;
  * Date: 26.01.13
  * Time: 15:23
  */
-public class HttpURIs extends Issue<CollectionResult<URI>> {
+public class HttpURIs extends Issue<CollectionReport<URI>> {
 
     private Set<URI> httpURIs = new HashSet<URI>();
     private Set<String> invalidResources = new HashSet<String>();
@@ -32,7 +32,7 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
     }
 
     @Override
-    protected CollectionResult<URI> invoke() throws OpenRDFException {
+    protected CollectionReport<URI> invoke() throws OpenRDFException {
 
         TupleQueryResult result = vocabRepository.query(createIRIQuery());
 
@@ -41,7 +41,7 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
             addToUrlList(iri);
         }
 
-        return new CollectionResult<URI>(httpURIs);
+        return new CollectionReport<URI>(httpURIs);
     }
 
     private String createIRIQuery() {

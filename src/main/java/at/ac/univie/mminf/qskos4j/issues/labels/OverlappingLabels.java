@@ -6,7 +6,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -25,7 +25,7 @@ import java.util.*;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
  * ).
  */
-public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
+public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
 
 	private final Logger logger = LoggerFactory.getLogger(OverlappingLabels.class);
 
@@ -43,11 +43,11 @@ public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
     }
 
     @Override
-    protected CollectionResult<LabelConflict> invoke() throws OpenRDFException {
+    protected CollectionReport<LabelConflict> invoke() throws OpenRDFException {
         generateConceptsLabelMap();
         generateLabelConflictResults();
 
-		return new CollectionResult<LabelConflict>(labelConflicts);
+		return new CollectionReport<LabelConflict>(labelConflicts);
 	}
 	
 	private void generateConceptsLabelMap() throws OpenRDFException

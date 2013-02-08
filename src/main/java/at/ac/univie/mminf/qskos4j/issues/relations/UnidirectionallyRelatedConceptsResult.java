@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.relations;
 
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import org.openrdf.model.Resource;
 
@@ -15,7 +15,7 @@ public class UnidirectionallyRelatedConceptsResult extends Result<Map<Pair<Resou
 
 	@Override
 	public String getShortReport() {
-		return new CollectionResult<Pair<Resource>>(getData().keySet()).getShortReport();
+		return new CollectionReport<Pair<Resource>>(getData().keySet()).getShortReport();
 	}
 
 	@Override

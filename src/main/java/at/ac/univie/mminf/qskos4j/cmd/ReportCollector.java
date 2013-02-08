@@ -7,18 +7,16 @@ import ch.qos.logback.classic.Logger;
 import org.openrdf.OpenRDFException;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
-class ReportGenerator {
+class ReportCollector {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(ReportGenerator.class);
+    private Logger logger = (Logger) LoggerFactory.getLogger(ReportCollector.class);
 
     private Collection<Issue> issues;
 
-    public ReportGenerator(Collection<Issue> issues) {
+    public ReportCollector(Collection<Issue> issues) {
         this.issues = issues;
     }
 
@@ -62,10 +60,11 @@ class ReportGenerator {
             ConceptIterator conceptIterator = new ConceptIterator(uriTrackFile);
 
             try {
-                Result<?> result = issue.getResult();
+                BufferedWriter extensiveTextReportStringWriter = new BufferedWriter(new StringWriter());
+                issue.getResult().generateReport(extensiveTextReportStringWriter, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
+                extensiveTextReportStringWriter.close();
 
-                String report = result.getExtensiveReport();
-                addConceptOccurences(uriSubstringToIssuesMapping, issue, report, conceptIterator);
+                addConceptOccurences(uriSubstringToIssuesMapping, issue, extensiveTextReportStringWriter.toString(), conceptIterator);
             }
             catch (OpenRDFException e) {
                 logger.error("Error invoking measure " +issue.getName()+ " (" +issue.getId()+ ")");
@@ -114,17 +113,20 @@ class ReportGenerator {
 
     void outputIssuesReport(boolean outputExtendedReport, boolean shouldWriteGraphs)
     {
+        BufferedWriter reportStringWriter = new BufferedWriter(new StringWriter());
+
         for (Issue issue : issues) {
             System.out.println("--- " +issue.getName());
 
             try {
-                Result<?> result = issue.getResult();
-                System.out.println(result.getShortReport());
+                issue.getResult().generateReport(reportStringWriter, Result.ReportFormat.TXT, Result.ReportStyle.SHORT);
 
                 if (outputExtendedReport) {
-                    logger.debug("generating extensive report");
-                    System.out.println(result.getExtensiveReport());
+                    issue.getResult().generateReport(reportStringWriter, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
                 }
+
+                reportStringWriter.close();
+                System.out.println(reportStringWriter.toString());
 
                 if (shouldWriteGraphs) {
                     try {
@@ -135,10 +137,12 @@ class ReportGenerator {
                     }
 
                 }
-
             }
-            catch (OpenRDFException e) {
-                logger.error("Error getting measure result", e);
+            catch (OpenRDFException rdfEx) {
+                logger.error("Error getting measure result", rdfEx);
+            }
+            catch (IOException ioEx) {
+                logger.error("Error generating report output", ioEx);
             }
         }
     }

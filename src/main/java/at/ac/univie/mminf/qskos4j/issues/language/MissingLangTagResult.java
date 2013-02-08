@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.result.Result;
-import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.CollectionReport;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 
@@ -16,7 +16,7 @@ public class MissingLangTagResult extends Result<Map<Resource, Collection<Litera
 
 	@Override
 	public String getShortReport() {
-		return new CollectionResult<Resource>(getData().keySet()).getShortReport();
+		return new CollectionReport<Resource>(getData().keySet()).getShortReport();
 	}
 
 	@Override
