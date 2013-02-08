@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 14:18
  */
-public class LexicalRelationsTest extends IssueTestCase {
+public class LexicalRelationsTest extends QskosTestCase {
 
     private LexicalRelations lexicalRelations;
 

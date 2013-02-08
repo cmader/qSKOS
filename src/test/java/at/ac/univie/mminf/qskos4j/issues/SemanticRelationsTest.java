@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.count.SemanticRelations;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 14:22
  */
-public class SemanticRelationsTest extends IssueTestCase {
+public class SemanticRelationsTest extends QskosTestCase {
 
     private SemanticRelations semanticRelations;
 

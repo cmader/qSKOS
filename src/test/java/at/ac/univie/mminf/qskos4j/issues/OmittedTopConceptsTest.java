@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.OmittedTopConcepts;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.openrdf.OpenRDFException;
 import java.io.IOException;
 
 
-public class OmittedTopConceptsTest extends IssueTestCase {
+public class OmittedTopConceptsTest extends QskosTestCase {
 
 	private OmittedTopConcepts omittedTopConcepts;
 	

@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import java.util.Set;
  * Date: 26.01.13
  * Time: 15:43
  */
-public class DisconnectedConceptClustersTest extends IssueTestCase {
+public class DisconnectedConceptClustersTest extends QskosTestCase {
 
     private DisconnectedConceptClusters disconnectedConceptClusters;
     private InvolvedConcepts involvedConcepts;

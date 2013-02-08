@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.DisjointLabelsViolations;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.UriSuffixFinder;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.openrdf.OpenRDFException;
 import java.io.IOException;
 import java.util.Collection;
 
-public class DisjointLabelsViolationsTest extends IssueTestCase {
+public class DisjointLabelsViolationsTest extends QskosTestCase {
 
     private DisjointLabelsViolations disjointLabelsViolations;
 

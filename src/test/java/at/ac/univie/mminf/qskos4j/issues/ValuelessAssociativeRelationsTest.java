@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
 import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import org.openrdf.model.URI;
 import java.io.IOException;
 import java.util.Collection;
 
-public class ValuelessAssociativeRelationsTest extends IssueTestCase {
+public class ValuelessAssociativeRelationsTest extends QskosTestCase {
 
     private ValuelessAssociativeRelations valuelessAssociativeRelations;
 

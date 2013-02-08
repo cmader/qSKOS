@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.Collection;
  * Date: 26.01.13
  * Time: 12:57
  */
-public class AuthoritativeConceptsTest extends IssueTestCase {
+public class AuthoritativeConceptsTest extends QskosTestCase {
 
     private AuthoritativeConcepts authoritativeConcepts;
 

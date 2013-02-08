@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import java.util.Map;
  * Date: 27.01.13
  * Time: 00:54
  */
-public class IncompleteLanguageCoverageTest extends IssueTestCase {
+public class IncompleteLanguageCoverageTest extends QskosTestCase {
 
     private IncompleteLanguageCoverage incompleteLanguageCoverage;
 

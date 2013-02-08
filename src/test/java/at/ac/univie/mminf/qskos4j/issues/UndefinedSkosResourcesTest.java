@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 
-public class UndefinedSkosResourcesTest extends IssueTestCase {
+public class UndefinedSkosResourcesTest extends QskosTestCase {
 	
 	private UndefinedSkosResources undefinedSkosResourcesInConcepts, undefinedSkosResourcesInDeprecatedAndIllegal;
 	

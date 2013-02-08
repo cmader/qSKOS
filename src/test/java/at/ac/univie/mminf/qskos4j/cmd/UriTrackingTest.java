@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-public class UriTrackingTest extends IssueTestCase {
+public class UriTrackingTest extends QskosTestCase {
 
     private ReportGenerator reportGenerator;
     private File uriTrackFile;

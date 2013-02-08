@@ -90,6 +90,12 @@
         <version>3.0.1</version>
         <scope>provided</scope>
     </dependency>
+    <dependency>
+        <groupId>httpunit</groupId>
+        <artifactId>httpunit</artifactId>
+        <version>1.7</version>
+        <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
 	<plugins>

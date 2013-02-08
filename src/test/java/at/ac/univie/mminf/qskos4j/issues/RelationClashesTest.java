@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import org.openrdf.OpenRDFException;
 
 import java.io.IOException;
 
-public class RelationClashesTest extends IssueTestCase {
+public class RelationClashesTest extends QskosTestCase {
 
     private RelationClashes relationClashes;
 

@@ -37,8 +37,7 @@ import org.openrdf.OpenRDFException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Main class intended for easy interaction with qSKOS. On instantiation an in-memory ("local") repository 
@@ -68,7 +67,7 @@ public class QSkos {
     private ConceptSchemes conceptSchemes;
     private HttpURIs httpURIs;
 
-    private Collection<Issue> issuesToTest = new ArrayList<Issue>();
+    private List<Issue> registeredIssues = new ArrayList<Issue>();
     private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
     public QSkos(VocabRepository vocabRepository) {
@@ -83,7 +82,7 @@ public class QSkos {
     }
 
 	private void addAllIssues() throws OpenRDFException {
-        issuesToTest.clear();
+        registeredIssues.clear();
         addStatisticalIssues();
         addAnalyticalIssues();
         addSkosIntegrityIssues();
@@ -97,30 +96,30 @@ public class QSkos {
         conceptSchemes = new ConceptSchemes(vocabRepository);
         httpURIs = new HttpURIs(vocabRepository);
 
-        issuesToTest.add(involvedConcepts);
-        issuesToTest.add(authoritativeConcepts);
-        issuesToTest.add(new LexicalRelations(involvedConcepts));
-        issuesToTest.add(new SemanticRelations(vocabRepository));
-        issuesToTest.add(new AggregationRelations(vocabRepository));
-        issuesToTest.add(conceptSchemes);
-        issuesToTest.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections(vocabRepository));
-        issuesToTest.add(httpURIs);
+        registeredIssues.add(involvedConcepts);
+        registeredIssues.add(authoritativeConcepts);
+        registeredIssues.add(new LexicalRelations(involvedConcepts));
+        registeredIssues.add(new SemanticRelations(vocabRepository));
+        registeredIssues.add(new AggregationRelations(vocabRepository));
+        registeredIssues.add(conceptSchemes);
+        registeredIssues.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections(vocabRepository));
+        registeredIssues.add(httpURIs);
     }
 
     private void addAnalyticalIssues() throws OpenRDFException {
         HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
 
-        issuesToTest.add(new OmittedOrInvalidLanguageTags(vocabRepository));
-        issuesToTest.add(new IncompleteLanguageCoverage(involvedConcepts));
-        issuesToTest.add(new UndocumentedConcepts(authoritativeConcepts));
-        issuesToTest.add(new OverlappingLabels(involvedConcepts));
-        issuesToTest.add(new OrphanConcepts(involvedConcepts));
-        issuesToTest.add(new DisconnectedConceptClusters(involvedConcepts));
-        issuesToTest.add(new HierarchicalCycles(hierarchyGraphBuilder));
-        issuesToTest.add(new ValuelessAssociativeRelations(vocabRepository));
-        issuesToTest.add(new SolelyTransitivelyRelatedConcepts(vocabRepository));
-        issuesToTest.add(new OmittedTopConcepts(conceptSchemes));
-        issuesToTest.add(new TopConceptsHavingBroaderConcepts(vocabRepository));
+        registeredIssues.add(new OmittedOrInvalidLanguageTags(vocabRepository));
+        registeredIssues.add(new IncompleteLanguageCoverage(involvedConcepts));
+        registeredIssues.add(new UndocumentedConcepts(authoritativeConcepts));
+        registeredIssues.add(new OverlappingLabels(involvedConcepts));
+        registeredIssues.add(new OrphanConcepts(involvedConcepts));
+        registeredIssues.add(new DisconnectedConceptClusters(involvedConcepts));
+        registeredIssues.add(new HierarchicalCycles(hierarchyGraphBuilder));
+        registeredIssues.add(new ValuelessAssociativeRelations(vocabRepository));
+        registeredIssues.add(new SolelyTransitivelyRelatedConcepts(vocabRepository));
+        registeredIssues.add(new OmittedTopConcepts(conceptSchemes));
+        registeredIssues.add(new TopConceptsHavingBroaderConcepts(vocabRepository));
 
         MissingInLinks missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(extAccessDelayMillis);
@@ -128,31 +127,56 @@ public class QSkos {
         for (String sparqlEndpointUrl : sparqlEndpointUrls) {
             missingInLinks.addSparqlEndPoint(sparqlEndpointUrl);
         }
-        issuesToTest.add(missingInLinks);
+        registeredIssues.add(missingInLinks);
 
-        issuesToTest.add(new MissingOutLinks(authoritativeConcepts));
+        registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
 
         BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
         brokenLinks.setSubsetSize(randomSubsetSize_percent);
         brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
-        issuesToTest.add(brokenLinks);
+        registeredIssues.add(brokenLinks);
 
-        issuesToTest.add(new UndefinedSkosResources(vocabRepository));
-        issuesToTest.add(new UnidirectionallyRelatedConcepts(vocabRepository));
-        issuesToTest.add(new HttpUriSchemeViolations(vocabRepository));
-        issuesToTest.add(new RelationClashes(hierarchyGraphBuilder));
-        issuesToTest.add(new MappingClashes(vocabRepository));
+        registeredIssues.add(new UndefinedSkosResources(vocabRepository));
+        registeredIssues.add(new UnidirectionallyRelatedConcepts(vocabRepository));
+        registeredIssues.add(new HttpUriSchemeViolations(vocabRepository));
+        registeredIssues.add(new RelationClashes(hierarchyGraphBuilder));
+        registeredIssues.add(new MappingClashes(vocabRepository));
     }
 
     private void addSkosIntegrityIssues() {
         ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
 
-        issuesToTest.add(new InconsistentPrefLabels(resourceLabelsCollector));
-        issuesToTest.add(new DisjointLabelsViolations(resourceLabelsCollector));
+        registeredIssues.add(new InconsistentPrefLabels(resourceLabelsCollector));
+        registeredIssues.add(new DisjointLabelsViolations(resourceLabelsCollector));
     }
 
-    public Collection<Issue> getAllIssues() {
-        return issuesToTest;
+    public List<Issue> getAllIssues() {
+        return registeredIssues;
+    }
+
+    public Collection<Issue> getIssues(String commaSeparatedIssueIDs)
+    {
+        if (commaSeparatedIssueIDs == null || commaSeparatedIssueIDs.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        Collection<Issue> issues = new ArrayList<Issue>();
+        StringTokenizer tokenizer = new StringTokenizer(commaSeparatedIssueIDs, ",");
+        while (tokenizer.hasMoreElements()) {
+            issues.add(findIssue(tokenizer.nextToken().trim()));
+        }
+
+        return issues;
+    }
+
+    private Issue findIssue(String issueId) {
+        for (Issue issue : registeredIssues) {
+            if (issue.getId().equalsIgnoreCase(issueId)) {
+                return issue;
+            }
+        }
+
+        throw new UnknownIssueIdException(issueId);
     }
 
 	/**
@@ -160,7 +184,7 @@ public class QSkos {
 	 * @param progressMonitor monitor instance to be notified
 	 */
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
-        for (Issue issue : issuesToTest) {
+        for (Issue issue : registeredIssues) {
             issue.setProgressMonitor(progressMonitor);
         }
 	}

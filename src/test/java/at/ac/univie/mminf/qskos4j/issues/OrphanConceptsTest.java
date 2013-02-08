@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.Collection;
  * Date: 26.01.13
  * Time: 13:48
  */
-public class OrphanConceptsTest extends IssueTestCase {
+public class OrphanConceptsTest extends QskosTestCase {
 
     private OrphanConcepts orphanConceptsForConcepts, orphanConceptsForComponents;
 

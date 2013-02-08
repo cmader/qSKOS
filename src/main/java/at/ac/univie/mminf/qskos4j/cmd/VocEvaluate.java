@@ -11,7 +11,9 @@ import org.openrdf.OpenRDFException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class VocEvaluate {
 	
@@ -219,8 +221,8 @@ public class VocEvaluate {
 	{
 		Collection<Issue> resultingIssues;
 
-        Collection<Issue> selectedIssues = getIssues(parsedCommand.selectedIds);
-        Collection<Issue> excludedIssues = getIssues(parsedCommand.excludedIds);
+        Collection<Issue> selectedIssues = qskos.getIssues(parsedCommand.selectedIds);
+        Collection<Issue> excludedIssues = qskos.getIssues(parsedCommand.excludedIds);
 
 		if (!selectedIssues.isEmpty()) {
 			resultingIssues = selectedIssues;
@@ -234,26 +236,6 @@ public class VocEvaluate {
 		}
 		
 		return resultingIssues;
-	}
-	
-	private Collection<Issue> getIssues(String ids)
-	{
-		if (ids == null || ids.isEmpty()) {
-			return Collections.emptySet();
-		}
-		
-		Collection<Issue> issues = new ArrayList<Issue>();
-		StringTokenizer tokenizer = new StringTokenizer(ids, ",");
-		while (tokenizer.hasMoreElements()) {
-            String token = tokenizer.nextToken();
-            for (Issue issue : qskos.getAllIssues()) {
-                if (issue.getId().equalsIgnoreCase(token)) {
-                    issues.add(issue);
-                }
-            }
-		}
-		
-		return issues;
 	}
 	
 	private Collection<Issue> getAllIssuesForCommand() {

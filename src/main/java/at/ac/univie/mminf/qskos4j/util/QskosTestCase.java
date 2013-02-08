@@ -12,7 +12,7 @@ import java.net.URL;
 
 
 @Ignore
-public class IssueTestCase {
+public class QskosTestCase {
 	
 	protected VocabRepository setUpRepository(String testFileName)
 		throws OpenRDFException, IOException 

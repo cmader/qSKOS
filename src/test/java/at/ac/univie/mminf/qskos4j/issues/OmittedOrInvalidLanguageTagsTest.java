@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
-import at.ac.univie.mminf.qskos4j.util.IssueTestCase;
+import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import java.util.Map;
  * Date: 27.01.13
  * Time: 00:42
  */
-public class OmittedOrInvalidLanguageTagsTest extends IssueTestCase {
+public class OmittedOrInvalidLanguageTagsTest extends QskosTestCase {
 
     private OmittedOrInvalidLanguageTags oiltComponents, oiltDeprecatedAndIllegal, oiltLangTags;
 
