@@ -1,5 +1,6 @@
 package at.ac.univie.mminf.qskos4j.servlet;
 
+import at.ac.univie.mminf.qskos4j.report.UnsupportedReportFormatException;
 import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.PostMethodWebRequest;
@@ -11,6 +12,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
@@ -66,4 +68,28 @@ public class ServletInvocationTest extends QskosTestCase {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test(expected = UnsupportedReportFormatException.class)
+    public void unsupportedReportFormatTest() {
+        ServletUnitClient sc = sr.newClient();
+        WebRequest request = new PostMethodWebRequest(SERVLET_URL);
+        request.setParameter("issueId", "c");
+        request.setParameter("reportFormat", "bla");
+
+        try {
+            sc.getResponse(request);
+        }
+        catch (IOException e) {
+            Assert.fail();
+        }
+        catch (SAXException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void unsupportedReportStyleTest() {
+        Assert.fail();
+    }
+
 }

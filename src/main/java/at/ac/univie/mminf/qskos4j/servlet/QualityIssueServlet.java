@@ -2,6 +2,8 @@ package at.ac.univie.mminf.qskos4j.servlet;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.report.UnsupportedReportFormatException;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.repository.Repository;
 
@@ -16,6 +18,8 @@ import java.util.Collection;
 public class QualityIssueServlet extends HttpServlet {
 
     private final static String REQ_PARAM_ISSUE_ID = "issueId";
+    private final static String REQ_PARAM_REPORT_FORMAT = "reportFormat";
+    private final static String REQ_PARAM_REPORT_STYLE = "reportStyle";
 
     private QSkos qskos;
 
@@ -44,5 +48,20 @@ public class QualityIssueServlet extends HttpServlet {
     private void processRequest(HttpServletRequest req) {
         String issueIds = req.getParameter(REQ_PARAM_ISSUE_ID);
         Collection<Issue> issues = qskos.getIssues(issueIds);
+
+
+        checkReportFormat(req.getParameter(REQ_PARAM_REPORT_FORMAT));
+        checkReportStyle(req.getParameter(REQ_PARAM_REPORT_STYLE));
+
+        ;
+        throw new UnsupportedReportFormatException("blabla");
+    }
+
+    private void checkReportFormat(String reportFormat) {
+        throw new UnsupportedReportFormatException("");
+    }
+
+    private void checkReportStyle(String reportStyle) {
+        throw new UnsupportedReportStyleException("");
     }
 }
