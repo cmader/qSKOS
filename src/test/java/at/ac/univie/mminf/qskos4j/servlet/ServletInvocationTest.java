@@ -15,7 +15,9 @@ import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class ServletInvocationTest extends QskosTestCase {
 
@@ -63,7 +65,7 @@ public class ServletInvocationTest extends QskosTestCase {
         try {
             WebResponse response = sc.getResponse(request);
             Assert.assertNotNull("No response received", response);
-            Assert.assertEquals( "content type", "text/plain", response.getContentType() );
+            Assert.assertEquals("content type", "text/plain", response.getContentType());
         }
         catch (Exception e) {
             Assert.fail(e.getMessage());
@@ -84,7 +86,7 @@ public class ServletInvocationTest extends QskosTestCase {
         ServletUnitClient sc = sr.newClient();
         WebRequest request = new PostMethodWebRequest(SERVLET_URL);
         request.setParameter("issueId", new QSkos(null).getAllIssues().iterator().next().getId());
-        request.setParameter(reportParameter, "nonsenseparameter");
+        request.setParameter(reportParameter, "nonsensevalue");
 
         try {
             sc.getResponse(request);

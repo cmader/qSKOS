@@ -72,7 +72,7 @@ public class QualityIssueServlet extends HttpServlet {
             return ReportFormat.valueOf(requestedReportFormat);
         }
         catch (IllegalArgumentException e) {
-            throw new UnsupportedReportFormatException("Report format not one of " +ReportFormat.values().toString());
+            throw new UnsupportedReportFormatException("Report format must be one of " +ReportFormat.values().toString());
         }
         catch (NullPointerException e) {
             return ReportFormat.TXT;
@@ -84,7 +84,7 @@ public class QualityIssueServlet extends HttpServlet {
             return ReportStyle.valueOf(requestedReportStyle);
         }
         catch (IllegalArgumentException e) {
-            throw new UnsupportedReportStyleException("Report style not one of " +ReportStyle.values().toString());
+            throw new UnsupportedReportStyleException("Report style must by one of " +ReportStyle.values().toString());
         }
         catch (NullPointerException e) {
             return ReportStyle.SHORT;
@@ -97,6 +97,7 @@ public class QualityIssueServlet extends HttpServlet {
         generateReports(responseWriter);
         responseWriter.close();
         resp.setContentType(inferContentType());
+        resp.setHeader("Cache-Control", "no-cache");
     }
 
     private void generateReports(BufferedWriter responseWriter) throws IOException
