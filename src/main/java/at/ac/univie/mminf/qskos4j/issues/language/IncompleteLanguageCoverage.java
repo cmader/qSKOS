@@ -66,7 +66,6 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovReport> {
 	
 	private String createLanguageLiteralQuery(Value concept) {
 		return "SELECT DISTINCT ?literal "+
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
 			"WHERE {" +
 			"<"+concept+"> ?p ?literal ."+
 			"FILTER isLiteral(?literal) "+

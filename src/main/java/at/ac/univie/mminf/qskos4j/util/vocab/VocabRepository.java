@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j.util.vocab;
 
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.openrdf.repository.Repository;
@@ -20,26 +19,28 @@ import java.net.URL;
 public class VocabRepository {
 
 	public final String SKOS_GRAPH_URL = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
-	private final String VOCAB_DEFAULT_URL = "http://localhost/uploads/";
-    private final String VOCAB_DEFAULT_CONTEXT = VOCAB_DEFAULT_URL + "defaultcontext";
-	
 	private final String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
+
 	private Repository repository;
 	private RepositoryConnection connection;
-	private File rdfFile;
 
 	public VocabRepository(
 		File rdfFile,
 		String baseURI,
 		RDFFormat dataFormat) throws OpenRDFException, IOException
 	{
-		this.rdfFile = rdfFile;
-		
 		createRepositoryForFile();
         addSkosData();
 
-        connection.add(rdfFile, baseURI, dataFormat, getVocabContext());
+        connection.add(rdfFile, baseURI, dataFormat);//, getVocabContext());
 	}
+
+    public VocabRepository(Repository repository) throws RepositoryException, IOException, RDFParseException
+    {
+        this.repository = repository;
+        connection = repository.getConnection();
+        addSkosData();
+    }
 
     private void addSkosData() throws IOException, RepositoryException, RDFParseException
     {
@@ -49,26 +50,11 @@ public class VocabRepository {
             RDFFormat.RDFXML,
             new URIImpl(SKOS_GRAPH_URL));
     }
-
-    public VocabRepository(Repository repository) throws RepositoryException, IOException, RDFParseException
-    {
-        this.repository = repository;
-        connection = repository.getConnection();
-        addSkosData();
-    }
 				
 	public Repository getRepository() {
 		return repository;
 	}
-	
-	public URI getVocabContext() {
-		if (rdfFile != null) {
-			return new URIImpl(VOCAB_DEFAULT_URL + rdfFile.getName());
-		}
 
-		return new URIImpl(VOCAB_DEFAULT_CONTEXT);
-	}
-	
 	private void createRepositoryForFile() throws RepositoryException {
 		File tempDir = new File(createDataDirName());
 		repository = new SailRepository(new MemoryStore(tempDir));
@@ -112,7 +98,7 @@ public class VocabRepository {
 		GraphQueryResult result = graphQuery.evaluate();
 		while (result.hasNext()) {
 			Statement statement = result.next();
-			connection.add(statement, getVocabContext());
+			connection.add(statement);
 		}		
 	}
 	

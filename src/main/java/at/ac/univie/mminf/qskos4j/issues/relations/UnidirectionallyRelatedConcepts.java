@@ -56,8 +56,6 @@ import java.util.Map;
 	private String createOmittedRelationsQuery(String[] inverseRelations) {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource1 ?resource2 "+
-				"FROM <" +vocabRepository.getVocabContext()+ "> "+
-
 				"WHERE {" +
 					"{?resource1 " +inverseRelations[0]+ " ?resource2 . "+
 					"FILTER NOT EXISTS {?resource2 "+inverseRelations[1]+ " ?resource1}}" +

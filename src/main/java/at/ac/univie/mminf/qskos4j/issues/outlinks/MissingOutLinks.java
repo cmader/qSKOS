@@ -74,7 +74,6 @@ public class MissingOutLinks extends Issue<CollectionReport<Value>> {
 	
 	private String createIRIQuery(Value concept) {
 		return "SELECT DISTINCT ?iri "+
-				"FROM <" +vocabRepository.getVocabContext()+ "> "+
 				"WHERE {{<"+concept.stringValue()+"> ?p ?iri .} UNION "+
 					"{?iri ?p <"+concept.stringValue()+"> .}"+
 					"FILTER isIRI(?iri) "+

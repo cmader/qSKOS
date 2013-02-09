@@ -51,7 +51,6 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
 	private String createDeprecatedPropertiesQuery() {
 		return SparqlPrefix.SKOS +
 			"SELECT DISTINCT ?iri ?deprProp "+
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
 			"WHERE {{?iri ?deprProp ?o .} UNION "+
 				"{?q ?deprProp ?iri .} "+
 				"FILTER isIRI(?iri) "+
@@ -95,8 +94,6 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
 	private String createIllegalTermsQuery() {
 		return SparqlPrefix.SKOS+ 
 			"SELECT DISTINCT ?illTerm ?s ?o "+
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
-			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
 			"WHERE {{?illTerm ?p ?o . } UNION "+
 			"{?s ?illTerm ?o . } UNION "+
 			"{?s ?p ?illTerm . } "+

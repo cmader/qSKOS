@@ -36,9 +36,6 @@ public class InvolvedConcepts extends Issue<CollectionReport<Value>> {
     private String createConceptsQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept "+
-                "FROM <" +vocabRepository.getVocabContext()+ "> "+
-                "FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
-
                 "WHERE {" +
                     "{?concept rdf:type/rdfs:subClassOf* skos:Concept} UNION "+
                     "{?concept skos:topConceptOf ?conceptScheme} UNION "+

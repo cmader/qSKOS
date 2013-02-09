@@ -40,7 +40,6 @@ public class ValuelessAssociativeRelations extends Issue<CollectionReport<Pair<U
 	private String createRedundantAssociativeRelationsQuery() {
 		return SparqlPrefix.SKOS +
 			"SELECT ?parent ?child ?otherchild "+
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
 			"WHERE {" +
 				"{" +
 					"?parent skos:narrower|skos:narrowerTransitive|^skos:broader|^skos:broaderTransitive ?child . " +

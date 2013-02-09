@@ -2,15 +2,14 @@ package at.ac.univie.mminf.qskos4j.servlet;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.Report.ReportStyle;
 import at.ac.univie.mminf.qskos4j.report.Report.ReportFormat;
+import at.ac.univie.mminf.qskos4j.report.Report.ReportStyle;
 import at.ac.univie.mminf.qskos4j.report.UnsupportedReportFormatException;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
@@ -19,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class QualityIssueServlet extends HttpServlet {
@@ -72,7 +72,7 @@ public class QualityIssueServlet extends HttpServlet {
             return ReportFormat.valueOf(requestedReportFormat);
         }
         catch (IllegalArgumentException e) {
-            throw new UnsupportedReportFormatException("Report format must be one of " +ReportFormat.values().toString());
+            throw new UnsupportedReportFormatException("Report format must be one of " +Arrays.asList(ReportFormat.values()).toString());
         }
         catch (NullPointerException e) {
             return ReportFormat.TXT;
@@ -84,7 +84,7 @@ public class QualityIssueServlet extends HttpServlet {
             return ReportStyle.valueOf(requestedReportStyle);
         }
         catch (IllegalArgumentException e) {
-            throw new UnsupportedReportStyleException("Report style must by one of " +ReportStyle.values().toString());
+            throw new UnsupportedReportStyleException("Report style must by one of " +Arrays.asList(ReportStyle.values()).toString());
         }
         catch (NullPointerException e) {
             return ReportStyle.SHORT;

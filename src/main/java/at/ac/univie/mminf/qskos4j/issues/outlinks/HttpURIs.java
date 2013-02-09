@@ -46,7 +46,7 @@ public class HttpURIs extends Issue<CollectionReport<URI>> {
 
     private String createIRIQuery() {
         return "SELECT DISTINCT ?iri "+
-            "FROM <" +vocabRepository.getVocabContext()+ "> "+
+            "FROM default "+
                 "WHERE {" +
                     "{{?s ?p ?iri .} UNION "+
                     "{?iri ?p ?o .} UNION "+

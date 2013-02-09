@@ -97,7 +97,6 @@ public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
 	private String createConceptLabelQuery(Value concept) {
 		return SparqlPrefix.SKOS+ 
 			"SELECT ?prefLabel ?altLabel ?hiddenLabel "+
-				"FROM <" +vocabRepository.getVocabContext()+ "> "+
 				"WHERE {{<"+concept.stringValue()+"> skos:prefLabel ?prefLabel .} UNION "+
 				"{<"+concept.stringValue()+"> skos:altLabel ?altLabel .} UNION "+
 				"{<"+concept.stringValue()+"> skos:hiddenLabel ?hiddenLabel .}}";

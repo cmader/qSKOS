@@ -58,9 +58,6 @@ public class HierarchyGraphBuilder {
 	private String createHierarchicalGraphQuery(String skosHierarchyProperties) {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource ?otherResource "+
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
-			"FROM <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
-
 			"WHERE {?resource ?hierarchyRelation ?otherResource . "+
 				"?hierarchyRelation rdfs:subPropertyOf* ?skosHierarchyRelation . "+
 				"FILTER (?skosHierarchyRelation IN (" +skosHierarchyProperties+ "))}";

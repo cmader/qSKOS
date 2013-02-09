@@ -49,8 +49,6 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionReport<Pa
 	{
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource1 ?resource2 "+
-				"FROM <" +vocabRepository.getVocabContext()+ "> "+
-
 				"WHERE {" +
 					"?resource1 " +transitiveNontransiviteInverseProperties[0]+ " ?resource2 . "+
 					"FILTER NOT EXISTS {?resource1 ("+transitiveNontransiviteInverseProperties[1]+ "|^"+transitiveNontransiviteInverseProperties[2]+")* ?resource2}" +

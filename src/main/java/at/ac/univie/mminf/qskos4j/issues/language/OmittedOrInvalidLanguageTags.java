@@ -45,10 +45,10 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
 	private String createMissingLangTagQuery() {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
 			"SELECT ?literal ?s ?p "+
-			
-			"FROM <" +vocabRepository.getVocabContext()+ "> "+
+
+            "FROM default "+
 			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
-			
+
 			"WHERE {" +
 				"?s ?p ?literal . " +
 			
