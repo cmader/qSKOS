@@ -27,11 +27,11 @@ public class NonHttpResourcesTest extends QskosTestCase {
 
     @Test
     public void testConceptsNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(1, httpUriSchemeViolationsForConcepts.getResult().getData().size());
+        Assert.assertEquals(1, httpUriSchemeViolationsForConcepts.getReport().getData().size());
     }
 
     @Test
     public void testResourcesNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(4, httpResourcesForUriSchemeViolations.getResult().getData().size());
+        Assert.assertEquals(4, httpResourcesForUriSchemeViolations.getReport().getData().size());
     }
 }

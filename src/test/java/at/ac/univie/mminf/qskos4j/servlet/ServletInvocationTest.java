@@ -1,5 +1,6 @@
 package at.ac.univie.mminf.qskos4j.servlet;
 
+import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.report.UnsupportedReportFormatException;
 import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import com.meterware.httpunit.GetMethodWebRequest;
@@ -52,7 +53,7 @@ public class ServletInvocationTest extends QskosTestCase {
                 break;
         }
 
-        request.setParameter("issueId", "c");
+        request.setParameter("issueId", new QSkos(null).getAllIssues().iterator().next().getId());
         invokeServlet(request);
     }
 
@@ -71,10 +72,19 @@ public class ServletInvocationTest extends QskosTestCase {
 
     @Test(expected = UnsupportedReportFormatException.class)
     public void unsupportedReportFormatTest() {
+        invokeWithInvalidReportParameter("reportFormat");
+    }
+
+    @Test(expected = UnsupportedReportStyleException.class)
+    public void unsupportedReportStyleTest() {
+        invokeWithInvalidReportParameter("reportStyle");
+    }
+
+    private void invokeWithInvalidReportParameter(String reportParameter) {
         ServletUnitClient sc = sr.newClient();
         WebRequest request = new PostMethodWebRequest(SERVLET_URL);
-        request.setParameter("issueId", "c");
-        request.setParameter("reportFormat", "bla");
+        request.setParameter("issueId", new QSkos(null).getAllIssues().iterator().next().getId());
+        request.setParameter(reportParameter, "nonsenseparameter");
 
         try {
             sc.getResponse(request);
@@ -85,11 +95,6 @@ public class ServletInvocationTest extends QskosTestCase {
         catch (SAXException e) {
             Assert.fail();
         }
-    }
-
-    @Test
-    public void unsupportedReportStyleTest() {
-        Assert.fail();
     }
 
 }

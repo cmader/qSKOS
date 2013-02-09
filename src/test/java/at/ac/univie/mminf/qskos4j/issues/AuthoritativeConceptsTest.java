@@ -30,7 +30,7 @@ public class AuthoritativeConceptsTest extends QskosTestCase {
         @Test
     public void testAuthoritativeConceptsCount() throws OpenRDFException
     {
-        Collection<Value> authoritativeConceptValues = authoritativeConcepts.getResult().getData();
+        Collection<Value> authoritativeConceptValues = authoritativeConcepts.getReport().getData();
         Assert.assertEquals(9, authoritativeConceptValues.size());
     }
 }

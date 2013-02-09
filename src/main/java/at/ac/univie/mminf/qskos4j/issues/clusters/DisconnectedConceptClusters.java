@@ -46,19 +46,19 @@ public class DisconnectedConceptClusters extends Issue<ClustersReport> {
 
     @Override
     protected ClustersReport invoke() throws OpenRDFException {
-        createGraph(involvedConcepts.getResult().getData());
+        createGraph();
 
         return new ClustersReport(
                 new ConnectivityInspector<Value, NamedEdge>(graph).connectedSets(),
                 graph);
     }
 
-    private void createGraph(Collection<Value> allConcepts)
+    private void createGraph()
             throws OpenRDFException
     {
         graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 
-        Iterator<Value> conceptIt = new MonitoredIterator<Value>(involvedConcepts.getResult().getData(), progressMonitor);
+        Iterator<Value> conceptIt = new MonitoredIterator<Value>(involvedConcepts.getReport().getData(), progressMonitor);
         while (conceptIt.hasNext()) {
             Collection<Relation> relations = findRelations(conceptIt.next());
 

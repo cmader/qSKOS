@@ -24,7 +24,7 @@ public class InconsistentPrefLabelsTest extends QskosTestCase {
 
     @Test
     public void testUniquePrefLabels() throws OpenRDFException {
-        Collection<LabelConflict> ambiguousResources = inconsistentPrefLabels.getResult().getData();
+        Collection<LabelConflict> ambiguousResources = inconsistentPrefLabels.getReport().getData();
 
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptA"));
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptA2"));

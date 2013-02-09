@@ -29,7 +29,7 @@ public class BrokenLinksTest extends QskosTestCase {
 
     @Test
     public void testBrokenLinks() throws OpenRDFException {
-        Collection<URL> brokenLinkURLs = brokenLinks.getResult().getData();
+        Collection<URL> brokenLinkURLs = brokenLinks.getReport().getData();
         Assert.assertEquals(1, brokenLinkURLs.size());
     }
 

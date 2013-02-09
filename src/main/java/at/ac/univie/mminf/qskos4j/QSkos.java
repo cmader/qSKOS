@@ -70,6 +70,7 @@ public class QSkos {
     private List<Issue> registeredIssues = new ArrayList<Issue>();
     private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
+
     public QSkos(VocabRepository vocabRepository) {
         this.vocabRepository = vocabRepository;
 
@@ -81,7 +82,14 @@ public class QSkos {
         }
     }
 
-	private void addAllIssues() throws OpenRDFException {
+    /**
+     * Constructor for testing purposes only; a null repository doesn't make much sense
+     */
+    public QSkos() {
+        this(null);
+    }
+
+    private void addAllIssues() throws OpenRDFException {
         registeredIssues.clear();
         addStatisticalIssues();
         addAnalyticalIssues();

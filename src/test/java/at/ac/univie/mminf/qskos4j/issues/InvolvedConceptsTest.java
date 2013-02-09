@@ -24,14 +24,14 @@ public class InvolvedConceptsTest extends QskosTestCase {
     @Test
     public void testConceptCount_1() throws OpenRDFException
     {
-        Collection<Value> involvedConceptValues = involvedConceptsForConcepts.getResult().getData();
+        Collection<Value> involvedConceptValues = involvedConceptsForConcepts.getReport().getData();
         Assert.assertEquals(10, involvedConceptValues.size());
     }
 
     @Test
     public void testConceptCount_2() throws OpenRDFException
     {
-        Collection<Value> involvedConceptValues = involvedConceptsForComponents.getResult().getData();
+        Collection<Value> involvedConceptValues = involvedConceptsForComponents.getReport().getData();
         Assert.assertEquals(21, involvedConceptValues.size());
     }
 }

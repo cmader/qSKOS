@@ -24,13 +24,13 @@ public class UndefinedSkosResourcesTest extends QskosTestCase {
 	
 	@Test
 	public void testUndefinedSkosResourcesCount_1() throws OpenRDFException {
-		Collection<URI> undefRes = undefinedSkosResourcesInConcepts.getResult().getData();
+		Collection<URI> undefRes = undefinedSkosResourcesInConcepts.getReport().getData();
 		Assert.assertEquals(3, undefRes.size());
 	}
 
 	@Test
 	public void testUndefinedSkosResourcesCount_2() throws OpenRDFException {
-		Collection<URI> undefRes = undefinedSkosResourcesInDeprecatedAndIllegal.getResult().getData();
+		Collection<URI> undefRes = undefinedSkosResourcesInDeprecatedAndIllegal.getReport().getData();
 		Assert.assertEquals(12, undefRes.size());
 	}
 	

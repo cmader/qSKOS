@@ -29,7 +29,7 @@ public class MissingInLinksTest extends QskosTestCase {
     public void testInLinksAsDbPedia() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("dbpedia.org");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getResult().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
         Assert.assertTrue(conceptsMissingInLinks.isEmpty());
     }
 
@@ -37,7 +37,7 @@ public class MissingInLinksTest extends QskosTestCase {
     public void testInLinksAsSTW() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("zbw.eu");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getResult().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
         Assert.assertEquals(2, conceptsMissingInLinks.size());
     }
 
@@ -45,7 +45,7 @@ public class MissingInLinksTest extends QskosTestCase {
     public void testInLinksAsBnf() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("data.bnf.fr");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getResult().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
         Assert.assertEquals(1, conceptsMissingInLinks.size());
     }
 
@@ -54,7 +54,7 @@ public class MissingInLinksTest extends QskosTestCase {
     public void testInLinksAsLocal() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("myvocab.org");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getResult().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
         Assert.assertEquals(1, conceptsMissingInLinks.size());
     }
 }

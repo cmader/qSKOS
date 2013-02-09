@@ -35,7 +35,7 @@ public class OrphanConcepts extends Issue<CollectionReport<Value>> {
         TupleQueryResult result = vocabRepository.query(createOrphanConceptsQuery());
         Set<Value> connectedConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
 
-        Set<Value> orphanConcepts = new HashSet<Value>(involvedConcepts.getResult().getData());
+        Set<Value> orphanConcepts = new HashSet<Value>(involvedConcepts.getReport().getData());
         orphanConcepts.removeAll(connectedConcepts);
 
         return new CollectionReport<Value>(orphanConcepts);

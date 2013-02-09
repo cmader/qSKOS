@@ -23,7 +23,7 @@ public class UndocumentedConceptsTest extends QskosTestCase {
 	
 	@Test
 	public void testAverageDocumentationCoverageRatio() throws OpenRDFException {
-		Assert.assertEquals(1, undocumentedConcepts.getResult().getData().size());
+		Assert.assertEquals(1, undocumentedConcepts.getReport().getData().size());
 	}
 	
 }

@@ -20,7 +20,7 @@ public class RelationClashesTest extends QskosTestCase {
 
     @Test
     public void testAssociativeVsHierarchicalClashes() throws OpenRDFException {
-        Assert.assertEquals(10, relationClashes.getResult().getData().size());
+        Assert.assertEquals(10, relationClashes.getReport().getData().size());
     }
 
 }

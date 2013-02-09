@@ -65,7 +65,7 @@ class ReportCollector {
             try {
                 StringWriter extensiveTextReportStringWriter = new StringWriter();
                 BufferedWriter extensiveTextReportStringBufWriter = new BufferedWriter(extensiveTextReportStringWriter);
-                issue.getResult().generateReport(extensiveTextReportStringBufWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
+                issue.getReport().generateReport(extensiveTextReportStringBufWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
                 extensiveTextReportStringBufWriter.close();
 
                 addConceptOccurences(uriSubstringToIssuesMapping, issue, extensiveTextReportStringWriter.toString(), conceptIterator);
@@ -123,11 +123,11 @@ class ReportCollector {
             try {
                 StringWriter stringWriter = new StringWriter();
                 BufferedWriter reportStringWriter = new BufferedWriter(stringWriter);
-                issue.getResult().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.SHORT);
+                issue.getReport().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.SHORT);
 
                 if (outputExtendedReport) {
                     reportStringWriter.newLine();
-                    issue.getResult().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
+                    issue.getReport().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
                 }
 
                 reportStringWriter.close();
@@ -135,7 +135,7 @@ class ReportCollector {
 
                 if (shouldWriteGraphs) {
                     BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(issue.getId() + ".dot"));
-                    issue.getResult().generateReport(graphFileWriter, Report.ReportFormat.DOT);
+                    issue.getReport().generateReport(graphFileWriter, Report.ReportFormat.DOT);
                     graphFileWriter.close();
                 }
             }

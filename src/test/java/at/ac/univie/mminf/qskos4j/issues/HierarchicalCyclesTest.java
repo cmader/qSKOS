@@ -30,12 +30,12 @@ public class HierarchicalCyclesTest extends QskosTestCase {
 
     @Test
     public void testCycleCount() throws OpenRDFException {
-        Assert.assertEquals(2, hierarchicalCycles.getResult().getData().size());
+        Assert.assertEquals(2, hierarchicalCycles.getReport().getData().size());
     }
 
     @Test
     public void testComponentsCycleCount() throws OpenRDFException {
-        Assert.assertEquals(3, hierarchicalCyclesForComponents.getResult().getData().size());
+        Assert.assertEquals(3, hierarchicalCyclesForComponents.getReport().getData().size());
     }
 
 }

@@ -50,7 +50,7 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovReport> {
 	{
 		languageCoverage = new HashMap<Value, Collection<String>>();
 		
-		Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getResult().getData(), progressMonitor);
+		Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getReport().getData(), progressMonitor);
 		while (it.hasNext()) {
             Value concept = it.next();
 

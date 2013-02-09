@@ -23,7 +23,7 @@ public class ValuelessAssociativeRelationsTest extends QskosTestCase {
 
     @Test
     public void testRedundantAssociativeRelationsCount() throws OpenRDFException {
-        Collection<Pair<URI>> redAssRels = valuelessAssociativeRelations.getResult().getData();
+        Collection<Pair<URI>> redAssRels = valuelessAssociativeRelations.getReport().getData();
         Assert.assertEquals(6, redAssRels.size());
     }
 }

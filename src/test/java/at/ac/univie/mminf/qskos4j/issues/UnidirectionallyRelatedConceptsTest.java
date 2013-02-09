@@ -23,7 +23,7 @@ public class UnidirectionallyRelatedConceptsTest extends QskosTestCase {
 
     @Test
     public void testMissingInverseRelationsCount() throws OpenRDFException {
-        Map<Pair<Resource>, String> missingRelations = unidirectionallyRelatedConcepts.getResult().getData();
+        Map<Pair<Resource>, String> missingRelations = unidirectionallyRelatedConcepts.getReport().getData();
         Assert.assertEquals(8, missingRelations.size());
     }
 }

@@ -20,7 +20,7 @@ public class SolelyTransitivelyRelatedConceptsTest extends QskosTestCase {
 
 	@Test
 	public void testSolitaryTransitiveRelationsCount() throws OpenRDFException {
-		Assert.assertEquals(4, solelyTransitivelyRelatedConcepts.getResult().getData().size());
+		Assert.assertEquals(4, solelyTransitivelyRelatedConcepts.getReport().getData().size());
 	}
 	
 }

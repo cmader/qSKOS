@@ -21,7 +21,7 @@ public class TopConceptsHavingBroaderConceptsTest extends QskosTestCase {
 	
 	@Test
 	public void testTopConceptsHavingBroaderConceptCount() throws OpenRDFException {
-		Assert.assertEquals(4, topConceptsHavingBroaderConcepts.getResult().getData().size());
+		Assert.assertEquals(4, topConceptsHavingBroaderConcepts.getReport().getData().size());
 	}
 	
 }

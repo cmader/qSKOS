@@ -26,6 +26,6 @@ public class ConceptSchemesTest extends QskosTestCase {
     @Test
     public void testLexicalRelationsCount() throws OpenRDFException
     {
-        Assert.assertEquals(5, conceptSchemes.getResult().getData().size());
+        Assert.assertEquals(5, conceptSchemes.getReport().getData().size());
     }
 }

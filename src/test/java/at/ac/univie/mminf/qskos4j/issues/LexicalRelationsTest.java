@@ -26,7 +26,7 @@ public class LexicalRelationsTest extends QskosTestCase {
 
     @Test
     public void testLexicalRelationsCount() throws OpenRDFException {
-        Assert.assertEquals(29, lexicalRelations.getResult().getData().longValue());
+        Assert.assertEquals(29, lexicalRelations.getReport().getData().longValue());
     }
 
 }

@@ -15,7 +15,7 @@ public abstract class Issue<T extends Report<?>> {
 
     private String id, name, description;
     private IssueType type;
-    private T result;
+    private T report;
 
     protected Issue(VocabRepository vocabRepository, String id, String name, String description, IssueType type) {
         this.id = id;
@@ -28,15 +28,15 @@ public abstract class Issue<T extends Report<?>> {
 
     protected abstract T invoke() throws OpenRDFException;
 
-    public final T getResult() throws OpenRDFException {
-        if (result == null) {
-            result = invoke();
+    public final T getReport() throws OpenRDFException {
+        if (report == null) {
+            report = invoke();
         }
-        return result;
+        return report;
     }
 
     protected final void reset() {
-        result = null;
+        report = null;
         if (progressMonitor != null) {
             progressMonitor.reset();
         }

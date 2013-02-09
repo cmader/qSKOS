@@ -31,8 +31,8 @@ public class DisconnectedConceptClustersTest extends QskosTestCase {
 
     @Test
     public void testComponentCount() throws OpenRDFException {
-        long conceptCount = involvedConcepts.getResult().getData().size();
-        Collection<Set<Value>> components = disconnectedConceptClusters.getResult().getData();
+        long conceptCount = involvedConcepts.getReport().getData().size();
+        Collection<Set<Value>> components = disconnectedConceptClusters.getReport().getData();
 
         Assert.assertEquals(7, components.size());
         Assert.assertTrue(getVertexCount(components) <= conceptCount);

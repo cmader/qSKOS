@@ -20,6 +20,6 @@ public class MappingClashesTest extends QskosTestCase {
 
     @Test
     public void testExactVsAssociativeMappingClashes() throws OpenRDFException {
-        Assert.assertEquals(3, mappingClashes.getResult().getData().size());
+        Assert.assertEquals(3, mappingClashes.getReport().getData().size());
     }
 }

@@ -55,7 +55,7 @@ public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
 		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
 
         progressMonitor.setTaskDescription("Collecting resource labels");
-        Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getResult().getData(), progressMonitor);
+        Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getReport().getData(), progressMonitor);
 
 		while (it.hasNext()) {
             Value concept = it.next();

@@ -37,7 +37,7 @@ public class OmittedTopConcepts extends Issue<CollectionReport<Resource>> {
         RepositoryConnection connection = vocabRepository.getRepository().getConnection();
         Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
 
-        for (Resource conceptScheme : conceptSchemes.getResult().getData()) {
+        for (Resource conceptScheme : conceptSchemes.getReport().getData()) {
 
             BooleanQuery hasTopConceptQuery = connection.prepareBooleanQuery(
                     QueryLanguage.SPARQL,

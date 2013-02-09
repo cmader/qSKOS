@@ -22,7 +22,7 @@ public class OmittedTopConceptsTest extends QskosTestCase {
 	
 	@Test
 	public void testConceptSchemesWithoutTopConceptsCount() throws OpenRDFException {
-		Assert.assertEquals(2, omittedTopConcepts.getResult().getData().size());
+		Assert.assertEquals(2, omittedTopConcepts.getReport().getData().size());
 	}
 	
 }

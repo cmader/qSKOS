@@ -27,11 +27,11 @@ public class HttpURIsTest extends QskosTestCase {
 
     @Test
     public void testConceptsHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(21, httpURIs1.getResult().getData().size());
+        Assert.assertEquals(21, httpURIs1.getReport().getData().size());
     }
 
     @Test
     public void testResourcesHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(8, httpURIs2.getResult().getData().size());
+        Assert.assertEquals(8, httpURIs2.getReport().getData().size());
     }
 }

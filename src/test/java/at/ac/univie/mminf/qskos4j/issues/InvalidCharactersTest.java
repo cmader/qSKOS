@@ -22,7 +22,7 @@ public class InvalidCharactersTest extends QskosTestCase {
         // all issues must run without exception
         try {
             for (Issue issue : qSkosInvalidCharacters.getAllIssues()) {
-                issue.getResult();
+                issue.getReport();
             }
         }
         catch (Exception e) {

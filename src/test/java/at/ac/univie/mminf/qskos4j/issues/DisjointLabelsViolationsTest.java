@@ -23,7 +23,7 @@ public class DisjointLabelsViolationsTest extends QskosTestCase {
     }
     @Test
     public void testDisjointLabels() throws OpenRDFException {
-        Collection<LabelConflict> ambiguousResources = disjointLabelsViolations.getResult().getData();
+        Collection<LabelConflict> ambiguousResources = disjointLabelsViolations.getReport().getData();
 
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptD"));
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptF"));

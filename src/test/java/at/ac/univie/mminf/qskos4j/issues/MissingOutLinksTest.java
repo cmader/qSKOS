@@ -30,11 +30,11 @@ public class MissingOutLinksTest extends QskosTestCase {
 
     @Test
     public void testComponentsMissingOutLinkCount() throws OpenRDFException {
-        Assert.assertEquals(involvedConceptsForComponents.getResult().getData().size(), missingOutLinksForComponents.getResult().getData().size());
+        Assert.assertEquals(involvedConceptsForComponents.getReport().getData().size(), missingOutLinksForComponents.getReport().getData().size());
     }
 
     @Test
     public void testConceptsMissingOutLinkCount() throws OpenRDFException {
-        Assert.assertEquals(7, missingOutLinksForConcepts.getResult().getData().size());
+        Assert.assertEquals(7, missingOutLinksForConcepts.getReport().getData().size());
     }
 }

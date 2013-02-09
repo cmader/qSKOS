@@ -27,7 +27,7 @@ public class AggregationRelationsTest extends QskosTestCase {
     @Test
     public void testAggregationRelationsCount() throws OpenRDFException
     {
-        Assert.assertEquals(7, aggregationRelations.getResult().getData().longValue());
+        Assert.assertEquals(7, aggregationRelations.getReport().getData().longValue());
     }
 
 }

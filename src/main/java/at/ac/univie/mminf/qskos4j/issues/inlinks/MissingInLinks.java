@@ -68,10 +68,10 @@ public class MissingInLinks extends Issue<CollectionReport<Value>> {
 	private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
     {
 		if (randomSubsetSize_percent == null) {
-			return authoritativeConcepts.getResult().getData();
+			return authoritativeConcepts.getReport().getData();
 		}
 		else {
-			return new RandomSubSet<Value>(authoritativeConcepts.getResult().getData(), randomSubsetSize_percent);
+			return new RandomSubSet<Value>(authoritativeConcepts.getReport().getData(), randomSubsetSize_percent);
 		}
 	}
 	

@@ -62,7 +62,7 @@ public class AuthoritativeConcepts extends Issue<CollectionReport<Value>> {
         HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
 
         Iterator<Value> resourcesListIt = new MonitoredIterator<Value>(
-                involvedConcepts.getResult().getData(),
+                involvedConcepts.getReport().getData(),
                 progressMonitor,
                 "guessing publishing host");
 
@@ -84,7 +84,7 @@ public class AuthoritativeConcepts extends Issue<CollectionReport<Value>> {
     {
         Collection<Value> authoritativeConcepts = new HashSet<Value>();
 
-        for (Value concept : involvedConcepts.getResult().getData()) {
+        for (Value concept : involvedConcepts.getReport().getData()) {
             String lowerCaseUriValue = concept.toString().toLowerCase();
 
             if (lowerCaseUriValue.contains(authResourceIdentifier.toLowerCase()))

@@ -29,13 +29,13 @@ public class OrphanConceptsTest extends QskosTestCase {
 
     @Test
     public void testConceptsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConceptsForConcepts.getResult().getData();
+        Collection<Value> orphanConceptValues = orphanConceptsForConcepts.getReport().getData();
         Assert.assertEquals(7, orphanConceptValues.size());
     }
 
     @Test
     public void testComponentsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConceptsForComponents.getResult().getData();
+        Collection<Value> orphanConceptValues = orphanConceptsForComponents.getReport().getData();
         Assert.assertEquals(2, orphanConceptValues.size());
     }
 }

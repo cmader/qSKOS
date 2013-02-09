@@ -49,7 +49,7 @@ public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
 		List<Value> undocumentedConcepts = new ArrayList<Value>();
 		
 		Iterator<Value> conceptIt = new MonitoredIterator<Value>(
-            authoritativeConcepts.getResult().getData(),
+            authoritativeConcepts.getReport().getData(),
             progressMonitor);
 
 		while (conceptIt.hasNext()) {

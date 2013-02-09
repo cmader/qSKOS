@@ -39,7 +39,7 @@ public class LexicalRelations extends Issue<NumberReport<Long>> {
     protected NumberReport<Long> invoke() throws OpenRDFException {
         long relationsCount = 0;
 
-        for (Value concept : involvedConcepts.getResult().getData()) {
+        for (Value concept : involvedConcepts.getReport().getData()) {
             try {
                 TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));
                 relationsCount += TupleQueryResultUtil.countResults(result);
