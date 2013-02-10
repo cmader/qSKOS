@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,14 +18,14 @@ import java.util.Set;
  * Date: 26.01.13
  * Time: 15:43
  */
-public class DisconnectedConceptClustersTest extends QskosTestCase {
+public class DisconnectedConceptClustersTest {
 
     private DisconnectedConceptClusters disconnectedConceptClusters;
     private InvolvedConcepts involvedConcepts;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConcepts = new InvolvedConcepts(setUpRepository("components.rdf"));
+        involvedConcepts = new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf"));
         disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
     }
 

@@ -9,6 +9,7 @@ import org.openrdf.model.Value;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 public class ClustersReport extends CollectionReport<Set<Value>>
@@ -26,17 +27,23 @@ public class ClustersReport extends CollectionReport<Set<Value>>
 		long compCount = 1;
 		
 		if (style == ReportStyle.SHORT) {
-			report.append("count: ").append(getData().size());
+			report.append("count: ").append(getData().size()).append("\n");
 		}
-		
-		for (Set<Value> component : getData()) {
-			report.append("\ncomponent ").append(compCount).append(", size: ").append(component.size());
+
+        Iterator<Set<Value>> componentIt = getData().iterator();
+        while (componentIt.hasNext()) {
+            Set<Value> component = componentIt.next();
+
+			report.append("component ").append(compCount).append(", size: ").append(component.size());
 			if (style == ReportStyle.EXTENSIVE) {
-                for (Value resource : component) {
-                    report.append("\n\t").append(resource.toString());
+                Iterator<Value> resourceIt = component.iterator();
+                while (resourceIt.hasNext()) {
+                    report.append("\n\t").append(resourceIt.next().toString());
                 }
 			}
 			compCount++;
+
+            if (componentIt.hasNext()) report.append("\n");
 		}
 		
 		osw.write(report.toString());

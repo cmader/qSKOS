@@ -184,7 +184,16 @@ public class QSkos {
             }
         }
 
-        throw new UnknownIssueIdException(issueId);
+        throw new UnknownIssueIdException(issueId, generateSupportedIssueIdList());
+    }
+
+    private String generateSupportedIssueIdList() {
+        String supportedIssueIds = "";
+        Iterator<Issue> allIssuesIt = getAllIssues().iterator();
+        while (allIssuesIt.hasNext()) {
+            supportedIssueIds += allIssuesIt.next().getId() + (allIssuesIt.hasNext() ? ", " : "");
+        }
+        return supportedIssueIds;
     }
 
 	/**

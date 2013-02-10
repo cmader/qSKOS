@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.report;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Report class that holds a collection of objects of interest
@@ -33,9 +34,9 @@ public class CollectionReport<T> extends Report<Collection<T>> {
 
 	public String generateExtensiveTextReport() {
         StringBuilder report = new StringBuilder();
-
-        for (T dataItem : getData()) {
-            report.append("\n").append(dataItem.toString());
+        Iterator<T> dataIt = getData().iterator();
+        while (dataIt.hasNext()) {
+            report.append(dataIt.next().toString()).append(dataIt.hasNext() ? "\n" : "");
         }
 
         return report.toString();

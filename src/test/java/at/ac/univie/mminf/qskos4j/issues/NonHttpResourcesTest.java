@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpUriSchemeViolations;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,14 +14,14 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 17:15
  */
-public class NonHttpResourcesTest extends QskosTestCase {
+public class NonHttpResourcesTest {
 
     private HttpUriSchemeViolations httpUriSchemeViolationsForConcepts, httpResourcesForUriSchemeViolations;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        httpUriSchemeViolationsForConcepts = new HttpUriSchemeViolations(setUpRepository("concepts.rdf"));
-        httpResourcesForUriSchemeViolations = new HttpUriSchemeViolations(setUpRepository("resources.rdf"));
+        httpUriSchemeViolationsForConcepts = new HttpUriSchemeViolations(VocabRepository.setUpFromTestResource("concepts.rdf"));
+        httpResourcesForUriSchemeViolations = new HttpUriSchemeViolations(VocabRepository.setUpFromTestResource("resources.rdf"));
     }
 
 

@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,14 +17,14 @@ import java.util.Collection;
  * Date: 26.01.13
  * Time: 13:48
  */
-public class OrphanConceptsTest extends QskosTestCase {
+public class OrphanConceptsTest {
 
     private OrphanConcepts orphanConceptsForConcepts, orphanConceptsForComponents;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts(setUpRepository("concepts.rdf")));
-        orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts(setUpRepository("components.rdf")));
+        orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("concepts.rdf")));
+        orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
     }
 
     @Test

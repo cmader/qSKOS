@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.qskos;
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.UnknownIssueIdException;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,14 +12,14 @@ import org.openrdf.OpenRDFException;
 import java.io.IOException;
 import java.util.*;
 
-public class IssueIdTest extends QskosTestCase {
+public class IssueIdTest {
 
     private QSkos qskos;
 
     @Before
     public void setUp() throws IOException, OpenRDFException
     {
-        qskos = new QSkos(setUpRepository("nocontent.rdf"));
+        qskos = new QSkos(VocabRepository.setUpFromTestResource("nocontent.rdf"));
     }
 
     @Test

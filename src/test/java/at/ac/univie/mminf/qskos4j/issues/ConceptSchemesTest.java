@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +14,13 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 14:47
  */
-public class ConceptSchemesTest extends QskosTestCase {
+public class ConceptSchemesTest {
 
     private ConceptSchemes conceptSchemes;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        conceptSchemes = new ConceptSchemes(setUpRepository("aggregations.rdf"));
+        conceptSchemes = new ConceptSchemes(VocabRepository.setUpFromTestResource("aggregations.rdf"));
     }
 
     @Test

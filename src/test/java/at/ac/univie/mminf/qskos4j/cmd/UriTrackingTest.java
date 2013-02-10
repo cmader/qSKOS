@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-public class UriTrackingTest extends QskosTestCase {
+public class UriTrackingTest {
 
     private ReportCollector reportCollector;
     private File uriTrackFile;
@@ -25,7 +25,7 @@ public class UriTrackingTest extends QskosTestCase {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        InvolvedConcepts involvedConcepts = new InvolvedConcepts(setUpRepository("components.rdf"));
+        InvolvedConcepts involvedConcepts = new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf"));
 
         disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
         incompleteLanguageCoverage = new IncompleteLanguageCoverage(involvedConcepts);

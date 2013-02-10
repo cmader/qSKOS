@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -15,14 +14,14 @@ import java.io.IOException;
  * Date: 27.01.13
  * Time: 00:20
  */
-public class HierarchicalCyclesTest extends QskosTestCase {
+public class HierarchicalCyclesTest {
 
     private HierarchicalCycles hierarchicalCycles, hierarchicalCyclesForComponents;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        VocabRepository cyclesRepo = setUpRepository("cycles.rdf");
-        VocabRepository componentsRepo = setUpRepository("components.rdf");
+        VocabRepository cyclesRepo = VocabRepository.setUpFromTestResource("cycles.rdf");
+        VocabRepository componentsRepo = VocabRepository.setUpFromTestResource("components.rdf");
 
         hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(cyclesRepo));
         hierarchicalCyclesForComponents = new HierarchicalCycles(new HierarchyGraphBuilder(componentsRepo));

@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.count.Collections;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +14,13 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 14:47
  */
-public class CollectionsTest extends QskosTestCase {
+public class CollectionsTest {
 
     private Collections collections;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        collections = new Collections(setUpRepository("aggregations.rdf"));
+        collections = new Collections(VocabRepository.setUpFromTestResource("aggregations.rdf"));
     }
 
     @Test

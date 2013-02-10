@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,14 +11,14 @@ import org.openrdf.model.Value;
 import java.io.IOException;
 import java.util.Collection;
 
-public class InvolvedConceptsTest extends QskosTestCase {
+public class InvolvedConceptsTest {
 
     private InvolvedConcepts involvedConceptsForConcepts, involvedConceptsForComponents;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConceptsForConcepts = new InvolvedConcepts(setUpRepository("concepts.rdf"));
-        involvedConceptsForComponents = new InvolvedConcepts(setUpRepository("components.rdf"));
+        involvedConceptsForConcepts = new InvolvedConcepts(VocabRepository.setUpFromTestResource("concepts.rdf"));
+        involvedConceptsForComponents = new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf"));
     }
 
     @Test

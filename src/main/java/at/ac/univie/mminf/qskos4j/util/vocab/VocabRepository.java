@@ -1,5 +1,6 @@
 package at.ac.univie.mminf.qskos4j.util.vocab;
 
+import org.junit.Assert;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.URIImpl;
@@ -49,6 +50,15 @@ public class VocabRepository {
             SKOS_BASE_URI,
             RDFFormat.RDFXML,
             new URIImpl(SKOS_GRAPH_URL));
+    }
+
+    public static VocabRepository setUpFromTestResource(String testFileName)
+        throws OpenRDFException, IOException
+    {
+        URL conceptsUrl = VocabRepository.class.getResource("/" +testFileName);
+        File conceptsFile = new File(conceptsUrl.getFile());
+        Assert.assertNotNull(conceptsFile);
+        return new VocabRepository(conceptsFile, null, RDFFormat.RDFXML);
     }
 				
 	public Repository getRepository() {

@@ -5,7 +5,6 @@ import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -14,7 +13,7 @@ import org.openrdf.OpenRDFException;
 
 import java.io.IOException;
 
-public class SkosXlTest extends QskosTestCase {
+public class SkosXlTest {
 
 	private LexicalRelations lexicalRelations;
     private OmittedOrInvalidLanguageTags omittedOrInvalidLanguageTags;
@@ -23,7 +22,7 @@ public class SkosXlTest extends QskosTestCase {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        VocabRepository repo = setUpRepository("skosxl.rdf");
+        VocabRepository repo = VocabRepository.setUpFromTestResource("skosxl.rdf");
         repo.enableSkosXlSupport();
 
         InvolvedConcepts involvedConcepts = new InvolvedConcepts(repo);

@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.servlet;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.report.UnsupportedReportFormatException;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.PostMethodWebRequest;
 import com.meterware.httpunit.WebRequest;
@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
-public class ServletInvocationTest extends QskosTestCase {
+public class ServletInvocationTest {
 
     private final static String SERVLET_URL = "http://somehost.org/qualityIssueServlet";
     private enum HttpMethod {POST, GET}
@@ -26,7 +26,7 @@ public class ServletInvocationTest extends QskosTestCase {
     @Before
     public void setUp() throws IOException, OpenRDFException {
         sr = new ServletRunner();
-        sr.setContextParameter("repository", setUpRepository("concepts.rdf").getRepository());
+        sr.setContextParameter("repository", VocabRepository.setUpFromTestResource("concepts.rdf").getRepository());
         sr.registerServlet("qualityIssueServlet", QualityIssueServlet.class.getName());
     }
 

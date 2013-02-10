@@ -60,7 +60,8 @@ public class DisconnectedConceptClusters extends Issue<ClustersReport> {
 
         Iterator<Value> conceptIt = new MonitoredIterator<Value>(involvedConcepts.getReport().getData(), progressMonitor);
         while (conceptIt.hasNext()) {
-            Collection<Relation> relations = findRelations(conceptIt.next());
+            Value concept = conceptIt.next();
+            Collection<Relation> relations = findRelations(concept);
 
             for (Relation relation : relations) {
                 addNodesToGraph(

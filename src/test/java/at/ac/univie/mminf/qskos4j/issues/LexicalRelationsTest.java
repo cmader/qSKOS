@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,13 +15,13 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 14:18
  */
-public class LexicalRelationsTest extends QskosTestCase {
+public class LexicalRelationsTest {
 
     private LexicalRelations lexicalRelations;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        lexicalRelations = new LexicalRelations(new InvolvedConcepts(setUpRepository("components.rdf")));
+        lexicalRelations = new LexicalRelations(new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
     }
 
     @Test

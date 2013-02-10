@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,15 +18,15 @@ import java.util.Map;
  * Date: 27.01.13
  * Time: 00:42
  */
-public class OmittedOrInvalidLanguageTagsTest extends QskosTestCase {
+public class OmittedOrInvalidLanguageTagsTest {
 
     private OmittedOrInvalidLanguageTags oiltComponents, oiltDeprecatedAndIllegal, oiltLangTags;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        oiltComponents = new OmittedOrInvalidLanguageTags(setUpRepository("components.rdf"));
-        oiltDeprecatedAndIllegal = new OmittedOrInvalidLanguageTags(setUpRepository("deprecatedAndIllegalTerms.rdf"));
-        oiltLangTags = new OmittedOrInvalidLanguageTags(setUpRepository("languageTags.rdf"));
+        oiltComponents = new OmittedOrInvalidLanguageTags(VocabRepository.setUpFromTestResource("components.rdf"));
+        oiltDeprecatedAndIllegal = new OmittedOrInvalidLanguageTags(VocabRepository.setUpFromTestResource("deprecatedAndIllegalTerms.rdf"));
+        oiltLangTags = new OmittedOrInvalidLanguageTags(VocabRepository.setUpFromTestResource("languageTags.rdf"));
     }
 
     @Test

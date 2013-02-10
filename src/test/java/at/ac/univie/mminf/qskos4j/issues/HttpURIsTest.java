@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,14 +14,14 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 15:33
  */
-public class HttpURIsTest extends QskosTestCase {
+public class HttpURIsTest {
 
     private HttpURIs httpURIs1, httpURIs2;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        httpURIs1 = new HttpURIs(setUpRepository("concepts.rdf"));
-        httpURIs2 = new HttpURIs(setUpRepository("resources.rdf"));
+        httpURIs1 = new HttpURIs(VocabRepository.setUpFromTestResource("concepts.rdf"));
+        httpURIs2 = new HttpURIs(VocabRepository.setUpFromTestResource("resources.rdf"));
     }
 
 

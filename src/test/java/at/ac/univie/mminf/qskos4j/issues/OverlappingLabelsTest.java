@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,14 +15,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class OverlappingLabelsTest extends QskosTestCase {
+public class OverlappingLabelsTest {
 
     private OverlappingLabels overlappingLabelsForComponents, overlappingLabelsForRelatedConcepts;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts(setUpRepository("components.rdf")));
-        overlappingLabelsForRelatedConcepts = new OverlappingLabels(new InvolvedConcepts(setUpRepository("relatedConcepts.rdf")));
+        overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
+        overlappingLabelsForRelatedConcepts = new OverlappingLabels(new InvolvedConcepts(VocabRepository.setUpFromTestResource("relatedConcepts.rdf")));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.count.SemanticRelations;
-import at.ac.univie.mminf.qskos4j.util.QskosTestCase;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +14,13 @@ import java.io.IOException;
  * Date: 26.01.13
  * Time: 14:22
  */
-public class SemanticRelationsTest extends QskosTestCase {
+public class SemanticRelationsTest {
 
     private SemanticRelations semanticRelations;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        semanticRelations = new SemanticRelations(setUpRepository("components.rdf"));
+        semanticRelations = new SemanticRelations(VocabRepository.setUpFromTestResource("components.rdf"));
     }
 
     @Test
