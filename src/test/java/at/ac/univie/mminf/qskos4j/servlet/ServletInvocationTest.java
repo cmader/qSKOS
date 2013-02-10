@@ -20,7 +20,6 @@ import java.io.IOException;
 public class ServletInvocationTest {
 
     private final static String SERVLET_URL = "http://somehost.org/qualityIssueServlet";
-    private enum HttpMethod {POST, GET}
     private ServletRunner sr;
 
     @Before
@@ -32,27 +31,7 @@ public class ServletInvocationTest {
 
     @Test
     public void testHttpGetInvocation() {
-        testHttpInvocation(HttpMethod.GET);
-    }
-
-    @Test
-    public void testHttpPostInvocation() {
-        testHttpInvocation(HttpMethod.POST);
-    }
-
-    private void testHttpInvocation(HttpMethod method) {
-        WebRequest request = null;
-
-        switch (method) {
-            case POST:
-                request = new PostMethodWebRequest(SERVLET_URL);
-                break;
-
-            case GET:
-                request = new GetMethodWebRequest(SERVLET_URL);
-                break;
-        }
-
+        WebRequest request = new GetMethodWebRequest(SERVLET_URL);
         request.setParameter("issueId", new QSkos(null).getAllIssues().iterator().next().getId());
         invokeServlet(request);
     }
@@ -82,7 +61,7 @@ public class ServletInvocationTest {
 
     private void invokeWithInvalidReportParameter(String reportParameter) {
         ServletUnitClient sc = sr.newClient();
-        WebRequest request = new PostMethodWebRequest(SERVLET_URL);
+        WebRequest request = new GetMethodWebRequest(SERVLET_URL);
         request.setParameter("issueId", new QSkos(null).getAllIssues().iterator().next().getId());
         request.setParameter(reportParameter, "nonsensevalue");
 

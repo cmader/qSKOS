@@ -52,13 +52,6 @@ public class QualityIssueServlet extends HttpServlet {
         generateResponse(resp);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-    {
-        processRequest(req);
-        generateResponse(resp);
-    }
-
     private void processRequest(HttpServletRequest req) {
         String issueIds = req.getParameter(REQ_PARAM_ISSUE_ID);
 
