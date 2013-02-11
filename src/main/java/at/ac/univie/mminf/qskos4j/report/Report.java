@@ -8,7 +8,7 @@ import java.io.StringWriter;
 
 public abstract class Report<T> {
 
-    public enum ReportFormat {TXT, DOT, RDF, PDF}
+    public enum ReportFormat {TXT, DOT, RDF, HTML, PDF}
     public enum ReportStyle {SHORT, EXTENSIVE}
     private T data;
 
