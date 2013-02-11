@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        >
+
+    <!-- Case 1; ok; no label at all -->
+    <rdf:Description rdf:about="conceptA">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </rdf:Description>
+
+    <!-- Case 2; ok; prefLabel longer than 2 characters -->
+    <rdf:Description rdf:about="conceptB">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel>ABC</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Case 2; error; preflabel shorter than 3 characters -->
+    <rdf:Description rdf:about="conceptC">
+        <skos:prefLabel>AB</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Case 3; error; altlabel shorter than 3 characters -->
+    <rdf:Description rdf:about="conceptD">
+        <skos:altLabel>AB</skos:altLabel>
+    </rdf:Description>
+
+    <!-- Case 4; error; hiddenlabel shorter than 3 characters -->
+    <rdf:Description rdf:about="conceptE">
+        <skos:hiddenLabel>AB</skos:hiddenLabel>
+    </rdf:Description>
+
+    <!-- Case 4; error; prefLabel longer than 2 characters, altLabel shorter than 3 characters -->
+    <rdf:Description rdf:about="conceptF">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel>ABC</skos:prefLabel>
+        <skos:altLabel>AB</skos:altLabel>
+    </rdf:Description>
+
+</rdf:RDF>
