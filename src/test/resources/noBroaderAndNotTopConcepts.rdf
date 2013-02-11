@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+        >
+
+    <!-- Case 1; ok; topconcept definition 1 -->
+    <rdf:Description rdf:about="conceptSchemeA">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+        <skos:hasTopConcept rdf:resource="resourceA"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="resourceA">
+        <skos:inScheme rdf:resource="conceptSchemeA"/>
+    </rdf:Description>
+
+    <!-- Case 2; ok; topconcept definition 2 -->
+    <rdf:Description rdf:about="resourceB">
+        <skos:topConceptOf rdf:resource="conceptSchemeB"/>
+    </rdf:Description>
+
+    <!-- Case 3; error -->
+    <rdf:Description rdf:about="resourceD">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </rdf:Description>
+
+    <!-- Case 4; ok -->
+    <rdf:Description rdf:about="resourceE">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="resourceF"/>
+    </rdf:Description>
+
+    <!-- Case 5; error -->
+    <rdf:Description rdf:about="resourceG">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:narrower rdf:resource="resourceH"/>
+    </rdf:Description>
+
+    <!-- Case 6; ok -->
+    <rdf:Description rdf:about="resourceI">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="resourceJ">
+        <skos:narrower rdf:resource="resourceI"/>
+    </rdf:Description>
+
+
+</rdf:RDF>
