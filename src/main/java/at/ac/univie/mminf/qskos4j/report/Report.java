@@ -1,7 +1,5 @@
 package at.ac.univie.mminf.qskos4j.report;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -41,11 +39,11 @@ public abstract class Report<T> {
     }
 
     protected void generateTextReport(BufferedWriter writer, ReportStyle style) throws IOException {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
 	public void generateDotReport(BufferedWriter writer) throws IOException {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
 	}
 	
 	@Override
