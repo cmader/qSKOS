@@ -137,27 +137,37 @@
 		</plugin>
 	</plugins>
   </build>
+
   <pluginRepositories>
 	<pluginRepository>
 		<id>onejar-maven-plugin.googlecode.com</id>
 		<url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
 	</pluginRepository>
   </pluginRepositories>
-  <repositories>  
+
+  <repositories>
   	<repository>
       <id>openrdf</id>
       <name>openrdf repository</name>
       <url>http://repo.aduna-software.org/maven2/releases</url>
     </repository>
   </repositories>
+
   <properties>
   	<sesame.version>2.6.10</sesame.version>
   </properties>
+
   <distributionManagement>
-    <snapshotRepository>
-        <id>develop.mminf.univie.ac.at</id>
-        <name>develop.mminf.univie.ac.at-snapshots</name>
-        <url>http://develop.mminf.univie.ac.at/artifactory/mis-snapshots</url>
-    </snapshotRepository>
+    <repository>
+        <id>punkt</id>
+        <name>Punkt Repository</name>
+        <url>scp://mvn.punkt.at/var/www/mvn.punkt.at/</url>
+        <uniqueVersion>false</uniqueVersion>
+    </repository>
+    <site>
+        <id>mysite</id>
+        <url>scp://mvn.punkt.at/var/www/mvn.punkt.at/maven-sites/PoolPartyCaipirinhaMaven/${project.version}</url>
+    </site>
   </distributionManagement>
+
 </project>
