@@ -13,12 +13,15 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 public class HierarchyGraphBuilder {
 
 	private enum HierarchyStyle {BROADER, NARROWER}
-	
-	private final String skosBroaderProperties = "skos:broader, skos:broaderTransitive, skos:broadMatch";
-	private final String skosNarrowerProperties = "skos:narrower, skos:narrowerTransitive, skos:narrowMatch";	
+
+	private final String[] skosBroaderProperties = {"skos:broader", "skos:broaderTransitive", "skos:broadMatch"};
+	private final String[] skosNarrowerProperties = {"skos:narrower", "skos:narrowerTransitive", "skos:narrowMatch"};
 
 	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 	private VocabRepository vocabRepository;
@@ -42,7 +45,7 @@ public class HierarchyGraphBuilder {
 	private TupleQueryResult findTriples(HierarchyStyle hierarchyStyle)
 		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
 	{
-		String skosHierarchyProperties = null;
+		String[] skosHierarchyProperties = null;
 		switch (hierarchyStyle) {
 		case BROADER:
 			skosHierarchyProperties = skosBroaderProperties;
@@ -55,13 +58,37 @@ public class HierarchyGraphBuilder {
 		return vocabRepository.query(query);
 	}
 	
-	private String createHierarchicalGraphQuery(String skosHierarchyProperties) {
+	private String createHierarchicalGraphQuery(String[] skosHierarchyProperties) {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource ?otherResource "+
-			"WHERE {?resource ?hierarchyRelation ?otherResource . "+
-				"?hierarchyRelation rdfs:subPropertyOf* ?skosHierarchyRelation . "+
-				"FILTER (?skosHierarchyRelation IN (" +skosHierarchyProperties+ "))}";
+			"WHERE {" +
+                "{?resource " +createHierarchyPropertyPath(skosHierarchyProperties)+ " ?otherResource}" +
+                "UNION" +
+                "{"+
+                    "?resource ?hierarchyRelation ?otherResource ."+
+                    "?hierarchyRelation rdfs:subPropertyOf+ ?skosHierarchyRelation ."+
+                    "FILTER (?skosHierarchyRelation IN " +createHierarchyPropertyList(skosHierarchyProperties) +")" +
+                "}"+
+            "}";
 	}
+
+    private String createHierarchyPropertyPath(String[] skosHierarchyProperties) {
+        String propertyPath = "(";
+        Iterator<String> propIt = Arrays.asList(skosHierarchyProperties).iterator();
+        while (propIt.hasNext()) {
+            propertyPath += propIt.next() + (propIt.hasNext() ? "|" : ")");
+        }
+        return propertyPath;
+    }
+
+    private String createHierarchyPropertyList(String[] skosHierarchyProperties) {
+        String propertyList = "(";
+        Iterator<String> propIt = Arrays.asList(skosHierarchyProperties).iterator();
+        while (propIt.hasNext()) {
+            propertyList += propIt.next() + (propIt.hasNext() ? ", " : ")");
+        }
+        return propertyList;
+    }
 	
 	private void addResultsToGraph(TupleQueryResult result, boolean invertEdges) 
 		throws QueryEvaluationException

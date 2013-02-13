@@ -82,13 +82,6 @@ public class QSkos {
         }
     }
 
-    /**
-     * Constructor for testing purposes only; a null repository doesn't make much sense
-     */
-    public QSkos() {
-        this(null);
-    }
-
     private void addAllIssues() throws OpenRDFException {
         registeredIssues.clear();
         addStatisticalIssues();
