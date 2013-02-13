@@ -102,7 +102,6 @@
 			<artifactId>maven-jar-plugin</artifactId>
 			<version>2.4</version>
 			<configuration>
-				<outputDirectory>${project.build.directory}/..</outputDirectory>
 				<archive>
 					<manifest>
 						<mainClass>at.ac.univie.mminf.qskos4j.cmd.VocEvaluate</mainClass>
@@ -117,7 +116,6 @@
 			<artifactId>onejar-maven-plugin</artifactId>
 			<version>1.4.4</version>
 			<configuration>
-				<outputDirectory>${project.build.directory}/..</outputDirectory>
 				<filename>qSKOS-cmd.jar</filename>
 			</configuration>
 			

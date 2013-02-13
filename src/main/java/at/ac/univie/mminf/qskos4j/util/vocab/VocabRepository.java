@@ -25,18 +25,15 @@ public class VocabRepository {
 	private Repository repository;
 	private RepositoryConnection connection;
 
-	public VocabRepository(
-		File rdfFile,
-		String baseURI,
-		RDFFormat dataFormat) throws OpenRDFException, IOException
+	public VocabRepository(File rdfFile,String baseURI,RDFFormat dataFormat) throws OpenRDFException, IOException
 	{
 		createRepositoryForFile();
         addSkosData();
 
-        connection.add(rdfFile, baseURI, dataFormat);//, getVocabContext());
+        connection.add(rdfFile, baseURI, dataFormat);
 	}
 
-    public VocabRepository(Repository repository) throws RepositoryException, IOException, RDFParseException
+    public VocabRepository(Repository repository) throws OpenRDFException, IOException
     {
         this.repository = repository;
         connection = repository.getConnection();
