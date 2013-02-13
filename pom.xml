@@ -5,32 +5,20 @@
   <version>0.9.3pp</version>
   <name>qSKOS</name>
   <dependencies>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-repository-sail</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-sail-nativerdf</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-sail-memory</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
+    <dependency>
+        <groupId>org.openrdf.sesame</groupId>
+        <artifactId>openrdf-sesame</artifactId>
+        <version>2.6.9</version>
+        <classifier>onejar</classifier>
+        <scope>provided</scope>
+    </dependency>
+
   	<dependency>
   		<groupId>junit</groupId>
   		<artifactId>junit</artifactId>
   		<version>4.10</version>
   		<type>jar</type>
   		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-queryparser-sparql</artifactId>
-  		<version>${sesame.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.jgrapht</groupId>
@@ -44,41 +32,26 @@
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
-	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-rio-rdfxml</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-rio-turtle</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-rio-n3</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-rio-ntriples</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-rio-trix</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openrdf.sesame</groupId>
-  		<artifactId>sesame-rio-trig</artifactId>
-  		<version>${sesame.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>ch.qos.logback</groupId>
-  		<artifactId>logback-classic</artifactId>
-  		<version>1.0.0</version>
-  	</dependency>
+
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.5.8</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.5.8</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+        <scope>provided</scope>
+    </dependency>
+
   	<dependency>
   		<groupId>com.beust</groupId>
   		<artifactId>jcommander</artifactId>
@@ -146,16 +119,18 @@
   </pluginRepositories>
 
   <repositories>
-  	<repository>
-      <id>openrdf</id>
-      <name>openrdf repository</name>
-      <url>http://repo.aduna-software.org/maven2/releases</url>
+    <repository>
+        <id>punkt</id>
+        <name>Punkt Repository</name>
+        <url>https://mvn.punkt.at</url>
+    </repository>
+
+    <repository>
+        <id>openrdf</id>
+        <name>openrdf repository</name>
+        <url>http://repo.aduna-software.org/maven2/releases</url>
     </repository>
   </repositories>
-
-  <properties>
-  	<sesame.version>2.6.9</sesame.version>
-  </properties>
 
   <distributionManagement>
     <repository>

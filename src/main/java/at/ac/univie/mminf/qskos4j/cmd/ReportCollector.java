@@ -3,8 +3,8 @@ package at.ac.univie.mminf.qskos4j.cmd;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import ch.qos.logback.classic.Logger;
 import org.openrdf.OpenRDFException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
