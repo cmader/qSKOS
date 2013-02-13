@@ -157,17 +157,4 @@
   	<sesame.version>2.6.10</sesame.version>
   </properties>
 
-  <distributionManagement>
-    <repository>
-        <id>punkt</id>
-        <name>Punkt Repository</name>
-        <url>scp://mvn.punkt.at/var/www/mvn.punkt.at/</url>
-        <uniqueVersion>false</uniqueVersion>
-    </repository>
-    <site>
-        <id>mysite</id>
-        <url>scp://mvn.punkt.at/var/www/mvn.punkt.at/maven-sites/PoolPartyCaipirinhaMaven/${project.version}</url>
-    </site>
-  </distributionManagement>
-
 </project>
