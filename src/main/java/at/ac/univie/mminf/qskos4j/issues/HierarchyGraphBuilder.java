@@ -42,8 +42,7 @@ public class HierarchyGraphBuilder {
 		return graph;
 	}
 	
-	private TupleQueryResult findTriples(HierarchyStyle hierarchyStyle)
-		throws RepositoryException, MalformedQueryException, QueryEvaluationException 
+	private TupleQueryResult findTriples(HierarchyStyle hierarchyStyle) throws OpenRDFException
 	{
 		String[] skosHierarchyProperties = null;
 		switch (hierarchyStyle) {
