@@ -42,4 +42,31 @@ public class CollectionReport<T> extends Report<Collection<T>> {
         return report.toString();
 	}
 
+    @Override
+    public void generateHtmlReport(BufferedWriter writer, ReportStyle style) throws IOException {
+        writer.write("<div class='" +this.getClass().getName()+ "'>");
+
+        switch (style) {
+            case SHORT:
+                generateTextReport(writer, ReportStyle.SHORT);
+                break;
+
+            case EXTENSIVE:
+                generateExtensiveHtmlReport(writer);
+                break;
+        }
+
+        writer.write("</div>");
+    }
+
+    public void generateExtensiveHtmlReport(BufferedWriter writer) throws IOException {
+        for (T collectionElement : getData()) {
+            if (collectionElement instanceof HtmlRenderable) {
+                writer.write("<p>" +((HtmlRenderable) collectionElement).toHtml()+ "</p>");
+            }
+            else {
+                throw new UnsupportedOperationException("Collection elements of type " +collectionElement.getClass().getName()+ " have no HTML representation");
+            }
+        }
+    }
 }

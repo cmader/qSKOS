@@ -6,7 +6,7 @@ import java.io.StringWriter;
 
 public abstract class Report<T> {
 
-    public enum ReportFormat {TXT, DOT, RDF, HTML, PDF}
+    public enum ReportFormat {TXT, DOT, RDF, HTML}
     public enum ReportStyle {SHORT, EXTENSIVE}
     private T data;
 
@@ -33,6 +33,9 @@ public abstract class Report<T> {
             case DOT:
                 generateDotReport(writer);
 
+            case HTML:
+                generateHtmlReport(writer, style);
+
             default:
                 throw new UnsupportedReportFormatException(format);
         }
@@ -45,6 +48,10 @@ public abstract class Report<T> {
 	public void generateDotReport(BufferedWriter writer) throws IOException {
         throw new UnsupportedOperationException();
 	}
+
+    public void generateHtmlReport(BufferedWriter writer, ReportStyle style) throws IOException {
+        throw new UnsupportedOperationException();
+    }
 	
 	@Override
 	public String toString() {

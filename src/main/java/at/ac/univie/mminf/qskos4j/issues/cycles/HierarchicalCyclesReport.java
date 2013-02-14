@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
-public class HierarchyCycleReport extends CollectionReport<Set<Value>> {
+public class HierarchicalCyclesReport extends CollectionReport<Set<Value>> {
 
 	private DirectedGraph<Value, NamedEdge> graph;
 	
-	public HierarchyCycleReport(Collection<Set<Value>> data, DirectedGraph<Value, NamedEdge> graph) {
+	public HierarchicalCyclesReport(Collection<Set<Value>> data, DirectedGraph<Value, NamedEdge> graph) {
 		super(data);
 		this.graph = graph;
 	}

@@ -1,12 +1,13 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
+import at.ac.univie.mminf.qskos4j.report.HtmlRenderable;
 import org.openrdf.model.Value;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
-public class LabelConflict {
+public class LabelConflict implements HtmlRenderable {
 
     private Set<LabeledConcept> conflicts;
 
@@ -45,5 +46,17 @@ public class LabelConflict {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof LabeledConcept && conflicts.equals(obj);
+    }
+
+    @Override
+    public String toHtml() {
+        String htmlString = "<div class='" +this.getClass().getName()+ "'>";
+
+        for (LabeledConcept conflict : conflicts) {
+            htmlString += conflict.toHtml();
+        }
+
+        htmlString += "</div>";
+        return htmlString;
     }
 }

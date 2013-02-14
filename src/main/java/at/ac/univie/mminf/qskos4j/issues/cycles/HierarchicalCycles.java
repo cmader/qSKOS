@@ -42,7 +42,7 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
         Set<Value> nodesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
         List<Set<Value>> cycleContainingComponents = trackNodesInCycles(nodesInCycles);
 
-        return new HierarchyCycleReport(cycleContainingComponents, hierarchyGraph);
+        return new HierarchicalCyclesReport(cycleContainingComponents, hierarchyGraph);
     }
 
     private List<Set<Value>> trackNodesInCycles(Set<Value> nodesInCycles)
