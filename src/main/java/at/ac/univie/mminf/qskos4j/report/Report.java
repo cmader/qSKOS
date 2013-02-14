@@ -32,9 +32,11 @@ public abstract class Report<T> {
 
             case DOT:
                 generateDotReport(writer);
+                break;
 
             case HTML:
                 generateHtmlReport(writer, style);
+                break;
 
             default:
                 throw new UnsupportedReportFormatException(format);
