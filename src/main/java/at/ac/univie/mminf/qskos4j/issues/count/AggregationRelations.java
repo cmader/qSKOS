@@ -35,33 +35,20 @@ public class AggregationRelations extends Issue<NumberReport<Long>> {
     @Override
     protected NumberReport<Long> invoke() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createAggregationRelationsQuery());
-
-        while (result.hasNext()) {
-            BindingSet bs = result.next();
-            String triples = bs.getValue("res1").stringValue() +", "+ bs.getValue("aggregationRelation").stringValue() +", "+ bs.getValue("res2").stringValue();
-            System.out.println(triples);
-        }
-
         return new NumberReport<Long>(TupleQueryResultUtil.countResults(result));
     }
 
     private String createAggregationRelationsQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-            "SELECT ?res1 ?aggregationRelation ?res2 WHERE {" +
-
+            "SELECT * WHERE {" +
                 "{" +
                     "?res1 ?aggregationRelation ?res2 ." +
                 "}" +
-
-
                 "UNION" +
-
-
                 "{" +
                     "?res1 ?p ?res2 ." +
                     "?p rdfs:subPropertyOf ?aggregationRelation ." +
                 "}"+
-
                 "FILTER (?aggregationRelation IN ("+ AGGREGATION_RELATIONS+ "))" +
             "}";
     }
