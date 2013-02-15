@@ -1,16 +1,12 @@
 package at.ac.univie.mminf.qskos4j.util;
 
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class TupleQueryResultUtil {
 
@@ -24,6 +20,17 @@ public class TupleQueryResultUtil {
         }
 
         return ret;
+    }
+
+    public static String getFilterForBindingName(TupleQueryResult result, String bindingName)
+        throws QueryEvaluationException
+    {
+        String filterExpression = "FILTER (?" +bindingName+ " IN (";
+        Iterator<Value> subPropIt = getValuesForBindingName(result, bindingName).iterator();
+        while (subPropIt.hasNext()) {
+            filterExpression += "<"+ subPropIt.next().stringValue() +">"+ (subPropIt.hasNext() ? "," : "))");
+        }
+        return filterExpression;
     }
 
     public static long countResults(TupleQueryResult result) throws QueryEvaluationException

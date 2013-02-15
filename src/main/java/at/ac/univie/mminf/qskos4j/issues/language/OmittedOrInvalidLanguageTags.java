@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
@@ -42,7 +43,8 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
 		return new MissingLangTagReport(missingLangTags);
 	}
 	
-	private String createMissingLangTagQuery() {
+	private String createMissingLangTagQuery() throws OpenRDFException
+    {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
 			"SELECT ?literal ?s ?p "+
 
@@ -50,17 +52,29 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
 			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
 
 			"WHERE {" +
-				"?s ?p ?literal . " +
-			
-				"GRAPH <" +vocabRepository.SKOS_GRAPH_URL+ "> {"+
-					"{?p rdfs:subPropertyOf* rdfs:label}" +
-					"UNION" +
-					"{?p rdfs:subPropertyOf* skos:note}" +
-				"}" +
-									
+				"?s ?textProp ?literal . " +
+
 				"FILTER isLiteral(?literal) " +
+                createSkosTextualPropertiesFilter()+
 			"}";
 	}
+
+    private String createSkosTextualPropertiesFilter() throws OpenRDFException
+    {
+        TupleQueryResult result = vocabRepository.query(createSkosTextualPropertiesQuery(), VocabRepository.RepositoryType.SKOS);
+        return TupleQueryResultUtil.getFilterForBindingName(result, "textProp");
+    }
+
+    private String createSkosTextualPropertiesQuery() {
+        return SparqlPrefix.SKOS +" "+  SparqlPrefix.RDFS +
+            "SELECT ?textProp WHERE {" +
+                "{?textProp rdfs:subPropertyOf* rdfs:label}" +
+                "UNION" +
+                "{?textProp rdfs:subPropertyOf* skos:note}" +
+            "}";
+    }
+
+
 	
 	private void generateMissingLangTagMap(TupleQueryResult result) 
 		throws QueryEvaluationException 

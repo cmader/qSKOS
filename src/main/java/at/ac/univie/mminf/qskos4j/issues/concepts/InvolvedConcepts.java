@@ -5,14 +5,10 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
-import info.aduna.webapp.system.SystemOverviewController;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
 
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -37,7 +33,7 @@ public class InvolvedConcepts extends Issue<CollectionReport<Value>> {
     }
 
     private String createConceptsQuery() throws OpenRDFException {
-        String skosSemanticRelationSubPropertiesFilter = getFilterForSemanticRelations("semRelSubProp");
+        String skosSemanticRelationSubPropertiesFilter = createFilterForSemanticRelations();
 
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept "+
@@ -60,16 +56,9 @@ public class InvolvedConcepts extends Issue<CollectionReport<Value>> {
                 "}";
     }
 
-    private String getFilterForSemanticRelations(String bindingName) throws OpenRDFException {
+    private String createFilterForSemanticRelations() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createSubpropertiesOfSemanticRelationsQuery(), VocabRepository.RepositoryType.SKOS);
-        Set<Value> semRelSubProperties = TupleQueryResultUtil.getValuesForBindingName(result, "semRelSubProp");
-
-        String filterExpression = "FILTER (?" +bindingName+ " IN (";
-        Iterator<Value> subPropIt = semRelSubProperties.iterator();
-        while (subPropIt.hasNext()) {
-            filterExpression += "<"+ subPropIt.next().stringValue() +">"+ (subPropIt.hasNext() ? "," : "))");
-        }
-        return filterExpression;
+        return TupleQueryResultUtil.getFilterForBindingName(result, "semRelSubProp");
     }
 
     private String createSubpropertiesOfSemanticRelationsQuery() {
