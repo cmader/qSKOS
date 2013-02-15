@@ -37,9 +37,9 @@ public class Collections extends Issue<NumberReport<Long>> {
             "SELECT DISTINCT ?collection WHERE {" +
                 "{?collection rdf:type/rdfs:subClassOf* skos:Collection .}" +
                 "UNION" +
-                "{?collection ?hasMember ?resource . ?hasMember rdfs:subPropertyOf* skos:member}" +
+                "{?collection rdf:type/rdfs:subClassOf* skos:OrderedCollection .}" +
                 "UNION" +
-                "{?collection ?memberList ?resource . ?memberList rdfs:subPropertyOf* skos:memberList}" +
+                "{?collection rdfs:subPropertyOf*/(skos:member|skos:memberList) ?member .}" +
             "}";
     }
 }
