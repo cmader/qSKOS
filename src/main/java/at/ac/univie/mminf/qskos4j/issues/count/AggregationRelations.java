@@ -17,6 +17,9 @@ import org.openrdf.query.TupleQueryResult;
  */
 public class AggregationRelations extends Issue<NumberReport<Long>> {
 
+    private final String AGGREGATION_RELATIONS =
+        "skos:topConceptOf, skos:hasTopConcept, skos:inScheme, skos:member, skos:memberList";
+
     public AggregationRelations(VocabRepository vocabRepo) {
         super(vocabRepo,
               "ar",
@@ -34,17 +37,10 @@ public class AggregationRelations extends Issue<NumberReport<Long>> {
 
     private String createAggregationRelationsQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-            "SELECT * WHERE {" +
+            "SELECT DISTINCT ?res1 ?relationType ?res2 WHERE {" +
                 "?res1 ?relationType ?res2 ."+
-                "{?relationType rdfs:subPropertyOf* skos:topConceptOf}" +
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:hasTopConcept}" +
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:inScheme}"+
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:member}"+
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:memberList}"+
+                "?relationType rdfs:subPropertyOf* ?aggregationRelation ." +
+                "FILTER (?aggregationRelation IN (" +AGGREGATION_RELATIONS+ "))"+
             "}";
     }
 
