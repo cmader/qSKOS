@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
@@ -9,9 +10,8 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.util.language.LanguageTag;
 import org.openrdf.model.util.language.LanguageTagSyntaxException;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,10 +47,6 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
     {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
 			"SELECT ?literal ?s ?p "+
-
-            "FROM default "+
-			"FROM NAMED <" +vocabRepository.SKOS_GRAPH_URL+ "> "+
-
 			"WHERE {" +
 				"?s ?textProp ?literal . " +
 
@@ -61,8 +57,9 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
 
     private String createSkosTextualPropertiesFilter() throws OpenRDFException
     {
-        TupleQueryResult result = vocabRepository.query(createSkosTextualPropertiesQuery(), VocabRepository.RepositoryType.SKOS);
-        return TupleQueryResultUtil.getFilterForBindingName(result, "textProp");
+        RepositoryConnection skosRepConn = SkosOntology.getInstance().getConnection();
+        TupleQuery skosTextPropQuery = skosRepConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosTextualPropertiesQuery());
+        return TupleQueryResultUtil.getFilterForBindingName(skosTextPropQuery.evaluate(), "textProp");
     }
 
     private String createSkosTextualPropertiesQuery() {
@@ -74,9 +71,7 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
             "}";
     }
 
-
-	
-	private void generateMissingLangTagMap(TupleQueryResult result) 
+	private void generateMissingLangTagMap(TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
 		missingLangTags = new HashMap<Resource, Collection<Literal>>();

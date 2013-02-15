@@ -23,9 +23,15 @@ public class TupleQueryResultUtil {
     }
 
     public static String getFilterForBindingName(TupleQueryResult result, String bindingName)
+            throws QueryEvaluationException
+    {
+        return TupleQueryResultUtil.getFilterForBindingName(result, bindingName, false);
+    }
+
+    public static String getFilterForBindingName(TupleQueryResult result, String bindingName, boolean exclusive)
         throws QueryEvaluationException
     {
-        String filterExpression = "FILTER (?" +bindingName+ " IN (";
+        String filterExpression = "FILTER (?" +bindingName+ (exclusive ? " NOT" : "") +" IN (";
         Iterator<Value> subPropIt = getValuesForBindingName(result, bindingName).iterator();
         while (subPropIt.hasNext()) {
             filterExpression += "<"+ subPropIt.next().stringValue() +">"+ (subPropIt.hasNext() ? "," : "))");

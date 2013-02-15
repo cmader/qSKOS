@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
@@ -33,7 +34,7 @@ public class InvolvedConcepts extends Issue<CollectionReport<Value>> {
     }
 
     private String createConceptsQuery() throws OpenRDFException {
-        String skosSemanticRelationSubPropertiesFilter = createFilterForSemanticRelations();
+        String skosSemanticRelationSubPropertiesFilter = SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semRelSubProp");
 
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept "+
@@ -54,18 +55,6 @@ public class InvolvedConcepts extends Issue<CollectionReport<Value>> {
                         skosSemanticRelationSubPropertiesFilter+
                     "}"+
                 "}";
-    }
-
-    private String createFilterForSemanticRelations() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createSubpropertiesOfSemanticRelationsQuery(), VocabRepository.RepositoryType.SKOS);
-        return TupleQueryResultUtil.getFilterForBindingName(result, "semRelSubProp");
-    }
-
-    private String createSubpropertiesOfSemanticRelationsQuery() {
-        return SparqlPrefix.SKOS +" "+  SparqlPrefix.RDFS +
-            "SELECT ?semRelSubProp WHERE {" +
-                "?semRelSubProp rdfs:subPropertyOf+ skos:semanticRelation" +
-            "}";
     }
 
 }

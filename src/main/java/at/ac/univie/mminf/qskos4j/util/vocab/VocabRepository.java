@@ -1,17 +1,14 @@
 package at.ac.univie.mminf.qskos4j.util.vocab;
 
 import org.junit.Assert;
-import org.omg.CORBA.DATA_CONVERSION;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
 import org.openrdf.sail.memory.MemoryStore;
 
 import java.io.File;
@@ -20,19 +17,12 @@ import java.net.URL;
 
 public class VocabRepository {
 
-	public final String SKOS_GRAPH_URL = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
-	private final String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
-
-    public enum RepositoryType {DATA, SKOS};
-
 	private Repository repository;
-	private RepositoryConnection connection, skosRepositoryConnection;
+	private RepositoryConnection connection;
 
 	public VocabRepository(File rdfFile,String baseURI,RDFFormat dataFormat) throws OpenRDFException, IOException
 	{
 		createRepositoryForFile();
-        createSkosRepository();
-
         connection.add(rdfFile, baseURI, dataFormat);
 	}
 
@@ -40,19 +30,6 @@ public class VocabRepository {
     {
         this.repository = repository;
         connection = repository.getConnection();
-        createSkosRepository();
-    }
-
-    private void createSkosRepository() throws IOException, RepositoryException, RDFParseException
-    {
-        Repository skosRepository = new SailRepository(new MemoryStore());
-        skosRepository.initialize();
-        skosRepositoryConnection = skosRepository.getConnection();
-        skosRepositoryConnection.add(
-            new URL(SKOS_GRAPH_URL),
-            SKOS_BASE_URI,
-            RDFFormat.RDFXML,
-            new URIImpl(SKOS_GRAPH_URL));
     }
 
     public static VocabRepository setUpFromTestResource(String testFileName)
@@ -83,25 +60,9 @@ public class VocabRepository {
 
     public TupleQueryResult query(String sparqlQuery) throws OpenRDFException
     {
-        return query(sparqlQuery, RepositoryType.DATA);
+        TupleQuery graphQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
+        return graphQuery.evaluate();
     }
-
-	public TupleQueryResult query(String sparqlQuery, RepositoryType repoType) throws OpenRDFException
-	{
-        TupleQuery graphQuery = null;
-
-        switch (repoType) {
-            case DATA:
-                graphQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
-                break;
-
-            case SKOS:
-                graphQuery = skosRepositoryConnection.prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
-                break;
-        }
-
-		return graphQuery.evaluate();
-	}
 
     /**
      * If this is called, the local repository is complemented with SKOS lexical labels inferred from SKOSXL definitions

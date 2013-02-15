@@ -2,14 +2,15 @@ package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,18 +92,31 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
 		generateIllegalTermsMap(result);
 	}
 	
-	private String createIllegalTermsQuery() {
+	private String createIllegalTermsQuery() throws OpenRDFException {
 		return SparqlPrefix.SKOS+ 
 			"SELECT DISTINCT ?illTerm ?s ?o "+
-			"WHERE {{?illTerm ?p ?o . } UNION "+
-			"{?s ?illTerm ?o . } UNION "+
-			"{?s ?p ?illTerm . } "+
-			"FILTER isIRI(?illTerm) "+
-			"FILTER STRSTARTS(str(?illTerm), \"" +SparqlPrefix.SKOS.getNameSpace()+ "\") "+
-			"FILTER NOT EXISTS {"+
-			"GRAPH <"+vocabRepository.SKOS_GRAPH_URL+"> {"+
-			"?illTerm ?p1 ?o1}}} ";
+			"WHERE {" +
+                "{?illTerm ?p ?o . } UNION "+
+			    "{?s ?illTerm ?o . } UNION "+
+			    "{?s ?p ?illTerm . } "+
+			    "FILTER isIRI(?illTerm) "+
+			    "FILTER STRSTARTS(str(?illTerm), \"" +SparqlPrefix.SKOS.getNameSpace()+ "\") "+
+                createSkosSubjectsFilter()+
+            "} ";
 	}
+
+    private String createSkosSubjectsFilter() throws OpenRDFException {
+        RepositoryConnection skosRepoConn = SkosOntology.getInstance().getConnection();
+        TupleQuery skosSubjectsQuery = skosRepoConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosSubjectsQuery());
+        return TupleQueryResultUtil.getFilterForBindingName(skosSubjectsQuery.evaluate(), "illTerm", true);
+    }
+
+    private String createSkosSubjectsQuery() {
+        return "SELECT ?illTerm WHERE {" +
+                    "?illTerm ?p ?o . " +
+                    "FILTER isIRI(?illTerm)"+
+                "}";
+    }
 	
 	private void generateIllegalTermsMap(TupleQueryResult result) 
 		throws QueryEvaluationException 
