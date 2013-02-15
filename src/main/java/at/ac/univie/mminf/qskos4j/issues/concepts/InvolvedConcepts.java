@@ -31,63 +31,33 @@ public class InvolvedConcepts extends Issue<CollectionReport<Value>> {
 
     @Override
     protected CollectionReport<Value> invoke() throws OpenRDFException {
-        String query = createConceptsQuery();
-        System.out.println(query);
-        TupleQueryResult result = vocabRepository.query(query);
-
-        //Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
-
-        while (result.hasNext()) {
-            BindingSet bindingSet = result.next();
-            Value concept = bindingSet.getValue("concept");
-            Value p = bindingSet.getValue("p");
-            Value semRelSubProp = bindingSet.getValue("semRelSubProp");
-
-            System.out.println(concept.stringValue() +", p="+ p.stringValue() +", semRelSubProp="+ semRelSubProp.stringValue());
-        }
-
-        //return new CollectionReport<Value>(foundConcepts);
-        return null;
+        TupleQueryResult result = vocabRepository.query(createConceptsQuery());
+        Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
+        return new CollectionReport<Value>(foundConcepts);
     }
 
     private String createConceptsQuery() throws OpenRDFException {
+        String skosSemanticRelationSubPropertiesFilter = getFilterForSemanticRelations("semRelSubProp");
+
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
-            "SELECT DISTINCT ?concept ?p ?semRelSubProp "+
+            "SELECT DISTINCT ?concept "+
                 "WHERE {" +
-/*
+
                     "{?concept rdf:type/rdfs:subClassOf* skos:Concept} UNION "+
                     "{?concept skos:topConceptOf ?conceptScheme} UNION "+
                     "{?conceptScheme skos:hasTopConcept ?concept} UNION " +
                     "{" +
                         "{?concept ?semRelSubProp ?x} UNION" +
                         "{?x ?semRelSubProp ?concept}" +
-                        getFilterForSemanticRelations("semRelSubProp")+
-                    "}" +
-*/
-
-//                    "{" +
-                        "?concept ?p ?x . " +
-                        "?p rdfs:subPropertyOf ?semRelSubProp . " +
-//                        "{?x ?p ?concept . ?p rdfs:subPropertyOf+ ?semRelSubProp}" +
-                         "FILTER (?semRelSubProp IN (<http://www.w3.org/2004/02/skos/core#broader>))"+
-//                        getFilterForSemanticRelations("semRelSubProp")+
-//                    "}"+
-
-                /*
-                    "{"+
-                        "GRAPH <" +vocabRepository.SKOS_GRAPH_URL+ "> {"+
-                            "?semRelSubProp rdfs:subPropertyOf+ skos:semanticRelation ."+
-                        "}" +
-                        "{" +
-                            "{?x ?semRelSubProp ?concept . } UNION "+
-                            "{?concept ?semRelSubProp ?x . } UNION " +
-                            "{?concept ?p ?x . ?p rdfs:subPropertyOf+ ?semRelSubProp} UNION " +
-                            "{?x ?p ?concept . ?p rdfs:subPropertyOf+ ?semRelSubProp}" +
-                        "}"+
-                    "}" +
-                    */
+                        skosSemanticRelationSubPropertiesFilter+
+                    "} UNION " +
+                    "{" +
+                        "{?concept ?p ?x . } UNION" +
+                        "{?x ?p ?concept . }" +
+                        "?p rdfs:subPropertyOf ?semRelSubProp .  " +
+                        skosSemanticRelationSubPropertiesFilter+
+                    "}"+
                 "}";
-
     }
 
     private String getFilterForSemanticRelations(String bindingName) throws OpenRDFException {

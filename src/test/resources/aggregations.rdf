@@ -7,6 +7,7 @@
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
 	</rdf:Description>
 
+    <!-- Aggregation 1 -->
 	<rdf:Description rdf:about="conceptScheme2">
 		<skos:hasTopConcept rdf:resource="someConcept"/>
 	</rdf:Description>
@@ -18,6 +19,7 @@
 	<rdf:Description rdf:about="conceptScheme4">
 	</rdf:Description>
 
+    <!-- Aggregation 2 -->
 	<rdf:Description rdf:about="conceptScheme5">
 		<myonto:myHasTopConcept rdf:resource="anotherConcept"/>
 	</rdf:Description>
@@ -26,6 +28,7 @@
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
 	</rdf:Description>
 
+    <!-- Aggregation 3 -->
 	<rdf:Description rdf:about="collection2">
 		<skos:member rdf:resource="someConcept"/>
 	</rdf:Description>
@@ -34,23 +37,26 @@
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#OrderedCollection"/>
 	</rdf:Description>
 
+    <!-- Aggregation 4 -->
 	<rdf:Description rdf:about="orderedCollection">
 		<skos:memberList rdf:resource="someList"/>
 	</rdf:Description>
 
 	<rdf:Description rdf:about="http://localhost/myonto#myConceptScheme">
 		<rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-  </rdf:Description>
+    </rdf:Description>
 
 	<rdf:Description rdf:about="http://localhost/myonto#myHasTopConcept">
 		<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept"/>
-  </rdf:Description>
+    </rdf:Description>
 
+    <!-- Aggregation 5 -->
 	<rdf:Description rdf:about="someConcept">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:topConceptOf rdf:resource="conceptScheme1"/>
 	</rdf:Description>
 
+    <!-- Aggregation 6 -->
 	<rdf:Description rdf:about="anotherConcept">
 		<skos:inScheme rdf:resource="conceptScheme4"/>
 	</rdf:Description>

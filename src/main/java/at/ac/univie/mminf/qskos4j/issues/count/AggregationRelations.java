@@ -6,7 +6,10 @@ import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
+import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
+
+import javax.xml.transform.sax.SAXSource;
 
 /**
  * Created by christian
@@ -16,6 +19,9 @@ import org.openrdf.query.TupleQueryResult;
  * Finds the number of triples that assign concepts to concept schemes or lists.
  */
 public class AggregationRelations extends Issue<NumberReport<Long>> {
+
+    private final String AGGREGATION_RELATIONS =
+        "skos:topConceptOf, skos:hasTopConcept, skos:inScheme, skos:member, skos:memberList";
 
     public AggregationRelations(VocabRepository vocabRepo) {
         super(vocabRepo,
@@ -29,22 +35,34 @@ public class AggregationRelations extends Issue<NumberReport<Long>> {
     @Override
     protected NumberReport<Long> invoke() throws OpenRDFException {
         TupleQueryResult result = vocabRepository.query(createAggregationRelationsQuery());
+
+        while (result.hasNext()) {
+            BindingSet bs = result.next();
+            String triples = bs.getValue("res1").stringValue() +", "+ bs.getValue("aggregationRelation").stringValue() +", "+ bs.getValue("res2").stringValue();
+            System.out.println(triples);
+        }
+
         return new NumberReport<Long>(TupleQueryResultUtil.countResults(result));
     }
 
     private String createAggregationRelationsQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-            "SELECT * WHERE {" +
-                "?res1 ?relationType ?res2 ."+
-                "{?relationType rdfs:subPropertyOf* skos:topConceptOf}" +
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:hasTopConcept}" +
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:inScheme}"+
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:member}"+
-                "UNION" +
-                "{?relationType rdfs:subPropertyOf* skos:memberList}"+
+            "SELECT ?res1 ?aggregationRelation ?res2 WHERE {" +
+
+                "{" +
+                    "?res1 ?aggregationRelation ?res2 ." +
+                "}" +
+
+
+//                "UNION" +
+
+/*
+                "{" +
+                    "?res1 ?p ?res2 ." +
+                    "?p rdfs:subPropertyOf ?aggregationRelation ." +
+                "}"+
+*/
+//                "FILTER (?aggregationRelation IN ("+ AGGREGATION_RELATIONS+ "))" +
             "}";
     }
 

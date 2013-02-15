@@ -20,11 +20,7 @@ public class TupleQueryResultUtil {
         Set<Value> ret = new HashSet<Value>();
 
         while (result.hasNext()) {
-            Value concept = result.next().getValue(bindingName);
-
-            if (concept instanceof URI) {
-                ret.add(concept);
-            }
+            ret.add(result.next().getValue(bindingName));
         }
 
         return ret;
