@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.count;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.NumberReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
@@ -32,11 +33,18 @@ public class SemanticRelations extends Issue<NumberReport<Long>> {
         return new NumberReport<Long>(TupleQueryResultUtil.countResults(result));
     }
 
-    private String createSemanticRelationsQuery() {
+    private String createSemanticRelationsQuery() throws OpenRDFException
+    {
+        String skosSemanticRelationSubPropertiesFilter = SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("relationType");
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-            "SELECT * WHERE {" +
-                "?concept ?relationType ?otherConcept ."+
-                "?relationType rdfs:subPropertyOf* skos:semanticRelation ."+
+            "SELECT ?relationType WHERE " +
+            "{" +
+                "{?concept ?relationType ?otherConcept} UNION "+
+                "{"+
+                    "?x ?p ?y . " +
+                    "?p rdfs:subPropertyOf ?relationType . " +
+                "}"+
+                skosSemanticRelationSubPropertiesFilter+
             "}";
     }
 
