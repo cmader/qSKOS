@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
@@ -41,13 +42,21 @@ public class OrphanConcepts extends Issue<CollectionReport<Value>> {
         return new CollectionReport<Value>(orphanConcepts);
     }
 
-    private String createOrphanConceptsQuery() {
+    private String createOrphanConceptsQuery() throws OpenRDFException
+    {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
-            "SELECT DISTINCT ?concept ?semanticRelation ?otherConcept WHERE" +
+            "SELECT DISTINCT ?concept WHERE " +
             "{" +
-                "{?concept ?semanticRelation ?otherConcept . ?semanticRelation rdfs:subPropertyOf+ skos:semanticRelation}" +
-                "UNION" +
-                "{?otherConcept ?semanticRelation ?concept . ?semanticRelation rdfs:subPropertyOf+ skos:semanticRelation}" +
+                "{" +
+                    "{?concept ?semRel ?otherConcept} UNION " +
+                    "{?otherConcept ?semRel ?concept}" +
+                "} UNION " +
+                "{"+
+                    "{?concept ?rel ?otherConcept} UNION " +
+                    "{?otherConcept ?rel ?concept}" +
+                    "?rel rdfs:subPropertyOf ?semRel . " +
+                "}"+
+                SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semRel")+
             "}";
     }
 

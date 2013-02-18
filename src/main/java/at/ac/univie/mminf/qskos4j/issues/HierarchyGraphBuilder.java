@@ -8,10 +8,8 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryException;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -65,7 +63,7 @@ public class HierarchyGraphBuilder {
                 "UNION" +
                 "{"+
                     "?resource ?hierarchyRelation ?otherResource ."+
-                    "?hierarchyRelation rdfs:subPropertyOf+ ?skosHierarchyRelation ."+
+                    "?hierarchyRelation rdfs:subPropertyOf ?skosHierarchyRelation ."+
                     "FILTER (?skosHierarchyRelation IN " +createHierarchyPropertyList(skosHierarchyProperties) +")" +
                 "}"+
             "}";
