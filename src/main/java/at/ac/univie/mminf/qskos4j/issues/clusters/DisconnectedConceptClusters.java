@@ -100,7 +100,11 @@ public class DisconnectedConceptClusters extends Issue<ClustersReport> {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
                 "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
                 "{" +
-                    "<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept . " +
+                    "{<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept} UNION " +
+                    "{" +
+                        "<" +concept.stringValue()+ "> ?relation ?otherConcept . "+
+                        "?relation rdfs:subPropertyOf ?semanticRelation . "+
+                    "}" +
                     SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semanticRelation")+
                 "}";
     }
