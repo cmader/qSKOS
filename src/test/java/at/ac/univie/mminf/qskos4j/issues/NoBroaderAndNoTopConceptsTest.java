@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.pp.NoBroaderAndNotTopConcepts;
+import at.ac.univie.mminf.qskos4j.issues.pp.onimport.NoBroaderAndNotTopConcepts;
 import at.ac.univie.mminf.qskos4j.issues.pp.RepairFailedException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -98,7 +98,7 @@ public class NoBroaderAndNoTopConceptsTest {
     }
 
     @Test(expected = RepairFailedException.class)
-    public void repairConceptsNoAbsorbingSchemeProvided() throws RepairFailedException
+    public void repairConceptsNoAbsorbingSchemeProvided() throws RepairFailedException, RepositoryException
     {
         noBroaderAndNotTopConcepts.setAbsorbingConceptScheme(null, null);
         noBroaderAndNotTopConcepts.repair();

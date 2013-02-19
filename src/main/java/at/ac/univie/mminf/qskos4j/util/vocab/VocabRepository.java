@@ -10,6 +10,8 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.memory.MemoryStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,19 +19,28 @@ import java.net.URL;
 
 public class VocabRepository {
 
+    private final Logger logger = LoggerFactory.getLogger(VocabRepository.class);
 	private Repository repository;
-	private RepositoryConnection connection;
 
-	public VocabRepository(File rdfFile,String baseURI,RDFFormat dataFormat) throws OpenRDFException, IOException
-	{
+	public VocabRepository(File rdfFile,String baseURI,RDFFormat dataFormat) throws RepositoryException
+    {
 		createRepositoryForFile();
-        connection.add(rdfFile, baseURI, dataFormat);
-	}
+        RepositoryConnection repCon = repository.getConnection();
+
+        try {
+            repCon.add(rdfFile, baseURI, dataFormat);
+        }
+        catch (Exception e) {
+            logger.error("Could not add RDF data from file to temporary repository");
+        }
+        finally {
+            repCon.close();
+        }
+    }
 
     public VocabRepository(Repository repository) throws OpenRDFException, IOException
     {
         this.repository = repository;
-        connection = repository.getConnection();
     }
 
     public static VocabRepository setUpFromTestResource(String testFileName)
@@ -49,7 +60,6 @@ public class VocabRepository {
 		File tempDir = new File(createDataDirName());
 		repository = new SailRepository(new MemoryStore(tempDir));
 		repository.initialize();
-        connection = repository.getConnection();
 	}
 	
 	private String createDataDirName() {
@@ -58,10 +68,9 @@ public class VocabRepository {
 			System.currentTimeMillis();
 	}
 
-    public TupleQueryResult query(String sparqlQuery) throws OpenRDFException
-    {
-        TupleQuery graphQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
-        return graphQuery.evaluate();
+    public TupleQueryResult query(String sparqlQuery) throws OpenRDFException {
+        TupleQuery tupleQuery = repository.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
+        return tupleQuery.evaluate();
     }
 
     /**
@@ -79,21 +88,29 @@ public class VocabRepository {
 		addSkosXlLabels("skosxl:hiddenLabel", "skos:hiddenLabel");
 	}
 	
-	private void addSkosXlLabels(String skosXlProperty, String skosProperty) 
-		throws OpenRDFException
-	{
-		GraphQuery graphQuery = createSkosXlGraphQuery(skosXlProperty, skosProperty);
-		
-		GraphQueryResult result = graphQuery.evaluate();
-		while (result.hasNext()) {
-			Statement statement = result.next();
-			connection.add(statement);
-		}		
+	private void addSkosXlLabels(String skosXlProperty, String skosProperty) throws OpenRDFException
+    {
+        RepositoryConnection repCon = repository.getConnection();
+
+        try {
+    		GraphQuery graphQuery = createSkosXlGraphQuery(repCon, skosXlProperty, skosProperty);
+            GraphQueryResult result = graphQuery.evaluate();
+
+            while (result.hasNext()) {
+                Statement statement = result.next();
+                repCon.add(statement);
+            }
+        }
+        finally {
+            repCon.close();
+        }
 	}
 	
-	private GraphQuery createSkosXlGraphQuery(String skosXlProperty, String skosProperty) 
-		throws OpenRDFException
-	{
+	private GraphQuery createSkosXlGraphQuery(
+        RepositoryConnection connection,
+        String skosXlProperty,
+        String skosProperty) throws OpenRDFException
+    {
 		return connection.prepareGraphQuery(
 			QueryLanguage.SPARQL,
 			

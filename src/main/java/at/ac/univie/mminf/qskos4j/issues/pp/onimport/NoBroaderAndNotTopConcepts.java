@@ -1,5 +1,7 @@
-package at.ac.univie.mminf.qskos4j.issues.pp;
+package at.ac.univie.mminf.qskos4j.issues.pp.onimport;
 
+import at.ac.univie.mminf.qskos4j.issues.pp.RepairFailedException;
+import at.ac.univie.mminf.qskos4j.issues.pp.RepairableIssue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -23,6 +25,7 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
 
     private URI absorbingConceptSchemeUri;
     private Literal absorbingConceptSchemeLabel;
+    private RepositoryConnection repCon;
 
     private final static String QUERY =  SparqlPrefix.SKOS +" "+
         "SELECT DISTINCT ?concept WHERE {"+
@@ -65,31 +68,43 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
     }
 
     @Override
-    public void invokeRepair() throws RepairFailedException
+    public void invokeRepair() throws RepairFailedException, RepositoryException
     {
+        repCon = vocabRepository.getRepository().getConnection();
+        repCon.setAutoCommit(false);
+
         try {
-            for (Value concept : getReport().getData()) {
-                Collection<Resource> containingSchemes = getContainingConceptSchemes((Resource) concept);
-                if (!containingSchemes.isEmpty()) {
-                    setConceptAsTopConcept((Resource) concept, containingSchemes);
-                }
-                else {
-                    addToAbsorbingConceptScheme((Resource) concept);
-                }
-            }
+            repairConcepts();
+            repCon.commit();
         }
         catch (Exception e) {
             throw new RepairFailedException(e);
+        }
+        finally {
+            repCon.close();
+        }
+    }
+
+    private void repairConcepts() throws OpenRDFException, RepairFailedException
+    {
+        for (Value concept : getReport().getData()) {
+            Collection<Resource> containingSchemes = getContainingConceptSchemes((Resource) concept);
+            if (!containingSchemes.isEmpty()) {
+                setConceptAsTopConcept((Resource) concept, containingSchemes);
+            }
+            else {
+                addToAbsorbingConceptScheme((Resource) concept);
+            }
         }
     }
 
     private Collection<Resource> getContainingConceptSchemes(Resource concept) throws OpenRDFException
     {
-        RepositoryResult<Statement> containingConceptSchemesResult = vocabRepository.getRepository().getConnection().getStatements(
-            concept,
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "inScheme"),
-            null,
-            true);
+        RepositoryResult<Statement> containingConceptSchemesResult = repCon.getStatements(
+                concept,
+                new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "inScheme"),
+                null,
+                true);
 
         Collection<Resource> containingConceptSchemes = new ArrayList<Resource>();
 
@@ -104,14 +119,8 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
         throws RepositoryException
     {
         for (Resource conceptScheme : containingSchemes) {
-            vocabRepository.getRepository().getConnection().add(
-                conceptScheme,
-                new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "hasTopConcept"),
-                concept);
-            vocabRepository.getRepository().getConnection().add(
-                concept,
-                new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "topConceptOf"),
-                conceptScheme);
+            repCon.add(conceptScheme, new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "hasTopConcept"), concept);
+            repCon.add(concept, new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "topConceptOf"), conceptScheme);
         }
     }
 
@@ -134,15 +143,13 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
     private void createAbsorbingConceptScheme() throws RepositoryException {
         if (!isAbsorbingConceptSchemeDefined()) {
             for (Statement statement : absorbingConceptSchemeDefinitions()) {
-                vocabRepository.getRepository().getConnection().add(statement);
+                repCon.add(statement);
             }
         }
     }
 
     private boolean isAbsorbingConceptSchemeDefined() throws RepositoryException
     {
-        RepositoryConnection repCon = vocabRepository.getRepository().getConnection();
-
         boolean isDefined = true;
         for (Statement statement : absorbingConceptSchemeDefinitions()) {
             isDefined &= repCon.hasStatement(statement, false);

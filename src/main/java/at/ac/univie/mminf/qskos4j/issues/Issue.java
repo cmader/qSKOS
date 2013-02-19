@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Statement;
 
 public abstract class Issue<T extends Report<?>> {
 
@@ -64,6 +65,11 @@ public abstract class Issue<T extends Report<?>> {
 
     public final IssueType getType() {
         return type;
+    }
+
+    public void checkStatement(Statement statement) {
+        // override me!
+        throw new UnsupportedOperationException();
     }
 
     @Override

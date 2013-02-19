@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.pp;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;import org.openrdf.repository.RepositoryException;
 
 public abstract class RepairableIssue<T extends Report<?>> extends Issue<T> {
 
@@ -16,12 +16,12 @@ public abstract class RepairableIssue<T extends Report<?>> extends Issue<T> {
         super(vocabRepository, id, name, description, type);
     }
 
-    public void repair() throws RepairFailedException
+    public void repair() throws RepairFailedException, RepositoryException
     {
         invokeRepair();
         reset();
     }
 
-    protected abstract void invokeRepair() throws RepairFailedException;
+    protected abstract void invokeRepair() throws RepairFailedException, RepositoryException;
 
 }
