@@ -106,9 +106,14 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
 	}
 
     private String createSkosSubjectsFilter() throws OpenRDFException {
-        RepositoryConnection skosRepoConn = SkosOntology.getInstance().getConnection();
-        TupleQuery skosSubjectsQuery = skosRepoConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosSubjectsQuery());
-        return TupleQueryResultUtil.getFilterForBindingName(skosSubjectsQuery.evaluate(), "illTerm", true);
+        RepositoryConnection skosRepoConn = SkosOntology.getInstance().getRepository().getConnection();
+        try {
+            TupleQuery skosSubjectsQuery = skosRepoConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosSubjectsQuery());
+            return TupleQueryResultUtil.getFilterForBindingName(skosSubjectsQuery.evaluate(), "illTerm", true);
+        }
+        finally {
+            skosRepoConn.close();
+        }
     }
 
     private String createSkosSubjectsQuery() {

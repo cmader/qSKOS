@@ -57,9 +57,14 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
 
     private String createSkosTextualPropertiesFilter() throws OpenRDFException
     {
-        RepositoryConnection skosRepConn = SkosOntology.getInstance().getConnection();
-        TupleQuery skosTextPropQuery = skosRepConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosTextualPropertiesQuery());
-        return TupleQueryResultUtil.getFilterForBindingName(skosTextPropQuery.evaluate(), "textProp");
+        RepositoryConnection skosRepConn = SkosOntology.getInstance().getRepository().getConnection();
+        try {
+            TupleQuery skosTextPropQuery = skosRepConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosTextualPropertiesQuery());
+            return TupleQueryResultUtil.getFilterForBindingName(skosTextPropQuery.evaluate(), "textProp");
+        }
+        finally {
+            skosRepConn.close();
+        }
     }
 
     private String createSkosTextualPropertiesQuery() {

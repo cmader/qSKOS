@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.pp.onimport.NoBroaderAndNotTopConcepts;
 import at.ac.univie.mminf.qskos4j.issues.pp.RepairFailedException;
+import at.ac.univie.mminf.qskos4j.issues.pp.onimport.NoBroaderAndNotTopConcepts;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;

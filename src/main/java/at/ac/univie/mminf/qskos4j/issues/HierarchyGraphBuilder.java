@@ -1,11 +1,14 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
@@ -15,11 +18,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 public class HierarchyGraphBuilder {
-
-	private enum HierarchyStyle {BROADER, NARROWER}
-
-	private final String[] skosBroaderProperties = {"skos:broader", "skos:broaderTransitive", "skos:broadMatch"};
-	private final String[] skosNarrowerProperties = {"skos:narrower", "skos:narrowerTransitive", "skos:narrowMatch"};
 
 	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 	private VocabRepository vocabRepository;
@@ -33,56 +31,38 @@ public class HierarchyGraphBuilder {
 	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
 	{
         if (graph != null) {
-            addResultsToGraph(findTriples(HierarchyStyle.BROADER), false);
-            addResultsToGraph(findTriples(HierarchyStyle.NARROWER), true);
+            addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
+            addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
         }
 
 		return graph;
 	}
 	
-	private TupleQueryResult findTriples(HierarchyStyle hierarchyStyle) throws OpenRDFException
+	private TupleQueryResult findTriples(URI[] skosHierarchyProperties) throws OpenRDFException
 	{
-		String[] skosHierarchyProperties = null;
-		switch (hierarchyStyle) {
-		case BROADER:
-			skosHierarchyProperties = skosBroaderProperties;
-			break;
-		case NARROWER:
-			skosHierarchyProperties = skosNarrowerProperties;
-		}
-		
 		String query = createHierarchicalGraphQuery(skosHierarchyProperties);
 		return vocabRepository.query(query);
 	}
 	
-	private String createHierarchicalGraphQuery(String[] skosHierarchyProperties) {
+	private String createHierarchicalGraphQuery(URI[] skosHierarchyProperties) {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource ?otherResource "+
 			"WHERE {" +
-                "{?resource " +createHierarchyPropertyPath(skosHierarchyProperties)+ " ?otherResource}" +
+                "{?resource ?hierProp ?otherResource}" +
                 "UNION" +
                 "{"+
                     "?resource ?hierarchyRelation ?otherResource ."+
-                    "?hierarchyRelation rdfs:subPropertyOf ?skosHierarchyRelation ."+
-                    "FILTER (?skosHierarchyRelation IN " +createHierarchyPropertyList(skosHierarchyProperties) +")" +
+                    "?hierarchyRelation rdfs:subPropertyOf ?hierProp ."+
                 "}"+
+                "FILTER (?hierProp IN " +createHierarchyPropertyList(skosHierarchyProperties) +")" +
             "}";
 	}
 
-    private String createHierarchyPropertyPath(String[] skosHierarchyProperties) {
-        String propertyPath = "(";
-        Iterator<String> propIt = Arrays.asList(skosHierarchyProperties).iterator();
-        while (propIt.hasNext()) {
-            propertyPath += propIt.next() + (propIt.hasNext() ? "|" : ")");
-        }
-        return propertyPath;
-    }
-
-    private String createHierarchyPropertyList(String[] skosHierarchyProperties) {
+    private String createHierarchyPropertyList(URI[] skosHierarchyProperties) {
         String propertyList = "(";
-        Iterator<String> propIt = Arrays.asList(skosHierarchyProperties).iterator();
+        Iterator<URI> propIt = Arrays.asList(skosHierarchyProperties).iterator();
         while (propIt.hasNext()) {
-            propertyList += propIt.next() + (propIt.hasNext() ? ", " : ")");
+            propertyList += "<"+ propIt.next().stringValue() +">"+ (propIt.hasNext() ? ", " : ")");
         }
         return propertyList;
     }
@@ -121,6 +101,10 @@ public class HierarchyGraphBuilder {
 
     public VocabRepository getVocabRepository() {
         return vocabRepository;
+    }
+
+    public boolean causesCycle(Statement statement) {
+        return false;
     }
 
 }

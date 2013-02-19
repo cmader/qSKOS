@@ -67,7 +67,7 @@ public abstract class Issue<T extends Report<?>> {
         return type;
     }
 
-    public void checkStatement(Statement statement) {
+    public void checkStatement(Statement statement) throws IssueOccursException {
         // override me!
         throw new UnsupportedOperationException();
     }

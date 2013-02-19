@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.util.vocab;
 
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -13,52 +14,86 @@ import org.openrdf.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class SkosOntology {
 
-    private final Logger logger = LoggerFactory.getLogger(SkosOntology.class);
+    private final static Logger logger = LoggerFactory.getLogger(SkosOntology.class);
+
+    public final static URI[] SKOS_BROADER_PROPERTIES = {
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broader"),
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broaderTransitive"),
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broadMatch")
+    };
+
+    public final static URI[] SKOS_NARROWER_PROPERTIES = {
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrower"),
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowerTransitive"),
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowMatch")
+    };
 
     private final String SKOS_GRAPH_URL = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
     private final String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
 
-    private RepositoryConnection skosRepositoryConnection;
-
     private static SkosOntology ourInstance = new SkosOntology();
+    private static Repository skosRepo;
 
     public static SkosOntology getInstance() {
+        if (skosRepo == null) {
+            try {
+                ourInstance.createSkosRepo();
+            }
+            catch (Exception e) {
+                logger.error("Error creating SKOS repository", e);
+            }
+        }
         return ourInstance;
     }
 
-    private SkosOntology()
-    {
+    private void createSkosRepo() throws OpenRDFException, IOException {
+        skosRepo = new SailRepository(new MemoryStore());
+        skosRepo.initialize();
+
+        RepositoryConnection repCon = skosRepo.getConnection();
         try {
-            Repository skosRepository = new SailRepository(new MemoryStore());
-            skosRepository.initialize();
-            skosRepositoryConnection = skosRepository.getConnection();
-            skosRepositoryConnection.add(
-                    new URL(SKOS_GRAPH_URL),
-                    SKOS_BASE_URI,
-                    RDFFormat.RDFXML,
-                    new URIImpl(SKOS_GRAPH_URL));
+            repCon.add(new URL(SKOS_GRAPH_URL),
+                        SKOS_BASE_URI,
+                        RDFFormat.RDFXML,
+                        new URIImpl(SKOS_GRAPH_URL));
         }
-        catch (Exception e) {
-            logger.error("Could not create SKOS ontology repository", e);
+        finally {
+            repCon.close();
         }
+    }
+
+    private SkosOntology() {
     }
 
     public String getSubPropertiesOfSemanticRelationsFilter(String bindingName) throws OpenRDFException
     {
-        String semRelSubPropertiesQuery = SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
+        RepositoryConnection repCon = skosRepo.getConnection();
+        try {
+            TupleQuery tupleQuery = repCon.prepareTupleQuery(
+                QueryLanguage.SPARQL,
+                createSubPropertiesOfSemanticRelationsQuery(bindingName));
+
+            return TupleQueryResultUtil.getFilterForBindingName(tupleQuery.evaluate(), bindingName);
+        }
+        finally {
+            repCon.close();
+        }
+    }
+
+    private String createSubPropertiesOfSemanticRelationsQuery(String bindingName) {
+        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
             "SELECT ?" +bindingName+ " WHERE {" +
                 "?" +bindingName+ " rdfs:subPropertyOf+ skos:semanticRelation" +
             "}";
-
-        TupleQuery tupleQuery = skosRepositoryConnection.prepareTupleQuery(QueryLanguage.SPARQL, semRelSubPropertiesQuery);
-        return TupleQueryResultUtil.getFilterForBindingName(tupleQuery.evaluate(), bindingName);
     }
 
-    public RepositoryConnection getConnection() {
-        return skosRepositoryConnection;
+    public Repository getRepository() {
+        return skosRepo;
     }
+
 }

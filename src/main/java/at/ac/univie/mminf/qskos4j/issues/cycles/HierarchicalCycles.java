@@ -2,15 +2,20 @@ package at.ac.univie.mminf.qskos4j.issues.cycles;
 
 import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -62,5 +67,25 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
         }
 
         return ret;
+    }
+
+    @Override
+    public void checkStatement(Statement statement) throws IssueOccursException
+    {
+        if (subjectAndObjectInGraph(statement) && isHierarchicalPredicate(statement.getPredicate())) {
+            if (hierarchyGraphBuilder.causesCycle(statement)) {
+                throw new IssueOccursException();
+            }
+        }
+    }
+
+    private boolean subjectAndObjectInGraph(Statement statement) {
+        return hierarchyGraph.containsVertex(statement.getSubject()) &&
+               hierarchyGraph.containsVertex(statement.getObject());
+    }
+
+    private boolean isHierarchicalPredicate(URI predicate) {
+        return Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).contains(predicate) ||
+               Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).contains(predicate);
     }
 }
