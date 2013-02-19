@@ -36,7 +36,7 @@ public abstract class Issue<T extends Report<?>> {
         return report;
     }
 
-    protected final void reset() {
+    protected void reset() {
         report = null;
         if (progressMonitor != null) {
             progressMonitor.reset();
@@ -67,7 +67,7 @@ public abstract class Issue<T extends Report<?>> {
         return type;
     }
 
-    public void checkStatement(Statement statement) throws IssueOccursException {
+    public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException {
         // override me!
         throw new UnsupportedOperationException();
     }

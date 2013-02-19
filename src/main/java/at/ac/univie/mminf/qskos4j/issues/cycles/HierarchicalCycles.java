@@ -70,10 +70,10 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     }
 
     @Override
-    public void checkStatement(Statement statement) throws IssueOccursException
+    public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException
     {
         if (subjectAndObjectInGraph(statement) && isHierarchicalPredicate(statement.getPredicate())) {
-            if (hierarchyGraphBuilder.causesCycle(statement)) {
+            if (causesCycle(statement)) {
                 throw new IssueOccursException();
             }
         }
@@ -87,5 +87,27 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     private boolean isHierarchicalPredicate(URI predicate) {
         return Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).contains(predicate) ||
                Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).contains(predicate);
+    }
+
+    public boolean causesCycle(Statement statement) throws OpenRDFException {
+        if (hierarchyGraph == null) {
+            hierarchyGraph = hierarchyGraphBuilder.createGraph();
+        }
+
+        NamedEdge newEdge = hierarchyGraph.addEdge(statement.getSubject(), statement.getObject());
+        try {
+            Set<Value> verticesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
+            return statementContainsVertices(statement, verticesInCycles);
+        }
+        finally {
+            hierarchyGraph.removeEdge(newEdge);
+        }
+
+    }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        hierarchyGraph = null;
     }
 }

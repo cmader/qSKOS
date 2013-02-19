@@ -103,8 +103,4 @@ public class HierarchyGraphBuilder {
         return vocabRepository;
     }
 
-    public boolean causesCycle(Statement statement) {
-        return false;
-    }
-
 }
