@@ -1,14 +1,17 @@
 package at.ac.univie.mminf.qskos4j.issues.pp;
 
-import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.*;
+import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-public class NoBroaderAndNotTopConcepts extends Issue<CollectionReport<Value>> implements Repairable {
+public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport<Value>> {
 
     private URI absorbingConceptSchemeUri;
     private Literal absorbingConceptSchemeLabel;
@@ -62,7 +65,7 @@ public class NoBroaderAndNotTopConcepts extends Issue<CollectionReport<Value>> i
     }
 
     @Override
-    public void repair() throws RepairFailedException
+    public void invokeRepair() throws RepairFailedException
     {
         try {
             for (Value concept : getReport().getData()) {
@@ -71,7 +74,7 @@ public class NoBroaderAndNotTopConcepts extends Issue<CollectionReport<Value>> i
                     setConceptAsTopConcept((Resource) concept, containingSchemes);
                 }
                 else {
-                    addToAbsorbingConceptScheme(concept);
+                    addToAbsorbingConceptScheme((Resource) concept);
                 }
             }
         }
@@ -112,9 +115,48 @@ public class NoBroaderAndNotTopConcepts extends Issue<CollectionReport<Value>> i
         }
     }
 
-    private void addToAbsorbingConceptScheme(Value concept) throws RepairFailedException
+    private void addToAbsorbingConceptScheme(Resource concept) throws RepairFailedException, RepositoryException
     {
+        checkAbsorbingConceptSchemeDataProvided();
+        createAbsorbingConceptScheme();
 
+        Collection<Resource> containingSchemes = new ArrayList<Resource>();
+        containingSchemes.add(absorbingConceptSchemeUri);
+        setConceptAsTopConcept(concept, containingSchemes);
+    }
+
+    private void checkAbsorbingConceptSchemeDataProvided() throws RepairFailedException
+    {
+        if (absorbingConceptSchemeUri == null || absorbingConceptSchemeLabel == null)
+            throw new RepairFailedException("Absorbing ConceptScheme data not provided");
+    }
+
+    private void createAbsorbingConceptScheme() throws RepositoryException {
+        if (!isAbsorbingConceptSchemeDefined()) {
+            for (Statement statement : absorbingConceptSchemeDefinitions()) {
+                vocabRepository.getRepository().getConnection().add(statement);
+            }
+        }
+    }
+
+    private boolean isAbsorbingConceptSchemeDefined() throws RepositoryException
+    {
+        RepositoryConnection repCon = vocabRepository.getRepository().getConnection();
+
+        boolean isDefined = true;
+        for (Statement statement : absorbingConceptSchemeDefinitions()) {
+            isDefined &= repCon.hasStatement(statement, false);
+        }
+        return isDefined;
+    }
+
+    private Collection<Statement> absorbingConceptSchemeDefinitions() {
+        Collection<Statement> definitionStatements = new ArrayList<Statement>();
+
+        definitionStatements.add(new StatementImpl(absorbingConceptSchemeUri, RDF.TYPE, new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "ConceptScheme")));
+        definitionStatements.add(new StatementImpl(absorbingConceptSchemeUri, RDFS.LABEL, absorbingConceptSchemeLabel));
+
+        return definitionStatements;
     }
 
 }

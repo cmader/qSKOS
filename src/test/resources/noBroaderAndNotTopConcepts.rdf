@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-         xml:base="http://localhost/myonto#">
+         xml:base="http://localhost/myonto/">
 
     <!-- Case 1; ok; topconcept definition 1 -->
     <rdf:Description rdf:about="conceptSchemeA">
@@ -43,11 +43,11 @@
         <skos:narrower rdf:resource="resourceI"/>
     </rdf:Description>
 
-    <!-- Case 7; error, but is member of a ConceptScheme -->
+    <!-- Case 7; error, but is member of a ConceptScheme (thus repairable) -->
     <rdf:Description rdf:about="resourceK">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:narrower rdf:resource="resourceL"/>
-        <skos:inScheme rdf:resource="http://localhost/myonto#myConceptScheme"/>
+        <skos:inScheme rdf:resource="myConceptScheme"/>
     </rdf:Description>
 
 </rdf:RDF>
