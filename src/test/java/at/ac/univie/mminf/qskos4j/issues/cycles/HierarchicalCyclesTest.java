@@ -1,6 +1,6 @@
-package at.ac.univie.mminf.qskos4j.issues;
+package at.ac.univie.mminf.qskos4j.issues.cycles;
 
-import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
+import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.Before;

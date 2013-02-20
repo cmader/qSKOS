@@ -7,7 +7,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;

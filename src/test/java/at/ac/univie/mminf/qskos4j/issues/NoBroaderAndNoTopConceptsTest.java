@@ -109,15 +109,20 @@ public class NoBroaderAndNoTopConceptsTest {
     {
         RepositoryConnection repCon = noBroaderAndNotTopConcepts.getVocabRepository().getRepository().getConnection();
 
-        long statementsBeforeRepair = repCon.size();
-        Assert.assertTrue(statementsBeforeRepair > 0);
+        try {
+            long statementsBeforeRepair = repCon.size();
+            Assert.assertTrue(statementsBeforeRepair > 0);
 
-        noBroaderAndNotTopConcepts.repair();
-        long statementsAfterRepair = repCon.size();
-        Assert.assertTrue(statementsAfterRepair > statementsBeforeRepair);
+            noBroaderAndNotTopConcepts.repair();
+            long statementsAfterRepair = repCon.size();
+            Assert.assertTrue(statementsAfterRepair > statementsBeforeRepair);
 
-        noBroaderAndNotTopConcepts.repair();
-        long statementsAfterRepeatedRepair = repCon.size();
-        Assert.assertTrue(statementsAfterRepeatedRepair == statementsAfterRepair);
+            noBroaderAndNotTopConcepts.repair();
+            long statementsAfterRepeatedRepair = repCon.size();
+            Assert.assertTrue(statementsAfterRepeatedRepair == statementsAfterRepair);
+        }
+        finally {
+            repCon.close();
+        }
     }
 }

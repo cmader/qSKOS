@@ -10,6 +10,7 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -44,10 +45,12 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     @Override
     protected CollectionReport<Set<Value>> invoke() throws OpenRDFException {
         hierarchyGraph = hierarchyGraphBuilder.createGraph();
-        Set<Value> nodesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
-        List<Set<Value>> cycleContainingComponents = trackNodesInCycles(nodesInCycles);
+        return new HierarchicalCyclesReport(findCycleContainingComponents(), hierarchyGraph);
+    }
 
-        return new HierarchicalCyclesReport(cycleContainingComponents, hierarchyGraph);
+    private List<Set<Value>> findCycleContainingComponents() {
+        Set<Value> nodesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
+        return trackNodesInCycles(nodesInCycles);
     }
 
     private List<Set<Value>> trackNodesInCycles(Set<Value> nodesInCycles)
@@ -72,6 +75,10 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     @Override
     public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException
     {
+        if (hierarchyGraph == null) {
+            hierarchyGraph = hierarchyGraphBuilder.createGraph();
+        }
+
         if (subjectAndObjectInGraph(statement) && isHierarchicalPredicate(statement.getPredicate())) {
             if (causesCycle(statement)) {
                 throw new IssueOccursException();
@@ -90,24 +97,45 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     }
 
     public boolean causesCycle(Statement statement) throws OpenRDFException {
-        if (hierarchyGraph == null) {
-            hierarchyGraph = hierarchyGraphBuilder.createGraph();
-        }
-
         NamedEdge newEdge = hierarchyGraph.addEdge(statement.getSubject(), statement.getObject());
+        NamedEdge newInverseEdge = hierarchyGraph.addEdge(statement.getObject(), statement.getSubject());
+
         try {
-            Set<Value> verticesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
-            return statementContainsVertices(statement, verticesInCycles);
+            return subjectAndObjectInSameComponent(statement, findCycleContainingComponents());
         }
         finally {
             hierarchyGraph.removeEdge(newEdge);
+            hierarchyGraph.removeEdge(newInverseEdge);
+        }
+    }
+
+    private boolean subjectAndObjectInSameComponent(Statement statement, List<Set<Value>> cycleContainingComponents) {
+        Resource subject = statement.getSubject();
+        Value object = statement.getObject();
+
+        for (Set<Value> component : cycleContainingComponents) {
+            boolean subjectFound = false, objectFound = false;
+
+            for (Value vertex : component) {
+                if (vertex.equals(subject)) subjectFound = true;
+                if (vertex.equals(object)) objectFound = true;
+                if (subjectFound && objectFound) return true;
+            }
         }
 
+        return false;
     }
 
     @Override
     protected void reset() {
         super.reset();
         hierarchyGraph = null;
+    }
+
+    // only for testing
+    public int[] getHierarchyGraphSize() {
+        int edgeCount = hierarchyGraph.edgeSet().size();
+        int vertexCount = hierarchyGraph.vertexSet().size();
+        return new int[] {vertexCount, edgeCount};
     }
 }
