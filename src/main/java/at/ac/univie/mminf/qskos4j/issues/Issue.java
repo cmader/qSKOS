@@ -36,7 +36,7 @@ public abstract class Issue<T extends Report<?>> {
         return report;
     }
 
-    protected void reset() {
+    protected final void reset() {
         report = null;
         if (progressMonitor != null) {
             progressMonitor.reset();

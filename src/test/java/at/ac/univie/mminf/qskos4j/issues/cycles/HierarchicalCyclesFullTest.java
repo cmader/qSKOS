@@ -14,7 +14,7 @@ import java.io.IOException;
  * Date: 27.01.13
  * Time: 00:20
  */
-public class HierarchicalCyclesTest {
+public class HierarchicalCyclesFullTest {
 
     private HierarchicalCycles hierarchicalCycles, hierarchicalCyclesForComponents;
 

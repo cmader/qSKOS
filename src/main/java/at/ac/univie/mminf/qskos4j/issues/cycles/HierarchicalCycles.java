@@ -14,6 +14,8 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +30,8 @@ import java.util.Set;
  * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Cyclic_Hierarchical_Relations">Cyclic Hierarchical Relations</a>.
  */
 public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
+
+    private final Logger logger = LoggerFactory.getLogger(HierarchicalCycles.class);
 
     private DirectedGraph<Value, NamedEdge> hierarchyGraph;
     private HierarchyGraphBuilder hierarchyGraphBuilder;
@@ -49,6 +53,8 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     }
 
     private List<Set<Value>> findCycleContainingComponents() {
+        logger.debug("Finding cycles");
+
         Set<Value> nodesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
         return trackNodesInCycles(nodesInCycles);
     }
@@ -75,9 +81,7 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     @Override
     public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException
     {
-        if (hierarchyGraph == null) {
-            hierarchyGraph = hierarchyGraphBuilder.createGraph();
-        }
+        hierarchyGraph = hierarchyGraphBuilder.createGraph();
 
         if (subjectAndObjectInGraph(statement) && isHierarchicalPredicate(statement.getPredicate())) {
             if (causesCycle(statement)) {
@@ -110,6 +114,8 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     }
 
     private boolean subjectAndObjectInSameComponent(Statement statement, List<Set<Value>> cycleContainingComponents) {
+        logger.debug("Checking if statement causes cycle(s)");
+
         Resource subject = statement.getSubject();
         Value object = statement.getObject();
 
@@ -124,12 +130,6 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
         }
 
         return false;
-    }
-
-    @Override
-    protected void reset() {
-        super.reset();
-        hierarchyGraph = null;
     }
 
     // only for testing

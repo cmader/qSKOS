@@ -12,11 +12,15 @@ import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 public class HierarchyGraphBuilder {
+
+    private final Logger logger = LoggerFactory.getLogger(HierarchyGraphBuilder.class);
 
 	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 	private VocabRepository vocabRepository;
@@ -29,12 +33,11 @@ public class HierarchyGraphBuilder {
 
 	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
 	{
-        if (graph != null) {
-            addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
-            addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
-        }
+        logger.debug("Creating hierarchy graph");
 
-		return graph;
+        addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
+        addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
+        return graph;
 	}
 	
 	private TupleQueryResult findTriples(URI[] skosHierarchyProperties) throws OpenRDFException
