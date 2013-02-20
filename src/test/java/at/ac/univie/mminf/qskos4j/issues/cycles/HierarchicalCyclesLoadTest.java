@@ -29,8 +29,8 @@ public class HierarchicalCyclesLoadTest {
 
     @BeforeClass
     public static void setUp() throws OpenRDFException, IOException {
-        VocabRepository repo = VocabRepository.setUpFromTestResource("stw.rdf");
-        //VocabRepository repo = VocabRepository.setUpFromTestResource("cycles.rdf");
+        //VocabRepository repo = VocabRepository.setUpFromTestResource("stw.rdf");
+        VocabRepository repo = VocabRepository.setUpFromTestResource("cycles.rdf");
 
         hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(repo));
         repCon = repo.getRepository().getConnection();
@@ -59,8 +59,8 @@ public class HierarchicalCyclesLoadTest {
     private Statement createRandomStatement() {
         String vocabNamespace = "http://myvocab.org/";
         return new StatementImpl(
-            new URIImpl(vocabNamespace + System.currentTimeMillis()),
+            new URIImpl(vocabNamespace + System.currentTimeMillis() + "_1"),
             new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broader"),
-            new URIImpl(vocabNamespace + System.currentTimeMillis()));
+            new URIImpl(vocabNamespace + System.currentTimeMillis() + "_2"));
     }
 }

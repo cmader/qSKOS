@@ -8,9 +8,9 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.io.IOException;
 
@@ -32,47 +32,6 @@ public class HierarchicalCyclesAdHocTest {
     public void initiallyNoCycle() throws OpenRDFException
     {
         Assert.assertEquals(0, hierarchicalCycles.getReport().getData().size());
-    }
-
-    @Test
-    public void statementChecksDontChangeRepository() throws OpenRDFException {
-        RepositoryConnection repCon = hierarchicalCycles.getVocabRepository().getRepository().getConnection();
-        long sizeBeforeCheck = repCon.size();
-
-        try {
-            introduceReflexiveCycle();
-
-            // the method above MUST throw an exception, so we should not arrive here
-            Assert.fail();
-        }
-        catch (IssueOccursException e) {
-            long sizeAfterCheck = repCon.size();
-            Assert.assertTrue(sizeBeforeCheck == sizeAfterCheck);
-        }
-        finally {
-            repCon.close();
-        }
-    }
-
-    @Test
-    public void statementChecksDontChangeHierarchyGraph() throws OpenRDFException {
-        // do initial cycle finding
-        hierarchicalCycles.getReport();
-
-        int[] graphSizeBeforeAdHocCheck = hierarchicalCycles.getHierarchyGraphSize();
-        try {
-            introduceReflexiveCycle();
-
-            // the method above MUST throw an exception, so we should not arrive here
-            Assert.fail();
-        }
-        catch (IssueOccursException e) {
-            int[] graphSizeAfterAdHocCheck = hierarchicalCycles.getHierarchyGraphSize();
-            boolean sameVertexCount = graphSizeBeforeAdHocCheck[0] == graphSizeAfterAdHocCheck[0];
-            boolean sameEdgeCount = graphSizeBeforeAdHocCheck[1] == graphSizeAfterAdHocCheck[1];
-
-            Assert.assertTrue(sameVertexCount && sameEdgeCount);
-        }
     }
 
     @Test(expected = IssueOccursException.class)
@@ -111,7 +70,6 @@ public class HierarchicalCyclesAdHocTest {
         );
     }
 
-
     @Test(expected = IssueOccursException.class)
     public void introduceMultiLevelCycle() throws IssueOccursException, OpenRDFException
     {
@@ -120,6 +78,30 @@ public class HierarchicalCyclesAdHocTest {
                         new URIImpl("http://myvocab.org/conceptC"),
                         new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broader"),
                         new URIImpl("http://myvocab.org/conceptA")
+                )
+        );
+    }
+
+    @Test(expected = IssueOccursException.class)
+    public void introduceTransitiveCycle_broader() throws IssueOccursException, OpenRDFException
+    {
+        hierarchicalCycles.checkStatement(
+                new StatementImpl(
+                        new URIImpl("http://myvocab.org/conceptF"),
+                        new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broaderTransitive"),
+                        new URIImpl("http://myvocab.org/conceptD")
+                )
+        );
+    }
+
+    @Test(expected = IssueOccursException.class)
+    public void introduceTransitiveCycle_narrower() throws IssueOccursException, OpenRDFException
+    {
+        hierarchicalCycles.checkStatement(
+                new StatementImpl(
+                        new URIImpl("http://myvocab.org/conceptD"),
+                        new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowerTransitive"),
+                        new URIImpl("http://myvocab.org/conceptE")
                 )
         );
     }
@@ -147,6 +129,18 @@ public class HierarchicalCyclesAdHocTest {
                         new URIImpl("http://myvocab.org/conceptZ"),
                         new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broaderTransitive"),
                         new URIImpl("http://myvocab.org/conceptV")
+                )
+        );
+    }
+
+    @Test
+    public void testNonHierarchicalStatement() throws IssueOccursException, OpenRDFException
+    {
+        hierarchicalCycles.checkStatement(
+                new StatementImpl(
+                        new URIImpl("http://myvocab.org/conceptA"),
+                        new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "scopeNote"),
+                        new LiteralImpl("some scope note")
                 )
         );
     }

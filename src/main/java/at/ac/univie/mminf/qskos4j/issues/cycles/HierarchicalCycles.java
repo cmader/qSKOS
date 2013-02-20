@@ -6,6 +6,7 @@ import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
@@ -14,13 +15,13 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.query.BooleanQuery;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by christian
@@ -32,6 +33,8 @@ import java.util.Set;
 public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
 
     private final Logger logger = LoggerFactory.getLogger(HierarchicalCycles.class);
+
+    private enum HierarchyType {BROADER, NARROWER, NONE}
 
     private DirectedGraph<Value, NamedEdge> hierarchyGraph;
     private HierarchyGraphBuilder hierarchyGraphBuilder;
@@ -79,63 +82,58 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     }
 
     @Override
-    public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException
-    {
-        hierarchyGraph = hierarchyGraphBuilder.createGraph();
+    public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException {
+        HierarchyType hierarchyType = getPredicateHierarchyType(statement.getPredicate());
+        if (hierarchyType == HierarchyType.NONE) return;
 
-        if (subjectAndObjectInGraph(statement) && isHierarchicalPredicate(statement.getPredicate())) {
-            if (causesCycle(statement)) {
+        RepositoryConnection repCon = vocabRepository.getRepository().getConnection();
+        try {
+            String query = createHierarchicalCycleQuery(statement.getSubject(), statement.getObject(), hierarchyType);
+            BooleanQuery hierarchicalQuery = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, query);
+            if (hierarchicalQuery.evaluate()) {
                 throw new IssueOccursException();
             }
         }
-    }
-
-    private boolean subjectAndObjectInGraph(Statement statement) {
-        return hierarchyGraph.containsVertex(statement.getSubject()) &&
-               hierarchyGraph.containsVertex(statement.getObject());
-    }
-
-    private boolean isHierarchicalPredicate(URI predicate) {
-        return Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).contains(predicate) ||
-               Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).contains(predicate);
-    }
-
-    public boolean causesCycle(Statement statement) throws OpenRDFException {
-        NamedEdge newEdge = hierarchyGraph.addEdge(statement.getSubject(), statement.getObject());
-        NamedEdge newInverseEdge = hierarchyGraph.addEdge(statement.getObject(), statement.getSubject());
-
-        try {
-            return subjectAndObjectInSameComponent(statement, findCycleContainingComponents());
-        }
         finally {
-            hierarchyGraph.removeEdge(newEdge);
-            hierarchyGraph.removeEdge(newInverseEdge);
+            repCon.close();
         }
     }
 
-    private boolean subjectAndObjectInSameComponent(Statement statement, List<Set<Value>> cycleContainingComponents) {
-        logger.debug("Checking if statement causes cycle(s)");
+    private String createHierarchicalCycleQuery(Resource subject, Value object, HierarchyType hierarchyType)
+    {
+        return SparqlPrefix.SKOS +" "+
+            "ASK {<" +object+ "> (" +getHierarchicalProperties(hierarchyType)+ ")* <" +subject+ ">}";
+    }
 
-        Resource subject = statement.getSubject();
-        Value object = statement.getObject();
+    private String getHierarchicalProperties(HierarchyType hierarchyType) {
+        Iterator<URI> broaderIt = Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).iterator();
+        Iterator<URI> narrowerIt = Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).iterator();
 
-        for (Set<Value> component : cycleContainingComponents) {
-            boolean subjectFound = false, objectFound = false;
+        switch (hierarchyType) {
+            case BROADER:
+                return concatWithOrOperator(broaderIt, false) +"|"+ concatWithOrOperator(narrowerIt, true);
 
-            for (Value vertex : component) {
-                if (vertex.equals(subject)) subjectFound = true;
-                if (vertex.equals(object)) objectFound = true;
-                if (subjectFound && objectFound) return true;
-            }
+            case NARROWER:
+                return concatWithOrOperator(narrowerIt, false) +"|"+ concatWithOrOperator(broaderIt, true);
+
+            default:
+                return "";
         }
-
-        return false;
     }
 
-    // only for testing
-    public int[] getHierarchyGraphSize() {
-        int edgeCount = hierarchyGraph.edgeSet().size();
-        int vertexCount = hierarchyGraph.vertexSet().size();
-        return new int[] {vertexCount, edgeCount};
+    private String concatWithOrOperator(Iterator<URI> iterator, boolean addInversePrefix) {
+        String concatedEntries = "";
+        while (iterator.hasNext()) {
+            concatedEntries += (addInversePrefix ? "^" : "") +"<"+ iterator.next() +">"+ (iterator.hasNext() ? "|" : "");
+        }
+        return concatedEntries;
     }
+
+    private HierarchyType getPredicateHierarchyType(URI predicate) {
+        if (Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).contains(predicate)) return HierarchyType.BROADER;
+        if (Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).contains(predicate)) return HierarchyType.NARROWER;
+
+        return HierarchyType.NONE;
+    }
+
 }
