@@ -5,8 +5,8 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
+import org.openrdf.repository.RepositoryException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class DisjointLabelsViolations extends Issue<CollectionReport<LabelConfli
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public DisjointLabelsViolations(ResourceLabelsCollector resourceLabelsCollector) {
-        super(resourceLabelsCollector.getVocabRepository(),
+        super(resourceLabelsCollector.getRepository(),
               "dlv",
               "Disjoint Labels Violation",
               "Finds resources with identical entries for different label types",
@@ -33,17 +33,17 @@ public class DisjointLabelsViolations extends Issue<CollectionReport<LabelConfli
     }
 
     @Override
-    protected CollectionReport<LabelConflict> invoke() throws OpenRDFException {
+    protected CollectionReport<LabelConflict> invoke() throws RepositoryException {
         findNonDisjointLabels();
         return new CollectionReport<LabelConflict>(nonDisjointLabels.values());
     }
 
-    private void findNonDisjointLabels() {
+    private void findNonDisjointLabels() throws RepositoryException {
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = orderResourcesByLabel();
         extractNonDisjointConflicts(resourcesByLabel);
     }
 
-    private Map<Literal, Collection<LabeledConcept>> orderResourcesByLabel() {
+    private Map<Literal, Collection<LabeledConcept>> orderResourcesByLabel() throws RepositoryException {
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = new HashMap<Literal, Collection<LabeledConcept>>();
 
         for (LabeledConcept labeledResource : resourceLabelsCollector.getLabeledResources()) {

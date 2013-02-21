@@ -145,7 +145,7 @@ public class QSkos {
     }
 
     private void addSkosIntegrityIssues() {
-        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository);
+        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository.getRepository());
 
         registeredIssues.add(new InconsistentPrefLabels(resourceLabelsCollector));
         registeredIssues.add(new DisjointLabelsViolations(resourceLabelsCollector));

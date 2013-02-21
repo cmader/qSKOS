@@ -19,7 +19,8 @@ public class InconsistentPrefLabelsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        inconsistentPrefLabels = new InconsistentPrefLabels(new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf")));
+        inconsistentPrefLabels = new InconsistentPrefLabels(
+            new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf").getRepository()));
     }
 
     @Test

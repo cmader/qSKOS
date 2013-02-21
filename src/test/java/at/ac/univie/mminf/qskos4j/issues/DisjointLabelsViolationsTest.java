@@ -19,7 +19,8 @@ public class DisjointLabelsViolationsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf")));
+        disjointLabelsViolations = new DisjointLabelsViolations(
+            new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf").getRepository()));
     }
     @Test
     public void testDisjointLabels() throws OpenRDFException {

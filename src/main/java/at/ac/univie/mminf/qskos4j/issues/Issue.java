@@ -6,25 +6,37 @@ import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
+import org.openrdf.repository.Repository;
 
 public abstract class Issue<T extends Report<?>> {
 
     public enum IssueType {STATISTICAL, ANALYTICAL}
 
+    @Deprecated
 	protected VocabRepository vocabRepository;
-	protected IProgressMonitor progressMonitor;
+
+	protected Repository repository;
+    protected IProgressMonitor progressMonitor;
 
     private String id, name, description;
     private IssueType type;
     private T report;
 
-    protected Issue(VocabRepository vocabRepository, String id, String name, String description, IssueType type) {
+    protected Issue(Repository repository, String id, String name, String description, IssueType type)
+    {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
-        this.vocabRepository = vocabRepository;
+        this.repository = repository;
         progressMonitor = new StubProgressMonitor();
+    }
+
+    @Deprecated
+    protected Issue(VocabRepository vocabRepository, String id, String name, String description, IssueType type)
+    {
+        this(vocabRepository.getRepository(), id, name, description, type);
+        this.vocabRepository = vocabRepository;
     }
 
     protected abstract T invoke() throws OpenRDFException;
@@ -47,6 +59,7 @@ public abstract class Issue<T extends Report<?>> {
 		this.progressMonitor = progressMonitor;
 	}
 
+    @Deprecated
     public final VocabRepository getVocabRepository() {
         return vocabRepository;
     }

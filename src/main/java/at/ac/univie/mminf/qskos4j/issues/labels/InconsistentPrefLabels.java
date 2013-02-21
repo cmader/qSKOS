@@ -8,6 +8,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.repository.RepositoryException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +25,7 @@ public class InconsistentPrefLabels extends Issue<CollectionReport<LabelConflict
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public InconsistentPrefLabels(ResourceLabelsCollector resourceLabelsCollector) {
-        super(resourceLabelsCollector.getVocabRepository(),
+        super(resourceLabelsCollector.getRepository(),
               "ipl",
               "Inconsistent Preferred Labels",
               "Finds resources with more then one prefLabel per language",
@@ -41,7 +42,7 @@ public class InconsistentPrefLabels extends Issue<CollectionReport<LabelConflict
 		return new CollectionReport<LabelConflict>(ambigPrefLabels.values());
 	}
 
-    private Map<Value, Collection<LabeledConcept>> orderPrefLabelsByResource() {
+    private Map<Value, Collection<LabeledConcept>> orderPrefLabelsByResource() throws RepositoryException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByResource = new HashMap<Value, Collection<LabeledConcept>>();
 
         for (LabeledConcept labeledConcept : resourceLabelsCollector.getLabeledResources()) {

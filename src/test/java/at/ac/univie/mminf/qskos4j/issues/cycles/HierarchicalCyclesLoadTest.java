@@ -29,8 +29,7 @@ public class HierarchicalCyclesLoadTest {
 
     @BeforeClass
     public static void setUp() throws OpenRDFException, IOException {
-        //VocabRepository repo = VocabRepository.setUpFromTestResource("stw.rdf");
-        VocabRepository repo = VocabRepository.setUpFromTestResource("cycles.rdf");
+        VocabRepository repo = VocabRepository.setUpFromTestResource("stw.rdf");
 
         hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(repo));
         repCon = repo.getRepository().getConnection();

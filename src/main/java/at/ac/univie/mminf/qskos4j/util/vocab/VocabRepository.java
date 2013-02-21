@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+@Deprecated
 public class VocabRepository {
 
     private final Logger logger = LoggerFactory.getLogger(VocabRepository.class);
@@ -68,6 +69,7 @@ public class VocabRepository {
 			System.currentTimeMillis();
 	}
 
+    @Deprecated
     public TupleQueryResult query(String sparqlQuery) throws OpenRDFException {
         TupleQuery tupleQuery = repository.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, sparqlQuery);
         return tupleQuery.evaluate();

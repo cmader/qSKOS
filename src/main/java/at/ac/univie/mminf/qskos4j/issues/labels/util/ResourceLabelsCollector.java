@@ -1,13 +1,16 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,27 +22,32 @@ public class ResourceLabelsCollector {
     private final Logger logger = LoggerFactory.getLogger(ResourceLabelsCollector.class);
 
     private Collection<LabeledConcept> labeledResources;
-    private VocabRepository vocabRepository;
+    private Repository repository;
 
-    public ResourceLabelsCollector(VocabRepository vocabRepository) {
-        this.vocabRepository = vocabRepository;
+    public ResourceLabelsCollector(Repository vocabRepository) {
+        this.repository = vocabRepository;
     }
 
-    public Collection<LabeledConcept> getLabeledResources() {
-        if (labeledResources == null) {
-            createLabeledResources();
+    public Collection<LabeledConcept> getLabeledResources() throws RepositoryException
+    {
+        labeledResources = new HashSet<LabeledConcept>();
+        RepositoryConnection repCon = repository.getConnection();
+
+        try {
+            createLabeledResources(repCon);
         }
+        finally {
+            repCon.close();
+        }
+
         return labeledResources;
     }
 
-    private void createLabeledResources() {
-        labeledResources = new HashSet<LabeledConcept>();
-
+    private void createLabeledResources(RepositoryConnection repCon) {
         for (LabelType labelType : LabelType.values()) {
             String labelQuery = createLabelQuery(labelType);
-
             try {
-                TupleQueryResult result = vocabRepository.query(labelQuery);
+                TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, labelQuery).evaluate();
                 addResultToLabels(labelType, result);
             }
             catch (OpenRDFException e) {
@@ -52,7 +60,7 @@ public class ResourceLabelsCollector {
         return SparqlPrefix.SKOS +
             "SELECT DISTINCT ?resource ?label"+
             "{" +
-            "?resource "+labelType.getSkosProperty()+" ?label ." +
+                "?resource "+labelType.getSkosProperty()+" ?label ." +
             "}";
     }
 
@@ -75,8 +83,8 @@ public class ResourceLabelsCollector {
         }
     }
 
-    public final VocabRepository getVocabRepository() {
-        return vocabRepository;
+    public final Repository getRepository() {
+        return repository;
     }
 
 }

@@ -22,8 +22,10 @@ public class HtmlReportsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf")));
-        disconnectedConceptClusters = new DisconnectedConceptClusters(new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
+        disjointLabelsViolations = new DisjointLabelsViolations(
+            new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf").getRepository()));
+        disconnectedConceptClusters = new DisconnectedConceptClusters(
+            new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
 
     }
 
