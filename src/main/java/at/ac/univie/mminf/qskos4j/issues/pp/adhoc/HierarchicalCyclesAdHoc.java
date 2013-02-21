@@ -1,6 +1,6 @@
-package at.ac.univie.mminf.qskos4j.issues.cycles;
+package at.ac.univie.mminf.qskos4j.issues.pp.adhoc;
 
-import at.ac.univie.mminf.qskos4j.issues.AdHocCheckable;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.AdHocCheckable;
 import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;

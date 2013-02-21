@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles;
 
 import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.HierarchicalCyclesAdHoc;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import com.carrotsearch.junitbenchmarks.BenchmarkRule;

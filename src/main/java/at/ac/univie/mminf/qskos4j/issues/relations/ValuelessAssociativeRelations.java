@@ -52,7 +52,6 @@ public class ValuelessAssociativeRelations extends Issue<CollectionReport<Pair<U
 				"}" +
 
 				"?child skos:related|skos:relatedMatch ?otherchild. "+
-				
 			"}";
 	}
 	

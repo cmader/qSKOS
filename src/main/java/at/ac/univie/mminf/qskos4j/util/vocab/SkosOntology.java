@@ -33,6 +33,11 @@ public class SkosOntology {
             new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowMatch")
     };
 
+    public final static URI[] SKOS_ASSOCIATIVE_PROPERTIES = {
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "related"),
+            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "relatedMatch")
+    };
+
     private final String SKOS_GRAPH_URL = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
     private final String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
 
