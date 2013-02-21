@@ -6,6 +6,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.Repository;
 
 import java.io.IOException;
 
@@ -20,8 +21,8 @@ public class HierarchicalCyclesFullTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        VocabRepository cyclesRepo = VocabRepository.setUpFromTestResource("cycles.rdf");
-        VocabRepository componentsRepo = VocabRepository.setUpFromTestResource("components.rdf");
+        Repository cyclesRepo = VocabRepository.setUpFromTestResource("cycles.rdf").getRepository();
+        Repository componentsRepo = VocabRepository.setUpFromTestResource("components.rdf").getRepository();
 
         hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(cyclesRepo));
         hierarchicalCyclesForComponents = new HierarchicalCycles(new HierarchyGraphBuilder(componentsRepo));

@@ -5,17 +5,16 @@ import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
 import org.openrdf.repository.Repository;
 
-public abstract class Issue<T extends Report<?>> {
+public abstract class Issue<T extends Report<?>>  {
 
     public enum IssueType {STATISTICAL, ANALYTICAL}
 
     @Deprecated
 	protected VocabRepository vocabRepository;
+    protected Repository repository;
 
-	protected Repository repository;
     protected IProgressMonitor progressMonitor;
 
     private String id, name, description;
@@ -24,11 +23,11 @@ public abstract class Issue<T extends Report<?>> {
 
     protected Issue(Repository repository, String id, String name, String description, IssueType type)
     {
+        this.repository = repository;
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
-        this.repository = repository;
         progressMonitor = new StubProgressMonitor();
     }
 
@@ -78,11 +77,6 @@ public abstract class Issue<T extends Report<?>> {
 
     public final IssueType getType() {
         return type;
-    }
-
-    public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException {
-        // override me!
-        throw new UnsupportedOperationException();
     }
 
     @Override

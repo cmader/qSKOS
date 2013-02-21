@@ -3,7 +3,6 @@ package at.ac.univie.mminf.qskos4j.issues;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -11,7 +10,10 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,27 +25,33 @@ public class HierarchyGraphBuilder {
     private final Logger logger = LoggerFactory.getLogger(HierarchyGraphBuilder.class);
 
 	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
-	private VocabRepository vocabRepository;
+	private Repository repository;
+    private RepositoryConnection repCon;
 	
-	public HierarchyGraphBuilder(VocabRepository vocabRepository)
-		throws OpenRDFException
+	public HierarchyGraphBuilder(Repository repository)
 	{
-		this.vocabRepository = vocabRepository;
+		this.repository = repository;
 	}
 
 	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
 	{
         logger.debug("Creating hierarchy graph");
 
-        addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
-        addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
-        return graph;
+        repCon = repository.getConnection();
+        try {
+            addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
+            addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
+            return graph;
+        }
+        finally {
+            repCon.close();
+        }
 	}
 	
 	private TupleQueryResult findTriples(URI[] skosHierarchyProperties) throws OpenRDFException
 	{
-		String query = createHierarchicalGraphQuery(skosHierarchyProperties);
-		return vocabRepository.query(query);
+		    String query = createHierarchicalGraphQuery(skosHierarchyProperties);
+            return repCon.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
 	}
 	
 	private String createHierarchicalGraphQuery(URI[] skosHierarchyProperties) {
@@ -101,8 +109,8 @@ public class HierarchyGraphBuilder {
 		}
 	}
 
-    public VocabRepository getVocabRepository() {
-        return vocabRepository;
+    public Repository getRepository() {
+        return repository;
     }
 
 }

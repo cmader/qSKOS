@@ -12,7 +12,9 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,7 +28,7 @@ public class RelationClashes extends Issue<CollectionReport<Pair<Value>>> {
     private HierarchyGraphBuilder hierarchyGraphBuilder;
 
     public RelationClashes(HierarchyGraphBuilder hierarchyGraphBuilder) {
-        super(hierarchyGraphBuilder.getVocabRepository(),
+        super(hierarchyGraphBuilder.getRepository(),
               "rc",
               "Relation Clashes",
               "Covers condition S27 from the SKOS reference document (Associative vs. Hierarchical Relation Clashes)",
@@ -62,8 +64,16 @@ public class RelationClashes extends Issue<CollectionReport<Pair<Value>>> {
     }
 
     private Collection<Pair<Value>> findRelatedConcepts() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createRelatedConceptsQuery());
-        return TupleQueryResultUtil.createCollectionOfValuePairs(result, "concept1", "concept2");
+        RepositoryConnection repCon = repository.getConnection();
+        try {
+            TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRelatedConceptsQuery()).evaluate();
+            return TupleQueryResultUtil.createCollectionOfValuePairs(result, "concept1", "concept2");
+
+        }
+        finally {
+            repCon.close();
+        }
+
     }
 
     private String createRelatedConceptsQuery() {

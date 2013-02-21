@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.Repository;
 
 import java.io.IOException;
 
@@ -15,7 +16,8 @@ public class RelationClashesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        relationClashes = new RelationClashes(new HierarchyGraphBuilder(VocabRepository.setUpFromTestResource("associativeVsHierarchicalClashes.rdf")));
+        Repository repository = VocabRepository.setUpFromTestResource("associativeVsHierarchicalClashes.rdf").getRepository();
+        relationClashes = new RelationClashes(new HierarchyGraphBuilder(repository));
     }
 
     @Test

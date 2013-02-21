@@ -5,14 +5,15 @@ import at.ac.univie.mminf.qskos4j.issues.pp.RepairableIssue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
@@ -41,8 +42,8 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
             "FILTER (!bound(?y) && !bound(?s))"+
         "}";
 
-    public NoBroaderAndNotTopConcepts(VocabRepository vocabRepository) {
-        super(vocabRepository,
+    public NoBroaderAndNotTopConcepts(Repository repository) {
+        super(repository,
             "nbantc",
             "No Broader And No Top Concepts",
             "Finds concepts that don't have a broader concept defined and are not top concepts",
@@ -61,16 +62,22 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
 
     @Override
     protected CollectionReport<Value> invoke() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(QUERY);
-        Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
+        RepositoryConnection repCon = repository.getConnection();
+        try {
+            TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, QUERY).evaluate();
+            Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
 
-        return new CollectionReport<Value>(foundConcepts);
+            return new CollectionReport<Value>(foundConcepts);
+        }
+        finally {
+            repCon.close();
+        }
     }
 
     @Override
     public void invokeRepair() throws RepairFailedException, RepositoryException
     {
-        repCon = vocabRepository.getRepository().getConnection();
+        repCon = repository.getConnection();
         repCon.setAutoCommit(false);
 
         try {

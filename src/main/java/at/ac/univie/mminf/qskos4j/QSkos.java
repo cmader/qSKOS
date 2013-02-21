@@ -108,7 +108,7 @@ public class QSkos {
     }
 
     private void addAnalyticalIssues() throws OpenRDFException {
-        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository);
+        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository.getRepository());
 
         registeredIssues.add(new OmittedOrInvalidLanguageTags(vocabRepository));
         registeredIssues.add(new IncompleteLanguageCoverage(involvedConcepts));

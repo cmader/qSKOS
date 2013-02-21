@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles;
 
-import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
@@ -14,14 +13,15 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
 import java.io.IOException;
 
-public class HierarchicalCyclesLoadTest {
+public class HierarchicalCyclesAdHocLoadTest {
 
-    private static HierarchicalCycles hierarchicalCycles;
+    private static HierarchicalCyclesAdHoc hierarchicalCyclesAdHoc;
     private static RepositoryConnection repCon;
 
     @Rule
@@ -29,10 +29,10 @@ public class HierarchicalCyclesLoadTest {
 
     @BeforeClass
     public static void setUp() throws OpenRDFException, IOException {
-        VocabRepository repo = VocabRepository.setUpFromTestResource("stw.rdf");
+        Repository repo = VocabRepository.setUpFromTestResource("stw.rdf").getRepository();
 
-        hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(repo));
-        repCon = repo.getRepository().getConnection();
+        hierarchicalCyclesAdHoc = new HierarchicalCyclesAdHoc(repo);
+        repCon = repo.getConnection();
     }
 
     @AfterClass
@@ -46,7 +46,7 @@ public class HierarchicalCyclesLoadTest {
     {
         try {
             Statement someStatement = createRandomStatement();
-            hierarchicalCycles.checkStatement(someStatement);
+            hierarchicalCyclesAdHoc.checkStatement(someStatement);
             repCon.add(someStatement);
         }
         catch (IssueOccursException e) {

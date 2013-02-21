@@ -1,10 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles;
 
-import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
@@ -20,18 +18,11 @@ import java.io.IOException;
  */
 public class HierarchicalCyclesAdHocTest {
 
-    private HierarchicalCycles hierarchicalCycles;
+    private HierarchicalCyclesAdHoc hierarchicalCycles;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        VocabRepository cyclesAdHocRepo = VocabRepository.setUpFromTestResource("cyclesAdHoc.rdf");
-        hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(cyclesAdHocRepo));
-    }
-
-    @Test
-    public void initiallyNoCycle() throws OpenRDFException
-    {
-        Assert.assertEquals(0, hierarchicalCycles.getReport().getData().size());
+        hierarchicalCycles = new HierarchicalCyclesAdHoc(VocabRepository.setUpFromTestResource("cyclesAdHoc.rdf").getRepository());
     }
 
     @Test(expected = IssueOccursException.class)
