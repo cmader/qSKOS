@@ -16,7 +16,7 @@ public class RelationClashesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        Repository repository = VocabRepository.setUpFromTestResource("associativeVsHierarchicalClashes.rdf").getRepository();
+        Repository repository = VocabRepository.setUpFromTestResource("relationClashes.rdf").getRepository();
         relationClashes = new RelationClashes(new HierarchyGraphBuilder(repository));
     }
 

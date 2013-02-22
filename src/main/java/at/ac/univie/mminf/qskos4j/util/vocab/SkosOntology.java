@@ -16,10 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class SkosOntology {
 
     private final static Logger logger = LoggerFactory.getLogger(SkosOntology.class);
+
+    public enum HierarchyType {BROADER, NARROWER}
 
     public final static URI[] SKOS_BROADER_PROPERTIES = {
             new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broader"),
@@ -95,6 +99,39 @@ public class SkosOntology {
             "SELECT ?" +bindingName+ " WHERE {" +
                 "?" +bindingName+ " rdfs:subPropertyOf+ skos:semanticRelation" +
             "}";
+    }
+
+    public String getHierarchicalPropertiesPath(HierarchyType hierarchyType)
+    {
+        Iterator<URI> broaderIt = Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).iterator();
+        Iterator<URI> narrowerIt = Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).iterator();
+
+        switch (hierarchyType) {
+            case BROADER:
+                return concatWithOrOperator(broaderIt, false) +"|"+ concatWithOrOperator(narrowerIt, true);
+
+            case NARROWER:
+                return concatWithOrOperator(narrowerIt, false) +"|"+ concatWithOrOperator(broaderIt, true);
+
+            default:
+                return "";
+        }
+    }
+
+    private String concatWithOrOperator(Iterator<URI> iterator, boolean addInversePrefix) {
+        String concatedEntries = "";
+        while (iterator.hasNext()) {
+            concatedEntries += (addInversePrefix ? "^" : "") +"<"+ iterator.next() +">"+ (iterator.hasNext() ? "|" : "");
+        }
+        return concatedEntries;
+    }
+
+    public HierarchyType getPredicateHierarchyType(URI predicate)
+    {
+        if (Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).contains(predicate)) return HierarchyType.BROADER;
+        if (Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).contains(predicate)) return HierarchyType.NARROWER;
+
+        throw new IllegalArgumentException("Predicate not a hierarchical property");
     }
 
     public Repository getRepository() {

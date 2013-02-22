@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.pp.adhoc;
 
-import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.AdHocCheckable;
 import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -9,14 +8,14 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 public class RelationClashesAdHoc implements AdHocCheckable {
 
@@ -44,31 +43,53 @@ public class RelationClashesAdHoc implements AdHocCheckable {
     }
 
     private RelationType getRelationType(URI predicate) {
-        if (Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).contains(predicate) ||
-            Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).contains(predicate))
-        {
+        try {
+            SkosOntology.getInstance().getPredicateHierarchyType(predicate);
             return RelationType.HIERARCHICAL;
         }
-
-        if (Arrays.asList(SkosOntology.SKOS_ASSOCIATIVE_PROPERTIES).contains(predicate)) {
-            return RelationType.ASSOCIATIVE;
+        catch (IllegalArgumentException e) {
+            if (Arrays.asList(SkosOntology.SKOS_ASSOCIATIVE_PROPERTIES).contains(predicate)) {
+                return RelationType.ASSOCIATIVE;
+            }
         }
 
         return RelationType.OTHER;
     }
 
     private boolean pathExists(Resource subject, Value object, RelationType relationType)
-        throws RepositoryException
+        throws RepositoryException, QueryEvaluationException
     {
         RepositoryConnection repCon = repository.getConnection();
         try {
-            String query = SparqlPrefix.SKOS +" ASK {<" +subject+ ">" +createPropertyPath(relationType)+ "<" +object+ ">}";
-            repCon.prepareBooleanQuery(QueryLanguage.SPARQL, )
+            String query = SparqlPrefix.SKOS +
+                    " ASK {"+
+                        "{<" +subject+ ">" +createPropertyPath(relationType)+ "<" +object+ ">}" +
+                        "UNION" +
+                        "{<" +object+ ">" +createPropertyPath(relationType)+ "<" +subject+ ">}" +
+                    "}";
 
+            System.out.println(query);
+
+            return repCon.prepareBooleanQuery(QueryLanguage.SPARQL, query).evaluate();
+        }
+        catch (MalformedQueryException e) {
+            return false;
         }
         finally {
             repCon.close();
         }
+    }
+
+    private String createPropertyPath(RelationType relationType) {
+        String propertyPath = "";
+        if (relationType == RelationType.HIERARCHICAL) {
+            propertyPath = SkosOntology.getInstance().getHierarchicalPropertiesPath(SkosOntology.HierarchyType.BROADER);
+        }
+        else if (relationType == RelationType.ASSOCIATIVE) {
+            propertyPath = "skos:related|skos:relatedMatch|^skos:related|^skos:relatedMatch";
+        }
+
+        return "(" +propertyPath+ ")+";
     }
 
 }
