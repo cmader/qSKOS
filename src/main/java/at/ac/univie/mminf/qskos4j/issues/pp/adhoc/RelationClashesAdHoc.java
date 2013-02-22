@@ -61,13 +61,7 @@ public class RelationClashesAdHoc implements AdHocCheckable {
     {
         RepositoryConnection repCon = repository.getConnection();
         try {
-            String query = SparqlPrefix.SKOS +
-                    " ASK {"+
-                        "{<" +subject+ ">" +createPropertyPath(relationType)+ "<" +object+ ">}" +
-                        "UNION" +
-                        "{<" +object+ ">" +createPropertyPath(relationType)+ "<" +subject+ ">}" +
-                    "}";
-
+            String query = createPathQuery(subject, object, relationType);
             System.out.println(query);
 
             return repCon.prepareBooleanQuery(QueryLanguage.SPARQL, query).evaluate();
@@ -78,6 +72,24 @@ public class RelationClashesAdHoc implements AdHocCheckable {
         finally {
             repCon.close();
         }
+    }
+
+    private String createPathQuery(Resource subject, Value object, RelationType relationType) {
+        String query = SparqlPrefix.SKOS +" ASK {";
+        switch (relationType) {
+            case HIERARCHICAL:
+                query += "{<" +subject+ ">" +createPropertyPath(relationType)+ "<" +object+ ">}" +
+                        "UNION" +
+                        "{<" +object+ ">" +createPropertyPath(relationType)+ "<" +subject+ ">}";
+                break;
+
+            case ASSOCIATIVE:
+                query += "<" +object+ ">" +createPropertyPath(relationType)+ "<" +subject+ ">";
+                break;
+        }
+
+        query += "}";
+        return query;
     }
 
     private String createPropertyPath(RelationType relationType) {
