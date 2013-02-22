@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.RelationClashesAdHoc;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.issues.RelationClashesAdHoc;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.junit.After;
@@ -32,8 +32,8 @@ public class RelationClashesAdHocTest {
         repCon.close();
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelClash_broader() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelClash_broader() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -44,8 +44,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelClash_broaderTransitive() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelClash_broaderTransitive() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -56,8 +56,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelClash_broadMatch() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelClash_broadMatch() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -68,8 +68,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelClash_narrower() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelClash_narrower() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -80,8 +80,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelClash_related() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelClash_related() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -92,8 +92,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelClash_relatedMatch() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelClash_relatedMatch() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -104,8 +104,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceSecondLevelClash_broader() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceSecondLevelClash_broader() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -116,8 +116,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceSecondLevelClash_related() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceSecondLevelClash_related() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -128,8 +128,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceSecondLevelClash_mixedBroaderTransitive() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceSecondLevelClash_mixedBroaderTransitive() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -140,8 +140,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceSecondLevelClash_mixedBroaderNarrower() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceSecondLevelClash_mixedBroaderNarrower() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -152,8 +152,8 @@ public class RelationClashesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceSecondLevelClash_mixedRelated() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceSecondLevelClash_mixedRelated() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -165,7 +165,7 @@ public class RelationClashesAdHocTest {
     }
 
     @Test
-    public void introduceNoClash() throws IssueOccursException, OpenRDFException
+    public void introduceNoClash() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(
@@ -177,7 +177,7 @@ public class RelationClashesAdHocTest {
     }
 
     @Test
-    public void introduceNonHierarchicalOrAssociativeRelation() throws IssueOccursException, OpenRDFException
+    public void introduceNonHierarchicalOrAssociativeRelation() throws IssueDetectedException, OpenRDFException
     {
         relationClashesAdHocTest.checkStatement(
                 new StatementImpl(

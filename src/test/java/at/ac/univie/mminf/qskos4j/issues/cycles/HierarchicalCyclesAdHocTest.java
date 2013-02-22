@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles;
 
-import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
-import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.HierarchicalCyclesAdHoc;
+import at.ac.univie.mminf.qskos4j.issues.IssueDetectedException;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.issues.HierarchicalCyclesAdHoc;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.junit.After;
@@ -38,8 +38,8 @@ public class HierarchicalCyclesAdHocTest {
         repCon.close();
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceReflexiveCycle() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceReflexiveCycle() throws IssueDetectedException, OpenRDFException
     {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(
@@ -50,8 +50,8 @@ public class HierarchicalCyclesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelCycle_broader() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelCycle_broader() throws IssueDetectedException, OpenRDFException
     {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(
@@ -62,8 +62,8 @@ public class HierarchicalCyclesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceFirstLevelCycle_narrower() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceFirstLevelCycle_narrower() throws IssueDetectedException, OpenRDFException
     {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(
@@ -74,8 +74,8 @@ public class HierarchicalCyclesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceMultiLevelCycle() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceMultiLevelCycle() throws IssueDetectedException, OpenRDFException
     {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(
@@ -86,8 +86,8 @@ public class HierarchicalCyclesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceTransitiveCycle_broader() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceTransitiveCycle_broader() throws IssueDetectedException, OpenRDFException
     {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(
@@ -98,8 +98,8 @@ public class HierarchicalCyclesAdHocTest {
         );
     }
 
-    @Test(expected = IssueOccursException.class)
-    public void introduceTransitiveCycle_narrower() throws IssueOccursException, OpenRDFException
+    @Test(expected = IssueDetectedException.class)
+    public void introduceTransitiveCycle_narrower() throws IssueDetectedException, OpenRDFException
     {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(
@@ -111,7 +111,7 @@ public class HierarchicalCyclesAdHocTest {
     }
 
     @Test
-    public void introduceNoCycle() throws IssueOccursException, OpenRDFException {
+    public void introduceNoCycle() throws IssueDetectedException, OpenRDFException {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(
                         new URIImpl("http://myvocab.org/conceptA"),
@@ -138,7 +138,7 @@ public class HierarchicalCyclesAdHocTest {
     }
 
     @Test
-    public void testNonHierarchicalStatement() throws IssueOccursException, OpenRDFException
+    public void testNonHierarchicalStatement() throws IssueDetectedException, OpenRDFException
     {
         hierarchicalCycles.checkStatement(
                 new StatementImpl(

@@ -1,6 +1,8 @@
-package at.ac.univie.mminf.qskos4j.issues.pp.adhoc;
+package at.ac.univie.mminf.qskos4j.issues.pp.adhoc.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
+import at.ac.univie.mminf.qskos4j.issues.IssueDetectedException;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.AdHocCheckable;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.exceptions.RelationClashDetectedException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -27,7 +29,7 @@ public class RelationClashesAdHoc implements AdHocCheckable {
     }
 
     @Override
-    public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException
+    public void checkStatement(Statement statement) throws IssueDetectedException, OpenRDFException
     {
         boolean clashFound = false;
 
@@ -38,7 +40,7 @@ public class RelationClashesAdHoc implements AdHocCheckable {
             clashFound = pathExists(statement.getSubject(), statement.getObject(), RelationType.HIERARCHICAL);
         }
 
-        if (clashFound) throw new IssueOccursException();
+        if (clashFound) throw new RelationClashDetectedException();
     }
 
     private RelationType getRelationType(URI predicate) {

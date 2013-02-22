@@ -1,6 +1,8 @@
-package at.ac.univie.mminf.qskos4j.issues.pp.adhoc;
+package at.ac.univie.mminf.qskos4j.issues.pp.adhoc.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.IssueOccursException;
+import at.ac.univie.mminf.qskos4j.issues.IssueDetectedException;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.AdHocCheckable;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.exceptions.HierarchicalCycleDetectedException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology.HierarchyType;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -21,14 +23,14 @@ public class HierarchicalCyclesAdHoc implements AdHocCheckable {
     }
 
     @Override
-    public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException
+    public void checkStatement(Statement statement) throws IssueDetectedException, OpenRDFException
     {
         try {
             HierarchyType hierarchyType = SkosOntology.getInstance().getPredicateHierarchyType(statement.getPredicate());
             String query = createHierarchicalCycleQuery(statement.getSubject(), statement.getObject(), hierarchyType);
             BooleanQuery hierarchicalQuery = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, query);
             if (hierarchicalQuery.evaluate()) {
-                throw new IssueOccursException();
+                throw new HierarchicalCycleDetectedException();
             }
         }
         catch (IllegalArgumentException e) {
