@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,11 +23,12 @@ public class AuthoritativeConceptsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        authoritativeConcepts = new AuthoritativeConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("concepts.rdf")));
+        authoritativeConcepts = new AuthoritativeConcepts(
+            new InvolvedConcepts(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection()));
         authoritativeConcepts.setAuthResourceIdentifier("zbw.eu");
     }
 
-        @Test
+    @Test
     public void testAuthoritativeConceptsCount() throws OpenRDFException
     {
         Collection<Value> authoritativeConceptValues = authoritativeConcepts.getReport().getData();

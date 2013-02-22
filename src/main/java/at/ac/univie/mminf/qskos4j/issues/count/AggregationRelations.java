@@ -4,9 +4,10 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.NumberReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.repository.RepositoryConnection;
 
 /**
  * Created by christian
@@ -20,8 +21,8 @@ public class AggregationRelations extends Issue<NumberReport<Long>> {
     private final String AGGREGATION_RELATIONS =
         "skos:topConceptOf, skos:hasTopConcept, skos:inScheme, skos:member, skos:memberList";
 
-    public AggregationRelations(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public AggregationRelations(RepositoryConnection repCon) {
+        super(repCon,
               "ar",
               "Aggregation Relations Count",
               "Counts the statements relating resources to ConceptSchemes or Collections",
@@ -31,8 +32,8 @@ public class AggregationRelations extends Issue<NumberReport<Long>> {
 
     @Override
     protected NumberReport<Long> invoke() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createAggregationRelationsQuery());
-        return new NumberReport<Long>(TupleQueryResultUtil.countResults(result));
+        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createAggregationRelationsQuery());
+        return new NumberReport<Long>(TupleQueryResultUtil.countResults(query.evaluate()));
     }
 
     private String createAggregationRelationsQuery() {

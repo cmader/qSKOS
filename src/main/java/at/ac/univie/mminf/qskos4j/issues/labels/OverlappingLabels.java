@@ -12,9 +12,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +32,7 @@ public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
     private InvolvedConcepts involvedConcepts;
 
     public OverlappingLabels(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getVocabRepository(),
+        super(involvedConcepts.getRepositoryConnection(),
               "ol",
               "Overlapping Labels",
               "Finds concepts with similar (identical) labels",
@@ -61,8 +59,8 @@ public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
             Value concept = it.next();
 
             try {
-			    TupleQueryResult resultLabels = vocabRepository.query(createConceptLabelQuery(concept));
-                Set<LabeledConcept> labeledConcepts = createLabeledConceptsFromResult(concept, resultLabels);
+                TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptLabelQuery(concept));
+                Set<LabeledConcept> labeledConcepts = createLabeledConceptsFromResult(concept, query.evaluate());
                 addToLabelsMap(labeledConcepts);
             }
             catch (OpenRDFException e) {

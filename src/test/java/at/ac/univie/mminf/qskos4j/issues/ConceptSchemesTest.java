@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class ConceptSchemesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        conceptSchemes = new ConceptSchemes(VocabRepository.setUpFromTestResource("aggregations.rdf"));
+        conceptSchemes = new ConceptSchemes(new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection());
     }
 
     @Test

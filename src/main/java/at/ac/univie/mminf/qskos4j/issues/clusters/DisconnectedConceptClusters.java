@@ -12,6 +12,8 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersReport> {
     private InvolvedConcepts involvedConcepts;
 
     public DisconnectedConceptClusters(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getVocabRepository(),
+        super(involvedConcepts.getRepositoryConnection(),
               "dcc",
               "Disconnected Concept Clusters",
               "Finds sets of concepts that are isolated from the rest of the vocabulary",
@@ -78,7 +80,9 @@ public class DisconnectedConceptClusters extends Issue<ClustersReport> {
         Collection<Relation> allRelations = new ArrayList<Relation>();
 
         try {
-            TupleQueryResult result = vocabRepository.query(createConnectionsQuery(concept));
+            TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConnectionsQuery(concept));
+            TupleQueryResult result = query.evaluate();
+
             while (result.hasNext()) {
                 BindingSet bindingSet = result.next();
                 Value otherConcept = bindingSet.getValue("otherConcept");

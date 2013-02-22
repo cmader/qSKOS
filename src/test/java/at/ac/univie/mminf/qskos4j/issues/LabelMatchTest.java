@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.pp.LabelMatch;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,9 @@ public class LabelMatchTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        labelLengthMatch = new LabelMatch(VocabRepository.setUpFromTestResource("labelMatch.rdf"), "^.{1,2}$");
+        labelLengthMatch = new LabelMatch(
+            new RepositoryBuilder().setUpFromTestResource("labelMatch.rdf").getConnection(),
+            "^.{1,2}$");
     }
 
     @Test

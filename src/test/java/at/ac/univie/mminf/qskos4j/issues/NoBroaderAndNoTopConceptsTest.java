@@ -2,8 +2,8 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.pp.RepairFailedException;
 import at.ac.univie.mminf.qskos4j.issues.pp.onimport.NoBroaderAndNotTopConcepts;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +15,6 @@ import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
@@ -32,9 +31,8 @@ public class NoBroaderAndNoTopConceptsTest {
 
     @Before
     public void setUp() throws IOException, OpenRDFException {
-        Repository repository = VocabRepository.setUpFromTestResource("noBroaderAndNotTopConcepts.rdf").getRepository();
-        repCon = repository.getConnection();
-        noBroaderAndNotTopConcepts = new NoBroaderAndNotTopConcepts(repository);
+        repCon = new RepositoryBuilder().setUpFromTestResource("noBroaderAndNotTopConcepts.rdf").getConnection();
+        noBroaderAndNotTopConcepts = new NoBroaderAndNotTopConcepts(repCon);
         noBroaderAndNotTopConcepts.setAbsorbingConceptScheme(
             new URIImpl(ABSORBING_SCHEME_URI),
             new LiteralImpl(ABSORBING_SCHEME_LABEL));

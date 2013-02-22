@@ -25,7 +25,7 @@ public class InconsistentPrefLabels extends Issue<CollectionReport<LabelConflict
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public InconsistentPrefLabels(ResourceLabelsCollector resourceLabelsCollector) {
-        super(resourceLabelsCollector.getRepository(),
+        super(resourceLabelsCollector.getRepositoryConnection(),
               "ipl",
               "Inconsistent Preferred Labels",
               "Finds resources with more then one prefLabel per language",

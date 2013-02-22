@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +18,10 @@ public class UndefinedSkosResourcesTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        undefinedSkosResourcesInConcepts = new UndefinedSkosResources(VocabRepository.setUpFromTestResource("concepts.rdf"));
-        undefinedSkosResourcesInDeprecatedAndIllegal = new UndefinedSkosResources(VocabRepository.setUpFromTestResource("deprecatedAndIllegalTerms.rdf"));
+        undefinedSkosResourcesInConcepts = new UndefinedSkosResources(
+            new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
+        undefinedSkosResourcesInDeprecatedAndIllegal = new UndefinedSkosResources(
+            new RepositoryBuilder().setUpFromTestResource("deprecatedAndIllegalTerms.rdf").getConnection());
 	}
 	
 	@Test

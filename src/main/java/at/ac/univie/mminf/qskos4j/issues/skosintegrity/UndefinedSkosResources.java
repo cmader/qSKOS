@@ -5,7 +5,6 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -26,8 +25,8 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
 
 	private Map<URI, Collection<URI>> deprecatedProperties, illegalTerms;
 
-    public UndefinedSkosResources(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public UndefinedSkosResources(RepositoryConnection repCon) {
+        super(repCon,
               "usr",
               "Undefined SKOS Resources",
               "Finds 'invented' new terms within the SKOS namespace or deprecated properties",
@@ -45,8 +44,8 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
 	
 	private void findDeprecatedProperties() throws OpenRDFException 
 	{
-		TupleQueryResult result = vocabRepository.query(createDeprecatedPropertiesQuery());
-		generateDeprecatedPropertiesMap(result);	
+		TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createDeprecatedPropertiesQuery());
+		generateDeprecatedPropertiesMap(query.evaluate());
 	}
 	
 	private String createDeprecatedPropertiesQuery() {
@@ -88,8 +87,8 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
 	
 	private void findIllegalTerms() throws OpenRDFException 
 	{
-		TupleQueryResult result = vocabRepository.query(createIllegalTermsQuery());
-		generateIllegalTermsMap(result);
+        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createIllegalTermsQuery());
+		generateIllegalTermsMap(query.evaluate());
 	}
 	
 	private String createIllegalTermsQuery() throws OpenRDFException {

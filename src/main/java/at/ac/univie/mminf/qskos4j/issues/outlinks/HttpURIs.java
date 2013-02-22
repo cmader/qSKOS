@@ -2,10 +2,11 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,8 +23,8 @@ public class HttpURIs extends Issue<CollectionReport<URI>> {
     private Set<URI> httpURIs = new HashSet<URI>();
     private Set<String> invalidResources = new HashSet<String>();
 
-    public HttpURIs(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public HttpURIs(RepositoryConnection repCon) {
+        super(repCon,
               "huc",
               "HTTP URI Count",
               "Counts the total number of HTTP URIs",
@@ -34,7 +35,7 @@ public class HttpURIs extends Issue<CollectionReport<URI>> {
     @Override
     protected CollectionReport<URI> invoke() throws OpenRDFException {
 
-        TupleQueryResult result = vocabRepository.query(createIRIQuery());
+        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createIRIQuery()).evaluate();
 
         while (result.hasNext()) {
             Value iri = result.next().getValue("iri");

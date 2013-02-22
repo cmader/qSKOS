@@ -56,12 +56,6 @@
   		<artifactId>jcommander</artifactId>
   		<version>1.23</version>
   	</dependency>
-    <dependency>
-        <groupId>com.carrotsearch</groupId>
-        <artifactId>junit-benchmarks</artifactId>
-        <version>0.4.0</version>
-        <scope>test</scope>
-    </dependency>
   </dependencies>
   <build>
 	<plugins>

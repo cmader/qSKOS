@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.DisjointLabelsViolations;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.UriSuffixFinder;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +19,8 @@ public class DisjointLabelsViolationsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        disjointLabelsViolations = new DisjointLabelsViolations(
-            new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf").getRepository()));
+        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector(
+            new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection()));
     }
     @Test
     public void testDisjointLabels() throws OpenRDFException {

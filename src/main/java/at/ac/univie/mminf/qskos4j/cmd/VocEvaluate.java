@@ -2,12 +2,13 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.Repository;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,25 +31,30 @@ public class VocEvaluate {
 	
 	@Parameters(commandNames = CMD_NAME_SUMMARIZE, commandDescription = "Computes basic statistics of a given vocabulary")
 	private class CommandSummarize {
-		
+
+        @SuppressWarnings("unused")
 		@Parameter(description = "vocabularyfile")
 		private List<String> vocabFilenames;
 
-		@Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
 		private String authoritativeResourceIdentifier;
 
-		@Parameter(names = {"-c", "--check"}, description = "Comma-separated list of issue/statistics IDs to check for")
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-c", "--check"}, description = "Comma-separated list of issue/statistics IDs to check for")
 		private String selectedIds;
-		
-		@Parameter(names = {"-dc", "--dont-check"}, description = "Comma-separated list of issue/statistics IDs NOT to check for")
+
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-dc", "--dont-check"}, description = "Comma-separated list of issue/statistics IDs NOT to check for")
 		private String excludedIds;
-		
-		@Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
+
+        @Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
 		private boolean enableSkosXl = false;
 
         @Parameter(names = {"-np", "--no-progress"}, description = "Suppresses output of a progress indicator")
         private boolean noProgressBar = false;
 
+        @SuppressWarnings("unused")
         @Parameter(names = {"-d", "--debug"}, description = "Enable additional informative/debug output")
         private boolean debug;
 
@@ -56,8 +62,9 @@ public class VocEvaluate {
 	
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
 	private class CommandAnalyze extends CommandSummarize {
-	
-		@Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
+
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
 		private Float randomSubsetSize_percent;
 	
 		@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
@@ -66,6 +73,7 @@ public class VocEvaluate {
 		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
 		private boolean writeGraphs = false;
 
+        @SuppressWarnings("unused")
         @Parameter(
             names = {"-utf", "--uri-track-file"},
             description = "A file that contains concept URIs. The output will contain the issues in which each of the concepts shows up.")
@@ -176,12 +184,9 @@ public class VocEvaluate {
 	private void setup() throws OpenRDFException, IOException {
         setupLogging();
 
-        VocabRepository vocabRepo = new VocabRepository(
-            new File(parsedCommand.vocabFilenames.get(0)),
-            null,
-            null
-        );
-		qskos = new QSkos(vocabRepo);
+        RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
+        Repository repo = repositoryBuilder.setUpFromFile(new File(parsedCommand.vocabFilenames.get(0)), null, null);
+		qskos = new QSkos(repo.getConnection());
 		qskos.setAuthResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
         qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
@@ -191,7 +196,7 @@ public class VocEvaluate {
 		}
 		
 		if (parsedCommand.enableSkosXl) {
-            vocabRepo.enableSkosXlSupport();
+            repositoryBuilder.enableSkosXlSupport();
 		}
 
         if (!uriTrackingEnabled() && !parsedCommand.noProgressBar) {

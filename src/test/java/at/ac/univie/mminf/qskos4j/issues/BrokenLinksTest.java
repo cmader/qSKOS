@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class BrokenLinksTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        brokenLinks = new BrokenLinks(new HttpURIs(VocabRepository.setUpFromTestResource("resources.rdf")));
+        brokenLinks = new BrokenLinks(new HttpURIs(new RepositoryBuilder().setUpFromTestResource("resources.rdf").getConnection()));
         brokenLinks.setExtAccessDelayMillis(0);
     }
 

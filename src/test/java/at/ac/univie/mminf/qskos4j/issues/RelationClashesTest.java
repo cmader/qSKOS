@@ -1,23 +1,32 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
 import java.io.IOException;
 
 public class RelationClashesTest {
 
     private RelationClashes relationClashes;
+    private RepositoryConnection repCon;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        Repository repository = VocabRepository.setUpFromTestResource("relationClashes.rdf").getRepository();
-        relationClashes = new RelationClashes(new HierarchyGraphBuilder(repository));
+        repCon = new RepositoryBuilder().setUpFromTestResource("relationClashes.rdf").getConnection();
+        relationClashes = new RelationClashes(new HierarchyGraphBuilder(repCon));
+    }
+
+    @After
+    public void tearDown() throws RepositoryException
+    {
+        repCon.close();
     }
 
     @Test

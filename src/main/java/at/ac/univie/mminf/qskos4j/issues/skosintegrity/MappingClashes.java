@@ -5,10 +5,11 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 
@@ -17,8 +18,8 @@ import java.util.Collection;
  */
 public class MappingClashes extends Issue<CollectionReport<Pair<Value>>> {
 
-    public MappingClashes(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public MappingClashes(RepositoryConnection repCon) {
+        super(repCon,
               "mc",
               "Mapping Clashes",
               "Covers condition S46 from the SKOS reference document (Exact vs. Associative and Hierarchical Mapping Clashes)",
@@ -28,8 +29,9 @@ public class MappingClashes extends Issue<CollectionReport<Pair<Value>>> {
 
     @Override
     protected CollectionReport<Pair<Value>> invoke() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createExVsAssMappingQuery());
-        Collection<Pair<Value>> exactVsAssMappingClashes = TupleQueryResultUtil.createCollectionOfValuePairs(result, "concept1", "concept2");
+        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createExVsAssMappingQuery());
+        Collection<Pair<Value>> exactVsAssMappingClashes = TupleQueryResultUtil.createCollectionOfValuePairs(
+            query.evaluate(), "concept1", "concept2");
 
         return new CollectionReport<Pair<Value>>(exactVsAssMappingClashes);
     }

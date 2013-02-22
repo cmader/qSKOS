@@ -4,11 +4,14 @@ import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.labels.DisjointLabelsViolations;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -19,14 +22,22 @@ public class HtmlReportsTest {
 
     private DisjointLabelsViolations disjointLabelsViolations;
     private DisconnectedConceptClusters disconnectedConceptClusters;
+    private RepositoryConnection disjointLabelsRepCon, clustersRepCon;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        disjointLabelsViolations = new DisjointLabelsViolations(
-            new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf").getRepository()));
-        disconnectedConceptClusters = new DisconnectedConceptClusters(
-            new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
+        disjointLabelsRepCon = new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection();
+        clustersRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
 
+        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector(disjointLabelsRepCon));
+        disconnectedConceptClusters = new DisconnectedConceptClusters(new InvolvedConcepts(clustersRepCon));
+    }
+
+    @After
+    public void tearDown() throws RepositoryException
+    {
+        disjointLabelsRepCon.close();
+        clustersRepCon.close();
     }
 
     @Test

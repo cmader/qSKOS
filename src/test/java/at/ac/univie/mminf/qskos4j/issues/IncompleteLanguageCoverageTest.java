@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,8 @@ public class IncompleteLanguageCoverageTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
+        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new InvolvedConcepts(
+            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection()));
     }
 
     @Test

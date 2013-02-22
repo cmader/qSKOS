@@ -3,12 +3,13 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +27,8 @@ public class ConceptSchemes extends Issue<CollectionReport<Resource>> {
 
     private final Logger logger = LoggerFactory.getLogger(ConceptSchemes.class);
 
-    public ConceptSchemes(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public ConceptSchemes(RepositoryConnection repCon) {
+        super(repCon,
               "cs",
               "Concept Schemes",
               "Finds the involved ConceptSchemes",
@@ -37,7 +38,7 @@ public class ConceptSchemes extends Issue<CollectionReport<Resource>> {
 
     @Override
     protected CollectionReport<Resource> invoke() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createConceptSchemeQuery());
+        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptSchemeQuery()).evaluate();
         return new CollectionReport<Resource>(identifyResources(result));
     }
 

@@ -36,7 +36,7 @@ public class MissingInLinks extends Issue<CollectionReport<Value>> {
     private Float randomSubsetSize_percent;
 
     public MissingInLinks(AuthoritativeConcepts authoritativeConcepts) {
-        super(authoritativeConcepts.getVocabRepository(),
+        super(authoritativeConcepts.getRepositoryConnection(),
               "mil",
               "Missing In-Links",
               "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
@@ -188,7 +188,7 @@ public class MissingInLinks extends Issue<CollectionReport<Value>> {
      * other repositories. This is only useful for in-link testing purposes.
      */
     public void addRepositoryLoopback() throws OpenRDFException {
-        connections.add(vocabRepository.getRepository().getConnection());
+        connections.add(repCon);
     }
 
     /**

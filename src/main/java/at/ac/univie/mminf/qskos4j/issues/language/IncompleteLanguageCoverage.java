@@ -6,9 +6,7 @@ import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +24,7 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovReport> {
     private InvolvedConcepts involvedConcepts;
 
     public IncompleteLanguageCoverage(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getVocabRepository(),
+        super(involvedConcepts.getRepositoryConnection(),
               "ilc",
               "Incomplete Language Coverage",
               "Finds concepts lacking description in languages that are present for other concepts",
@@ -55,8 +53,8 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovReport> {
             Value concept = it.next();
 
             try {
-			    TupleQueryResult result = vocabRepository.query(createLanguageLiteralQuery(concept));
-                addToLanguageCoverageMap(concept, result);
+			    TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createLanguageLiteralQuery(concept));
+                addToLanguageCoverageMap(concept, query.evaluate());
             }
             catch (OpenRDFException e) {
                 logger.error("Error finding languages for concept '" +concept+ "'");

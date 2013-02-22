@@ -5,11 +5,12 @@ import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.Repository;
 
 import java.io.IOException;
 
@@ -22,12 +23,13 @@ public class SkosXlTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        VocabRepository repo = VocabRepository.setUpFromTestResource("skosxl.rdf");
-        repo.enableSkosXlSupport();
+        RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
+        Repository repo = repositoryBuilder.setUpFromTestResource("skosxl.rdf");
+        repositoryBuilder.enableSkosXlSupport();
 
-        InvolvedConcepts involvedConcepts = new InvolvedConcepts(repo);
+        InvolvedConcepts involvedConcepts = new InvolvedConcepts(repo.getConnection());
         lexicalRelations = new LexicalRelations(involvedConcepts);
-        omittedOrInvalidLanguageTags = new OmittedOrInvalidLanguageTags(repo);
+        omittedOrInvalidLanguageTags = new OmittedOrInvalidLanguageTags(repo.getConnection());
         incompleteLanguageCoverage = new IncompleteLanguageCoverage(involvedConcepts);
         overlappingLabels = new OverlappingLabels(involvedConcepts);
 	}

@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.relations.SolelyTransitivelyRelatedConcepts;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,8 @@ public class SolelyTransitivelyRelatedConceptsTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        solelyTransitivelyRelatedConcepts = new SolelyTransitivelyRelatedConcepts(VocabRepository.setUpFromTestResource("solitaryTransitiveRelations.rdf"));
+        solelyTransitivelyRelatedConcepts = new SolelyTransitivelyRelatedConcepts(
+            new RepositoryBuilder().setUpFromTestResource("solitaryTransitiveRelations.rdf").getConnection());
 	}
 
 	@Test

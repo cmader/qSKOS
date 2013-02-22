@@ -2,10 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,8 +22,8 @@ import java.util.Set;
  */
 public class HttpUriSchemeViolations extends Issue<CollectionReport<String>> {
 
-    public HttpUriSchemeViolations(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public HttpUriSchemeViolations(RepositoryConnection repCon) {
+        super(repCon,
               "husv",
               "HTTP URI Scheme Violation",
               "Finds triple subjects that are no HTTP URIs",
@@ -31,8 +33,8 @@ public class HttpUriSchemeViolations extends Issue<CollectionReport<String>> {
 
     @Override
     protected CollectionReport<String> invoke() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createNonHttpUriQuery());
-        Collection<String> nonHttpUriSet = createNonHttpUriSet(result);
+        TupleQuery query  = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createNonHttpUriQuery());
+        Collection<String> nonHttpUriSet = createNonHttpUriSet(query.evaluate());
         return new CollectionReport<String>(nonHttpUriSet);
     }
 

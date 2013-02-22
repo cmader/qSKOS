@@ -8,6 +8,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class MissingOutLinks extends Issue<CollectionReport<Value>> {
     private AuthoritativeConcepts authoritativeConcepts;
 	
 	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
-		super(authoritativeConcepts.getVocabRepository(),
+		super(authoritativeConcepts.getRepositoryConnection(),
               "mol",
               "Missing Out-Links",
               "Finds concepts that are not linked to other vocabularies on the Web",
@@ -62,7 +63,7 @@ public class MissingOutLinks extends Issue<CollectionReport<Value>> {
 		String query = createIRIQuery(concept); 
 
         try {
-            TupleQueryResult result = vocabRepository.query(query);
+            TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
             resourceList = identifyResources(result);
         }
         catch (OpenRDFException e) {

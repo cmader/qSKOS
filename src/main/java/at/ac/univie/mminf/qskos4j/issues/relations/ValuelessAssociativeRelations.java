@@ -4,12 +4,10 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,8 +17,8 @@ import java.util.HashSet;
 */
 public class ValuelessAssociativeRelations extends Issue<CollectionReport<Pair<URI>>> {
 
-    public ValuelessAssociativeRelations(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public ValuelessAssociativeRelations(RepositoryConnection repCon) {
+        super(repCon,
               "var",
               "Valueless Associative Relations",
               "Two concepts are sibling, but also connected by an associative relation",
@@ -30,9 +28,9 @@ public class ValuelessAssociativeRelations extends Issue<CollectionReport<Pair<U
     @Override
     protected CollectionReport<Pair<URI>> invoke() throws OpenRDFException {
 		Collection<Pair<URI>> redundantAssociativeRelations = new HashSet<Pair<URI>>();
-		
-		TupleQueryResult result = vocabRepository.query(createRedundantAssociativeRelationsQuery());
-		generateResultsList(redundantAssociativeRelations, result);
+
+        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRedundantAssociativeRelationsQuery());
+        generateResultsList(redundantAssociativeRelations, query.evaluate());
 		
 		return new CollectionReport<Pair<URI>>(redundantAssociativeRelations);
 	}

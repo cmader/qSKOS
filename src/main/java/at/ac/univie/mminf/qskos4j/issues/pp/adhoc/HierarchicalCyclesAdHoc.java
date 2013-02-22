@@ -10,22 +10,19 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 
 public class HierarchicalCyclesAdHoc implements AdHocCheckable {
 
-    private Repository repository;
+    private RepositoryConnection repCon;
 
-    public HierarchicalCyclesAdHoc(Repository repository) {
-        this.repository = repository;
+    public HierarchicalCyclesAdHoc(RepositoryConnection repCon) {
+        this.repCon = repCon;
     }
 
     @Override
     public void checkStatement(Statement statement) throws IssueOccursException, OpenRDFException
     {
-        RepositoryConnection repCon = repository.getConnection();
-
         try {
             HierarchyType hierarchyType = SkosOntology.getInstance().getPredicateHierarchyType(statement.getPredicate());
             String query = createHierarchicalCycleQuery(statement.getSubject(), statement.getObject(), hierarchyType);
@@ -36,9 +33,6 @@ public class HierarchicalCyclesAdHoc implements AdHocCheckable {
         }
         catch (IllegalArgumentException e) {
             // not a hierarchical property, do nothing
-        }
-        finally {
-            repCon.close();
         }
     }
 

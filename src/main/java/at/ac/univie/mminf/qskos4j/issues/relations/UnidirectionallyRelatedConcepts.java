@@ -3,13 +3,11 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
+import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +33,8 @@ import java.util.Map;
     private final Logger logger = LoggerFactory.getLogger(UnidirectionallyRelatedConcepts.class);
 	private Map<Pair<Resource>, String> omittedInverseRelations = new HashMap<Pair<Resource>, String>();
 
-    public UnidirectionallyRelatedConcepts(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public UnidirectionallyRelatedConcepts(RepositoryConnection repCon) {
+        super(repCon,
               "urc",
               "Unidirectionally Related Concepts",
               "Concepts not including reciprocal relations",
@@ -46,8 +44,8 @@ import java.util.Map;
     @Override
     protected UnidirectionallyRelatedConceptsReport invoke() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
-			TupleQueryResult result = vocabRepository.query(createOmittedRelationsQuery(inversePropertyPair));
-			addToOmittedInverseRelationsMap(result, inversePropertyPair);
+            TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOmittedRelationsQuery(inversePropertyPair));
+			addToOmittedInverseRelationsMap(query.evaluate(), inversePropertyPair);
 		}
 		
 		return new UnidirectionallyRelatedConceptsReport(omittedInverseRelations);

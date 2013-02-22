@@ -8,7 +8,6 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +30,8 @@ public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
 		"skos:example", "skos:historyNote", "skos:scopeNote"
 	};
 	
-	private RepositoryConnection connection;
-
     public UndocumentedConcepts(AuthoritativeConcepts authoritativeConcepts) {
-        super(authoritativeConcepts.getVocabRepository(),
+        super(authoritativeConcepts.getRepositoryConnection(),
               "uc",
               "Undocumented Concepts",
               "Finds concepts that don't use any SKOS documentation properties",
@@ -45,7 +42,6 @@ public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
 
     @Override
     protected CollectionReport<Value> invoke() throws OpenRDFException {
-		connection = vocabRepository.getRepository().getConnection();
 		List<Value> undocumentedConcepts = new ArrayList<Value>();
 		
 		Iterator<Value> conceptIt = new MonitoredIterator<Value>(
@@ -77,7 +73,7 @@ public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
 	private boolean conceptHasProperty(Value concept, String property)
 	{
         try {
-            BooleanQuery graphQuery = connection.prepareBooleanQuery(
+            BooleanQuery graphQuery = repCon.prepareBooleanQuery(
                 QueryLanguage.SPARQL,
                 createPropertyQuery(concept, property));
             return graphQuery.evaluate();

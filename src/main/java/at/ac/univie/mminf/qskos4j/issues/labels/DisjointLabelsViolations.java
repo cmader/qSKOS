@@ -24,7 +24,7 @@ public class DisjointLabelsViolations extends Issue<CollectionReport<LabelConfli
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public DisjointLabelsViolations(ResourceLabelsCollector resourceLabelsCollector) {
-        super(resourceLabelsCollector.getRepository(),
+        super(resourceLabelsCollector.getRepositoryConnection(),
               "dlv",
               "Disjoint Labels Violation",
               "Finds resources with identical entries for different label types",

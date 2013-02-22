@@ -2,12 +2,15 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,11 +23,22 @@ import java.util.Collection;
 public class OrphanConceptsTest {
 
     private OrphanConcepts orphanConceptsForConcepts, orphanConceptsForComponents;
+    private RepositoryConnection orphansRepCon, componentsRepCon;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("concepts.rdf")));
-        orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf")));
+        orphansRepCon = new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection();
+        componentsRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
+
+        orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts(orphansRepCon));
+        orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts(componentsRepCon));
+    }
+
+    @After
+    public void tearDown() throws RepositoryException
+    {
+        orphansRepCon.close();
+        componentsRepCon.close();
     }
 
     @Test

@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.MappingClashes;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,8 @@ public class MappingClashesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        mappingClashes = new MappingClashes(VocabRepository.setUpFromTestResource("exactVsAssociativeMappingClashes.rdf"));
+        mappingClashes = new MappingClashes(
+            new RepositoryBuilder().setUpFromTestResource("exactVsAssociativeMappingClashes.rdf").getConnection());
     }
 
     @Test

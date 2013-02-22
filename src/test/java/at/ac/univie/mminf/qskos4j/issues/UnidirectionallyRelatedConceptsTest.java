@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.relations.UnidirectionallyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.util.Pair;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,8 @@ public class UnidirectionallyRelatedConceptsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        unidirectionallyRelatedConcepts = new UnidirectionallyRelatedConcepts(VocabRepository.setUpFromTestResource("omittedInverseRelations.rdf"));
+        unidirectionallyRelatedConcepts = new UnidirectionallyRelatedConcepts(
+            new RepositoryBuilder().setUpFromTestResource("omittedInverseRelations.rdf").getConnection());
     }
 
     @Test

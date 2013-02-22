@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.UndocumentedConcepts;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,8 @@ public class UndocumentedConceptsTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        undocumentedConcepts = new UndocumentedConcepts(new AuthoritativeConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("documentedConcepts.rdf"))));
+        undocumentedConcepts = new UndocumentedConcepts(new AuthoritativeConcepts(new InvolvedConcepts(
+            new RepositoryBuilder().setUpFromTestResource("documentedConcepts.rdf").getConnection())));
 	}
 	
 	@Test

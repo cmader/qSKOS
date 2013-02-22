@@ -32,8 +32,8 @@ import at.ac.univie.mminf.qskos4j.issues.skosintegrity.MappingClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public class QSkos {
      */
     private final static int EXT_ACCESS_MILLIS = 1500;
 
-	private VocabRepository vocabRepository;
+    private RepositoryConnection repCon;
 	private String baseURI;
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
@@ -71,8 +71,8 @@ public class QSkos {
     private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
 
-    public QSkos(VocabRepository vocabRepository) {
-        this.vocabRepository = vocabRepository;
+    public QSkos(RepositoryConnection repCon) {
+        this.repCon = repCon;
 
         try {
             addAllIssues();
@@ -90,37 +90,37 @@ public class QSkos {
     }
 
     private void addStatisticalIssues() {
-        involvedConcepts = new InvolvedConcepts(vocabRepository);
+        involvedConcepts = new InvolvedConcepts(repCon);
         authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
         authoritativeConcepts.setBaseURI(baseURI);
         authoritativeConcepts.setAuthResourceIdentifier(authResourceIdentifier);
-        conceptSchemes = new ConceptSchemes(vocabRepository);
-        httpURIs = new HttpURIs(vocabRepository);
+        conceptSchemes = new ConceptSchemes(repCon);
+        httpURIs = new HttpURIs(repCon);
 
         registeredIssues.add(involvedConcepts);
         registeredIssues.add(authoritativeConcepts);
         registeredIssues.add(new LexicalRelations(involvedConcepts));
-        registeredIssues.add(new SemanticRelations(vocabRepository));
-        registeredIssues.add(new AggregationRelations(vocabRepository));
+        registeredIssues.add(new SemanticRelations(repCon));
+        registeredIssues.add(new AggregationRelations(repCon));
         registeredIssues.add(conceptSchemes);
-        registeredIssues.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections(vocabRepository));
+        registeredIssues.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections(repCon));
         registeredIssues.add(httpURIs);
     }
 
     private void addAnalyticalIssues() throws OpenRDFException {
-        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(vocabRepository.getRepository());
+        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(repCon);
 
-        registeredIssues.add(new OmittedOrInvalidLanguageTags(vocabRepository));
+        registeredIssues.add(new OmittedOrInvalidLanguageTags(repCon));
         registeredIssues.add(new IncompleteLanguageCoverage(involvedConcepts));
         registeredIssues.add(new UndocumentedConcepts(authoritativeConcepts));
         registeredIssues.add(new OverlappingLabels(involvedConcepts));
         registeredIssues.add(new OrphanConcepts(involvedConcepts));
         registeredIssues.add(new DisconnectedConceptClusters(involvedConcepts));
         registeredIssues.add(new HierarchicalCycles(hierarchyGraphBuilder));
-        registeredIssues.add(new ValuelessAssociativeRelations(vocabRepository));
-        registeredIssues.add(new SolelyTransitivelyRelatedConcepts(vocabRepository));
+        registeredIssues.add(new ValuelessAssociativeRelations(repCon));
+        registeredIssues.add(new SolelyTransitivelyRelatedConcepts(repCon));
         registeredIssues.add(new OmittedTopConcepts(conceptSchemes));
-        registeredIssues.add(new TopConceptsHavingBroaderConcepts(vocabRepository));
+        registeredIssues.add(new TopConceptsHavingBroaderConcepts(repCon));
 
         MissingInLinks missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(extAccessDelayMillis);
@@ -137,15 +137,15 @@ public class QSkos {
         brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
         registeredIssues.add(brokenLinks);
 
-        registeredIssues.add(new UndefinedSkosResources(vocabRepository));
-        registeredIssues.add(new UnidirectionallyRelatedConcepts(vocabRepository));
-        registeredIssues.add(new HttpUriSchemeViolations(vocabRepository));
+        registeredIssues.add(new UndefinedSkosResources(repCon));
+        registeredIssues.add(new UnidirectionallyRelatedConcepts(repCon));
+        registeredIssues.add(new HttpUriSchemeViolations(repCon));
         registeredIssues.add(new RelationClashes(hierarchyGraphBuilder));
-        registeredIssues.add(new MappingClashes(vocabRepository));
+        registeredIssues.add(new MappingClashes(repCon));
     }
 
     private void addSkosIntegrityIssues() {
-        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(vocabRepository.getRepository());
+        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(repCon);
 
         registeredIssues.add(new InconsistentPrefLabels(resourceLabelsCollector));
         registeredIssues.add(new DisjointLabelsViolations(resourceLabelsCollector));
@@ -205,7 +205,8 @@ public class QSkos {
 	 * 
 	 * @param delayMillis delay time in milliseconds
 	 */
-	public void setExtAccessDelayMillis(int delayMillis) {
+    @SuppressWarnings("unused")
+    public void setExtAccessDelayMillis(int delayMillis) {
 		extAccessDelayMillis = delayMillis;
 	}
 	
@@ -230,6 +231,7 @@ public class QSkos {
         this.authResourceIdentifier = authResourceIdentifier;
     }
 
+    @SuppressWarnings("unused")
     public void setBaseURI(String baseURI) {
         this.baseURI = baseURI;
     }

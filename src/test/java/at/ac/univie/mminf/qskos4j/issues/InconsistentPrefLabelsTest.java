@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.InconsistentPrefLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.UriSuffixFinder;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +19,8 @@ public class InconsistentPrefLabelsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        inconsistentPrefLabels = new InconsistentPrefLabels(
-            new ResourceLabelsCollector(VocabRepository.setUpFromTestResource("ambiguousLabels.rdf").getRepository()));
+        inconsistentPrefLabels = new InconsistentPrefLabels(new ResourceLabelsCollector(
+            new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection()));
     }
 
     @Test

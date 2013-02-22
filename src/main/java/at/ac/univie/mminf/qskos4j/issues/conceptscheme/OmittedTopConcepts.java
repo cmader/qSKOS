@@ -8,7 +8,6 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,7 +22,7 @@ public class OmittedTopConcepts extends Issue<CollectionReport<Resource>> {
     private ConceptSchemes conceptSchemes;
 
     public OmittedTopConcepts(ConceptSchemes conceptSchemes) {
-        super(conceptSchemes.getVocabRepository(),
+        super(conceptSchemes.getRepositoryConnection(),
               "otc",
               "Omitted Top Concepts",
               "Finds skos:ConceptSchemes without top concepts",
@@ -34,12 +33,11 @@ public class OmittedTopConcepts extends Issue<CollectionReport<Resource>> {
 
     @Override
     protected CollectionReport<Resource> invoke() throws OpenRDFException {
-        RepositoryConnection connection = vocabRepository.getRepository().getConnection();
         Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
 
         for (Resource conceptScheme : conceptSchemes.getReport().getData()) {
 
-            BooleanQuery hasTopConceptQuery = connection.prepareBooleanQuery(
+            BooleanQuery hasTopConceptQuery = repCon.prepareBooleanQuery(
                     QueryLanguage.SPARQL,
                     createConceptSchemeWithoutTopConceptQuery(conceptScheme));
 

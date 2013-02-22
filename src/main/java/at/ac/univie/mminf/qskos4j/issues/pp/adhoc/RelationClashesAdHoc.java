@@ -11,7 +11,6 @@ import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
@@ -19,12 +18,12 @@ import java.util.Arrays;
 
 public class RelationClashesAdHoc implements AdHocCheckable {
 
-    private Repository repository;
+    private RepositoryConnection repCon;
 
     private enum RelationType {HIERARCHICAL, ASSOCIATIVE, OTHER}
 
-    public RelationClashesAdHoc(Repository repository) {
-        this.repository = repository;
+    public RelationClashesAdHoc(RepositoryConnection repCon) {
+        this.repCon = repCon;
     }
 
     @Override
@@ -59,7 +58,6 @@ public class RelationClashesAdHoc implements AdHocCheckable {
     private boolean pathExists(Resource subject, Value object, RelationType relationType)
         throws RepositoryException, QueryEvaluationException
     {
-        RepositoryConnection repCon = repository.getConnection();
         try {
             String query = createPathQuery(subject, object, relationType);
             System.out.println(query);
@@ -68,9 +66,6 @@ public class RelationClashesAdHoc implements AdHocCheckable {
         }
         catch (MalformedQueryException e) {
             return false;
-        }
-        finally {
-            repCon.close();
         }
     }
 

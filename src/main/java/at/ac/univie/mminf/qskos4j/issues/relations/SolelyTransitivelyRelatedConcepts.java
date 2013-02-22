@@ -4,12 +4,10 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.*;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +23,8 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionReport<Pa
 	
 	private Set<Pair<URI>> solitaryTransitiveRelations = new HashSet<Pair<URI>>();
 
-    public SolelyTransitivelyRelatedConcepts(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public SolelyTransitivelyRelatedConcepts(RepositoryConnection repCon) {
+        super(repCon,
               "strc",
               "Solely Transitively Related Concepts",
               "Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
@@ -37,8 +35,10 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionReport<Pa
     @Override
     protected CollectionReport<Pair<URI>> invoke() throws OpenRDFException {
 		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
-			TupleQueryResult result = vocabRepository.query(createSolitaryTransitiveRelationsQuery(transitivePropertyPair));
-			addToResults(result);			
+            TupleQuery query = repCon.prepareTupleQuery(
+                QueryLanguage.SPARQL,
+                createSolitaryTransitiveRelationsQuery(transitivePropertyPair));
+			addToResults(query.evaluate());
 		}
 		
 		return new CollectionReport<Pair<URI>>(solitaryTransitiveRelations);

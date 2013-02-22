@@ -8,7 +8,6 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
@@ -22,28 +21,20 @@ public class ResourceLabelsCollector {
     private final Logger logger = LoggerFactory.getLogger(ResourceLabelsCollector.class);
 
     private Collection<LabeledConcept> labeledResources;
-    private Repository repository;
+    private RepositoryConnection repCon;
 
-    public ResourceLabelsCollector(Repository vocabRepository) {
-        this.repository = vocabRepository;
+    public ResourceLabelsCollector(RepositoryConnection repCon) {
+        this.repCon = repCon;
     }
 
     public Collection<LabeledConcept> getLabeledResources() throws RepositoryException
     {
         labeledResources = new HashSet<LabeledConcept>();
-        RepositoryConnection repCon = repository.getConnection();
-
-        try {
-            createLabeledResources(repCon);
-        }
-        finally {
-            repCon.close();
-        }
-
+        createLabeledResources();
         return labeledResources;
     }
 
-    private void createLabeledResources(RepositoryConnection repCon) {
+    private void createLabeledResources() {
         for (LabelType labelType : LabelType.values()) {
             String labelQuery = createLabelQuery(labelType);
             try {
@@ -83,8 +74,8 @@ public class ResourceLabelsCollector {
         }
     }
 
-    public final Repository getRepository() {
-        return repository;
+    public RepositoryConnection getRepositoryConnection() {
+        return repCon;
     }
 
 }

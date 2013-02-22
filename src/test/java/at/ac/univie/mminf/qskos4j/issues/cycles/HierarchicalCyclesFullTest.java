@@ -1,12 +1,12 @@
 package at.ac.univie.mminf.qskos4j.issues.cycles;
 
 import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.io.IOException;
 
@@ -21,11 +21,11 @@ public class HierarchicalCyclesFullTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        Repository cyclesRepo = VocabRepository.setUpFromTestResource("cycles.rdf").getRepository();
-        Repository componentsRepo = VocabRepository.setUpFromTestResource("components.rdf").getRepository();
+        RepositoryConnection cyclesRepCon = new RepositoryBuilder().setUpFromTestResource("cycles.rdf").getConnection();
+        RepositoryConnection componentsRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
 
-        hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(cyclesRepo));
-        hierarchicalCyclesForComponents = new HierarchicalCycles(new HierarchyGraphBuilder(componentsRepo));
+        hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(cyclesRepCon));
+        hierarchicalCyclesForComponents = new HierarchicalCycles(new HierarchyGraphBuilder(componentsRepCon));
     }
 
     @Test

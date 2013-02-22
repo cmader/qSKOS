@@ -13,7 +13,6 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
@@ -26,7 +25,6 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
 
     private URI absorbingConceptSchemeUri;
     private Literal absorbingConceptSchemeLabel;
-    private RepositoryConnection repCon;
 
     private final static String QUERY =  SparqlPrefix.SKOS +" "+
         "SELECT DISTINCT ?concept WHERE {"+
@@ -42,8 +40,8 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
             "FILTER (!bound(?y) && !bound(?s))"+
         "}";
 
-    public NoBroaderAndNotTopConcepts(Repository repository) {
-        super(repository,
+    public NoBroaderAndNotTopConcepts(RepositoryConnection repCon) {
+        super(repCon,
             "nbantc",
             "No Broader And No Top Concepts",
             "Finds concepts that don't have a broader concept defined and are not top concepts",
@@ -62,23 +60,16 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
 
     @Override
     protected CollectionReport<Value> invoke() throws OpenRDFException {
-        RepositoryConnection repCon = repository.getConnection();
-        try {
-            TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, QUERY).evaluate();
-            Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
-
-            return new CollectionReport<Value>(foundConcepts);
-        }
-        finally {
-            repCon.close();
-        }
+        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, QUERY).evaluate();
+        Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
+        return new CollectionReport<Value>(foundConcepts);
     }
 
     @Override
     public void invokeRepair() throws RepairFailedException, RepositoryException
     {
-        repCon = repository.getConnection();
-        repCon.setAutoCommit(false);
+        boolean repoInAutoCommit = repCon.isAutoCommit();
+        if (repoInAutoCommit) repCon.setAutoCommit(false);
 
         try {
             repairConcepts();
@@ -88,7 +79,7 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
             throw new RepairFailedException(e);
         }
         finally {
-            repCon.close();
+            repCon.setAutoCommit(repoInAutoCommit);
         }
     }
 

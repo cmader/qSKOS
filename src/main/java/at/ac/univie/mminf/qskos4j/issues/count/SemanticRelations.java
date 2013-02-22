@@ -5,9 +5,10 @@ import at.ac.univie.mminf.qskos4j.report.NumberReport;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.repository.RepositoryConnection;
 
 /**
  * Created by christian
@@ -18,8 +19,8 @@ import org.openrdf.query.TupleQueryResult;
  */
 public class SemanticRelations extends Issue<NumberReport<Long>> {
 
-    public SemanticRelations(VocabRepository vocabRepo) {
-        super(vocabRepo,
+    public SemanticRelations(RepositoryConnection repCon) {
+        super(repCon,
               "sr",
               "Semantic Relations Count",
               "Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",
@@ -29,8 +30,8 @@ public class SemanticRelations extends Issue<NumberReport<Long>> {
 
     @Override
     protected NumberReport<Long> invoke() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createSemanticRelationsQuery());
-        return new NumberReport<Long>(TupleQueryResultUtil.countResults(result));
+        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createSemanticRelationsQuery());
+        return new NumberReport<Long>(TupleQueryResultUtil.countResults(query.evaluate()));
     }
 
     private String createSemanticRelationsQuery() throws OpenRDFException

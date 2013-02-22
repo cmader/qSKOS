@@ -7,7 +7,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class OrphanConcepts extends Issue<CollectionReport<Value>> {
     private InvolvedConcepts involvedConcepts;
 
     public OrphanConcepts(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getVocabRepository(),
+        super(involvedConcepts.getRepositoryConnection(),
               "oc",
               "Orphan Concepts",
               "Finds all orphan concepts, i.e. those not having semantic relationships to other concepts",
@@ -33,8 +34,8 @@ public class OrphanConcepts extends Issue<CollectionReport<Value>> {
 
     @Override
     protected CollectionReport<Value> invoke() throws OpenRDFException {
-        TupleQueryResult result = vocabRepository.query(createOrphanConceptsQuery());
-        Set<Value> connectedConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
+        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOrphanConceptsQuery());
+        Set<Value> connectedConcepts = TupleQueryResultUtil.getValuesForBindingName(query.evaluate(), "concept");
 
         Set<Value> orphanConcepts = new HashSet<Value>(involvedConcepts.getReport().getData());
         orphanConcepts.removeAll(connectedConcepts);

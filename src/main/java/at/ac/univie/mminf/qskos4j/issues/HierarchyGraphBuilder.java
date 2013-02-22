@@ -12,7 +12,6 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,27 +24,20 @@ public class HierarchyGraphBuilder {
     private final Logger logger = LoggerFactory.getLogger(HierarchyGraphBuilder.class);
 
 	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
-	private Repository repository;
     private RepositoryConnection repCon;
 	
-	public HierarchyGraphBuilder(Repository repository)
+	public HierarchyGraphBuilder(RepositoryConnection repCon)
 	{
-		this.repository = repository;
+		this.repCon = repCon;
 	}
 
 	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
 	{
         logger.debug("Creating hierarchy graph");
 
-        repCon = repository.getConnection();
-        try {
-            addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
-            addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
-            return graph;
-        }
-        finally {
-            repCon.close();
-        }
+        addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
+        addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
+        return graph;
 	}
 	
 	private TupleQueryResult findTriples(URI[] skosHierarchyProperties) throws OpenRDFException
@@ -109,8 +101,8 @@ public class HierarchyGraphBuilder {
 		}
 	}
 
-    public Repository getRepository() {
-        return repository;
+    public RepositoryConnection getRepositoryConnection() {
+        return repCon;
     }
 
 }

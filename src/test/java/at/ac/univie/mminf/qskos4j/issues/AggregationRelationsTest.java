@@ -1,11 +1,12 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.count.AggregationRelations;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.io.IOException;
 
@@ -20,9 +21,9 @@ public class AggregationRelationsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        aggregationRelations = new AggregationRelations(VocabRepository.setUpFromTestResource("aggregations.rdf"));
+        RepositoryConnection repCon = new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection();
+        aggregationRelations = new AggregationRelations(repCon);
     }
-
 
     @Test
     public void testAggregationRelationsCount() throws OpenRDFException

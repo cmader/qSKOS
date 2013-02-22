@@ -1,26 +1,35 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.RelationClashesAdHoc;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
 import java.io.IOException;
 
 public class RelationClashesAdHocTest {
 
     private RelationClashesAdHoc relationClashesAdHocTest;
+    private RepositoryConnection repCon;
 
     @Before
     public void setUp() throws IOException, OpenRDFException
     {
-        Repository repo = VocabRepository.setUpFromTestResource("relationClashesAdHoc.rdf").getRepository();
-        relationClashesAdHocTest = new RelationClashesAdHoc(repo);
+        repCon = new RepositoryBuilder().setUpFromTestResource("relationClashesAdHoc.rdf").getConnection();
+        relationClashesAdHocTest = new RelationClashesAdHoc(repCon);
+    }
+
+    @After
+    public void tearDown() throws RepositoryException
+    {
+        repCon.close();
     }
 
     @Test(expected = IssueOccursException.class)

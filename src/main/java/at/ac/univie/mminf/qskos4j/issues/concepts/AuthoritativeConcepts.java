@@ -26,7 +26,7 @@ public class AuthoritativeConcepts extends Issue<CollectionReport<Value>> {
     private InvolvedConcepts involvedConcepts;
 
     public AuthoritativeConcepts(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getVocabRepository(),
+        super(involvedConcepts.getRepositoryConnection(),
               "ac",
               "Authoritative Concepts",
               "Finds all authoritative concepts in the vocabulary",

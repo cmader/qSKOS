@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class LexicalRelations extends Issue<NumberReport<Long>> {
     private InvolvedConcepts involvedConcepts;
 
     public LexicalRelations(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getVocabRepository(),
+        super(involvedConcepts.getRepositoryConnection(),
               "cl",
               "Concept Labels",
               "Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
@@ -41,7 +42,11 @@ public class LexicalRelations extends Issue<NumberReport<Long>> {
 
         for (Value concept : involvedConcepts.getReport().getData()) {
             try {
-                TupleQueryResult result = vocabRepository.query(createLexicalLabelQuery(concept));
+                TupleQueryResult result = repCon.prepareTupleQuery(
+                        QueryLanguage.SPARQL,
+                        createLexicalLabelQuery(concept)
+                    ).evaluate();
+
                 relationsCount += TupleQueryResultUtil.countResults(result);
             }
             catch (OpenRDFException e) {

@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +23,11 @@ public class MissingOutLinksTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConceptsForComponents = new InvolvedConcepts(VocabRepository.setUpFromTestResource("components.rdf"));
+        involvedConceptsForComponents = new InvolvedConcepts(
+            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
         missingOutLinksForComponents = new MissingOutLinks(new AuthoritativeConcepts(involvedConceptsForComponents));
-        missingOutLinksForConcepts = new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("concepts.rdf"))));
+        missingOutLinksForConcepts = new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts(
+            new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection())));
     }
 
     @Test

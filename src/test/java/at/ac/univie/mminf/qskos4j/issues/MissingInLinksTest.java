@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.inlinks.MissingInLinks;
-import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,9 @@ public class MissingInLinksTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        authoritativeConcepts = new AuthoritativeConcepts(new InvolvedConcepts(VocabRepository.setUpFromTestResource("rankConcepts.rdf")));
+        authoritativeConcepts = new AuthoritativeConcepts(new InvolvedConcepts(
+            new RepositoryBuilder().setUpFromTestResource("rankConcepts.rdf").getConnection()));
+
         missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.addRepositoryLoopback();
     }
