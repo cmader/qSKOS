@@ -1,5 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.exceptions.IssueDetectedException;
 import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.issues.RelationClashesAdHoc;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;

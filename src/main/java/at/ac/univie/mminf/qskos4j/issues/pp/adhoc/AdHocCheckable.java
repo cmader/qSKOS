@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.pp.adhoc;
 
-import at.ac.univie.mminf.qskos4j.issues.IssueDetectedException;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.exceptions.IssueDetectedException;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
 

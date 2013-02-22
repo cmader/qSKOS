@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.pp.adhoc.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.IssueDetectedException;
+import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.exceptions.IssueDetectedException;
 import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.AdHocCheckable;
 import at.ac.univie.mminf.qskos4j.issues.pp.adhoc.exceptions.RelationClashDetectedException;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
