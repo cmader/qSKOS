@@ -6,39 +6,59 @@ import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.RepositoryConnection;
 
-public abstract class Issue<T extends Report<?>>  {
+public abstract class Issue<T> {
 
     public enum IssueType {STATISTICAL, ANALYTICAL}
 
     protected RepositoryConnection repCon;
 
-    protected IProgressMonitor progressMonitor;
+    protected IProgressMonitor progressMonitor = new StubProgressMonitor();
 
     private String id, name, description;
     private IssueType type;
-    private T report;
+    private T preparedData;
 
-    protected Issue(RepositoryConnection repCon, String id, String name, String description, IssueType type)
-    {
-        this.repCon = repCon;
+    private Issue(String id, String name, String description, IssueType type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
-        progressMonitor = new StubProgressMonitor();
     }
 
-    protected abstract T invoke() throws OpenRDFException;
+    /**
+     * Use this constructor to re-use already prepared data
+     */
+    protected Issue(T preparedData, String id, String name, String description, IssueType type) {
+        this(id, name, description, type);
+        this.preparedData = preparedData;
+    }
 
-    public final T getReport() throws OpenRDFException {
-        if (report == null) {
-            report = invoke();
+    /**
+     * Use this constructor to fetch RDF data and prepare the data yourself
+     */
+    protected Issue(RepositoryConnection repCon, String id, String name, String description, IssueType type)
+    {
+        this(id, name, description, type);
+        this.repCon = repCon;
+    }
+
+    protected abstract T prepareData() throws OpenRDFException;
+    protected abstract Report prepareReport(T preparedData);
+
+    public final T getPreparedData() throws OpenRDFException {
+        if (preparedData == null) {
+            preparedData = prepareData();
         }
-        return report;
+        return preparedData;
+    }
+
+    public final Report getReport() throws OpenRDFException
+    {
+        return prepareReport(getPreparedData());
     }
 
     protected final void reset() {
-        report = null;
+        preparedData = null;
         if (progressMonitor != null) {
             progressMonitor.reset();
         }

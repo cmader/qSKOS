@@ -23,7 +23,7 @@ public class OmittedTopConceptsTest {
 	
 	@Test
 	public void testConceptSchemesWithoutTopConceptsCount() throws OpenRDFException {
-		Assert.assertEquals(2, omittedTopConcepts.getReport().getData().size());
+		Assert.assertEquals(2, omittedTopConcepts.getPreparedData().getData().size());
 	}
 	
 }

@@ -42,7 +42,7 @@ import java.util.Map;
     }
 
     @Override
-    protected UnidirectionallyRelatedConceptsReport invoke() throws OpenRDFException {
+    protected UnidirectionallyRelatedConceptsReport prepareData() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
             TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOmittedRelationsQuery(inversePropertyPair));
 			addToOmittedInverseRelationsMap(query.evaluate(), inversePropertyPair);

@@ -37,7 +37,7 @@ public class ConceptSchemes extends Issue<CollectionReport<Resource>> {
     }
 
     @Override
-    protected CollectionReport<Resource> invoke() throws OpenRDFException {
+    protected CollectionReport<Resource> prepareData() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptSchemeQuery()).evaluate();
         return new CollectionReport<Resource>(identifyResources(result));
     }

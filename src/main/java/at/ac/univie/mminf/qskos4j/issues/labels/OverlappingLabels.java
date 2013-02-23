@@ -41,7 +41,7 @@ public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
     }
 
     @Override
-    protected CollectionReport<LabelConflict> invoke() throws OpenRDFException {
+    protected CollectionReport<LabelConflict> prepareData() throws OpenRDFException {
         generateConceptsLabelMap();
         generateLabelConflictResults();
 
@@ -53,7 +53,7 @@ public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
 		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
 
         progressMonitor.setTaskDescription("Collecting resource labels");
-        Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getReport().getData(), progressMonitor);
+        Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getPreparedData().getData(), progressMonitor);
 
 		while (it.hasNext()) {
             Value concept = it.next();

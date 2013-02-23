@@ -10,10 +10,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-public class MissingLangTagReport extends Report<Map<Resource, Collection<Literal>>> {
+public class MissingLangTagReport extends Report {
+
+    private Map<Resource, Collection<Literal>> data;
 
 	MissingLangTagReport(Map<Resource, Collection<Literal>> data) {
-		super(data);
+		this.data = data;
 	}
 
     @Override
@@ -21,7 +23,7 @@ public class MissingLangTagReport extends Report<Map<Resource, Collection<Litera
     {
         switch (style) {
             case SHORT:
-                new CollectionReport<Resource>(getData().keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
+                new CollectionReport<Resource>(data.keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
                 break;
 
             case EXTENSIVE:
@@ -33,8 +35,8 @@ public class MissingLangTagReport extends Report<Map<Resource, Collection<Litera
 	private String generateExtensiveReport() {
         StringBuilder extensiveReport = new StringBuilder();
 		
-		for (Resource resource : getData().keySet()) {
-			Collection<Literal> affectedLiterals = getData().get(resource);
+		for (Resource resource : data.keySet()) {
+			Collection<Literal> affectedLiterals = data.get(resource);
 			
 			extensiveReport.append("resource: '").append(resource).append("', affected literals: ").append(affectedLiterals.toString()).append("\n");
 		}

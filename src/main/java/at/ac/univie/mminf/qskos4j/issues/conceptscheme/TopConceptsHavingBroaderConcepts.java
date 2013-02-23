@@ -32,7 +32,7 @@ public class TopConceptsHavingBroaderConcepts extends Issue<CollectionReport<Val
     }
 
     @Override
-    protected CollectionReport<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> prepareData() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createTopConceptsHavingBroaderConceptQuery());
         return new CollectionReport<Value>(createUriResultList(query.evaluate()));
     }

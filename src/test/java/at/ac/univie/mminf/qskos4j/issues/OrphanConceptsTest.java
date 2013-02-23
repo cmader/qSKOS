@@ -43,13 +43,13 @@ public class OrphanConceptsTest {
 
     @Test
     public void testConceptsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConceptsForConcepts.getReport().getData();
+        Collection<Value> orphanConceptValues = orphanConceptsForConcepts.getPreparedData();
         Assert.assertEquals(7, orphanConceptValues.size());
     }
 
     @Test
     public void testComponentsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConceptsForComponents.getReport().getData();
+        Collection<Value> orphanConceptValues = orphanConceptsForComponents.getPreparedData();
         Assert.assertEquals(2, orphanConceptValues.size());
     }
 }

@@ -59,7 +59,7 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
     }
 
     @Override
-    protected CollectionReport<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> prepareData() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, QUERY).evaluate();
         Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
         return new CollectionReport<Value>(foundConcepts);
@@ -85,7 +85,7 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
 
     private void repairConcepts() throws OpenRDFException, RepairFailedException
     {
-        for (Value concept : getReport().getData()) {
+        for (Value concept : getPreparedData().getData()) {
             Collection<Resource> containingSchemes = getContainingConceptSchemes((Resource) concept);
             if (!containingSchemes.isEmpty()) {
                 setConceptAsTopConcept((Resource) concept, containingSchemes);

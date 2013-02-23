@@ -32,7 +32,7 @@ public class HttpUriSchemeViolations extends Issue<CollectionReport<String>> {
     }
 
     @Override
-    protected CollectionReport<String> invoke() throws OpenRDFException {
+    protected CollectionReport<String> prepareData() throws OpenRDFException {
         TupleQuery query  = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createNonHttpUriQuery());
         Collection<String> nonHttpUriSet = createNonHttpUriSet(query.evaluate());
         return new CollectionReport<String>(nonHttpUriSet);

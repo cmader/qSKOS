@@ -35,7 +35,7 @@ public class UndefinedSkosResources extends Issue<CollectionReport<URI>> {
     }
 
     @Override
-    protected CollectionReport<URI> invoke() throws OpenRDFException {
+    protected CollectionReport<URI> prepareData() throws OpenRDFException {
 		findDeprecatedProperties();
 		findIllegalTerms();
 		

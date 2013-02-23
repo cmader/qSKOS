@@ -31,7 +31,7 @@ public class MissingInLinksTest {
     public void testInLinksAsDbPedia() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("dbpedia.org");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getPreparedData().getData();
         Assert.assertTrue(conceptsMissingInLinks.isEmpty());
     }
 
@@ -39,7 +39,7 @@ public class MissingInLinksTest {
     public void testInLinksAsSTW() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("zbw.eu");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getPreparedData().getData();
         Assert.assertEquals(2, conceptsMissingInLinks.size());
     }
 
@@ -47,7 +47,7 @@ public class MissingInLinksTest {
     public void testInLinksAsBnf() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("data.bnf.fr");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getPreparedData().getData();
         Assert.assertEquals(1, conceptsMissingInLinks.size());
     }
 
@@ -56,7 +56,7 @@ public class MissingInLinksTest {
     public void testInLinksAsLocal() throws OpenRDFException {
         authoritativeConcepts.setAuthResourceIdentifier("myvocab.org");
 
-        Collection<Value> conceptsMissingInLinks = missingInLinks.getReport().getData();
+        Collection<Value> conceptsMissingInLinks = missingInLinks.getPreparedData().getData();
         Assert.assertEquals(1, conceptsMissingInLinks.size());
     }
 }

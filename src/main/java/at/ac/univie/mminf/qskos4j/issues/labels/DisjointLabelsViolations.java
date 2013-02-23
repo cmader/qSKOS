@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.model.Literal;
 import org.openrdf.repository.RepositoryException;
 
@@ -18,7 +19,7 @@ import java.util.Map;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disjoint_Labels_Violation">Disjoint Labels Violation</a>
  * ).
  */
-public class DisjointLabelsViolations extends Issue<CollectionReport<LabelConflict>> {
+public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>> {
 
     private Map<Literal, LabelConflict> nonDisjointLabels;
     private ResourceLabelsCollector resourceLabelsCollector;
@@ -33,8 +34,13 @@ public class DisjointLabelsViolations extends Issue<CollectionReport<LabelConfli
     }
 
     @Override
-    protected CollectionReport<LabelConflict> invoke() throws RepositoryException {
+    protected Map<Literal, LabelConflict> prepareData() throws RepositoryException {
         findNonDisjointLabels();
+        return nonDisjointLabels;
+    }
+
+    @Override
+    protected Report prepareReport(Map<Literal, LabelConflict> preparedData) {
         return new CollectionReport<LabelConflict>(nonDisjointLabels.values());
     }
 

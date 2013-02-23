@@ -28,7 +28,7 @@ public class Collections extends Issue<NumberReport<Long>> {
     }
 
     @Override
-    protected NumberReport<Long> invoke() throws OpenRDFException {
+    protected NumberReport<Long> prepareData() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createCollectionsQuery());
         return new NumberReport<Long>(TupleQueryResultUtil.countResults(query.evaluate()));
     }

@@ -37,7 +37,7 @@ public class AuthoritativeConcepts extends Issue<CollectionReport<Value>> {
     }
 
     @Override
-    protected CollectionReport<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> prepareData() throws OpenRDFException {
         if (authResourceIdentifier == null) {
             determineAuthResourceIdentifier();
         }
@@ -62,7 +62,7 @@ public class AuthoritativeConcepts extends Issue<CollectionReport<Value>> {
         HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
 
         Iterator<Value> resourcesListIt = new MonitoredIterator<Value>(
-                involvedConcepts.getReport().getData(),
+                involvedConcepts.getPreparedData().getData(),
                 progressMonitor,
                 "guessing publishing host");
 
@@ -84,7 +84,7 @@ public class AuthoritativeConcepts extends Issue<CollectionReport<Value>> {
     {
         Collection<Value> authoritativeConcepts = new HashSet<Value>();
 
-        for (Value concept : involvedConcepts.getReport().getData()) {
+        for (Value concept : involvedConcepts.getPreparedData().getData()) {
             String lowerCaseUriValue = concept.toString().toLowerCase();
 
             if (lowerCaseUriValue.contains(authResourceIdentifier.toLowerCase()))

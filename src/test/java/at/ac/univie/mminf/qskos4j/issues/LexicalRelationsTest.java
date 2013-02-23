@@ -28,7 +28,7 @@ public class LexicalRelationsTest {
 
     @Test
     public void testLexicalRelationsCount() throws OpenRDFException {
-        Assert.assertEquals(29, lexicalRelations.getReport().getData().longValue());
+        Assert.assertEquals(29, lexicalRelations.getPreparedData().getData().longValue());
     }
 
 }

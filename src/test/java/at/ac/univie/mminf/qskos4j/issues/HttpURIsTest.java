@@ -26,11 +26,11 @@ public class HttpURIsTest {
 
     @Test
     public void testConceptsHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(21, httpURIs1.getReport().getData().size());
+        Assert.assertEquals(21, httpURIs1.getPreparedData().getData().size());
     }
 
     @Test
     public void testResourcesHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(8, httpURIs2.getReport().getData().size());
+        Assert.assertEquals(8, httpURIs2.getPreparedData().getData().size());
     }
 }

@@ -28,7 +28,7 @@ public class MappingClashes extends Issue<CollectionReport<Pair<Value>>> {
     }
 
     @Override
-    protected CollectionReport<Pair<Value>> invoke() throws OpenRDFException {
+    protected CollectionReport<Pair<Value>> prepareData() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createExVsAssMappingQuery());
         Collection<Pair<Value>> exactVsAssMappingClashes = TupleQueryResultUtil.createCollectionOfValuePairs(
             query.evaluate(), "concept1", "concept2");

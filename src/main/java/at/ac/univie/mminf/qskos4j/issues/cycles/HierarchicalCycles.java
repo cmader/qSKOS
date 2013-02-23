@@ -41,7 +41,7 @@ public class HierarchicalCycles extends Issue<CollectionReport<Set<Value>>> {
     }
 
     @Override
-    protected CollectionReport<Set<Value>> invoke() throws OpenRDFException {
+    protected CollectionReport<Set<Value>> prepareData() throws OpenRDFException {
         hierarchyGraph = hierarchyGraphBuilder.createGraph();
         return new HierarchicalCyclesReport(findCycleContainingComponents(), hierarchyGraph);
     }

@@ -4,19 +4,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
-public abstract class Report<T> {
+public abstract class Report {
 
     public enum ReportFormat {TXT, DOT, RDF, HTML}
     public enum ReportStyle {SHORT, EXTENSIVE}
-    private T data;
-
-	protected Report(T data) {
-		this.data = data;
-	}
-
-	public T getData() {
-		return data;
-	}
 
     public final void generateReport(BufferedWriter writer, ReportFormat format) throws IOException
     {

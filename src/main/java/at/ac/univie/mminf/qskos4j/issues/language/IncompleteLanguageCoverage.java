@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -15,7 +16,7 @@ import java.util.*;
 /**
  * Finds all concepts with incomplete language coverage (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Incomplete_Language_Coverage">Incomplete Language Coverage</a>
  */
-public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovReport> {
+public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<String>>> {
 
     private final Logger logger = LoggerFactory.getLogger(IncompleteLanguageCoverage.class);
 
@@ -35,20 +36,25 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovReport> {
     }
 
     @Override
-    protected IncompleteLangCovReport invoke() throws OpenRDFException {
+    protected Map<Value, Collection<String>> prepareData() throws OpenRDFException {
 		incompleteLanguageCoverage = new HashMap<Value, Collection<String>>();
 		
 		checkLanguageCoverage();
 		generateIncompleteLanguageCoverageMap();
 		
-		return new IncompleteLangCovReport(incompleteLanguageCoverage);
+		return incompleteLanguageCoverage;
 	}
-	
-	private void checkLanguageCoverage() throws OpenRDFException
+
+    @Override
+    protected Report prepareReport(Map<Value, Collection<String>> preparedData) {
+        return new IncompleteLangCovReport(incompleteLanguageCoverage);
+    }
+
+    private void checkLanguageCoverage() throws OpenRDFException
 	{
 		languageCoverage = new HashMap<Value, Collection<String>>();
 		
-		Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getReport().getData(), progressMonitor);
+		Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getPreparedData(), progressMonitor);
 		while (it.hasNext()) {
             Value concept = it.next();
 

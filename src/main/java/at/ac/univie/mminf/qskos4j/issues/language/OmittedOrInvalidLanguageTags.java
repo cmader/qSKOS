@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -20,7 +21,7 @@ import java.util.Map;
 /**
 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">Omitted or Invalid Language Tags</a>.
 */
-public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
+public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection<Literal>>> {
 
 	private Map<Resource, Collection<Literal>> missingLangTags;
 
@@ -34,15 +35,18 @@ public class OmittedOrInvalidLanguageTags extends Issue<MissingLangTagReport> {
     }
 
     @Override
-    protected MissingLangTagReport invoke() throws OpenRDFException {
-		if (missingLangTags == null) {
-			TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createMissingLangTagQuery()).evaluate();
-			generateMissingLangTagMap(result);
-		}
-		return new MissingLangTagReport(missingLangTags);
+    protected Map<Resource, Collection<Literal>> prepareData() throws OpenRDFException {
+        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createMissingLangTagQuery()).evaluate();
+        generateMissingLangTagMap(result);
+        return missingLangTags;
 	}
-	
-	private String createMissingLangTagQuery() throws OpenRDFException
+
+    @Override
+    protected Report prepareReport(Map<Resource, Collection<Literal>> preparedData) {
+        return new MissingLangTagReport(preparedData);
+    }
+
+    private String createMissingLangTagQuery() throws OpenRDFException
     {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
 			"SELECT ?literal ?s ?p "+

@@ -23,7 +23,7 @@ public class LabelMatchTest {
     @Test
     public void testMaxLabelLength() throws OpenRDFException
     {
-        Assert.assertEquals(4, labelLengthMatch.getReport().getData().size());
+        Assert.assertEquals(4, labelLengthMatch.getPreparedData().getData().size());
     }
 
 }

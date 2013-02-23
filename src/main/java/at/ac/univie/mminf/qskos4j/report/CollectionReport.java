@@ -12,10 +12,12 @@ import java.util.Iterator;
  *
  * @param <T> type of the collection's content
  */
-public class CollectionReport<T> extends Report<Collection<T>> {
+public class CollectionReport<T> extends Report {
+
+    private Collection<T> data;
 
 	public CollectionReport(Collection<T> data) {
-		super(data);
+		this.data = data;
 	}
 
     @Override
@@ -23,7 +25,7 @@ public class CollectionReport<T> extends Report<Collection<T>> {
     {
         switch (style) {
             case SHORT:
-                osw.write("count: " + getData().size());
+                osw.write("count: " + data.size());
                 break;
 
             case EXTENSIVE:
@@ -34,7 +36,7 @@ public class CollectionReport<T> extends Report<Collection<T>> {
 
 	public String generateExtensiveTextReport() {
         StringBuilder report = new StringBuilder();
-        Iterator<T> dataIt = getData().iterator();
+        Iterator<T> dataIt = data.iterator();
         while (dataIt.hasNext()) {
             report.append(dataIt.next().toString()).append(dataIt.hasNext() ? "\n" : "");
         }
@@ -60,7 +62,7 @@ public class CollectionReport<T> extends Report<Collection<T>> {
     }
 
     public void generateExtensiveHtmlReport(BufferedWriter writer) throws IOException {
-        for (T collectionElement : getData()) {
+        for (T collectionElement : data) {
             if (collectionElement instanceof HtmlRenderable) {
                 writer.write("<p>" +((HtmlRenderable) collectionElement).toHtml()+ "</p>");
             }

@@ -31,8 +31,8 @@ public class DisconnectedConceptClustersTest {
 
     @Test
     public void testComponentCount() throws OpenRDFException {
-        long conceptCount = involvedConcepts.getReport().getData().size();
-        Collection<Set<Value>> components = disconnectedConceptClusters.getReport().getData();
+        long conceptCount = involvedConcepts.getPreparedData().getData().size();
+        Collection<Set<Value>> components = disconnectedConceptClusters.getPreparedData().getData();
 
         Assert.assertEquals(7, components.size());
         Assert.assertTrue(getVertexCount(components) <= conceptCount);

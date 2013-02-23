@@ -35,7 +35,7 @@ public class InconsistentPrefLabels extends Issue<CollectionReport<LabelConflict
     }
 
     @Override
-    protected CollectionReport<LabelConflict> invoke() throws OpenRDFException {
+    protected CollectionReport<LabelConflict> prepareData() throws OpenRDFException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByUri = orderPrefLabelsByResource();
         extractPrefLabelConflicts(prefLabelsByUri);
 

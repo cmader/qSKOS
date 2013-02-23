@@ -27,7 +27,7 @@ public class LabelMatch extends Issue<CollectionReport<Value>> {
     }
 
     @Override
-    protected CollectionReport<Value> invoke() throws OpenRDFException {
+    protected CollectionReport<Value> prepareData() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, generateQuery()).evaluate();
         Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
         return new CollectionReport<Value>(foundConcepts);
