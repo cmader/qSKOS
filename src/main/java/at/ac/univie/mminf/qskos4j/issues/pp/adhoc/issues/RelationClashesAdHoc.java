@@ -62,8 +62,6 @@ public class RelationClashesAdHoc implements AdHocCheckable {
     {
         try {
             String query = createPathQuery(subject, object, relationType);
-            System.out.println(query);
-
             return repCon.prepareBooleanQuery(QueryLanguage.SPARQL, query).evaluate();
         }
         catch (MalformedQueryException e) {

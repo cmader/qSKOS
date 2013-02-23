@@ -60,9 +60,6 @@ public class HtmlReportsTest {
             report.generateHtmlReport(htmlReportWriter, style);
             htmlReportWriter.close();
 
-            String htmlReport = htmlStringWriter.toString();
-            System.out.println(htmlReport);
-
             providesReport &= (htmlStringWriter.toString().trim().length() != 0);
         }
 
