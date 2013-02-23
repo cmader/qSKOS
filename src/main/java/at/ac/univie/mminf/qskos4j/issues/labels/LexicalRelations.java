@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.labels;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.report.NumberReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * Finds the number of relations involving SKOS lexical labels (prefLabel, altLabel, hiddenLabel).
  *
  */
-public class LexicalRelations extends Issue<NumberReport<Long>> {
+public class LexicalRelations extends Issue<Long> {
 
     private final Logger logger = LoggerFactory.getLogger(LexicalRelations.class);
 
@@ -37,10 +38,10 @@ public class LexicalRelations extends Issue<NumberReport<Long>> {
     }
 
     @Override
-    protected NumberReport<Long> prepareData() throws OpenRDFException {
+    protected Long prepareData() throws OpenRDFException {
         long relationsCount = 0;
 
-        for (Value concept : involvedConcepts.getPreparedData().getData()) {
+        for (Value concept : involvedConcepts.getPreparedData()) {
             try {
                 TupleQueryResult result = repCon.prepareTupleQuery(
                         QueryLanguage.SPARQL,
@@ -54,7 +55,12 @@ public class LexicalRelations extends Issue<NumberReport<Long>> {
             }
         }
 
-        return new NumberReport<Long>(relationsCount);
+        return relationsCount;
+    }
+
+    @Override
+    protected Report prepareReport(Long preparedData) {
+        return new NumberReport<Long>(preparedData);
     }
 
     private String createLexicalLabelQuery(Value concept) {

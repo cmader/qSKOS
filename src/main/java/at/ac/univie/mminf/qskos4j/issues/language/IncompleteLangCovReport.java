@@ -10,10 +10,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class IncompleteLangCovReport extends Report<Map<Value, Collection<String>>> {
+public class IncompleteLangCovReport extends Report {
+
+    private Map<Value, Collection<String>> data;
 
 	IncompleteLangCovReport(Map<Value, Collection<String>> data) {
-		super(data);
+		this.data = data;
 	}
 
     @Override
@@ -21,7 +23,7 @@ public class IncompleteLangCovReport extends Report<Map<Value, Collection<String
     {
         switch (style) {
             case SHORT:
-                new CollectionReport<Value>(getData().keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
+                new CollectionReport<Value>(data.keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
                 break;
 
             case EXTENSIVE:
@@ -34,7 +36,7 @@ public class IncompleteLangCovReport extends Report<Map<Value, Collection<String
 	private String generateExtensiveTextReport() {
         StringBuilder extensiveReport = new StringBuilder();
 
-        for (Entry<Value, Collection<String>> entry : getData().entrySet()) {
+        for (Entry<Value, Collection<String>> entry : data.entrySet()) {
 			extensiveReport.append("concept: '").append(entry.getKey().stringValue()).append("', not covered languages: ").append(entry.getValue().toString()).append("\n");
 		}
 

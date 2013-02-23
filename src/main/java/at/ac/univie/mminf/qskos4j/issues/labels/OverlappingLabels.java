@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -23,7 +24,7 @@ import java.util.*;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
  * ).
  */
-public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
+public class OverlappingLabels extends Issue<Set<LabelConflict>> {
 
 	private final Logger logger = LoggerFactory.getLogger(OverlappingLabels.class);
 
@@ -41,19 +42,24 @@ public class OverlappingLabels extends Issue<CollectionReport<LabelConflict>> {
     }
 
     @Override
-    protected CollectionReport<LabelConflict> prepareData() throws OpenRDFException {
+    protected Set<LabelConflict> prepareData() throws OpenRDFException {
         generateConceptsLabelMap();
         generateLabelConflictResults();
 
-		return new CollectionReport<LabelConflict>(labelConflicts);
+		return labelConflicts;
 	}
-	
-	private void generateConceptsLabelMap() throws OpenRDFException
+
+    @Override
+    protected Report prepareReport(Set<LabelConflict> preparedData) {
+        return new CollectionReport<LabelConflict>(preparedData);
+    }
+
+    private void generateConceptsLabelMap() throws OpenRDFException
 	{
 		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
 
         progressMonitor.setTaskDescription("Collecting resource labels");
-        Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getPreparedData().getData(), progressMonitor);
+        Iterator<Value> it = new MonitoredIterator<Value>(involvedConcepts.getPreparedData(), progressMonitor);
 
 		while (it.hasNext()) {
             Value concept = it.next();

@@ -4,6 +4,7 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.ExtrapolatedCollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
@@ -25,7 +26,7 @@ import java.util.*;
 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_InLinks">Missing In-Links</a>
 * ).
 */
-public class MissingInLinks extends Issue<CollectionReport<Value>> {
+public class MissingInLinks extends Issue<Collection<Value>> {
 
 	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
 
@@ -46,7 +47,7 @@ public class MissingInLinks extends Issue<CollectionReport<Value>> {
     }
 
     @Override
-    protected CollectionReport<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> prepareData() throws OpenRDFException {
         Collection<Value> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
@@ -62,10 +63,15 @@ public class MissingInLinks extends Issue<CollectionReport<Value>> {
             rankConcept(conceptIt.next());
         }
 
-        return new ExtrapolatedCollectionReport<Value>(extractUnreferencedConcepts(), randomSubsetSize_percent);
+        return extractUnreferencedConcepts();
     }
 
-	private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
+    @Override
+    protected Report prepareReport(Collection<Value> preparedData) {
+        return new ExtrapolatedCollectionReport<Value>(preparedData, randomSubsetSize_percent);
+    }
+
+    private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
     {
 		if (randomSubsetSize_percent == null) {
 			return authoritativeConcepts.getPreparedData().getData();
