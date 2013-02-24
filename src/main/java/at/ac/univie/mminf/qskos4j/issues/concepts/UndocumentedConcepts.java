@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,7 +22,7 @@ import java.util.List;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undocumented_Concepts">Undocumented Concepts</a>
  * ).
  */
-public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
+public class UndocumentedConcepts extends Issue<Collection<Value>> {
 
     private final Logger logger = LoggerFactory.getLogger(UndocumentedConcepts.class);
 
@@ -41,11 +43,11 @@ public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
     }
 
     @Override
-    protected CollectionReport<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> prepareData() throws OpenRDFException {
 		List<Value> undocumentedConcepts = new ArrayList<Value>();
 		
 		Iterator<Value> conceptIt = new MonitoredIterator<Value>(
-            authoritativeConcepts.getPreparedData().getData(),
+            authoritativeConcepts.getPreparedData(),
             progressMonitor);
 
 		while (conceptIt.hasNext()) {
@@ -55,10 +57,15 @@ public class UndocumentedConcepts extends Issue<CollectionReport<Value>> {
 			}
 		}
 		
-		return new CollectionReport<Value>(undocumentedConcepts);
+		return undocumentedConcepts;
 	}
-	
-	private boolean isConceptDocumented(Value concept)
+
+    @Override
+    protected Report prepareReport(Collection<Value> preparedData) {
+        return new CollectionReport<Value>(preparedData);
+    }
+
+    private boolean isConceptDocumented(Value concept)
 		throws OpenRDFException 
 	{		
 		for (String docProperty : documentationProperties) {

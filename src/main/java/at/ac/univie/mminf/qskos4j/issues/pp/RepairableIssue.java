@@ -1,11 +1,10 @@
 package at.ac.univie.mminf.qskos4j.issues.pp;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
-public abstract class RepairableIssue<T extends Report<?>> extends Issue<T> {
+public abstract class RepairableIssue<T> extends Issue<T> {
 
     protected RepairableIssue(
         RepositoryConnection repCon,

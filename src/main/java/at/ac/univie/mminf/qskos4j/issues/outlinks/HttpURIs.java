@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
@@ -10,6 +11,7 @@ import org.openrdf.repository.RepositoryConnection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +20,7 @@ import java.util.Set;
  * Date: 26.01.13
  * Time: 15:23
  */
-public class HttpURIs extends Issue<CollectionReport<URI>> {
+public class HttpURIs extends Issue<Collection<URI>> {
 
     private Set<URI> httpURIs = new HashSet<URI>();
     private Set<String> invalidResources = new HashSet<String>();
@@ -33,7 +35,7 @@ public class HttpURIs extends Issue<CollectionReport<URI>> {
     }
 
     @Override
-    protected CollectionReport<URI> prepareData() throws OpenRDFException {
+    protected Collection<URI> prepareData() throws OpenRDFException {
 
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createIRIQuery()).evaluate();
 
@@ -42,7 +44,12 @@ public class HttpURIs extends Issue<CollectionReport<URI>> {
             addToUrlList(iri);
         }
 
-        return new CollectionReport<URI>(httpURIs);
+        return httpURIs;
+    }
+
+    @Override
+    protected Report prepareReport(Collection<URI> preparedData) {
+        return new CollectionReport<URI>(preparedData);
     }
 
     private String createIRIQuery() {

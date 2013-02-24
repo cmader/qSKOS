@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -20,7 +21,7 @@ import java.util.List;
  * Finds top concepts that have broader concepts (
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Top_Concepts_Having_Broader_Concepts">Top Concepts Having Broader Concepts</a>
  */
-public class TopConceptsHavingBroaderConcepts extends Issue<CollectionReport<Value>> {
+public class TopConceptsHavingBroaderConcepts extends Issue<Collection<Value>> {
 
     public TopConceptsHavingBroaderConcepts(RepositoryConnection repCon) {
         super(repCon,
@@ -32,9 +33,14 @@ public class TopConceptsHavingBroaderConcepts extends Issue<CollectionReport<Val
     }
 
     @Override
-    protected CollectionReport<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> prepareData() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createTopConceptsHavingBroaderConceptQuery());
-        return new CollectionReport<Value>(createUriResultList(query.evaluate()));
+        return createUriResultList(query.evaluate());
+    }
+
+    @Override
+    protected Report prepareReport(Collection<Value> preparedData) {
+        return new CollectionReport<Value>(preparedData);
     }
 
     private String createTopConceptsHavingBroaderConceptQuery() {

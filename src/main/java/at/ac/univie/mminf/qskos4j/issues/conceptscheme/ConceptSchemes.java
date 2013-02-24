@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -23,7 +24,7 @@ import java.util.HashSet;
  *
  * Finds the number of SKOS <a href="http://www.w3.org/TR/skos-reference/#schemes">ConceptSchemes</a>.
  */
-public class ConceptSchemes extends Issue<CollectionReport<Resource>> {
+public class ConceptSchemes extends Issue<Collection<Resource>> {
 
     private final Logger logger = LoggerFactory.getLogger(ConceptSchemes.class);
 
@@ -37,9 +38,14 @@ public class ConceptSchemes extends Issue<CollectionReport<Resource>> {
     }
 
     @Override
-    protected CollectionReport<Resource> prepareData() throws OpenRDFException {
+    protected Collection<Resource> prepareData() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptSchemeQuery()).evaluate();
-        return new CollectionReport<Resource>(identifyResources(result));
+        return identifyResources(result);
+    }
+
+    @Override
+    protected Report prepareReport(Collection<Resource> preparedData) {
+        return new CollectionReport<Resource>(preparedData);
     }
 
     private String createConceptSchemeQuery() {

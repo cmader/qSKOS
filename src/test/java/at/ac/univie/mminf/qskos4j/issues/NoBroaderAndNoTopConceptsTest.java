@@ -47,7 +47,7 @@ public class NoBroaderAndNoTopConceptsTest {
     @Test
     public void testConceptCount() throws OpenRDFException
     {
-        Collection<Value> concepts = noBroaderAndNotTopConcepts.getPreparedData().getData();
+        Collection<Value> concepts = noBroaderAndNotTopConcepts.getPreparedData();
         Assert.assertEquals(3, concepts.size());
     }
 
@@ -82,9 +82,9 @@ public class NoBroaderAndNoTopConceptsTest {
     @Test
     public void allRepairsSuccessful() throws OpenRDFException, RepairFailedException
     {
-        Assert.assertTrue(noBroaderAndNotTopConcepts.getPreparedData().getData().size() > 0);
+        Assert.assertTrue(noBroaderAndNotTopConcepts.getPreparedData().size() > 0);
         noBroaderAndNotTopConcepts.repair();
-        Assert.assertTrue(noBroaderAndNotTopConcepts.getPreparedData().getData().size() == 0);
+        Assert.assertTrue(noBroaderAndNotTopConcepts.getPreparedData().size() == 0);
     }
 
     @Test

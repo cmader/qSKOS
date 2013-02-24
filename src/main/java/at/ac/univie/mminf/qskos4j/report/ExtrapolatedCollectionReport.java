@@ -7,10 +7,12 @@ import java.util.Collection;
 public class ExtrapolatedCollectionReport<T> extends CollectionReport<T> {
 
 	private Float subsetSize_percent;
+    private Collection<T> data;
 	
 	public ExtrapolatedCollectionReport(Collection<T> data, Float subsetSize_percent)
 	{
 		super(data);
+        this.data = data;
 		this.subsetSize_percent = subsetSize_percent;
 	}
 
@@ -28,7 +30,7 @@ public class ExtrapolatedCollectionReport<T> extends CollectionReport<T> {
     }
 
 	private String getShortReport() {
-		long elementCount = getData().size();
+		long elementCount = data.size();
 		
 		StringBuilder report = new StringBuilder("count: "+elementCount);
 		

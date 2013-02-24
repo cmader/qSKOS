@@ -15,10 +15,12 @@ import java.util.Set;
 public class ClustersReport extends CollectionReport<Set<Value>>
 {
 	private DirectedGraph<Value, NamedEdge> graph;
+    private Collection<Set<Value>> data;
 	
 	ClustersReport(Collection<Set<Value>> data, DirectedGraph<Value, NamedEdge> graph) {
 		super(data);
 		this.graph = graph;
+        this.data = data;
 	}
 
     @Override
@@ -27,18 +29,17 @@ public class ClustersReport extends CollectionReport<Set<Value>>
 		long compCount = 1;
 		
 		if (style == ReportStyle.SHORT) {
-			report.append("count: ").append(getData().size()).append("\n");
+			report.append("count: ").append(data.size()).append("\n");
 		}
 
-        Iterator<Set<Value>> componentIt = getData().iterator();
+        Iterator<Set<Value>> componentIt = data.iterator();
         while (componentIt.hasNext()) {
             Set<Value> component = componentIt.next();
 
 			report.append("component ").append(compCount).append(", size: ").append(component.size());
 			if (style == ReportStyle.EXTENSIVE) {
-                Iterator<Value> resourceIt = component.iterator();
-                while (resourceIt.hasNext()) {
-                    report.append("\n\t").append(resourceIt.next().toString());
+                for (Value resource : component) {
+                    report.append("\n\t").append(resource.toString());
                 }
 			}
 			compCount++;
@@ -51,7 +52,7 @@ public class ClustersReport extends CollectionReport<Set<Value>>
 
     @Override
     public void generateDotReport(BufferedWriter writer) throws IOException {
-        for (String dotGraph : new GraphExporter(graph).exportSubGraphs(getData())) {
+        for (String dotGraph : new GraphExporter(graph).exportSubGraphs(data)) {
             writer.write(dotGraph);
             writer.newLine();
         }

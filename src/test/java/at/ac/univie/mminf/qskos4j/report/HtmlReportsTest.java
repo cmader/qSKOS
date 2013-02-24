@@ -42,12 +42,12 @@ public class HtmlReportsTest {
 
     @Test
     public void issuesProvideHtmlReport() throws OpenRDFException, IOException {
-        Assert.assertTrue(providesHtmlReport(disjointLabelsViolations.getPreparedData()));
+        Assert.assertTrue(providesHtmlReport(disjointLabelsViolations.getReport()));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void issuesDontProvideHtmlReport() throws OpenRDFException, IOException {
-        providesHtmlReport(disconnectedConceptClusters.getPreparedData());
+        providesHtmlReport(disconnectedConceptClusters.getReport());
     }
 
     private boolean providesHtmlReport(Report report) throws IOException {

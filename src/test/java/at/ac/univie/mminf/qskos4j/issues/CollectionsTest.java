@@ -26,7 +26,7 @@ public class CollectionsTest {
     @Test
     public void testCollectionsCount() throws OpenRDFException
     {
-        Assert.assertEquals(4, collections.getPreparedData().getData().longValue());
+        Assert.assertEquals(4, collections.getPreparedData().longValue());
     }
 
 }

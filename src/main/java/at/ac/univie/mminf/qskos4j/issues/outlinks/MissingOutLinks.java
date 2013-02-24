@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -20,7 +21,7 @@ import java.util.*;
 /**
  * Finds concepts without links to "external" resources (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_OutLinks">Missing Out-Links</a>.
  */
-public class MissingOutLinks extends Issue<CollectionReport<Value>> {
+public class MissingOutLinks extends Issue<Collection<Value>> {
 
     private final Logger logger = LoggerFactory.getLogger(MissingOutLinks.class);
 
@@ -39,15 +40,20 @@ public class MissingOutLinks extends Issue<CollectionReport<Value>> {
 	}
 
     @Override
-    public CollectionReport<Value> prepareData() throws OpenRDFException {
+    public Collection<Value> prepareData() throws OpenRDFException {
 		extResourcesForConcept = new HashMap<Value, Collection<URL>>();
 
-		findResourcesForConcepts(authoritativeConcepts.getPreparedData().getData());
+		findResourcesForConcepts(authoritativeConcepts.getPreparedData());
 		
-		return new CollectionReport<Value>(extractUnlinkedConcepts());
+		return extractUnlinkedConcepts();
 	}
-	
-	private void findResourcesForConcepts(Collection<Value> concepts)
+
+    @Override
+    protected Report prepareReport(Collection<Value> preparedData) {
+        return new CollectionReport<Value>(preparedData);
+    }
+
+    private void findResourcesForConcepts(Collection<Value> concepts)
 	{
 		Iterator<Value> conceptIt = new MonitoredIterator<Value>(concepts, progressMonitor, "finding resources");
 		

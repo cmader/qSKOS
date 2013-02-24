@@ -29,11 +29,11 @@ public class NonHttpResourcesTest {
 
     @Test
     public void testConceptsNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(1, httpUriSchemeViolationsForConcepts.getPreparedData().getData().size());
+        Assert.assertEquals(1, httpUriSchemeViolationsForConcepts.getPreparedData().size());
     }
 
     @Test
     public void testResourcesNonHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(4, httpResourcesForUriSchemeViolations.getPreparedData().getData().size());
+        Assert.assertEquals(4, httpResourcesForUriSchemeViolations.getPreparedData().size());
     }
 }

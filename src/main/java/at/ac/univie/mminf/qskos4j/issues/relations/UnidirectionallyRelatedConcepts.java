@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -17,7 +18,7 @@ import java.util.Map;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Unidirectionally_Related_Concepts">Unidirectionally Related Concepts</a>.
  */
- public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelatedConceptsReport> {
+ public class UnidirectionallyRelatedConcepts extends Issue<Map<Pair<Resource>, String>> {
 
 	private String[][] inversePropertyPairs = {
 		{"skos:broader", "skos:narrower"}, 
@@ -42,16 +43,21 @@ import java.util.Map;
     }
 
     @Override
-    protected UnidirectionallyRelatedConceptsReport prepareData() throws OpenRDFException {
+    protected Map<Pair<Resource>, String> prepareData() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
             TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOmittedRelationsQuery(inversePropertyPair));
 			addToOmittedInverseRelationsMap(query.evaluate(), inversePropertyPair);
 		}
 		
-		return new UnidirectionallyRelatedConceptsReport(omittedInverseRelations);
+		return omittedInverseRelations;
 	}
-	
-	private String createOmittedRelationsQuery(String[] inverseRelations) {
+
+    @Override
+    protected Report prepareReport(Map<Pair<Resource>, String> preparedData) {
+        return new UnidirectionallyRelatedConceptsReport(preparedData);
+    }
+
+    private String createOmittedRelationsQuery(String[] inverseRelations) {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource1 ?resource2 "+
 				"WHERE {" +

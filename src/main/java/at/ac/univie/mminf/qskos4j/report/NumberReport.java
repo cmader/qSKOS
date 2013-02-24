@@ -3,10 +3,12 @@ package at.ac.univie.mminf.qskos4j.report;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class NumberReport<T extends Number> extends Report<T> {
+public class NumberReport<T> extends Report {
+
+    private T data;
 
 	public NumberReport(T data) {
-		super(data);
+		this.data = data;
 	}
 
     @Override
@@ -14,7 +16,7 @@ public class NumberReport<T extends Number> extends Report<T> {
     {
         switch (style) {
             case SHORT:
-                osw.write("value: " +getData().toString());
+                osw.write("value: " +data.toString());
                 break;
 
             case EXTENSIVE:

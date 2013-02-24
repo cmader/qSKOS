@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.pp.onimport;
 import at.ac.univie.mminf.qskos4j.issues.pp.RepairFailedException;
 import at.ac.univie.mminf.qskos4j.issues.pp.RepairableIssue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -19,9 +20,8 @@ import org.openrdf.repository.RepositoryResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
-public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport<Value>> {
+public class NoBroaderAndNotTopConcepts extends RepairableIssue<Collection<Value>> {
 
     private URI absorbingConceptSchemeUri;
     private Literal absorbingConceptSchemeLabel;
@@ -59,10 +59,14 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
     }
 
     @Override
-    protected CollectionReport<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> prepareData() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, QUERY).evaluate();
-        Set<Value> foundConcepts = TupleQueryResultUtil.getValuesForBindingName(result, "concept");
-        return new CollectionReport<Value>(foundConcepts);
+        return TupleQueryResultUtil.getValuesForBindingName(result, "concept");
+    }
+
+    @Override
+    protected Report prepareReport(Collection<Value> preparedData) {
+        return new CollectionReport<Value>(preparedData);
     }
 
     @Override
@@ -85,7 +89,7 @@ public class NoBroaderAndNotTopConcepts extends RepairableIssue<CollectionReport
 
     private void repairConcepts() throws OpenRDFException, RepairFailedException
     {
-        for (Value concept : getPreparedData().getData()) {
+        for (Value concept : getPreparedData()) {
             Collection<Resource> containingSchemes = getContainingConceptSchemes((Resource) concept);
             if (!containingSchemes.isEmpty()) {
                 setConceptAsTopConcept((Resource) concept, containingSchemes);

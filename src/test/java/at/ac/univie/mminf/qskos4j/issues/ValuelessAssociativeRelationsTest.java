@@ -24,7 +24,7 @@ public class ValuelessAssociativeRelationsTest {
 
     @Test
     public void testRedundantAssociativeRelationsCount() throws OpenRDFException {
-        Collection<Pair<URI>> redAssRels = valuelessAssociativeRelations.getPreparedData().getData();
+        Collection<Pair<URI>> redAssRels = valuelessAssociativeRelations.getPreparedData();
         Assert.assertEquals(6, redAssRels.size());
     }
 }

@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
@@ -20,7 +21,7 @@ import java.util.Set;
  *
  * Finds resources not within the HTTP URI scheme (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-HTTP_URI_Scheme_Violation">HTTP URI Scheme Violation</a>.
  */
-public class HttpUriSchemeViolations extends Issue<CollectionReport<String>> {
+public class HttpUriSchemeViolations extends Issue<Collection<String>> {
 
     public HttpUriSchemeViolations(RepositoryConnection repCon) {
         super(repCon,
@@ -32,10 +33,14 @@ public class HttpUriSchemeViolations extends Issue<CollectionReport<String>> {
     }
 
     @Override
-    protected CollectionReport<String> prepareData() throws OpenRDFException {
+    protected Collection<String> prepareData() throws OpenRDFException {
         TupleQuery query  = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createNonHttpUriQuery());
-        Collection<String> nonHttpUriSet = createNonHttpUriSet(query.evaluate());
-        return new CollectionReport<String>(nonHttpUriSet);
+        return createNonHttpUriSet(query.evaluate());
+    }
+
+    @Override
+    protected Report prepareReport(Collection<String> preparedData) {
+        return new CollectionReport<String>(preparedData);
     }
 
     private String createNonHttpUriQuery() {

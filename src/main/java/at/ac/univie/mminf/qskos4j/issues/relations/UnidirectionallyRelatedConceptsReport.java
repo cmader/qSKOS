@@ -9,10 +9,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Map;
 
-public class UnidirectionallyRelatedConceptsReport extends Report<Map<Pair<Resource>, String>> {
+public class UnidirectionallyRelatedConceptsReport extends Report {
+
+    private Map<Pair<Resource>, String> data;
 
 	public UnidirectionallyRelatedConceptsReport(Map<Pair<Resource>, String> data) {
-		super(data);
+		this.data = data;
 	}
 
     @Override
@@ -20,7 +22,7 @@ public class UnidirectionallyRelatedConceptsReport extends Report<Map<Pair<Resou
     {
         switch (style) {
             case SHORT:
-                new CollectionReport<Pair<Resource>>(getData().keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
+                new CollectionReport<Pair<Resource>>(data.keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
                 break;
 
             case EXTENSIVE:
@@ -33,8 +35,8 @@ public class UnidirectionallyRelatedConceptsReport extends Report<Map<Pair<Resou
     {
 		StringBuilder extensiveReport = new StringBuilder();
 		
-		for (Pair<Resource> concepts : getData().keySet()) {
-			extensiveReport.append("concepts: ").append(concepts.toString()).append(", related by: '").append(getData().get(concepts)).append("'\n");
+		for (Pair<Resource> concepts : data.keySet()) {
+			extensiveReport.append("concepts: ").append(concepts.toString()).append(", related by: '").append(data.get(concepts)).append("'\n");
 		}
 
 		return extensiveReport.toString();

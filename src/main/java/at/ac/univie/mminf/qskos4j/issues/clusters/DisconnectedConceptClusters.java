@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.clusters;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by christian
@@ -30,7 +32,7 @@ import java.util.Iterator;
  * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disconnected_Concept_Clusters">
  * Disconnected Concept Clusters</a>.
  */
-public class DisconnectedConceptClusters extends Issue<ClustersReport> {
+public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
 
     private final Logger logger = LoggerFactory.getLogger(DisconnectedConceptClusters.class);
 
@@ -48,12 +50,15 @@ public class DisconnectedConceptClusters extends Issue<ClustersReport> {
     }
 
     @Override
-    protected ClustersReport prepareData() throws OpenRDFException {
+    protected Collection<Set<Value>> prepareData() throws OpenRDFException {
         createGraph();
 
-        return new ClustersReport(
-                new ConnectivityInspector<Value, NamedEdge>(graph).connectedSets(),
-                graph);
+        return new ConnectivityInspector<Value, NamedEdge>(graph).connectedSets();
+    }
+
+    @Override
+    protected Report prepareReport(Collection<Set<Value>> preparedData) {
+        return new ClustersReport(preparedData, graph);
     }
 
     private void createGraph()
@@ -61,7 +66,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersReport> {
     {
         graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 
-        Iterator<Value> conceptIt = new MonitoredIterator<Value>(involvedConcepts.getPreparedData().getData(), progressMonitor);
+        Iterator<Value> conceptIt = new MonitoredIterator<Value>(involvedConcepts.getPreparedData(), progressMonitor);
         while (conceptIt.hasNext()) {
             Value concept = conceptIt.next();
             Collection<Relation> relations = findRelations(concept);

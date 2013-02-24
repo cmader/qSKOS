@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 /**
 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Valueless_Associative_Relations">Valueless Associative Relations</a>.
 */
-public class ValuelessAssociativeRelations extends Issue<CollectionReport<Pair<URI>>> {
+public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> {
 
     public ValuelessAssociativeRelations(RepositoryConnection repCon) {
         super(repCon,
@@ -26,16 +27,21 @@ public class ValuelessAssociativeRelations extends Issue<CollectionReport<Pair<U
     }
 
     @Override
-    protected CollectionReport<Pair<URI>> prepareData() throws OpenRDFException {
+    protected Collection<Pair<URI>> prepareData() throws OpenRDFException {
 		Collection<Pair<URI>> redundantAssociativeRelations = new HashSet<Pair<URI>>();
 
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRedundantAssociativeRelationsQuery());
         generateResultsList(redundantAssociativeRelations, query.evaluate());
 		
-		return new CollectionReport<Pair<URI>>(redundantAssociativeRelations);
+		return redundantAssociativeRelations;
 	}
-	
-	private String createRedundantAssociativeRelationsQuery() {
+
+    @Override
+    protected Report prepareReport(Collection<Pair<URI>> preparedData) {
+        return new CollectionReport<Pair<URI>>(preparedData);
+    }
+
+    private String createRedundantAssociativeRelationsQuery() {
 		return SparqlPrefix.SKOS +
 			"SELECT ?parent ?child ?otherchild "+
 			"WHERE {" +

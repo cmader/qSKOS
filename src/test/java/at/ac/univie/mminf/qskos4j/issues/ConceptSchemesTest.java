@@ -26,6 +26,6 @@ public class ConceptSchemesTest {
     @Test
     public void testLexicalRelationsCount() throws OpenRDFException
     {
-        Assert.assertEquals(5, conceptSchemes.getPreparedData().getData().size());
+        Assert.assertEquals(5, conceptSchemes.getPreparedData().size());
     }
 }

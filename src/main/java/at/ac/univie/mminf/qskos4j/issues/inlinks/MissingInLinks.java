@@ -2,7 +2,6 @@ package at.ac.univie.mminf.qskos4j.issues.inlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.ExtrapolatedCollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
@@ -74,10 +73,10 @@ public class MissingInLinks extends Issue<Collection<Value>> {
     private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
     {
 		if (randomSubsetSize_percent == null) {
-			return authoritativeConcepts.getPreparedData().getData();
+			return authoritativeConcepts.getPreparedData();
 		}
 		else {
-			return new RandomSubSet<Value>(authoritativeConcepts.getPreparedData().getData(), randomSubsetSize_percent);
+			return new RandomSubSet<Value>(authoritativeConcepts.getPreparedData(), randomSubsetSize_percent);
 		}
 	}
 	

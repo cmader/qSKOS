@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
@@ -22,7 +23,7 @@ import java.util.Iterator;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Relation_Clashes">Associative vs. Hierarchical Relation Clashes</a>.
  */
-public class RelationClashes extends Issue<CollectionReport<Pair<Value>>> {
+public class RelationClashes extends Issue<Collection<Pair<Value>>> {
 
     private HierarchyGraphBuilder hierarchyGraphBuilder;
 
@@ -38,7 +39,7 @@ public class RelationClashes extends Issue<CollectionReport<Pair<Value>>> {
     }
 
     @Override
-    protected CollectionReport<Pair<Value>> prepareData() throws OpenRDFException {
+    protected Collection<Pair<Value>> prepareData() throws OpenRDFException {
         Graph<Value, NamedEdge> hierarchyGraph = hierarchyGraphBuilder.createGraph();
 
         Collection<Pair<Value>> clashes = new HashSet<Pair<Value>>();
@@ -59,7 +60,12 @@ public class RelationClashes extends Issue<CollectionReport<Pair<Value>>> {
             }
         }
 
-        return new CollectionReport<Pair<Value>>(clashes);
+        return clashes;
+    }
+
+    @Override
+    protected Report prepareReport(Collection<Pair<Value>> preparedData) {
+        return new CollectionReport<Pair<Value>>(preparedData);
     }
 
     private Collection<Pair<Value>> findRelatedConcepts() throws OpenRDFException {

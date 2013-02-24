@@ -24,7 +24,7 @@ public class UnidirectionallyRelatedConceptsTest {
 
     @Test
     public void testMissingInverseRelationsCount() throws OpenRDFException {
-        Map<Pair<Resource>, String> missingRelations = unidirectionallyRelatedConcepts.getPreparedData().getData();
+        Map<Pair<Resource>, String> missingRelations = unidirectionallyRelatedConcepts.getPreparedData();
         Assert.assertEquals(8, missingRelations.size());
     }
 }

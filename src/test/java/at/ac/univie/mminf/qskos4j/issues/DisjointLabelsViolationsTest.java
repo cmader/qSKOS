@@ -24,7 +24,7 @@ public class DisjointLabelsViolationsTest {
     }
     @Test
     public void testDisjointLabels() throws OpenRDFException {
-        Collection<LabelConflict> ambiguousResources = disjointLabelsViolations.getPreparedData().getData();
+        Collection<LabelConflict> ambiguousResources = disjointLabelsViolations.getPreparedData().values();
 
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptD"));
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptF"));
