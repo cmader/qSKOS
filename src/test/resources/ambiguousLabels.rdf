@@ -77,4 +77,11 @@
         <skos:prefLabel>Concept G</skos:prefLabel>
     </rdf:Description>
 
+    <!-- Error, prefLabel and altLabel are equal by case insensitive comparison -->
+    <rdf:Description rdf:about="conceptI">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel>Concept I</skos:prefLabel>
+        <skos:altLabel>concept I</skos:altLabel>
+    </rdf:Description>
+
 </rdf:RDF>
