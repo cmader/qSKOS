@@ -8,6 +8,7 @@ import at.ac.univie.mminf.qskos4j.result.general.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.VocabRepository;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
+import org.openrdf.model.impl.LiteralImpl;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,7 +43,10 @@ public class NonDisjointLabelsFinder extends Issue {
         Map<Literal, Collection<LabeledResource>> resourcesByLabel = new HashMap<Literal, Collection<LabeledResource>>();
 
         for (LabeledResource labeledResource : resourceLabelsCollector.getLabeledResources()) {
-            Literal literal = labeledResource.getLiteral();
+            Literal literal = new LiteralImpl(
+                labeledResource.getLiteral().getLabel().toUpperCase(),
+                labeledResource.getLiteral().getLanguage());
+
             Collection<LabeledResource> resourcesForLiteral = resourcesByLabel.get(literal);
             if (resourcesForLiteral == null) {
                 resourcesForLiteral = new HashSet<LabeledResource>();

@@ -3,11 +3,11 @@ package at.ac.univie.mminf.qskos4j.issues.labelissues.util;
 import org.openrdf.model.Literal;
 import org.openrdf.model.impl.LiteralImpl;
 
-public class SimilarityLiteral extends LiteralImpl{
+public class SimilarityLiteral extends LiteralImpl {
 
     public SimilarityLiteral(Literal literal) {
         super();
-        setLabel(literal.getLabel());
+        setLabel(literal.getLabel().toUpperCase());
         setLanguage(literal.getLanguage());
         setDatatype(literal.getDatatype());
     }
