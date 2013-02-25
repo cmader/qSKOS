@@ -7,7 +7,7 @@ public class SimilarityLiteral extends LiteralImpl{
 
     public SimilarityLiteral(Literal literal) {
         super();
-        setLabel(literal.getLabel());
+        setLabel(literal.getLabel().toUpperCase());
         setLanguage(literal.getLanguage());
         setDatatype(literal.getDatatype());
     }
