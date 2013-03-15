@@ -70,7 +70,6 @@ public class QSkos {
     private List<Issue> registeredIssues = new ArrayList<Issue>();
     private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
-
     public QSkos(RepositoryConnection repCon) {
         this.repCon = repCon;
 
