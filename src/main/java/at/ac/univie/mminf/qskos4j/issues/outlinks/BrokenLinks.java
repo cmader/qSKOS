@@ -59,7 +59,7 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 
     private void dereferenceURIs() throws OpenRDFException
 	{
-		Collection<URI> urisToBeDereferenced = collectUrisToBeDereferenced(randomSubsetSize_percent);
+		Collection<URI> urisToBeDereferenced = collectUrisToBeDereferenced();
 		Iterator<URI> it = new MonitoredIterator<URI>(urisToBeDereferenced, progressMonitor);
 		
 		int i = 1;
@@ -81,7 +81,7 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 		}
 	}
 	
-	private Collection<URI> collectUrisToBeDereferenced(Float randomSubsetSize_percent) throws OpenRDFException {
+	private Collection<URI> collectUrisToBeDereferenced() throws OpenRDFException {
 		if (randomSubsetSize_percent == null) {
 			return httpURIs.getPreparedData();
 		}

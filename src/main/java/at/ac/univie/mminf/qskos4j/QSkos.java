@@ -72,20 +72,19 @@ public class QSkos {
 
     public QSkos(RepositoryConnection repCon) {
         this.repCon = repCon;
+    }
+
+    public void initialize() {
+        registeredIssues.clear();
+        addStatisticalIssues();
 
         try {
-            addAllIssues();
+            addAnalyticalIssues();
+            addSkosIntegrityIssues();
         }
         catch (OpenRDFException e) {
             logger.error("Error instantiating issue", e);
         }
-    }
-
-    private void addAllIssues() throws OpenRDFException {
-        registeredIssues.clear();
-        addStatisticalIssues();
-        addAnalyticalIssues();
-        addSkosIntegrityIssues();
     }
 
     private void addStatisticalIssues() {

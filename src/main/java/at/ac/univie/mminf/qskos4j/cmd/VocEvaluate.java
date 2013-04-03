@@ -202,6 +202,8 @@ public class VocEvaluate {
         if (!uriTrackingEnabled() && !parsedCommand.noProgressBar) {
             qskos.setProgressMonitor(new ConsoleProgressMonitor());
         }
+
+        qskos.initialize();
     }
 
     private void setupLogging() {
