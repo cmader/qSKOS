@@ -20,7 +20,6 @@ public class IssueIdTest {
     public void setUp() throws IOException, OpenRDFException
     {
         qskos = new QSkos(new RepositoryBuilder().setUpFromTestResource("nocontent.rdf").getConnection());
-        qskos.initialize();
     }
 
     @Test

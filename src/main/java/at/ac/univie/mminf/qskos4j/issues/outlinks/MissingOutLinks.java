@@ -7,15 +7,13 @@ import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.RepositoryResult;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -23,9 +21,7 @@ import java.util.*;
  */
 public class MissingOutLinks extends Issue<Collection<Value>> {
 
-    private final Logger logger = LoggerFactory.getLogger(MissingOutLinks.class);
-
-	private Map<Value, Collection<URL>> extResourcesForConcept;
+	private Map<Value, Collection<URI>> extResourcesForConcept;
     private AuthoritativeConcepts authoritativeConcepts;
 	
 	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
@@ -41,7 +37,7 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 
     @Override
     public Collection<Value> prepareData() throws OpenRDFException {
-		extResourcesForConcept = new HashMap<Value, Collection<URL>>();
+		extResourcesForConcept = new HashMap<Value, Collection<URI>>();
 
 		findResourcesForConcepts(authoritativeConcepts.getPreparedData());
 		
@@ -53,73 +49,52 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
         return new CollectionReport<Value>(preparedData);
     }
 
-    private void findResourcesForConcepts(Collection<Value> concepts)
-	{
+    private void findResourcesForConcepts(Collection<Value> concepts) throws RepositoryException {
 		Iterator<Value> conceptIt = new MonitoredIterator<Value>(concepts, progressMonitor, "finding resources");
-		
+
 		while (conceptIt.hasNext()) {
             Value concept = conceptIt.next();
-			extResourcesForConcept.put(concept, findExternalResourcesForConcept(concept));
-		}
-	}
-	
-	private Collection<URL> findExternalResourcesForConcept(Value concept)
-	{
-        List<URL> resourceList = new ArrayList<URL>();
-		String query = createIRIQuery(concept); 
-
-        try {
-            TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
-            resourceList = identifyResources(result);
+			extResourcesForConcept.put(concept, extractExternalResources(getURIsOfConcept(concept)));
         }
-        catch (OpenRDFException e) {
-            logger.error("Error finding references to/from concept '" +concept+ "'");
-        }
-		
-		return extractExternalResources(resourceList);
 	}
-	
-	private String createIRIQuery(Value concept) {
-		return "SELECT DISTINCT ?iri "+
-				"WHERE {{<"+concept.stringValue()+"> ?p ?iri .} UNION "+
-					"{?iri ?p <"+concept.stringValue()+"> .}"+
-					"FILTER isIRI(?iri) "+
-					"FILTER regex(str(?iri), \"^http\")}";
-	}
-		
-	private List<URL> identifyResources(TupleQueryResult iriTuples) 
-		throws QueryEvaluationException 
-	{
-		List<URL> ret = new ArrayList<URL>();
-		
-		while (iriTuples.hasNext()) {
-			Value iri = iriTuples.next().getValue("iri");
 
-			try {
-				URL url = new URL(iri.stringValue());
-				ret.add(url);
-			} 
-			catch (MalformedURLException e) {
-                // ignore exception
-			}
-		}
-		
-		return ret;
-	}
+    private Collection<URI> getURIsOfConcept(Value concept) throws RepositoryException {
+        Collection<URI> urisForConcept = new ArrayList<URI>();
+
+        if (concept instanceof Resource) {
+            RepositoryResult<Statement> conceptAsSubject = repCon.getStatements((Resource) concept, null, null, false);
+            while (conceptAsSubject.hasNext()) {
+                Value object = conceptAsSubject.next().getObject();
+                addToUriCollection(object, urisForConcept);
+            }
+        }
+
+        RepositoryResult<Statement> conceptAsObject = repCon.getStatements(null, null, concept, false);
+        while (conceptAsObject.hasNext()) {
+            Value object = conceptAsObject.next().getSubject();
+            addToUriCollection(object, urisForConcept);
+        }
+
+        return urisForConcept;
+    }
+
+    private void addToUriCollection(Value value, Collection<URI> uris) {
+        if (value instanceof URI) uris.add((URI) value);
+    }
 	
-	private Collection<URL> extractExternalResources(Collection<URL> allResources) {
-		Collection<URL> validExternalResources = new HashSet<URL>();
+	private Collection<URI> extractExternalResources(Collection<URI> allResources) {
+		Collection<URI> validExternalResources = new HashSet<URI>();
 		
-		for (URL url : allResources) {
-			if (isExternalResource(url) && isNonSkosURL(url)) {
-				validExternalResources.add(url);
+		for (URI uri : allResources) {
+			if (isExternalResource(uri) && isNonSkosURL(uri)) {
+				validExternalResources.add(uri);
 			}
 		}
 		
 		return validExternalResources;
 	}
 	
-	private boolean isExternalResource(URL url) {
+	private boolean isExternalResource(URI url) {
         String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {
@@ -129,7 +104,7 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 		throw new IllegalArgumentException("external resource identifier must not be null or empty");
 	}
 	
-	private boolean isNonSkosURL(URL url) {
+	private boolean isNonSkosURL(URI url) {
 		return !url.toString().contains(SparqlPrefix.SKOS.getNameSpace());
 	}
 	
