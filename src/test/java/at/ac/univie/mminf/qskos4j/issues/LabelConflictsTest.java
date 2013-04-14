@@ -15,12 +15,14 @@ import java.util.Set;
 
 public class LabelConflictsTest extends IssueTestCase {
 
-	private QSkos qSkosComponents, qSkosRelatedConcepts;
+	private QSkos qSkosComponents, qSkosRelatedConcepts, qSkosOverlappingLabels;
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
 		qSkosComponents = setUpInstance("components.rdf");
 		qSkosRelatedConcepts = setUpInstance("relatedConcepts.rdf");
+        qSkosOverlappingLabels = setUpInstance("overlappingLabels.rdf");
+
 		qSkosRelatedConcepts.setAuthoritativeResourceIdentifier("http://aims.fao.org/aos/agrovoc");
 	}
 	
@@ -31,6 +33,12 @@ public class LabelConflictsTest extends IssueTestCase {
 		Assert.assertEquals(2, allLabelConflicts.size());
 		Assert.assertEquals(4, getDifferentResources(allLabelConflicts).size());
 	}
+
+    @Test
+    public void overLappingLabelsCaseInsensitive() throws OpenRDFException {
+        Collection<LabelConflict> allLabelConflicts = qSkosOverlappingLabels.findOverlappingLabels().getData();
+        Assert.assertEquals(2, allLabelConflicts.size());
+    }
 
 	private Collection<Resource> getDifferentResources(Collection<LabelConflict> labelConflicts)
 	{

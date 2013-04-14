@@ -40,6 +40,7 @@ public class AmbiguousLabelTest extends IssueTestCase {
 		
 		Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousResources, "conceptD"));
 		Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousResources, "conceptF"));
+        Assert.assertTrue(uriSuffixIsPartOfConflict(ambiguousResources, "conceptI"));
         Assert.assertFalse(uriSuffixIsPartOfConflict(ambiguousResources, "conceptE"));
         Assert.assertFalse(uriSuffixIsPartOfConflict(ambiguousResources, "conceptG"));
     }
