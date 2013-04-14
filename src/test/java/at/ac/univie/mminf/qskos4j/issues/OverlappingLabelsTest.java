@@ -5,13 +5,11 @@ import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,23 +18,17 @@ import java.util.Set;
 
 public class OverlappingLabelsTest {
 
-    private OverlappingLabels overlappingLabelsForComponents, overlappingLabelsForRelatedConcepts;
-    private RepositoryConnection componentsRepCon, relatedConceptsRepCon;
+    private OverlappingLabels overlappingLabelsForComponents, overlappingLabelsForRelatedConcepts, overlappingLabels;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        componentsRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
-        relatedConceptsRepCon = new RepositoryBuilder().setUpFromTestResource("relatedConcepts.rdf").getConnection();
+        RepositoryConnection componentsRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
+        RepositoryConnection relatedConceptsRepCon = new RepositoryBuilder().setUpFromTestResource("relatedConcepts.rdf").getConnection();
+        RepositoryConnection overlappingLabelsRepCon = new RepositoryBuilder().setUpFromTestResource("overlappingLabels.rdf").getConnection();
 
         overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts(componentsRepCon));
         overlappingLabelsForRelatedConcepts = new OverlappingLabels(new InvolvedConcepts(relatedConceptsRepCon));
-    }
-
-    @After
-    public void tearDown() throws RepositoryException
-    {
-        componentsRepCon.close();
-        relatedConceptsRepCon.close();
+        overlappingLabels = new OverlappingLabels(new InvolvedConcepts(overlappingLabelsRepCon));
     }
 
     @Test
@@ -45,6 +37,11 @@ public class OverlappingLabelsTest {
 
         Assert.assertEquals(2, allLabelConflicts.size());
         Assert.assertEquals(4, getDifferentResources(allLabelConflicts).size());
+    }
+
+    @Test
+    public void testCaseInsensitive() throws OpenRDFException {
+        Assert.assertEquals(2, overlappingLabels.getPreparedData().size());
     }
 
     private Collection<Value> getDifferentResources(Collection<LabelConflict> labelConflicts)

@@ -1,6 +1,6 @@
-package at.ac.univie.mminf.qskos4j.issues.cycles;
+package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
+import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import java.io.IOException;
  * Date: 27.01.13
  * Time: 00:20
  */
-public class HierarchicalCyclesFullTest {
+public class HierarchicalCyclesTest {
 
     private HierarchicalCycles hierarchicalCycles, hierarchicalCyclesForComponents;
 

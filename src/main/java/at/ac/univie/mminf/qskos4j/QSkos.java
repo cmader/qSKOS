@@ -32,6 +32,7 @@ import at.ac.univie.mminf.qskos4j.issues.skosintegrity.MappingClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
@@ -61,6 +62,7 @@ public class QSkos {
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
     private String authResourceIdentifier;
+    private IProgressMonitor progressMonitor = new StubProgressMonitor();
 
     private InvolvedConcepts involvedConcepts;
     private AuthoritativeConcepts authoritativeConcepts;
@@ -70,23 +72,25 @@ public class QSkos {
     private List<Issue> registeredIssues = new ArrayList<Issue>();
     private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
-
     public QSkos(RepositoryConnection repCon) {
         this.repCon = repCon;
+    }
+
+    private void initialize() {
+        registeredIssues.clear();
+        addStatisticalIssues();
 
         try {
-            addAllIssues();
+            addAnalyticalIssues();
+            addSkosIntegrityIssues();
         }
         catch (OpenRDFException e) {
             logger.error("Error instantiating issue", e);
         }
-    }
 
-    private void addAllIssues() throws OpenRDFException {
-        registeredIssues.clear();
-        addStatisticalIssues();
-        addAnalyticalIssues();
-        addSkosIntegrityIssues();
+        for (Issue issue : registeredIssues) {
+            issue.setProgressMonitor(progressMonitor);
+        }
     }
 
     private void addStatisticalIssues() {
@@ -152,11 +156,13 @@ public class QSkos {
     }
 
     public List<Issue> getAllIssues() {
+        initialize();
         return registeredIssues;
     }
 
     public Collection<Issue> getIssues(String commaSeparatedIssueIDs)
     {
+        initialize();
         if (commaSeparatedIssueIDs == null || commaSeparatedIssueIDs.isEmpty()) {
             return Collections.emptySet();
         }
@@ -194,9 +200,7 @@ public class QSkos {
 	 * @param progressMonitor monitor instance to be notified
 	 */
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
-        for (Issue issue : registeredIssues) {
-            issue.setProgressMonitor(progressMonitor);
-        }
+        this.progressMonitor = progressMonitor;
 	}
 	
 	/**

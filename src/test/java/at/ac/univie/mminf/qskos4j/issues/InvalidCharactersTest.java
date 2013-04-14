@@ -15,7 +15,8 @@ public class InvalidCharactersTest {
     @Before
     public void setUp() throws OpenRDFException, IOException {
         qSkosInvalidCharacters = new QSkos(
-            new RepositoryBuilder().setUpFromTestResource("invalidCharacters.rdf").getConnection());
+            new RepositoryBuilder().setUpFromTestResource("invalidCharacters.rdf").getConnection()
+        );
     }
 
     @Test

@@ -22,12 +22,14 @@ public class DisjointLabelsViolationsTest {
         disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector(
             new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection()));
     }
+
     @Test
     public void testDisjointLabels() throws OpenRDFException {
         Collection<LabelConflict> ambiguousResources = disjointLabelsViolations.getPreparedData().values();
 
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptD"));
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptF"));
+        Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptI"));
         Assert.assertFalse(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptE"));
         Assert.assertFalse(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptG"));
     }
