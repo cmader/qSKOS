@@ -57,9 +57,7 @@ public class OmittedOrInvalidLanguageTagsTest {
     @Test
     public void testMissingLangTagCount_3() throws OpenRDFException {
         Map<Resource, Collection<Literal>> missingLangTags = oiltLangTags.getPreparedData();
-
-        // expected value should be 0, but current implementatin relies on org.openrdf.model.util.language.Iso639 checks
-        Assert.assertEquals(5, countEntries(missingLangTags.values()));
+        Assert.assertEquals(1, countEntries(missingLangTags.values()));
     }
 
 }

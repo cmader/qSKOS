@@ -13,10 +13,7 @@ import org.openrdf.model.util.language.LanguageTagSyntaxException;
 import org.openrdf.query.*;
 import org.openrdf.repository.RepositoryConnection;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">Omitted or Invalid Language Tags</a>.
@@ -99,10 +96,16 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 	}
 	
 	private boolean isInvalidLanguage(String langTag) {
-		try {
+        try {
 			new LanguageTag(langTag);
 		} 
 		catch (LanguageTagSyntaxException e) {
+            if (e.getMessage().contains("does not define language")) {
+                for (String isoLanguage : Locale.getISOLanguages()) {
+                    if (isoLanguage.equalsIgnoreCase(langTag)) return false;
+                }
+            }
+
 			return true;
 		}
 		return false;

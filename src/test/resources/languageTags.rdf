@@ -27,4 +27,10 @@
         <skos:altLabel xml:lang="wa">conceptD</skos:altLabel>
     </rdf:Description>
 
+    <!-- Error, invalid language tag -->
+    <rdf:Description rdf:about="conceptE">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="xy">conceptE</skos:prefLabel>
+    </rdf:Description>
+
 </rdf:RDF>
