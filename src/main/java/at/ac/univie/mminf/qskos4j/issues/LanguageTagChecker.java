@@ -13,10 +13,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class LanguageTagChecker extends Issue {
 
@@ -74,16 +71,21 @@ public class LanguageTagChecker extends Issue {
 			}
 		}
 	}
-	
-	private boolean isInvalidLanguage(String langTag) {
-		try {
-			new LanguageTag(langTag);
-		} 
-		catch (LanguageTagSyntaxException e) {
-			return true;
-		}
-		return false;
-	}
+
+    private boolean isInvalidLanguage(String langTag) {
+        try {
+            new LanguageTag(langTag);
+        }
+        catch (LanguageTagSyntaxException e) {
+            if (e.getMessage().contains("does not define language")) {
+                for (String isoLanguage : Locale.getISOLanguages()) {
+                    if (isoLanguage.equalsIgnoreCase(langTag)) return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 	
 	private void addToMissingLangTagMap(Resource resource, Literal literal) {
 		Collection<Literal> literals = missingLangTags.get(resource);
