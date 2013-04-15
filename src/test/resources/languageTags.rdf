@@ -2,9 +2,16 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
          xml:base="http://mminf.univie.ac.at/vocab/">
 
+    <!-- OK, valid language tag -->
     <rdf:Description rdf:about="conceptA">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:prefLabel xml:lang="en">conceptA</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Error, invalid language tag: invalid language -->
+    <rdf:Description rdf:about="conceptE">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="xy">conceptE</skos:prefLabel>
     </rdf:Description>
 
     <!-- OK, valid language tags -->
@@ -27,10 +34,28 @@
         <skos:altLabel xml:lang="wa">conceptD</skos:altLabel>
     </rdf:Description>
 
-    <!-- Error, invalid language tag -->
-    <rdf:Description rdf:about="conceptE">
+    <!-- Ok, valid language tag: language and region -->
+    <rdf:Description rdf:about="conceptF">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-        <skos:prefLabel xml:lang="xy">conceptE</skos:prefLabel>
+        <skos:prefLabel xml:lang="jv-ID">conceptF</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Ok, valid language tag: language, script and region -->
+    <rdf:Description rdf:about="conceptG">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="mn-Cyrl-MN">conceptG</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Ok, invalid language tag: invalid variant but currently variant validity is not checked -->
+    <rdf:Description rdf:about="conceptH">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="sl-blabla">conceptH</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Ok, valid language tag: language and variant -->
+    <rdf:Description rdf:about="conceptI">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="sl-rozaj">conceptI</skos:prefLabel>
     </rdf:Description>
 
 </rdf:RDF>

@@ -8,8 +8,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
-import org.openrdf.model.util.language.LanguageTag;
-import org.openrdf.model.util.language.LanguageTagSyntaxException;
 import org.openrdf.query.*;
 import org.openrdf.repository.RepositoryConnection;
 
@@ -88,27 +86,40 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 			
 			if (literal.getDatatype() == null) {
 				String langTag = literal.getLanguage();			
-				if (langTag == null || isInvalidLanguage(langTag)) {
+				if (langTag == null || !isValidLangTag(langTag)) {
 					addToMissingLangTagMap(subject, literal);
 				}
 			}
 		}
 	}
 	
-	private boolean isInvalidLanguage(String langTag) {
-        try {
-			new LanguageTag(langTag);
-		} 
-		catch (LanguageTagSyntaxException e) {
-            if (e.getMessage().contains("does not define language")) {
-                for (String isoLanguage : Locale.getISOLanguages()) {
-                    if (isoLanguage.equalsIgnoreCase(langTag)) return false;
-                }
-            }
+	private boolean isValidLangTag(String langTag) {
+        return isSyntacticallyCorrect(langTag) && hasIsoLanguage(langTag);
+    }
 
-			return true;
-		}
-		return false;
+    private boolean isSyntacticallyCorrect(String langTag) {
+        try {
+            new Locale.Builder().setLanguageTag(langTag);
+        }
+        catch (IllformedLocaleException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean hasIsoLanguage(String langTag) {
+        Locale locale = new Locale.Builder().setLanguageTag(langTag).build();
+
+        boolean hasIsoLanguage = false;
+        for (String isoLanguage : Locale.getISOLanguages()) {
+            if (isoLanguage.equalsIgnoreCase(locale.getLanguage())) {
+                hasIsoLanguage = true;
+                break;
+            }
+        }
+
+        return hasIsoLanguage;
 	}
 	
 	private void addToMissingLangTagMap(Resource resource, Literal literal) {
