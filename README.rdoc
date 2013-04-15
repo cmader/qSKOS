@@ -6,7 +6,7 @@ qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wik
 
 === Requirements
 
-* Verify that Java v.1.6 or greater is installed: <tt>javac -version</tt>
+* Verify that Java v.1.7 or greater is installed: <tt>javac -version</tt>
 * Make sure Maven v.3.0 or greater is installed: <tt>mvn -v</tt>
 * Optional: Make sure you have the current version of the {git version control system}[http://git-scm.com/] installed on your system.
 
