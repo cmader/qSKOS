@@ -19,6 +19,7 @@ import java.util.*;
 public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection<Literal>>> {
 
 	private Map<Resource, Collection<Literal>> missingLangTags;
+    private Map<String, Boolean> checkedLanguageTags;
 
     public OmittedOrInvalidLanguageTags(RepositoryConnection repCon) {
         super(repCon,
@@ -78,6 +79,7 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 		throws QueryEvaluationException 
 	{
 		missingLangTags = new HashMap<Resource, Collection<Literal>>();
+        checkedLanguageTags = new HashMap<String, Boolean>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -94,7 +96,14 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 	}
 	
 	private boolean isValidLangTag(String langTag) {
-        return isSyntacticallyCorrect(langTag) && hasIsoLanguage(langTag);
+        Boolean validTag = checkedLanguageTags.get(langTag);
+
+        if (validTag == null) {
+            validTag = isSyntacticallyCorrect(langTag) && hasIsoLanguage(langTag);
+            checkedLanguageTags.put(langTag, validTag);
+        }
+
+        return validTag;
     }
 
     private boolean isSyntacticallyCorrect(String langTag) {
