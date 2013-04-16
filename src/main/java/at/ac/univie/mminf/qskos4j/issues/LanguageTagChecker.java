@@ -16,6 +16,7 @@ import java.util.*;
 public class LanguageTagChecker extends Issue {
 
 	private Map<Resource, Collection<Literal>> missingLangTags;
+    private Map<String, Boolean> checkedLanguageTags;
 	
 	public LanguageTagChecker(VocabRepository vocabRepository) {
 		super(vocabRepository);
@@ -55,6 +56,7 @@ public class LanguageTagChecker extends Issue {
 		throws QueryEvaluationException 
 	{
 		missingLangTags = new HashMap<Resource, Collection<Literal>>();
+        checkedLanguageTags = new HashMap<String, Boolean>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -71,7 +73,14 @@ public class LanguageTagChecker extends Issue {
 	}
 
     private boolean isValidLangTag(String langTag) {
-        return isSyntacticallyCorrect(langTag) && hasIsoLanguage(langTag);
+        Boolean validTag = checkedLanguageTags.get(langTag);
+
+        if (validTag == null) {
+            validTag = isSyntacticallyCorrect(langTag) && hasIsoLanguage(langTag);
+            checkedLanguageTags.put(langTag, validTag);
+        }
+
+        return validTag;
     }
 
     private boolean isSyntacticallyCorrect(String langTag) {
