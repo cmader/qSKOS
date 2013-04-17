@@ -11,6 +11,7 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
 import org.openrdf.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class RepositoryBuilder {
 
     private void createRepositoryForFile() throws RepositoryException {
         File tempDir = new File(createDataDirName());
-        repository = new SailRepository(new MemoryStore(tempDir));
+        repository = new SailRepository(new ForwardChainingRDFSInferencer(new MemoryStore(tempDir)));
         repository.initialize();
     }
 

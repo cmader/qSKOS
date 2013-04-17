@@ -34,6 +34,8 @@ public class NonHttpResourcesTest {
 
     @Test
     public void testResourcesNonHttpUriCount() throws OpenRDFException {
+        System.out.println(new RepositoryBuilder().setUpFromTestResource("resources.rdf").getConnection().getStatements(null,null,null,true).asList());
+
         Assert.assertEquals(4, httpResourcesForUriSchemeViolations.getPreparedData().size());
     }
 }

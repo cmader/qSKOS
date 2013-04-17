@@ -48,11 +48,6 @@ public class AggregationRelations extends Issue<Long> {
                 "{" +
                     "?res1 ?aggregationRelation ?res2 ." +
                 "}" +
-                "UNION" +
-                "{" +
-                    "?res1 ?p ?res2 . " +
-                    "?p rdfs:subPropertyOf ?aggregationRelation ." +
-                "}"+
                 "FILTER (?aggregationRelation IN ("+ AGGREGATION_RELATIONS+ "))" +
             "}";
     }

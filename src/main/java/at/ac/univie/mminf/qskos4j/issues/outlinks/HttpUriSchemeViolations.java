@@ -4,11 +4,11 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryResult;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,8 +34,27 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
 
     @Override
     protected Collection<String> prepareData() throws OpenRDFException {
-        TupleQuery query  = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createNonHttpUriQuery());
-        return createNonHttpUriSet(query.evaluate());
+        Set<String> nonHttpURIs = new HashSet<String>();
+
+        RepositoryResult<Statement> allStatements = repCon.getStatements(null, null, null, false);
+        while (allStatements.hasNext()) {
+            Statement statement = allStatements.next();
+            if (isNonHttpURI(statement.getSubject())) {
+                nonHttpURIs.add(statement.getSubject().stringValue());
+            }
+        }
+
+        return nonHttpURIs;
+    }
+
+    private boolean isNonHttpURI(Resource resource) {
+        if (resource instanceof URI) {
+            String uri = resource.stringValue().toLowerCase();
+            if (!uri.contains("http://") && !uri.contains("https://")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -43,28 +62,6 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
         return new CollectionReport<String>(preparedData);
     }
 
-    private String createNonHttpUriQuery() {
-        return "SELECT DISTINCT ?iri WHERE " +
-                "{" +
-                "?iri ?p ?obj ." +
-                "FILTER isIRI(?iri)"+
-                "}";
-    }
 
-    private Collection<String> createNonHttpUriSet(TupleQueryResult result)
-            throws OpenRDFException
-    {
-        Set<String> nonHttpURIs = new HashSet<String>();
-
-        while (result.hasNext()) {
-            Value iri = result.next().getValue("iri");
-            String iriValue = iri.stringValue().toLowerCase();
-            if (!iriValue.contains("http://") && !iriValue.contains("https://")) {
-                nonHttpURIs.add(iri.stringValue());
-            }
-        }
-
-        return nonHttpURIs;
-    }
 
 }

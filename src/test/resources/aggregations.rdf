@@ -3,66 +3,30 @@
          xmlns:skos="http://www.w3.org/2004/02/skos/core#"
          xmlns:myonto="http://localhost/myonto#">
 
+    <!-- Aggregation 1: hasTopConcept -->
 	<rdf:Description rdf:about="conceptScheme1">
-		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+		<skos:hasTopConcept rdf:resource="someConcept1"/>
 	</rdf:Description>
 
-    <!-- Aggregation 1 -->
-	<rdf:Description rdf:about="conceptScheme2">
-		<skos:hasTopConcept rdf:resource="someConcept"/>
-	</rdf:Description>
-
-	<rdf:Description rdf:about="conceptScheme3">
-		<rdf:type rdf:resource="http://localhost/myonto#myConceptScheme"/>
-	</rdf:Description>
-
-	<rdf:Description rdf:about="conceptScheme4">
-	</rdf:Description>
-
-    <!-- Aggregation 2 -->
-	<rdf:Description rdf:about="conceptScheme5">
-		<myonto:myHasTopConcept rdf:resource="anotherConcept"/>
-	</rdf:Description>
-
-	<rdf:Description rdf:about="collection1">
-		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
-	</rdf:Description>
-
-    <!-- Aggregation 3 -->
-	<rdf:Description rdf:about="collection2">
-		<skos:member rdf:resource="someConcept"/>
-	</rdf:Description>
-
-	<rdf:Description rdf:about="collection3">
-		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#OrderedCollection"/>
-	</rdf:Description>
-
-    <!-- Aggregation 4 -->
-	<rdf:Description rdf:about="orderedCollection">
-		<skos:memberList rdf:resource="someList"/>
-	</rdf:Description>
-
-	<rdf:Description rdf:about="http://localhost/myonto#myConceptScheme">
-		<rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <!-- Aggregation 2: topConceptOf -->
+    <rdf:Description rdf:about="someConcept2">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:topConceptOf rdf:resource="conceptScheme2"/>
     </rdf:Description>
 
-	<rdf:Description rdf:about="http://localhost/myonto#myHasTopConcept">
-		<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept"/>
+    <!-- Aggregation 3: inScheme -->
+    <rdf:Description rdf:about="someConcept3">
+        <skos:inScheme rdf:resource="conceptScheme3"/>
     </rdf:Description>
 
-    <!-- Aggregation 5 -->
-	<rdf:Description rdf:about="someConcept">
-		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-		<skos:topConceptOf rdf:resource="conceptScheme1"/>
-	</rdf:Description>
+    <!-- Aggregation 4: member -->
+    <rdf:Description rdf:about="collection1">
+        <skos:member rdf:resource="someConcept4"/>
+    </rdf:Description>
 
-    <!-- Aggregation 6 -->
-	<rdf:Description rdf:about="anotherConcept">
-		<skos:inScheme rdf:resource="conceptScheme4"/>
-	</rdf:Description>
-
-	<rdf:Description rdf:about="someList">
-		<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-	</rdf:Description>
+    <!-- Aggregation 5: memberList -->
+    <rdf:Description rdf:about="orderedCollection">
+        <skos:memberList rdf:resource="someList"/>
+    </rdf:Description>
 
 </rdf:RDF>

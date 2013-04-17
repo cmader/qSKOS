@@ -51,7 +51,7 @@ public class LexicalRelations extends Issue<Long> {
                 relationsCount += TupleQueryResultUtil.countResults(result);
             }
             catch (OpenRDFException e) {
-                logger.error("Error finding labels for concept '" +concept+ "'");
+                logger.error("Error finding labels for concept '" +concept+ "'", e);
             }
         }
 
@@ -65,13 +65,10 @@ public class LexicalRelations extends Issue<Long> {
 
     private String createLexicalLabelQuery(Value concept) {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
-                "SELECT DISTINCT ?skoslabelType ?literal WHERE {" +
-                "<" +concept.stringValue()+ "> ?skoslabelType ?literal ." +
-                "{?skoslabelType rdfs:subPropertyOf* skos:prefLabel}" +
-                "UNION" +
-                "{?skoslabelType rdfs:subPropertyOf* skos:altLabel}" +
-                "UNION" +
-                "{?skoslabelType rdfs:subPropertyOf* skos:hiddenLabel}" +
+            "SELECT DISTINCT ?skosLabelType ?literal WHERE " +
+                "{" +
+                    "{<" +concept.stringValue()+ "> ?skosLabelType ?literal} " +
+                    "FILTER (?skosLabelType IN (skos:prefLabel, skos:altLabel, skos:hiddenLabel))" +
                 "}";
     }
 
