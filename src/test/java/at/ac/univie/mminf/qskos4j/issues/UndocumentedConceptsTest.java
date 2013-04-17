@@ -18,8 +18,8 @@ public class UndocumentedConceptsTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        undocumentedConcepts = new UndocumentedConcepts(new AuthoritativeConcepts(new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("documentedConcepts.rdf").getConnection())));
+        undocumentedConcepts = new UndocumentedConcepts(new AuthoritativeConcepts(new InvolvedConcepts()));
+        undocumentedConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("documentedConcepts.rdf").getConnection());
 	}
 	
 	@Test

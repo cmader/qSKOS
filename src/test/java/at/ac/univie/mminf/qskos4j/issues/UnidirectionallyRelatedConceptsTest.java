@@ -18,8 +18,8 @@ public class UnidirectionallyRelatedConceptsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        unidirectionallyRelatedConcepts = new UnidirectionallyRelatedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("omittedInverseRelations.rdf").getConnection());
+        unidirectionallyRelatedConcepts = new UnidirectionallyRelatedConcepts();
+        unidirectionallyRelatedConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("omittedInverseRelations.rdf").getConnection());
     }
 
     @Test

@@ -25,8 +25,8 @@ public class DisconnectedConceptClustersTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConcepts = new InvolvedConcepts(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
-        disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
+        disconnectedConceptClusters = new DisconnectedConceptClusters(new InvolvedConcepts());
+        disconnectedConceptClusters.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test

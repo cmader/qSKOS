@@ -15,8 +15,8 @@ public class SolelyTransitivelyRelatedConceptsTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        solelyTransitivelyRelatedConcepts = new SolelyTransitivelyRelatedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("solitaryTransitiveRelations.rdf").getConnection());
+        solelyTransitivelyRelatedConcepts = new SolelyTransitivelyRelatedConcepts();
+        solelyTransitivelyRelatedConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("solitaryTransitiveRelations.rdf").getConnection());
 	}
 
 	@Test

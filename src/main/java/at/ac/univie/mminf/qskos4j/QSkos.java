@@ -62,10 +62,10 @@ public class QSkos {
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
     private String authResourceIdentifier;
-    private IProgressMonitor progressMonitor = new StubProgressMonitor();
 
     private InvolvedConcepts involvedConcepts;
     private AuthoritativeConcepts authoritativeConcepts;
+    private MissingInLinks missingInLinks;
     private ConceptSchemes conceptSchemes;
     private HttpURIs httpURIs;
 
@@ -73,65 +73,49 @@ public class QSkos {
     private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
     public QSkos(RepositoryConnection repCon) {
-        this.repCon = repCon;
-    }
-
-    private void initialize() {
-        registeredIssues.clear();
         addStatisticalIssues();
+        addAnalyticalIssues();
+        addSkosIntegrityIssues();
 
-        try {
-            addAnalyticalIssues();
-            addSkosIntegrityIssues();
-        }
-        catch (OpenRDFException e) {
-            logger.error("Error instantiating issue", e);
-        }
-
-        for (Issue issue : registeredIssues) {
-            issue.setProgressMonitor(progressMonitor);
-        }
+        setProgressMonitor(new StubProgressMonitor());
     }
 
     private void addStatisticalIssues() {
-        involvedConcepts = new InvolvedConcepts(repCon);
+        involvedConcepts = new InvolvedConcepts();
         authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
         authoritativeConcepts.setBaseURI(baseURI);
         authoritativeConcepts.setAuthResourceIdentifier(authResourceIdentifier);
-        conceptSchemes = new ConceptSchemes(repCon);
-        httpURIs = new HttpURIs(repCon);
+        conceptSchemes = new ConceptSchemes();
+        httpURIs = new HttpURIs();
 
         registeredIssues.add(involvedConcepts);
         registeredIssues.add(authoritativeConcepts);
         registeredIssues.add(new LexicalRelations(involvedConcepts));
-        registeredIssues.add(new SemanticRelations(repCon));
-        registeredIssues.add(new AggregationRelations(repCon));
+        registeredIssues.add(new SemanticRelations());
+        registeredIssues.add(new AggregationRelations());
         registeredIssues.add(conceptSchemes);
-        registeredIssues.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections(repCon));
+        registeredIssues.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections());
         registeredIssues.add(httpURIs);
     }
 
-    private void addAnalyticalIssues() throws OpenRDFException {
-        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder(repCon);
+    private void addAnalyticalIssues() {
+        HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder();
 
-        registeredIssues.add(new OmittedOrInvalidLanguageTags(repCon));
+        registeredIssues.add(new OmittedOrInvalidLanguageTags());
         registeredIssues.add(new IncompleteLanguageCoverage(involvedConcepts));
         registeredIssues.add(new UndocumentedConcepts(authoritativeConcepts));
         registeredIssues.add(new OverlappingLabels(involvedConcepts));
         registeredIssues.add(new OrphanConcepts(involvedConcepts));
         registeredIssues.add(new DisconnectedConceptClusters(involvedConcepts));
         registeredIssues.add(new HierarchicalCycles(hierarchyGraphBuilder));
-        registeredIssues.add(new ValuelessAssociativeRelations(repCon));
-        registeredIssues.add(new SolelyTransitivelyRelatedConcepts(repCon));
+        registeredIssues.add(new ValuelessAssociativeRelations());
+        registeredIssues.add(new SolelyTransitivelyRelatedConcepts());
         registeredIssues.add(new OmittedTopConcepts(conceptSchemes));
-        registeredIssues.add(new TopConceptsHavingBroaderConcepts(repCon));
+        registeredIssues.add(new TopConceptsHavingBroaderConcepts());
 
-        MissingInLinks missingInLinks = new MissingInLinks(authoritativeConcepts);
+        missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(extAccessDelayMillis);
         missingInLinks.setSubsetSize(randomSubsetSize_percent);
-        for (String sparqlEndpointUrl : sparqlEndpointUrls) {
-            missingInLinks.addSparqlEndPoint(sparqlEndpointUrl);
-        }
         registeredIssues.add(missingInLinks);
 
         registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
@@ -141,28 +125,26 @@ public class QSkos {
         brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
         registeredIssues.add(brokenLinks);
 
-        registeredIssues.add(new UndefinedSkosResources(repCon));
-        registeredIssues.add(new UnidirectionallyRelatedConcepts(repCon));
-        registeredIssues.add(new HttpUriSchemeViolations(repCon));
+        registeredIssues.add(new UndefinedSkosResources());
+        registeredIssues.add(new UnidirectionallyRelatedConcepts());
+        registeredIssues.add(new HttpUriSchemeViolations());
         registeredIssues.add(new RelationClashes(hierarchyGraphBuilder));
-        registeredIssues.add(new MappingClashes(repCon));
+        registeredIssues.add(new MappingClashes());
     }
 
     private void addSkosIntegrityIssues() {
-        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector(repCon);
+        ResourceLabelsCollector resourceLabelsCollector = new ResourceLabelsCollector();
 
         registeredIssues.add(new InconsistentPrefLabels(resourceLabelsCollector));
         registeredIssues.add(new DisjointLabelsViolations(resourceLabelsCollector));
     }
 
     public List<Issue> getAllIssues() {
-        initialize();
         return registeredIssues;
     }
 
     public Collection<Issue> getIssues(String commaSeparatedIssueIDs)
     {
-        initialize();
         if (commaSeparatedIssueIDs == null || commaSeparatedIssueIDs.isEmpty()) {
             return Collections.emptySet();
         }
@@ -195,12 +177,20 @@ public class QSkos {
         return supportedIssueIds;
     }
 
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        for (Issue issue : registeredIssues) {
+            issue.setRepositoryConnection(repCon);
+        }
+    }
+
 	/**
 	 * Set an IProgressMonitor that is notified on changes in the evaluation progress for every managed issues.
 	 * @param progressMonitor monitor instance to be notified
 	 */
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
-        this.progressMonitor = progressMonitor;
+        for (Issue issue : registeredIssues) {
+            issue.setProgressMonitor(progressMonitor);
+        }
 	}
 	
 	/**
@@ -240,8 +230,8 @@ public class QSkos {
         this.baseURI = baseURI;
     }
 
-    public void addSparqlEndPoint(String endpointUrl) {
-        sparqlEndpointUrls.add(endpointUrl);
+    public void addSparqlEndPoint(String endpointUrl) throws OpenRDFException {
+        missingInLinks.addSparqlEndPoint(endpointUrl);
     }
 
 }

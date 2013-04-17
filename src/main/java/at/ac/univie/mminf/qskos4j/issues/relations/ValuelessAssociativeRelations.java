@@ -8,7 +8,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.query.*;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,9 +17,8 @@ import java.util.HashSet;
 */
 public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> {
 
-    public ValuelessAssociativeRelations(RepositoryConnection repCon) {
-        super(repCon,
-              "var",
+    public ValuelessAssociativeRelations() {
+        super("var",
               "Valueless Associative Relations",
               "Two concepts are sibling, but also connected by an associative relation",
               IssueType.ANALYTICAL);

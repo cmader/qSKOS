@@ -26,9 +26,8 @@ public class UndefinedSkosResources extends Issue<Collection<URI>> {
 
 	private Map<URI, Collection<URI>> deprecatedProperties, illegalTerms;
 
-    public UndefinedSkosResources(RepositoryConnection repCon) {
-        super(repCon,
-              "usr",
+    public UndefinedSkosResources() {
+        super("usr",
               "Undefined SKOS Resources",
               "Finds 'invented' new terms within the SKOS namespace or deprecated properties",
               IssueType.ANALYTICAL

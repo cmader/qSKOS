@@ -26,8 +26,8 @@ public class IncompleteLanguageCoverageTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection()));
+        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new InvolvedConcepts());
+        incompleteLanguageCoverage.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test

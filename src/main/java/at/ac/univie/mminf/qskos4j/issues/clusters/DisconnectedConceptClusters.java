@@ -40,11 +40,11 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
     private InvolvedConcepts involvedConcepts;
 
     public DisconnectedConceptClusters(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getRepositoryConnection(),
-              "dcc",
-              "Disconnected Concept Clusters",
-              "Finds sets of concepts that are isolated from the rest of the vocabulary",
-              IssueType.ANALYTICAL
+        super(involvedConcepts,
+            "dcc",
+            "Disconnected Concept Clusters",
+            "Finds sets of concepts that are isolated from the rest of the vocabulary",
+            IssueType.ANALYTICAL
         );
         this.involvedConcepts = involvedConcepts;
     }

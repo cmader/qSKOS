@@ -6,9 +6,9 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.impl.LiteralImpl;
-import org.openrdf.repository.RepositoryException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,16 +26,17 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public DisjointLabelsViolations(ResourceLabelsCollector resourceLabelsCollector) {
-        super(resourceLabelsCollector.getRepositoryConnection(),
-              "dlv",
-              "Disjoint Labels Violation",
-              "Finds resources with identical entries for different label types",
-              IssueType.ANALYTICAL);
+        super(resourceLabelsCollector,
+            "dlv",
+            "Disjoint Labels Violation",
+            "Finds resources with identical entries for different label types",
+            IssueType.ANALYTICAL);
+
         this.resourceLabelsCollector = resourceLabelsCollector;
     }
 
     @Override
-    protected Map<Literal, LabelConflict> prepareData() throws RepositoryException {
+    protected Map<Literal, LabelConflict> prepareData() throws OpenRDFException {
         findNonDisjointLabels();
         return nonDisjointLabels;
     }
@@ -45,15 +46,15 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
         return new CollectionReport<LabelConflict>(nonDisjointLabels.values());
     }
 
-    private void findNonDisjointLabels() throws RepositoryException {
+    private void findNonDisjointLabels() throws OpenRDFException {
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = orderResourcesByLabel();
         extractNonDisjointConflicts(resourcesByLabel);
     }
 
-    private Map<Literal, Collection<LabeledConcept>> orderResourcesByLabel() throws RepositoryException {
+    private Map<Literal, Collection<LabeledConcept>> orderResourcesByLabel() throws OpenRDFException {
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = new HashMap<Literal, Collection<LabeledConcept>>();
 
-        for (LabeledConcept labeledResource : resourceLabelsCollector.getLabeledResources()) {
+        for (LabeledConcept labeledResource : resourceLabelsCollector.getPreparedData()) {
             Literal literal = new LiteralImpl(
                 labeledResource.getLiteral().getLabel().toUpperCase(),
                 labeledResource.getLiteral().getLanguage());

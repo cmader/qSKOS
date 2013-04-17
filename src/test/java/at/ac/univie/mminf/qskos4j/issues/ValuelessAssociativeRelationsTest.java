@@ -18,8 +18,8 @@ public class ValuelessAssociativeRelationsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        valuelessAssociativeRelations = new ValuelessAssociativeRelations(
-            new RepositoryBuilder().setUpFromTestResource("redundantAssociativeRelations.rdf").getConnection());
+        valuelessAssociativeRelations = new ValuelessAssociativeRelations();
+        valuelessAssociativeRelations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("redundantAssociativeRelations.rdf").getConnection());
     }
 
     @Test

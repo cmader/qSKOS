@@ -8,7 +8,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.query.*;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,9 +24,8 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
 	
 	private Set<Pair<URI>> solitaryTransitiveRelations = new HashSet<Pair<URI>>();
 
-    public SolelyTransitivelyRelatedConcepts(RepositoryConnection repCon) {
-        super(repCon,
-              "strc",
+    public SolelyTransitivelyRelatedConcepts() {
+        super("strc",
               "Solely Transitively Related Concepts",
               "Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
               IssueType.ANALYTICAL

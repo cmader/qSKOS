@@ -24,8 +24,7 @@ public class OrphanConcepts extends Issue<Collection<Value>> {
     private InvolvedConcepts involvedConcepts;
 
     public OrphanConcepts(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getRepositoryConnection(),
-              "oc",
+        super("oc",
               "Orphan Concepts",
               "Finds all orphan concepts, i.e. those not having semantic relationships to other concepts",
               IssueType.ANALYTICAL

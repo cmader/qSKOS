@@ -10,7 +10,6 @@ import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +27,11 @@ public class ConceptSchemes extends Issue<Collection<Resource>> {
 
     private final Logger logger = LoggerFactory.getLogger(ConceptSchemes.class);
 
-    public ConceptSchemes(RepositoryConnection repCon) {
-        super(repCon,
-              "cs",
+    public ConceptSchemes() {
+        super("cs",
               "Concept Schemes",
               "Finds the involved ConceptSchemes",
-              IssueType.STATISTICAL
-        );
+              IssueType.STATISTICAL);
     }
 
     @Override

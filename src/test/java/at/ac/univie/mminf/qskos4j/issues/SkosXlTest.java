@@ -27,12 +27,18 @@ public class SkosXlTest {
         Repository repo = repositoryBuilder.setUpFromTestResource("skosxl.rdf");
         repositoryBuilder.enableSkosXlSupport();
 
-        InvolvedConcepts involvedConcepts = new InvolvedConcepts(repo.getConnection());
-        lexicalRelations = new LexicalRelations(involvedConcepts);
-        omittedOrInvalidLanguageTags = new OmittedOrInvalidLanguageTags(repo.getConnection());
-        incompleteLanguageCoverage = new IncompleteLanguageCoverage(involvedConcepts);
-        overlappingLabels = new OverlappingLabels(involvedConcepts);
-	}
+        lexicalRelations = new LexicalRelations(new InvolvedConcepts());
+        lexicalRelations.setRepositoryConnection(repo.getConnection());
+
+        omittedOrInvalidLanguageTags = new OmittedOrInvalidLanguageTags();
+        omittedOrInvalidLanguageTags.setRepositoryConnection(repo.getConnection());
+
+        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new InvolvedConcepts());
+        incompleteLanguageCoverage.setRepositoryConnection(repo.getConnection());
+
+        overlappingLabels = new OverlappingLabels(new InvolvedConcepts());
+        overlappingLabels.setRepositoryConnection(repo.getConnection());
+    }
 	
 	@Test
 	public void lexicalRelationsCountTest() throws OpenRDFException {

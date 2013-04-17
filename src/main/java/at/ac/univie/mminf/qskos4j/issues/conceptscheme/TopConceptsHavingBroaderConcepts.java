@@ -11,7 +11,6 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,9 +22,8 @@ import java.util.List;
  */
 public class TopConceptsHavingBroaderConcepts extends Issue<Collection<Value>> {
 
-    public TopConceptsHavingBroaderConcepts(RepositoryConnection repCon) {
-        super(repCon,
-              "tchbc",
+    public TopConceptsHavingBroaderConcepts() {
+        super("tchbc",
               "Top Concepts Having Broader Concepts",
               "Finds top concepts internal to the vocabulary hierarchy tree",
               IssueType.ANALYTICAL

@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,13 +21,14 @@ public class OverlappingLabelsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        RepositoryConnection componentsRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
-        RepositoryConnection relatedConceptsRepCon = new RepositoryBuilder().setUpFromTestResource("relatedConcepts.rdf").getConnection();
-        RepositoryConnection overlappingLabelsRepCon = new RepositoryBuilder().setUpFromTestResource("overlappingLabels.rdf").getConnection();
+        overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts());
+        overlappingLabelsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
 
-        overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts(componentsRepCon));
-        overlappingLabelsForRelatedConcepts = new OverlappingLabels(new InvolvedConcepts(relatedConceptsRepCon));
-        overlappingLabels = new OverlappingLabels(new InvolvedConcepts(overlappingLabelsRepCon));
+        overlappingLabelsForRelatedConcepts = new OverlappingLabels(new InvolvedConcepts());
+        overlappingLabelsForRelatedConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("relatedConcepts.rdf").getConnection());
+
+        overlappingLabels = new OverlappingLabels(new InvolvedConcepts());
+        overlappingLabels.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("overlappingLabels.rdf").getConnection());
     }
 
     @Test

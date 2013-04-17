@@ -27,11 +27,11 @@ public class OrphanConceptsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        orphansRepCon = new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection();
-        componentsRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
+        orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts());
+        orphanConceptsForConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
 
-        orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts(orphansRepCon));
-        orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts(componentsRepCon));
+        orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts());
+        orphanConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @After

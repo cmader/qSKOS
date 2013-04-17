@@ -10,7 +10,6 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 
@@ -19,9 +18,8 @@ import java.util.Collection;
  */
 public class MappingClashes extends Issue<Collection<Pair<Value>>> {
 
-    public MappingClashes(RepositoryConnection repCon) {
-        super(repCon,
-              "mc",
+    public MappingClashes() {
+        super("mc",
               "Mapping Clashes",
               "Covers condition S46 from the SKOS reference document (Exact vs. Associative and Hierarchical Mapping Clashes)",
               IssueType.ANALYTICAL

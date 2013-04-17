@@ -21,9 +21,8 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 	private Map<Resource, Collection<Literal>> missingLangTags;
     private Map<String, Boolean> checkedLanguageTags;
 
-    public OmittedOrInvalidLanguageTags(RepositoryConnection repCon) {
-        super(repCon,
-              "oilt",
+    public OmittedOrInvalidLanguageTags() {
+        super("oilt",
               "Omitted or Invalid Language Tags",
               "Finds omitted or invalid language tags of text literals",
               IssueType.ANALYTICAL

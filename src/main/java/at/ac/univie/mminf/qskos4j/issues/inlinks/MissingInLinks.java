@@ -36,8 +36,7 @@ public class MissingInLinks extends Issue<Collection<Value>> {
     private Float randomSubsetSize_percent;
 
     public MissingInLinks(AuthoritativeConcepts authoritativeConcepts) {
-        super(authoritativeConcepts.getRepositoryConnection(),
-              "mil",
+        super("mil",
               "Missing In-Links",
               "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
               IssueType.ANALYTICAL);

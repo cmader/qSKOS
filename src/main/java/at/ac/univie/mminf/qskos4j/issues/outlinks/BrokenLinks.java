@@ -36,7 +36,7 @@ public class BrokenLinks extends Issue<Collection<URL>> {
     private Float randomSubsetSize_percent;
 
     public BrokenLinks(HttpURIs httpURIs) {
-		super(httpURIs.getRepositoryConnection(),
+		super(httpURIs,
               "bl",
               "Broken Links",
               "Checks dereferencability of all links",

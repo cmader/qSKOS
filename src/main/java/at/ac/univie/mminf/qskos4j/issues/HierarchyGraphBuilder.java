@@ -25,11 +25,6 @@ public class HierarchyGraphBuilder {
 
 	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
     private RepositoryConnection repCon;
-	
-	public HierarchyGraphBuilder(RepositoryConnection repCon)
-	{
-		this.repCon = repCon;
-	}
 
 	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
 	{

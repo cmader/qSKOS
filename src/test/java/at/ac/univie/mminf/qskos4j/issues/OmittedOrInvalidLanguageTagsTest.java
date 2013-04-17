@@ -24,12 +24,14 @@ public class OmittedOrInvalidLanguageTagsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        oiltComponents = new OmittedOrInvalidLanguageTags(
-            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
-        oiltDeprecatedAndIllegal = new OmittedOrInvalidLanguageTags(
-            new RepositoryBuilder().setUpFromTestResource("deprecatedAndIllegalTerms.rdf").getConnection());
-        oiltLangTags = new OmittedOrInvalidLanguageTags(
-            new RepositoryBuilder().setUpFromTestResource("languageTags.rdf").getConnection());
+        oiltComponents = new OmittedOrInvalidLanguageTags();
+        oiltComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+
+        oiltDeprecatedAndIllegal = new OmittedOrInvalidLanguageTags();
+        oiltDeprecatedAndIllegal.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("deprecatedAndIllegalTerms.rdf").getConnection());
+
+        oiltLangTags = new OmittedOrInvalidLanguageTags();
+        oiltLangTags.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("languageTags.rdf").getConnection());
     }
 
     @Test

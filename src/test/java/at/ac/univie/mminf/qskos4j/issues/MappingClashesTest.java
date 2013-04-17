@@ -15,8 +15,8 @@ public class MappingClashesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        mappingClashes = new MappingClashes(
-            new RepositoryBuilder().setUpFromTestResource("exactVsAssociativeMappingClashes.rdf").getConnection());
+        mappingClashes = new MappingClashes();
+        mappingClashes.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("exactVsAssociativeMappingClashes.rdf").getConnection());
     }
 
     @Test

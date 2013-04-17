@@ -33,8 +33,7 @@ public class UndocumentedConcepts extends Issue<Collection<Value>> {
 	};
 	
     public UndocumentedConcepts(AuthoritativeConcepts authoritativeConcepts) {
-        super(authoritativeConcepts.getRepositoryConnection(),
-              "uc",
+        super("uc",
               "Undocumented Concepts",
               "Finds concepts that don't use any SKOS documentation properties",
               IssueType.ANALYTICAL

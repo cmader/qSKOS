@@ -28,8 +28,7 @@ public class RelationClashes extends Issue<Collection<Pair<Value>>> {
     private HierarchyGraphBuilder hierarchyGraphBuilder;
 
     public RelationClashes(HierarchyGraphBuilder hierarchyGraphBuilder) {
-        super(hierarchyGraphBuilder.getRepositoryConnection(),
-              "rc",
+        super("rc",
               "Relation Clashes",
               "Covers condition S27 from the SKOS reference document (Associative vs. Hierarchical Relation Clashes)",
               IssueType.ANALYTICAL

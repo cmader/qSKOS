@@ -19,8 +19,8 @@ public class DisjointLabelsViolationsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector(
-            new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection()));
+        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector());
+        disjointLabelsViolations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection());
     }
 
     @Test

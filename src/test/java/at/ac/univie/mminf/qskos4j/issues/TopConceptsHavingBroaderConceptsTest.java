@@ -16,8 +16,8 @@ public class TopConceptsHavingBroaderConceptsTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        topConceptsHavingBroaderConcepts = new TopConceptsHavingBroaderConcepts(
-            new RepositoryBuilder().setUpFromTestResource("topConceptsHavingBroaderConcept.rdf").getConnection());
+        topConceptsHavingBroaderConcepts = new TopConceptsHavingBroaderConcepts();
+        topConceptsHavingBroaderConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("topConceptsHavingBroaderConcept.rdf").getConnection());
 	}
 	
 	@Test

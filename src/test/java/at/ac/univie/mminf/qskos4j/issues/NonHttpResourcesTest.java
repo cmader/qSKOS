@@ -20,10 +20,11 @@ public class NonHttpResourcesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        httpUriSchemeViolationsForConcepts = new HttpUriSchemeViolations(
-            new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
-        httpResourcesForUriSchemeViolations = new HttpUriSchemeViolations(
-            new RepositoryBuilder().setUpFromTestResource("resources.rdf").getConnection());
+        httpUriSchemeViolationsForConcepts = new HttpUriSchemeViolations();
+        httpUriSchemeViolationsForConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
+
+        httpResourcesForUriSchemeViolations = new HttpUriSchemeViolations();
+        httpResourcesForUriSchemeViolations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("resources.rdf").getConnection());
     }
 
 

@@ -17,30 +17,20 @@ public abstract class Issue<T> {
     private String id, name, description;
     private IssueType type;
     private T preparedData;
+    private Issue dependentIssue;
 
-    private Issue(String id, String name, String description, IssueType type) {
+    public Issue(String id, String name, String description, IssueType type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
     }
 
-    /**
-     * Use this constructor to re-use already prepared data
-     */
-    protected Issue(T preparedData, String id, String name, String description, IssueType type) {
+    public Issue(Issue dependentIssue, String id, String name, String description, IssueType type) {
         this(id, name, description, type);
-        this.preparedData = preparedData;
+        this.dependentIssue = dependentIssue;
     }
 
-    /**
-     * Use this constructor to fetch RDF data and prepare the data yourself
-     */
-    protected Issue(RepositoryConnection repCon, String id, String name, String description, IssueType type)
-    {
-        this(id, name, description, type);
-        this.repCon = repCon;
-    }
 
     protected abstract T prepareData() throws OpenRDFException;
     protected abstract Report prepareReport(T preparedData);
@@ -68,8 +58,13 @@ public abstract class Issue<T> {
 		this.progressMonitor = progressMonitor;
 	}
 
-    public final RepositoryConnection getRepositoryConnection() {
-        return repCon;
+    public final void setRepositoryConnection(RepositoryConnection repCon) {
+        if (dependentIssue != null) {
+            dependentIssue.setRepositoryConnection(repCon);
+        }
+
+        this.repCon = repCon;
+        reset();
     }
 
     public String getId() {

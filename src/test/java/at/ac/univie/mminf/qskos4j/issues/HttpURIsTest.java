@@ -20,8 +20,11 @@ public class HttpURIsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        httpURIs1 = new HttpURIs(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
-        httpURIs2 = new HttpURIs(new RepositoryBuilder().setUpFromTestResource("resources.rdf").getConnection());
+        httpURIs1 = new HttpURIs();
+        httpURIs1.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
+
+        httpURIs2 = new HttpURIs();
+        httpURIs2.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("resources.rdf").getConnection());
     }
 
     @Test

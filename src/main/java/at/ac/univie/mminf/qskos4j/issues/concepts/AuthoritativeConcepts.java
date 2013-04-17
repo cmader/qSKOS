@@ -27,11 +27,11 @@ public class AuthoritativeConcepts extends Issue<Collection<Value>> {
     private InvolvedConcepts involvedConcepts;
 
     public AuthoritativeConcepts(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getRepositoryConnection(),
-              "ac",
-              "Authoritative Concepts",
-              "Finds all authoritative concepts in the vocabulary",
-              IssueType.STATISTICAL
+        super(involvedConcepts,
+            "ac",
+            "Authoritative Concepts",
+            "Finds all authoritative concepts in the vocabulary",
+            IssueType.STATISTICAL
         );
 
         this.involvedConcepts = involvedConcepts;

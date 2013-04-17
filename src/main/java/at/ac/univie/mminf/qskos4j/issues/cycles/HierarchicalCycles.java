@@ -32,8 +32,7 @@ public class HierarchicalCycles extends Issue<Collection<Set<Value>>> {
     private HierarchyGraphBuilder hierarchyGraphBuilder;
 
     public HierarchicalCycles(HierarchyGraphBuilder hierarchyGraphBuilder) {
-        super(hierarchyGraphBuilder.getRepositoryConnection(),
-              "chr",
+        super("chr",
               "Cyclic Hierarchical Relations",
               "Finds all hierarchy cycle containing components",
               IssueType.ANALYTICAL

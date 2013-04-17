@@ -10,7 +10,6 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 
@@ -19,9 +18,8 @@ import java.util.Collection;
  */
 public class InvolvedConcepts extends Issue<Collection<Value>> {
 
-    public InvolvedConcepts(RepositoryConnection repCon) {
-        super(repCon,
-              "c",
+    public InvolvedConcepts() {
+        super("c",
               "All Concepts",
               "Finds all SKOS concepts involved in the vocabulary",
               IssueType.STATISTICAL

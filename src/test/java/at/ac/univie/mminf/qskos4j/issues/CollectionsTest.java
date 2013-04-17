@@ -20,7 +20,8 @@ public class CollectionsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        collections = new Collections(new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection());
+        collections = new Collections();
+        collections.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection());
     }
 
     @Test

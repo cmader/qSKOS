@@ -9,7 +9,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
-import org.openrdf.repository.RepositoryConnection;
 
 /**
  * Created by christian
@@ -20,9 +19,8 @@ import org.openrdf.repository.RepositoryConnection;
  */
 public class SemanticRelations extends Issue<Long> {
 
-    public SemanticRelations(RepositoryConnection repCon) {
-        super(repCon,
-              "sr",
+    public SemanticRelations() {
+        super("sr",
               "Semantic Relations Count",
               "Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",
               IssueType.STATISTICAL

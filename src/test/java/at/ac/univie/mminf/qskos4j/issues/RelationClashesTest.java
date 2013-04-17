@@ -19,8 +19,8 @@ public class RelationClashesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        repCon = new RepositoryBuilder().setUpFromTestResource("relationClashes.rdf").getConnection();
-        relationClashes = new RelationClashes(new HierarchyGraphBuilder(repCon));
+        relationClashes = new RelationClashes(new HierarchyGraphBuilder());
+        relationClashes.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("relationClashes.rdf").getConnection());
     }
 
     @After

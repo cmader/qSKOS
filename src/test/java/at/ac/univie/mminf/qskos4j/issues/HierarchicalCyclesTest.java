@@ -6,7 +6,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.io.IOException;
 
@@ -21,11 +20,11 @@ public class HierarchicalCyclesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        RepositoryConnection cyclesRepCon = new RepositoryBuilder().setUpFromTestResource("cycles.rdf").getConnection();
-        RepositoryConnection componentsRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
+        hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder());
+        hierarchicalCycles.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("cycles.rdf").getConnection());
 
-        hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder(cyclesRepCon));
-        hierarchicalCyclesForComponents = new HierarchicalCycles(new HierarchyGraphBuilder(componentsRepCon));
+        hierarchicalCyclesForComponents = new HierarchicalCycles(new HierarchyGraphBuilder());
+        hierarchicalCyclesForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test

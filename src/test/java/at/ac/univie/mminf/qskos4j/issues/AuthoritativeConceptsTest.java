@@ -23,9 +23,9 @@ public class AuthoritativeConceptsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        authoritativeConcepts = new AuthoritativeConcepts(
-            new InvolvedConcepts(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection()));
+        authoritativeConcepts = new AuthoritativeConcepts(new InvolvedConcepts());
         authoritativeConcepts.setAuthResourceIdentifier("zbw.eu");
+        authoritativeConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
     }
 
     @Test

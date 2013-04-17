@@ -25,11 +25,11 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
     private InvolvedConcepts involvedConcepts;
 
     public IncompleteLanguageCoverage(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts.getRepositoryConnection(),
-              "ilc",
-              "Incomplete Language Coverage",
-              "Finds concepts lacking description in languages that are present for other concepts",
-              IssueType.ANALYTICAL
+        super(involvedConcepts,
+            "ilc",
+            "Incomplete Language Coverage",
+            "Finds concepts lacking description in languages that are present for other concepts",
+            IssueType.ANALYTICAL
         );
 
         this.involvedConcepts = involvedConcepts;

@@ -7,7 +7,6 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,9 +24,8 @@ public class HttpURIs extends Issue<Collection<URI>> {
     private Set<URI> httpURIs = new HashSet<URI>();
     private Set<String> invalidResources = new HashSet<String>();
 
-    public HttpURIs(RepositoryConnection repCon) {
-        super(repCon,
-              "huc",
+    public HttpURIs() {
+        super("huc",
               "HTTP URI Count",
               "Counts the total number of HTTP URIs",
               IssueType.STATISTICAL

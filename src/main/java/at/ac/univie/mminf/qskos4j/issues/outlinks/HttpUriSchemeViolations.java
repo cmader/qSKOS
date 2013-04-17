@@ -7,7 +7,6 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 
 import java.util.Collection;
@@ -23,9 +22,8 @@ import java.util.Set;
  */
 public class HttpUriSchemeViolations extends Issue<Collection<String>> {
 
-    public HttpUriSchemeViolations(RepositoryConnection repCon) {
-        super(repCon,
-              "husv",
+    public HttpUriSchemeViolations() {
+        super("husv",
               "HTTP URI Scheme Violation",
               "Finds triple subjects that are no HTTP URIs",
               IssueType.ANALYTICAL

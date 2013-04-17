@@ -26,11 +26,11 @@ public class HtmlReportsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        disjointLabelsRepCon = new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection();
-        clustersRepCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
+        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector());
+        disjointLabelsViolations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection());
 
-        disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector(disjointLabelsRepCon));
-        disconnectedConceptClusters = new DisconnectedConceptClusters(new InvolvedConcepts(clustersRepCon));
+        disconnectedConceptClusters = new DisconnectedConceptClusters(new InvolvedConcepts());
+        disconnectedConceptClusters.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @After

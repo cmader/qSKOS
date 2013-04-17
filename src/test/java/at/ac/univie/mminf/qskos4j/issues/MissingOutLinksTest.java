@@ -23,11 +23,11 @@ public class MissingOutLinksTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConceptsForComponents = new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
-        missingOutLinksForComponents = new MissingOutLinks(new AuthoritativeConcepts(involvedConceptsForComponents));
-        missingOutLinksForConcepts = new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection())));
+        missingOutLinksForComponents = new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts()));
+        involvedConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+
+        missingOutLinksForConcepts = new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts()));
+        missingOutLinksForConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
     }
 
     @Test

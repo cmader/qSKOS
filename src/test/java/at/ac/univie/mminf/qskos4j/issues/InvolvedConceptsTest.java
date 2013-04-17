@@ -17,10 +17,11 @@ public class InvolvedConceptsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        involvedConceptsForConcepts = new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
-        involvedConceptsForComponents = new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        involvedConceptsForConcepts = new InvolvedConcepts();
+        involvedConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
+
+        involvedConceptsForComponents = new InvolvedConcepts();
+        involvedConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test

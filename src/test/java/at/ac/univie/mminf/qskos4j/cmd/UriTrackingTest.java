@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,11 +26,14 @@ public class UriTrackingTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        InvolvedConcepts involvedConcepts = new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        RepositoryConnection repCon = new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection();
 
-        disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
-        incompleteLanguageCoverage = new IncompleteLanguageCoverage(involvedConcepts);
+        disconnectedConceptClusters = new DisconnectedConceptClusters(new InvolvedConcepts());
+        disconnectedConceptClusters.setRepositoryConnection(repCon);
+
+        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new InvolvedConcepts());
+        incompleteLanguageCoverage.setRepositoryConnection(repCon);
+
         Collection<Issue> issues = new ArrayList<Issue>();
         issues.add(disconnectedConceptClusters);
         issues.add(incompleteLanguageCoverage);

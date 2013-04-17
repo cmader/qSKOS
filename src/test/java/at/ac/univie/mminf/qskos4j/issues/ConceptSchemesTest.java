@@ -20,7 +20,8 @@ public class ConceptSchemesTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        conceptSchemes = new ConceptSchemes(new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection());
+        conceptSchemes = new ConceptSchemes();
+        conceptSchemes.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection());
     }
 
     @Test

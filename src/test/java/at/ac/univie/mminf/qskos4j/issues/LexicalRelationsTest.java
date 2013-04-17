@@ -22,8 +22,8 @@ public class LexicalRelationsTest {
     @Before
     public void setUp() throws OpenRDFException, IOException
     {
-        lexicalRelations = new LexicalRelations(new InvolvedConcepts(
-            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection()));
+        lexicalRelations = new LexicalRelations(new InvolvedConcepts());
+        lexicalRelations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test

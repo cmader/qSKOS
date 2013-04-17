@@ -8,7 +8,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
-import org.openrdf.repository.RepositoryConnection;
 
 /**
  * Created by christian
@@ -22,9 +21,8 @@ public class AggregationRelations extends Issue<Long> {
     private final String AGGREGATION_RELATIONS =
         "skos:topConceptOf, skos:hasTopConcept, skos:inScheme, skos:member, skos:memberList";
 
-    public AggregationRelations(RepositoryConnection repCon) {
-        super(repCon,
-              "ar",
+    public AggregationRelations() {
+        super("ar",
               "Aggregation Relations Count",
               "Counts the statements relating resources to ConceptSchemes or Collections",
               IssueType.STATISTICAL

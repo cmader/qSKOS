@@ -8,7 +8,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
-import org.openrdf.repository.RepositoryConnection;
 
 /**
  * Created by christian
@@ -19,9 +18,8 @@ import org.openrdf.repository.RepositoryConnection;
  */
 public class Collections extends Issue<Long> {
 
-    public Collections(RepositoryConnection repCon) {
-        super(repCon,
-              "cc",
+    public Collections() {
+        super("cc",
               "Collection Count",
               "Counts the involved Collections",
               IssueType.STATISTICAL

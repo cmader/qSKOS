@@ -22,8 +22,8 @@ public class AggregationRelationsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        repCon = new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection();
-        aggregationRelations = new AggregationRelations(repCon);
+        aggregationRelations = new AggregationRelations();
+        aggregationRelations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("aggregations.rdf").getConnection());
     }
 
     @Test

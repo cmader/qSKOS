@@ -17,8 +17,8 @@ public class OmittedTopConceptsTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        omittedTopConcepts = new OmittedTopConcepts(new ConceptSchemes(
-            new RepositoryBuilder().setUpFromTestResource("missingTopConcepts.rdf").getConnection()));
+        omittedTopConcepts = new OmittedTopConcepts(new ConceptSchemes());
+        omittedTopConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("missingTopConcepts.rdf").getConnection());
 	}
 	
 	@Test

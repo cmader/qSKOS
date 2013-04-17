@@ -20,8 +20,8 @@ public class SemanticRelationsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        semanticRelations = new SemanticRelations(
-            new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        semanticRelations = new SemanticRelations();
+        semanticRelations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test

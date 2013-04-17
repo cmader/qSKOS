@@ -8,7 +8,6 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.query.*;
-import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +33,8 @@ import java.util.Map;
     private final Logger logger = LoggerFactory.getLogger(UnidirectionallyRelatedConcepts.class);
 	private Map<Pair<Resource>, String> omittedInverseRelations = new HashMap<Pair<Resource>, String>();
 
-    public UnidirectionallyRelatedConcepts(RepositoryConnection repCon) {
-        super(repCon,
-              "urc",
+    public UnidirectionallyRelatedConcepts() {
+        super("urc",
               "Unidirectionally Related Concepts",
               "Concepts not including reciprocal relations",
               IssueType.ANALYTICAL);

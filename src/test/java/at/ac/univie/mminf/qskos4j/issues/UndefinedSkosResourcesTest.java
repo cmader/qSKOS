@@ -18,10 +18,10 @@ public class UndefinedSkosResourcesTest {
 	
 	@Before
 	public void setUp() throws OpenRDFException, IOException {
-        undefinedSkosResourcesInConcepts = new UndefinedSkosResources(
-            new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
-        undefinedSkosResourcesInDeprecatedAndIllegal = new UndefinedSkosResources(
-            new RepositoryBuilder().setUpFromTestResource("deprecatedAndIllegalTerms.rdf").getConnection());
+        undefinedSkosResourcesInConcepts = new UndefinedSkosResources();
+        undefinedSkosResourcesInConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
+        undefinedSkosResourcesInDeprecatedAndIllegal = new UndefinedSkosResources();
+        undefinedSkosResourcesInDeprecatedAndIllegal.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("deprecatedAndIllegalTerms.rdf").getConnection());
 	}
 	
 	@Test
