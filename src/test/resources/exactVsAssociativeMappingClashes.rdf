@@ -28,4 +28,14 @@
 	<skos:relatedMatch rdf:resource="24"/>
 </rdf:Description>
 
+<!-- error -->
+<rdf:Description rdf:about="1">
+    <skos:exactMatch rdf:resource="2"/>
+    <skos:relatedMatch rdf:resource="3"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="3">
+    <skos:relatedMatch rdf:resource="2"/>
+</rdf:Description>
+
 </rdf:RDF>

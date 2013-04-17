@@ -43,7 +43,7 @@ public class MappingClashes extends Issue<Collection<Pair<Value>>> {
         return SparqlPrefix.SKOS +
             "SELECT ?concept1 ?concept2 WHERE {" +
                 "?concept1 skos:exactMatch ?concept2 ."+
-                "?concept1 skos:broadMatch|skos:narrowMatch|skos:relatedMatch ?concept2 ." +
+                "?concept1 (skos:broadMatch|^skos:broadMatch|skos:narrowMatch|^skos:narrowMatch|skos:relatedMatch|^skos:relatedMatch)+ ?concept2 ." +
             "}";
     }
 }
