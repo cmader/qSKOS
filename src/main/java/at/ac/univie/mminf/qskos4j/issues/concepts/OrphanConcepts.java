@@ -55,10 +55,6 @@ public class OrphanConcepts extends Issue<Collection<Value>> {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept WHERE " +
             "{" +
-                "{" +
-                    "{?concept ?semRel ?otherConcept} UNION " +
-                    "{?otherConcept ?semRel ?concept}" +
-                "} UNION " +
                 "{"+
                     "{?concept ?rel ?otherConcept} UNION " +
                     "{?otherConcept ?rel ?concept}" +

@@ -51,13 +51,13 @@ public class ConceptSchemes extends Issue<Collection<Resource>> {
     private String createConceptSchemeQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.RDF +
             "SELECT DISTINCT ?resource WHERE {" +
-                "{?resource rdf:type/rdfs:subClassOf* skos:ConceptScheme}" +
+                "{?resource rdf:type skos:ConceptScheme}" +
                 "UNION" +
-                "{?resource ?hasTopConcept ?concept . ?hasTopConcept rdfs:subPropertyOf* skos:hasTopConcept}" +
+                "{?resource ?hasTopConcept ?concept . ?hasTopConcept rdfs:subPropertyOf skos:hasTopConcept}" +
                 "UNION" +
-                "{?concept ?topConceptOf ?resource . ?topConceptOf rdfs:subPropertyOf* skos:topConceptOf}" +
+                "{?concept ?topConceptOf ?resource . ?topConceptOf rdfs:subPropertyOf skos:topConceptOf}" +
                 "UNION" +
-                "{?concept ?inScheme ?resource . ?inScheme rdfs:subPropertyOf* skos:inScheme}"+
+                "{?concept ?inScheme ?resource . ?inScheme rdfs:subPropertyOf skos:inScheme}"+
             "}";
     }
 

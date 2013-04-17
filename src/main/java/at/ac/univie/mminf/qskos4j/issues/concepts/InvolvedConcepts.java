@@ -46,15 +46,9 @@ public class InvolvedConcepts extends Issue<Collection<Value>> {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept "+
                 "WHERE {" +
-
-                    "{?concept rdf:type/rdfs:subClassOf* skos:Concept} UNION "+
+                    "{?concept rdf:type skos:Concept} UNION "+
                     "{?concept skos:topConceptOf ?conceptScheme} UNION "+
                     "{?conceptScheme skos:hasTopConcept ?concept} UNION " +
-                    "{" +
-                        "{?concept ?semRelSubProp ?x} UNION" +
-                        "{?x ?semRelSubProp ?concept}" +
-                        skosSemanticRelationSubPropertiesFilter+
-                    "} UNION " +
                     "{" +
                         "{?concept ?p ?x . } UNION" +
                         "{?x ?p ?concept . }" +

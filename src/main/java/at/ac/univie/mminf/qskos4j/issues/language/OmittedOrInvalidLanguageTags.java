@@ -45,7 +45,7 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
     private String createMissingLangTagQuery() throws OpenRDFException
     {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
-			"SELECT ?literal ?s ?p "+
+			"SELECT ?literal ?s "+
 			"WHERE {" +
 				"?s ?textProp ?literal . " +
 
@@ -85,8 +85,8 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 			BindingSet queryResult = result.next();
 			Literal literal = (Literal) queryResult.getValue("literal");
 			Resource subject = (Resource) queryResult.getValue("s");
-			
-			if (literal.getDatatype() == null) {
+
+            if (literal.getDatatype() == null) {
 				String langTag = literal.getLanguage();			
 				if (langTag == null || !isValidLangTag(langTag)) {
 					addToMissingLangTagMap(subject, literal);

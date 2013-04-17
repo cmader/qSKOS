@@ -46,11 +46,7 @@ public class SemanticRelations extends Issue<Long> {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
             "SELECT ?relationType WHERE " +
             "{" +
-                "{?concept ?relationType ?otherConcept} UNION "+
-                "{"+
-                    "?x ?p ?y . " +
-                    "?p rdfs:subPropertyOf ?relationType . " +
-                "}"+
+                "{?concept ?relationType ?otherConcept} "+
                 skosSemanticRelationSubPropertiesFilter+
             "}";
     }

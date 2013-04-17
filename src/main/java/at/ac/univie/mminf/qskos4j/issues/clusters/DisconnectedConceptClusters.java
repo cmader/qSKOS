@@ -109,10 +109,9 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
                 "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
                 "{" +
-                    "{<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept} UNION " +
                     "{" +
-                        "<" +concept.stringValue()+ "> ?relation ?otherConcept . "+
-                        "?relation rdfs:subPropertyOf ?semanticRelation . "+
+                        "<" +concept.stringValue()+ "> ?p ?otherConcept . " +
+                        "?p rdfs:subPropertyOf ?semanticRelation" +
                     "}" +
                     SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semanticRelation")+
                 "}";

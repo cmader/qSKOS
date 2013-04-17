@@ -41,12 +41,8 @@ public class Collections extends Issue<Long> {
 
     private String createCollectionsQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.RDF +
-            "SELECT DISTINCT ?collection WHERE {" +
-                "{?collection rdf:type/rdfs:subClassOf* skos:Collection .}" +
-                "UNION" +
-                "{?collection rdf:type/rdfs:subClassOf* skos:OrderedCollection .}" +
-                "UNION" +
-                "{?collection rdfs:subPropertyOf*/(skos:member|skos:memberList) ?member .}" +
+            "SELECT ?collection WHERE {" +
+                "?collection rdf:type skos:Collection ." +
             "}";
     }
 }

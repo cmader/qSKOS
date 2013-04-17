@@ -50,12 +50,10 @@ public class HierarchyGraphBuilder {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource ?otherResource "+
 			"WHERE {" +
-                "{?resource ?hierProp ?otherResource}" +
-                "UNION" +
-                "{"+
-                    "?resource ?hierarchyRelation ?otherResource ."+
-                    "?hierarchyRelation rdfs:subPropertyOf ?hierProp ."+
-                "}"+
+                "{" +
+                    "?resource ?prop ?otherResource ." +
+                    "?prop rdfs:subPropertyOf ?hierProp" +
+                "}" +
                 "FILTER (?hierProp IN " +createHierarchyPropertyList(skosHierarchyProperties) +")" +
             "}";
 	}

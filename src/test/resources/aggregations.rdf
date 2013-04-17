@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-         xmlns:myonto="http://localhost/myonto#">
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
 
     <!-- Aggregation 1: hasTopConcept -->
 	<rdf:Description rdf:about="conceptScheme1">
@@ -27,6 +26,20 @@
     <!-- Aggregation 5: memberList -->
     <rdf:Description rdf:about="orderedCollection">
         <skos:memberList rdf:resource="someList"/>
+    </rdf:Description>
+
+    <!-- Collection definition 1 -->
+    <rdf:Description rdf:about="collection2">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
+    </rdf:Description>
+
+    <!-- Collection definition 2 -->
+    <rdf:Description rdf:about="collection3">
+        <rdf:type rdf:resource="mycollection"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="mycollection">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Collection"/>
     </rdf:Description>
 
 </rdf:RDF>
