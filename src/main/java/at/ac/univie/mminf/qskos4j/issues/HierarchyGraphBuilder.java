@@ -94,8 +94,8 @@ public class HierarchyGraphBuilder {
 		}
 	}
 
-    public RepositoryConnection getRepositoryConnection() {
-        return repCon;
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        this.repCon = repCon;
     }
 
 }

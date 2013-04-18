@@ -4,13 +4,10 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -23,7 +20,6 @@ import java.util.Collection;
 public class OrphanConceptsTest {
 
     private OrphanConcepts orphanConceptsForConcepts, orphanConceptsForComponents;
-    private RepositoryConnection orphansRepCon, componentsRepCon;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
@@ -32,13 +28,6 @@ public class OrphanConceptsTest {
 
         orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts());
         orphanConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
-    }
-
-    @After
-    public void tearDown() throws RepositoryException
-    {
-        orphansRepCon.close();
-        componentsRepCon.close();
     }
 
     @Test

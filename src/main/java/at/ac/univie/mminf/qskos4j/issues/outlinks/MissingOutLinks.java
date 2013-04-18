@@ -25,10 +25,11 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
     private AuthoritativeConcepts authoritativeConcepts;
 	
 	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
-		super("mol",
-              "Missing Out-Links",
-              "Finds concepts that are not linked to other vocabularies on the Web",
-              IssueType.ANALYTICAL
+		super(authoritativeConcepts,
+            "mol",
+            "Missing Out-Links",
+            "Finds concepts that are not linked to other vocabularies on the Web",
+            IssueType.ANALYTICAL
         );
 
         this.authoritativeConcepts = authoritativeConcepts;

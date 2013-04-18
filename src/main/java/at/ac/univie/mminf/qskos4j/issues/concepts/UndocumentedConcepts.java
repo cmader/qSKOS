@@ -33,11 +33,13 @@ public class UndocumentedConcepts extends Issue<Collection<Value>> {
 	};
 	
     public UndocumentedConcepts(AuthoritativeConcepts authoritativeConcepts) {
-        super("uc",
-              "Undocumented Concepts",
-              "Finds concepts that don't use any SKOS documentation properties",
-              IssueType.ANALYTICAL
+        super(authoritativeConcepts,
+            "uc",
+            "Undocumented Concepts",
+            "Finds concepts that don't use any SKOS documentation properties",
+            IssueType.ANALYTICAL
         );
+
         this.authoritativeConcepts = authoritativeConcepts;
     }
 

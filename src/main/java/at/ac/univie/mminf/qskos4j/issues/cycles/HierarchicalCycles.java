@@ -9,6 +9,7 @@ import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,4 +78,9 @@ public class HierarchicalCycles extends Issue<Collection<Set<Value>>> {
         return ret;
     }
 
+    @Override
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        hierarchyGraphBuilder.setRepositoryConnection(repCon);
+        super.setRepositoryConnection(repCon);
+    }
 }

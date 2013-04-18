@@ -186,7 +186,8 @@ public class VocEvaluate {
 
         RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
         Repository repo = repositoryBuilder.setUpFromFile(new File(parsedCommand.vocabFilenames.get(0)), null, null);
-		qskos = new QSkos(repo.getConnection());
+		qskos = new QSkos();
+        qskos.setRepositoryConnection(repo.getConnection());
 		qskos.setAuthResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
         qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");

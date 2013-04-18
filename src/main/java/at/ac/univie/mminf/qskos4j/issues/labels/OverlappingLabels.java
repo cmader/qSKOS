@@ -33,10 +33,12 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
     private InvolvedConcepts involvedConcepts;
 
     public OverlappingLabels(InvolvedConcepts involvedConcepts) {
-        super("ol",
-              "Overlapping Labels",
-              "Finds concepts with similar (identical) labels",
-              IssueType.ANALYTICAL);
+        super(involvedConcepts,
+            "ol",
+            "Overlapping Labels",
+            "Finds concepts with similar (identical) labels",
+            IssueType.ANALYTICAL);
+
         this.involvedConcepts = involvedConcepts;
     }
 

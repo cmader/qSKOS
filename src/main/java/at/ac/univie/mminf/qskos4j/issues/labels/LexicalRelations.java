@@ -28,11 +28,13 @@ public class LexicalRelations extends Issue<Long> {
     private InvolvedConcepts involvedConcepts;
 
     public LexicalRelations(InvolvedConcepts involvedConcepts) {
-        super("cl",
-              "Concept Labels",
-              "Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
-              IssueType.STATISTICAL
+        super(involvedConcepts,
+            "cl",
+            "Concept Labels",
+            "Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
+            IssueType.STATISTICAL
         );
+
         this.involvedConcepts = involvedConcepts;
     }
 

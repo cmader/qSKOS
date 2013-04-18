@@ -15,6 +15,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -91,5 +92,11 @@ public class RelationClashes extends Issue<Collection<Pair<Value>>> {
                     conceptPair.getFirst()).getPathEdgeList() != null;
         }
         return true;
+    }
+
+    @Override
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        hierarchyGraphBuilder.setRepositoryConnection(repCon);
+        super.setRepositoryConnection(repCon);
     }
 }

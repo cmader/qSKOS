@@ -58,7 +58,7 @@ public abstract class Issue<T> {
 		this.progressMonitor = progressMonitor;
 	}
 
-    public final void setRepositoryConnection(RepositoryConnection repCon) {
+    public void setRepositoryConnection(RepositoryConnection repCon) {
         if (dependentIssue != null) {
             dependentIssue.setRepositoryConnection(repCon);
         }

@@ -23,10 +23,11 @@ public class OmittedTopConcepts extends Issue<Collection<Resource>> {
     private ConceptSchemes conceptSchemes;
 
     public OmittedTopConcepts(ConceptSchemes conceptSchemes) {
-        super("otc",
-              "Omitted Top Concepts",
-              "Finds skos:ConceptSchemes without top concepts",
-              IssueType.ANALYTICAL);
+        super(conceptSchemes,
+            "otc",
+            "Omitted Top Concepts",
+            "Finds skos:ConceptSchemes without top concepts",
+            IssueType.ANALYTICAL);
 
         this.conceptSchemes = conceptSchemes;
     }

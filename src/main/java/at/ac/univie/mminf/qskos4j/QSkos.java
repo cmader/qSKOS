@@ -35,8 +35,6 @@ import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.RepositoryConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -49,15 +47,12 @@ import java.util.*;
  */
 public class QSkos {
 
-	private final Logger logger = LoggerFactory.getLogger(QSkos.class);
-
     /**
      * Delay to avoid flooding "external" sources. This is used, e.g., when dereferencing lots of links or sending
      * many queryies to a SPARQL endpoint
      */
     private final static int EXT_ACCESS_MILLIS = 1500;
 
-    private RepositoryConnection repCon;
 	private String baseURI;
 	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
 	private Float randomSubsetSize_percent;
@@ -70,9 +65,8 @@ public class QSkos {
     private HttpURIs httpURIs;
 
     private List<Issue> registeredIssues = new ArrayList<Issue>();
-    private Collection<String> sparqlEndpointUrls = new ArrayList<String>();
 
-    public QSkos(RepositoryConnection repCon) {
+    public QSkos() {
         addStatisticalIssues();
         addAnalyticalIssues();
         addSkosIntegrityIssues();
