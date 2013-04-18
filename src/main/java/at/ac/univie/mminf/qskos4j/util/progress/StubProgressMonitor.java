@@ -17,7 +17,10 @@ public class StubProgressMonitor implements IProgressMonitor {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-
 	}
 
+    @Override
+    public void onFinish() {
+        // TODO Auto-generated method stub
+    }
 }

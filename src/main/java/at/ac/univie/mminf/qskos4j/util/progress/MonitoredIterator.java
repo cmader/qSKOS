@@ -32,7 +32,13 @@ public class MonitoredIterator<T> implements Iterator<T> {
 			
 	@Override
 	public boolean hasNext() {
-		return delegate.hasNext();
+        boolean hasNext =  delegate.hasNext();
+
+        if (!hasNext) {
+            progressMonitor.onFinish();
+        }
+
+        return hasNext;
 	}
 
 	@Override

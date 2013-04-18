@@ -13,19 +13,17 @@ public class ConsoleProgressMonitor implements IProgressMonitor {
 	
 	@Override
 	public void onUpdateProgress(float progress) {
-		if (progress > .999) {
-			clearConsoleBar();
-		}
-		else if (progress - prevProgressValue > .01) {
+		if (progress - prevProgressValue > .01) {
 			int percentage = Math.round(progress * 100);			
 			System.out.print("|" +createBar(percentage)+ "|" +percentage+ "%\r");
 			
 			prevProgressValue = progress;
 		}
 	}
-	
-	private void clearConsoleBar() {
-		System.out.print(produceBlanks(PROG_BAR_WIDTH + 10) + "\r");		
+
+    @Override
+    public void onFinish() {
+		System.out.print(produceBlanks(PROG_BAR_WIDTH + 10) + "\r");
 	}
 	
 	private String createBar(int percentage) {

@@ -18,5 +18,7 @@ public interface IProgressMonitor {
 	 * Resets the internal state
 	 */
 	public void reset();
+
+    public void onFinish();
 	
 }
