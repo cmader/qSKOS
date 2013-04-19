@@ -54,10 +54,8 @@ public class QSkos {
     private final static int EXT_ACCESS_MILLIS = 1500;
 
 	private String baseURI;
-	private Integer extAccessDelayMillis = EXT_ACCESS_MILLIS;
-	private Float randomSubsetSize_percent;
-    private String authResourceIdentifier;
 
+    private BrokenLinks brokenLinks;
     private InvolvedConcepts involvedConcepts;
     private AuthoritativeConcepts authoritativeConcepts;
     private MissingInLinks missingInLinks;
@@ -78,7 +76,6 @@ public class QSkos {
         involvedConcepts = new InvolvedConcepts();
         authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
         authoritativeConcepts.setBaseURI(baseURI);
-        authoritativeConcepts.setAuthResourceIdentifier(authResourceIdentifier);
         conceptSchemes = new ConceptSchemes();
         httpURIs = new HttpURIs();
 
@@ -108,15 +105,13 @@ public class QSkos {
         registeredIssues.add(new TopConceptsHavingBroaderConcepts());
 
         missingInLinks = new MissingInLinks(authoritativeConcepts);
-        missingInLinks.setQueryDelayMillis(extAccessDelayMillis);
-        missingInLinks.setSubsetSize(randomSubsetSize_percent);
+        missingInLinks.setQueryDelayMillis(EXT_ACCESS_MILLIS);
         registeredIssues.add(missingInLinks);
 
         registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
 
-        BrokenLinks brokenLinks = new BrokenLinks(httpURIs);
-        brokenLinks.setSubsetSize(randomSubsetSize_percent);
-        brokenLinks.setExtAccessDelayMillis(extAccessDelayMillis);
+        brokenLinks = new BrokenLinks(httpURIs);
+        brokenLinks.setExtAccessDelayMillis(EXT_ACCESS_MILLIS);
         registeredIssues.add(brokenLinks);
 
         registeredIssues.add(new UndefinedSkosResources());
@@ -195,7 +190,8 @@ public class QSkos {
 	 */
     @SuppressWarnings("unused")
     public void setExtAccessDelayMillis(int delayMillis) {
-		extAccessDelayMillis = delayMillis;
+        missingInLinks.setQueryDelayMillis(delayMillis);
+        brokenLinks.setExtAccessDelayMillis(delayMillis);
 	}
 	
 	/**
@@ -205,7 +201,8 @@ public class QSkos {
 	 * @param subsetSizePercent percentage of the total resources to investigate.
 	 */
 	public void setSubsetSize(Float subsetSizePercent) {
-		randomSubsetSize_percent = subsetSizePercent;
+        missingInLinks.setSubsetSize(subsetSizePercent);
+        brokenLinks.setSubsetSize(subsetSizePercent);
 	}
 
     /**
@@ -216,7 +213,7 @@ public class QSkos {
      * that uniquely identifies an authoritative URI.
      */
     public void setAuthResourceIdentifier(String authResourceIdentifier) {
-        this.authResourceIdentifier = authResourceIdentifier;
+        authoritativeConcepts.setAuthResourceIdentifier(authResourceIdentifier);
     }
 
     @SuppressWarnings("unused")

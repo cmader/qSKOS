@@ -9,6 +9,7 @@ import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.impl.LiteralImpl;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,8 +27,7 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public DisjointLabelsViolations(ResourceLabelsCollector resourceLabelsCollector) {
-        super(resourceLabelsCollector,
-            "dlv",
+        super("dlv",
             "Disjoint Labels Violation",
             "Finds resources with identical entries for different label types",
             IssueType.ANALYTICAL);
@@ -54,7 +54,7 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
     private Map<Literal, Collection<LabeledConcept>> orderResourcesByLabel() throws OpenRDFException {
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = new HashMap<Literal, Collection<LabeledConcept>>();
 
-        for (LabeledConcept labeledResource : resourceLabelsCollector.getPreparedData()) {
+        for (LabeledConcept labeledResource : resourceLabelsCollector.getLabeledConcepts()) {
             Literal literal = new LiteralImpl(
                 labeledResource.getLiteral().getLabel().toUpperCase(),
                 labeledResource.getLiteral().getLanguage());
@@ -102,4 +102,9 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
         return (resource1.getConcept() == resource2.getConcept()) && (resource1.getLabelType() != resource2.getLabelType());
     }
 
+    @Override
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        resourceLabelsCollector.setRepositoryConnection(repCon);
+        super.setRepositoryConnection(repCon);
+    }
 }

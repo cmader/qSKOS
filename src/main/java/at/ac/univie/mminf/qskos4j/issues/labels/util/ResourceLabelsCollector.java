@@ -1,7 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -10,30 +8,21 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-public class ResourceLabelsCollector extends Issue<Collection<LabeledConcept>> {
+public class ResourceLabelsCollector {
 
     private final Logger logger = LoggerFactory.getLogger(ResourceLabelsCollector.class);
 
+    private RepositoryConnection repCon;
     private Collection<LabeledConcept> labeledResources;
 
-    public ResourceLabelsCollector() {
-        super("rlc", "Resource Labels Collector", "for internal use only", IssueType.STATISTICAL);
-    }
-
-
-    @Override
-    protected Report prepareReport(Collection<LabeledConcept> preparedData) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    protected Collection<LabeledConcept> prepareData() throws OpenRDFException {
+    public Collection<LabeledConcept> getLabeledConcepts() throws OpenRDFException {
         labeledResources = new HashSet<LabeledConcept>();
         createLabeledResources();
         return labeledResources;
@@ -77,6 +66,10 @@ public class ResourceLabelsCollector extends Issue<Collection<LabeledConcept>> {
                 logger.info("literal label expected for resource " +resource.toString()+ ", " +e.toString());
             }
         }
+    }
+
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        this.repCon = repCon;
     }
 
 }

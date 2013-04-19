@@ -9,6 +9,7 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,8 +26,7 @@ public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public InconsistentPrefLabels(ResourceLabelsCollector resourceLabelsCollector) {
-        super(resourceLabelsCollector,
-            "ipl",
+        super("ipl",
             "Inconsistent Preferred Labels",
             "Finds resources with more then one prefLabel per language",
             IssueType.ANALYTICAL);
@@ -50,7 +50,7 @@ public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
     private Map<Value, Collection<LabeledConcept>> orderPrefLabelsByResource() throws OpenRDFException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByResource = new HashMap<Value, Collection<LabeledConcept>>();
 
-        for (LabeledConcept labeledConcept : resourceLabelsCollector.getPreparedData()) {
+        for (LabeledConcept labeledConcept : resourceLabelsCollector.getLabeledConcepts()) {
             if (labeledConcept.getLabelType() != LabelType.PREF_LABEL) continue;
 
             Collection<LabeledConcept> labeledResourcesOfUri = prefLabelsByResource.get(labeledConcept.getConcept());
@@ -108,4 +108,9 @@ public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
         return false;
     }
 
+    @Override
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        resourceLabelsCollector.setRepositoryConnection(repCon);
+        super.setRepositoryConnection(repCon);
+    }
 }
