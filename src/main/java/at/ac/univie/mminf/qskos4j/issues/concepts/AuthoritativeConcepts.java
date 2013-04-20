@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ public class AuthoritativeConcepts extends Issue<Collection<Value>> {
     private void guessAuthoritativeResourceIdentifier() throws OpenRDFException {
         HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
 
-        Iterator<Value> resourcesListIt = new MonitoredIterator<Value>(
+        Iterator<URI> resourcesListIt = new MonitoredIterator<URI>(
                 involvedConcepts.getPreparedData(),
                 progressMonitor,
                 "guessing publishing host");

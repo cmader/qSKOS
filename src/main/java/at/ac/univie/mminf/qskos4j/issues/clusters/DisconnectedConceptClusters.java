@@ -11,6 +11,7 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
@@ -66,7 +67,7 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
     {
         graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 
-        Iterator<Value> conceptIt = new MonitoredIterator<Value>(involvedConcepts.getPreparedData(), progressMonitor);
+        Iterator<URI> conceptIt = new MonitoredIterator<URI>(involvedConcepts.getPreparedData(), progressMonitor);
         while (conceptIt.hasNext()) {
             Value concept = conceptIt.next();
             Collection<Relation> relations = findRelations(concept);

@@ -3,20 +3,21 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * Finds all <a href="http://www.w3.org/TR/skos-reference/#concepts">SKOS Concepts</a> involved in the vocabulary.
  */
-public class InvolvedConcepts extends Issue<Collection<Value>> {
+public class InvolvedConcepts extends Issue<Collection<URI>> {
 
     public InvolvedConcepts() {
         super("c",
@@ -27,15 +28,21 @@ public class InvolvedConcepts extends Issue<Collection<Value>> {
     }
 
     @Override
-    protected Collection<Value> prepareData() throws OpenRDFException
+    protected Collection<URI> prepareData() throws OpenRDFException
     {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptsQuery()).evaluate();
-        return TupleQueryResultUtil.getValuesForBindingName(result, "concept");
+
+        Collection<URI> involvedConcepts = new ArrayList<URI>();
+        while (result.hasNext()) {
+            Value concept = result.next().getBinding("concept").getValue();
+            if (concept instanceof URI) involvedConcepts.add((URI) concept);
+        }
+        return involvedConcepts;
     }
 
     @Override
-    protected Report prepareReport(Collection<Value> preparedData) {
-        return new CollectionReport<Value>(preparedData);
+    protected Report prepareReport(Collection<URI> preparedData) {
+        return new CollectionReport<URI>(preparedData);
     }
 
     private String createConceptsQuery() throws OpenRDFException {

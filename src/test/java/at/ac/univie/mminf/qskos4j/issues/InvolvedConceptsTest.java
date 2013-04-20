@@ -6,6 +6,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.io.IOException;
@@ -27,14 +28,14 @@ public class InvolvedConceptsTest {
     @Test
     public void testConceptCount_1() throws OpenRDFException
     {
-        Collection<Value> involvedConceptValues = involvedConceptsForConcepts.getPreparedData();
+        Collection<URI> involvedConceptValues = involvedConceptsForConcepts.getPreparedData();
         Assert.assertEquals(10, involvedConceptValues.size());
     }
 
     @Test
     public void testConceptCount_2() throws OpenRDFException
     {
-        Collection<Value> involvedConceptValues = involvedConceptsForComponents.getPreparedData();
+        Collection<URI> involvedConceptValues = involvedConceptsForComponents.getPreparedData();
         Assert.assertEquals(21, involvedConceptValues.size());
     }
 }
