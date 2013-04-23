@@ -27,8 +27,6 @@ public class UndocumentedConceptsTest {
 	
 	@Test
 	public void testAverageDocumentationCoverageRatio() throws OpenRDFException {
-        System.out.println(repCon.getStatements(null,null,null,true).asList());
-
 		Assert.assertEquals(1, undocumentedConcepts.getPreparedData().size());
 	}
 	

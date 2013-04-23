@@ -6,7 +6,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.io.IOException;
 
@@ -18,7 +17,6 @@ import java.io.IOException;
 public class AggregationRelationsTest {
 
     private AggregationRelations aggregationRelations;
-    private RepositoryConnection repCon;
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
@@ -29,8 +27,6 @@ public class AggregationRelationsTest {
     @Test
     public void testAggregationRelationsCount() throws OpenRDFException
     {
-        //System.out.println(repCon.getStatements(null, null, null, true).asList());
-
         Assert.assertEquals(5, aggregationRelations.getPreparedData().longValue());
     }
 
