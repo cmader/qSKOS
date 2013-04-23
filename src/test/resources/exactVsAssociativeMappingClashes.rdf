@@ -22,7 +22,11 @@
 	<skos:narrowMatch rdf:resource="22"/>
 </rdf:Description>
 
-<!-- error -->
+<rdf:Description rdf:about="22">
+    <skos:exactMatch rdf:resource="21"/>
+</rdf:Description>
+
+    <!-- error -->
 <rdf:Description rdf:about="25">
     <skos:exactMatch rdf:resource="26"/>
 </rdf:Description>

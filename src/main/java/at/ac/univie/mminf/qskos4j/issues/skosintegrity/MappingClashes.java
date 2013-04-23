@@ -12,6 +12,7 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
@@ -29,7 +30,14 @@ public class MappingClashes extends Issue<Collection<Pair<Value>>> {
     @Override
     protected Collection<Pair<Value>> prepareData() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createExVsAssMappingQuery());
-        return TupleQueryResultUtil.createCollectionOfValuePairs(query.evaluate(), "concept1", "concept2");
+
+        Collection<Pair<Value>> valuePairs = TupleQueryResultUtil.createCollectionOfValuePairs(
+            query.evaluate(),
+            "concept1", "concept2");
+        Collection<Pair<Value>> distinctPairs = new HashSet<Pair<Value>>();
+        distinctPairs.addAll(valuePairs);
+
+        return distinctPairs;
     }
 
     @Override
@@ -39,11 +47,9 @@ public class MappingClashes extends Issue<Collection<Pair<Value>>> {
 
     private String createExVsAssMappingQuery() {
         return SparqlPrefix.SKOS +
-            "SELECT DISTINCT ?concept1 ?concept2 WHERE {" +
+            "SELECT ?concept1 ?concept2 WHERE {" +
                 "?concept1 (skos:exactMatch|^skos:exactMatch)+ ?concept2 ."+
                 "?concept1 skos:broadMatch|skos:narrowMatch|skos:relatedMatch ?concept2 ." +
                 "}";
-
-
     }
 }
