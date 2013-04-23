@@ -22,6 +22,15 @@
 	<skos:narrowMatch rdf:resource="22"/>
 </rdf:Description>
 
+<!-- error -->
+<rdf:Description rdf:about="25">
+    <skos:exactMatch rdf:resource="26"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="26">
+    <skos:broadMatch rdf:resource="25"/>
+</rdf:Description>
+
 <!-- case 11; ok -->
 <rdf:Description rdf:about="23">
 	<skos:broadMatch rdf:resource="24"/>
@@ -35,7 +44,7 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="3">
-    <skos:relatedMatch rdf:resource="2"/>
+    <skos:exactMatch rdf:resource="2"/>
 </rdf:Description>
 
 </rdf:RDF>
