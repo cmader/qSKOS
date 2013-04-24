@@ -8,7 +8,6 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
@@ -55,9 +54,7 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = new HashMap<Literal, Collection<LabeledConcept>>();
 
         for (LabeledConcept labeledResource : resourceLabelsCollector.getLabeledConcepts()) {
-            Literal literal = new LiteralImpl(
-                labeledResource.getLiteral().getLabel().toUpperCase(),
-                labeledResource.getLiteral().getLanguage());
+            Literal literal = labeledResource.getLiteral();
 
             Collection<LabeledConcept> resourcesForLiteral = resourcesByLabel.get(literal);
             if (resourcesForLiteral == null) {
