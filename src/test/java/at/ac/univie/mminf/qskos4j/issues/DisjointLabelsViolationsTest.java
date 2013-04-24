@@ -29,8 +29,9 @@ public class DisjointLabelsViolationsTest {
 
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptD"));
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptF"));
-        Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptI"));
+
         Assert.assertFalse(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptE"));
         Assert.assertFalse(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptG"));
+        Assert.assertFalse(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptI"));
     }
 }
