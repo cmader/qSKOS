@@ -1,5 +1,9 @@
 = Changelog
 
+== Release 0.9.5, May 2013
+* RDFS inferencing support
+* performance improvements
+* API improvements
+
 == Release 0.9, June 2012
 * first "official" release (announced at public-esw-thes-request@w3.org)
-
