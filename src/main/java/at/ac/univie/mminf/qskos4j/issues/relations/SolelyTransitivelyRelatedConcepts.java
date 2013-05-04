@@ -33,7 +33,7 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
     }
 
     @Override
-    protected Collection<Pair<URI>> prepareData() throws OpenRDFException {
+    protected Collection<Pair<URI>> computeResult() throws OpenRDFException {
 		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
             TupleQuery query = repCon.prepareTupleQuery(
                 QueryLanguage.SPARQL,
@@ -45,7 +45,7 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
 	}
 
     @Override
-    protected Report prepareReport(Collection<Pair<URI>> preparedData) {
+    protected Report generateReport(Collection<Pair<URI>> preparedData) {
         return new CollectionReport<Pair<URI>>(preparedData);
     }
 

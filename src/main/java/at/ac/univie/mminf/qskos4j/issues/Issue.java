@@ -16,7 +16,7 @@ public abstract class Issue<T> {
 
     private String id, name, description;
     private IssueType type;
-    private T preparedData;
+    private T result;
     private Issue dependentIssue;
 
     public Issue(String id, String name, String description, IssueType type) {
@@ -32,23 +32,23 @@ public abstract class Issue<T> {
     }
 
 
-    protected abstract T prepareData() throws OpenRDFException;
-    protected abstract Report prepareReport(T preparedData);
+    protected abstract T computeResult() throws OpenRDFException;
+    protected abstract Report generateReport(T preparedData);
 
-    public final T getPreparedData() throws OpenRDFException {
-        if (preparedData == null) {
-            preparedData = prepareData();
+    public final T getResult() throws OpenRDFException {
+        if (result == null) {
+            result = computeResult();
         }
-        return preparedData;
+        return result;
     }
 
     public final Report getReport() throws OpenRDFException
     {
-        return prepareReport(getPreparedData());
+        return generateReport(getResult());
     }
 
     protected final void reset() {
-        preparedData = null;
+        result = null;
         if (progressMonitor != null) {
             progressMonitor.reset();
         }

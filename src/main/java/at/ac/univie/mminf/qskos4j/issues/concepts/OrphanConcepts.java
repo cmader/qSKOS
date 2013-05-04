@@ -35,18 +35,18 @@ public class OrphanConcepts extends Issue<Collection<Value>> {
     }
 
     @Override
-    protected Collection<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> computeResult() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOrphanConceptsQuery());
         Set<Value> connectedConcepts = TupleQueryResultUtil.getValuesForBindingName(query.evaluate(), "concept");
 
-        Set<Value> orphanConcepts = new HashSet<Value>(involvedConcepts.getPreparedData());
+        Set<Value> orphanConcepts = new HashSet<Value>(involvedConcepts.getResult());
         orphanConcepts.removeAll(connectedConcepts);
 
         return orphanConcepts;
     }
 
     @Override
-    protected Report prepareReport(Collection<Value> preparedData) {
+    protected Report generateReport(Collection<Value> preparedData) {
         return new CollectionReport<Value>(preparedData);
     }
 

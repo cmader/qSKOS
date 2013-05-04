@@ -39,7 +39,7 @@ public class RelationClashes extends Issue<Collection<Pair<Value>>> {
     }
 
     @Override
-    protected Collection<Pair<Value>> prepareData() throws OpenRDFException {
+    protected Collection<Pair<Value>> computeResult() throws OpenRDFException {
         Graph<Value, NamedEdge> hierarchyGraph = hierarchyGraphBuilder.createGraph();
 
         Collection<Pair<Value>> clashes = new HashSet<Pair<Value>>();
@@ -64,7 +64,7 @@ public class RelationClashes extends Issue<Collection<Pair<Value>>> {
     }
 
     @Override
-    protected Report prepareReport(Collection<Pair<Value>> preparedData) {
+    protected Report generateReport(Collection<Pair<Value>> preparedData) {
         return new CollectionReport<Pair<Value>>(preparedData);
     }
 

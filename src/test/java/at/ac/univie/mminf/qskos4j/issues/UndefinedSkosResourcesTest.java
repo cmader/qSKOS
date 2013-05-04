@@ -26,13 +26,13 @@ public class UndefinedSkosResourcesTest {
 	
 	@Test
 	public void testUndefinedSkosResourcesCount_1() throws OpenRDFException {
-		Collection<URI> undefRes = undefinedSkosResourcesInConcepts.getPreparedData();
+		Collection<URI> undefRes = undefinedSkosResourcesInConcepts.getResult();
 		Assert.assertEquals(3, undefRes.size());
 	}
 
 	@Test
 	public void testUndefinedSkosResourcesCount_2() throws OpenRDFException {
-		Collection<URI> undefRes = undefinedSkosResourcesInDeprecatedAndIllegal.getPreparedData();
+		Collection<URI> undefRes = undefinedSkosResourcesInDeprecatedAndIllegal.getResult();
 		Assert.assertEquals(12, undefRes.size());
 	}
 	

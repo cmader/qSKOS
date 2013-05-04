@@ -47,13 +47,13 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 	}
 
     @Override
-    protected Collection<URL> prepareData() throws OpenRDFException {
+    protected Collection<URL> computeResult() throws OpenRDFException {
         dereferenceURIs();
 		return collectUnavailableURLs();
 	}
 
     @Override
-    protected Report prepareReport(Collection<URL> preparedData) {
+    protected Report generateReport(Collection<URL> preparedData) {
         return new ExtrapolatedCollectionReport<URL>(preparedData, randomSubsetSize_percent);
     }
 
@@ -83,10 +83,10 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 	
 	private Collection<URI> collectUrisToBeDereferenced() throws OpenRDFException {
 		if (randomSubsetSize_percent == null) {
-			return httpURIs.getPreparedData();
+			return httpURIs.getResult();
 		}
 
-        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs.getPreparedData(), randomSubsetSize_percent);
+        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs.getResult(), randomSubsetSize_percent);
         logger.info("using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
 
 		return urisToBeDereferenced;

@@ -34,7 +34,7 @@ public class IncompleteLanguageCoverageTest {
     public void testIncompleteLanguageCoverageCount()
             throws OpenRDFException
     {
-        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getPreparedData();
+        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult();
         Assert.assertEquals(13, incompleteLangCoverage.size());
     }
 
@@ -42,7 +42,7 @@ public class IncompleteLanguageCoverageTest {
     public void testExistResourcesNotHavingEnglishLabels()
             throws OpenRDFException
     {
-        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getPreparedData();
+        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult();
 
         boolean englishTagFound = false;
         for (Collection<String> missingLanguages : incompleteLangCoverage.values()) {
@@ -57,7 +57,7 @@ public class IncompleteLanguageCoverageTest {
     public void testResourcesMissingOnlyFrenchLabelsCount()
             throws OpenRDFException
     {
-        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getPreparedData();
+        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult();
 
         List<Value> foundResources = new ArrayList<Value>();
         for (Value resource : incompleteLangCoverage.keySet()) {

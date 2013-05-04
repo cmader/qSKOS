@@ -35,13 +35,13 @@ public class ConceptSchemes extends Issue<Collection<Resource>> {
     }
 
     @Override
-    protected Collection<Resource> prepareData() throws OpenRDFException {
+    protected Collection<Resource> computeResult() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptSchemeQuery()).evaluate();
         return identifyResources(result);
     }
 
     @Override
-    protected Report prepareReport(Collection<Resource> preparedData) {
+    protected Report generateReport(Collection<Resource> preparedData) {
         return new CollectionReport<Resource>(preparedData);
     }
 

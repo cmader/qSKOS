@@ -44,11 +44,11 @@ public class UndocumentedConcepts extends Issue<Collection<Value>> {
     }
 
     @Override
-    protected Collection<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> computeResult() throws OpenRDFException {
 		List<Value> undocumentedConcepts = new ArrayList<Value>();
 		
 		Iterator<Value> conceptIt = new MonitoredIterator<Value>(
-            authoritativeConcepts.getPreparedData(),
+            authoritativeConcepts.getResult(),
             progressMonitor);
 
 		while (conceptIt.hasNext()) {
@@ -62,7 +62,7 @@ public class UndocumentedConcepts extends Issue<Collection<Value>> {
 	}
 
     @Override
-    protected Report prepareReport(Collection<Value> preparedData) {
+    protected Report generateReport(Collection<Value> preparedData) {
         return new CollectionReport<Value>(preparedData);
     }
 

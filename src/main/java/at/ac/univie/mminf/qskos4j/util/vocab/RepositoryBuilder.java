@@ -34,7 +34,7 @@ public class RepositoryBuilder {
         return repository;
     }
 
-    public Repository setUpFromFile(File rdfFile,String baseURI,RDFFormat dataFormat) throws RepositoryException
+    public Repository setUpFromFile(File rdfFile, String baseURI, RDFFormat dataFormat) throws RepositoryException
     {
         createRepositoryForFile();
         RepositoryConnection repCon = repository.getConnection();

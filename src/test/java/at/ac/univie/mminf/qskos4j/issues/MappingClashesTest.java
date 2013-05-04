@@ -21,6 +21,6 @@ public class MappingClashesTest {
 
     @Test
     public void testExactVsAssociativeMappingClashes() throws OpenRDFException {
-        Assert.assertEquals(5, mappingClashes.getPreparedData().size());
+        Assert.assertEquals(5, mappingClashes.getResult().size());
     }
 }

@@ -39,10 +39,10 @@ public class LexicalRelations extends Issue<Long> {
     }
 
     @Override
-    protected Long prepareData() throws OpenRDFException {
+    protected Long computeResult() throws OpenRDFException {
         long relationsCount = 0;
 
-        for (Value concept : involvedConcepts.getPreparedData()) {
+        for (Value concept : involvedConcepts.getResult()) {
             try {
                 TupleQueryResult result = repCon.prepareTupleQuery(
                         QueryLanguage.SPARQL,
@@ -60,7 +60,7 @@ public class LexicalRelations extends Issue<Long> {
     }
 
     @Override
-    protected Report prepareReport(Long preparedData) {
+    protected Report generateReport(Long preparedData) {
         return new NumberReport<Long>(preparedData);
     }
 

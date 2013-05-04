@@ -35,7 +35,7 @@ public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
     }
 
     @Override
-    protected Map<Value, LabelConflict> prepareData() throws OpenRDFException {
+    protected Map<Value, LabelConflict> computeResult() throws OpenRDFException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByUri = orderPrefLabelsByResource();
         extractPrefLabelConflicts(prefLabelsByUri);
 
@@ -43,7 +43,7 @@ public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
 	}
 
     @Override
-    protected Report prepareReport(Map<Value, LabelConflict> preparedData) {
+    protected Report generateReport(Map<Value, LabelConflict> preparedData) {
         return new CollectionReport<LabelConflict>(preparedData.values());
     }
 

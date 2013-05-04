@@ -33,11 +33,11 @@ public class MissingOutLinksTest {
 
     @Test
     public void testComponentsMissingOutLinkCount() throws OpenRDFException {
-        Assert.assertEquals(involvedConceptsForComponents.getPreparedData().size(), missingOutLinksForComponents.getPreparedData().size());
+        Assert.assertEquals(involvedConceptsForComponents.getResult().size(), missingOutLinksForComponents.getResult().size());
     }
 
     @Test
     public void testConceptsMissingOutLinkCount() throws OpenRDFException {
-        Assert.assertEquals(7, missingOutLinksForConcepts.getPreparedData().size());
+        Assert.assertEquals(7, missingOutLinksForConcepts.getResult().size());
     }
 }

@@ -25,7 +25,7 @@ public class InconsistentPrefLabelsTest {
 
     @Test
     public void testUniquePrefLabels() throws OpenRDFException {
-        Collection<LabelConflict> ambiguousResources = inconsistentPrefLabels.getPreparedData().values();
+        Collection<LabelConflict> ambiguousResources = inconsistentPrefLabels.getResult().values();
 
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptA"));
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptA2"));

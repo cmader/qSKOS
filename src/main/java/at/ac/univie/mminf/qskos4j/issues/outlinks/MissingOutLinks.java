@@ -36,16 +36,16 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 	}
 
     @Override
-    public Collection<Value> prepareData() throws OpenRDFException {
+    public Collection<Value> computeResult() throws OpenRDFException {
 		extResourcesForConcept = new HashMap<Value, Collection<URI>>();
 
-		findResourcesForConcepts(authoritativeConcepts.getPreparedData());
+		findResourcesForConcepts(authoritativeConcepts.getResult());
 		
 		return extractUnlinkedConcepts();
 	}
 
     @Override
-    protected Report prepareReport(Collection<Value> preparedData) {
+    protected Report generateReport(Collection<Value> preparedData) {
         return new CollectionReport<Value>(preparedData);
     }
 

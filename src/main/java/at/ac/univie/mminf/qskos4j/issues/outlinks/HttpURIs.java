@@ -33,7 +33,7 @@ public class HttpURIs extends Issue<Collection<URI>> {
     }
 
     @Override
-    protected Collection<URI> prepareData() throws OpenRDFException {
+    protected Collection<URI> computeResult() throws OpenRDFException {
 
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createIRIQuery()).evaluate();
 
@@ -46,7 +46,7 @@ public class HttpURIs extends Issue<Collection<URI>> {
     }
 
     @Override
-    protected Report prepareReport(Collection<URI> preparedData) {
+    protected Report generateReport(Collection<URI> preparedData) {
         return new CollectionReport<URI>(preparedData);
     }
 

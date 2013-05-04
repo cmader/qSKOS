@@ -33,9 +33,13 @@ import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
 import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.openrdf.OpenRDFException;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -63,6 +67,14 @@ public class QSkos {
     private HttpURIs httpURIs;
 
     private List<Issue> registeredIssues = new ArrayList<Issue>();
+
+    public QSkos(File file) throws RepositoryException {
+        this();
+
+        RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
+        Repository repo = repositoryBuilder.setUpFromFile(file, null, null);
+        setRepositoryConnection(repo.getConnection());
+    }
 
     public QSkos() {
         addStatisticalIssues();
@@ -223,6 +235,133 @@ public class QSkos {
 
     public void addSparqlEndPoint(String endpointUrl) throws OpenRDFException {
         missingInLinks.addSparqlEndPoint(endpointUrl);
+    }
+
+    // convenience methods
+
+    public DisconnectedConceptClusters getDisconnectedConceptClusters() throws OpenRDFException {
+        return (DisconnectedConceptClusters) getIssueInstanceByClassName(DisconnectedConceptClusters.class.getName());
+    }
+
+    public MappingClashes getMappingClashes() throws OpenRDFException {
+        return (MappingClashes) getIssueInstanceByClassName(MappingClashes.class.getName());
+    }
+
+    public SemanticRelations getSemanticRelations() throws OpenRDFException {
+        return (SemanticRelations) getIssueInstanceByClassName(SemanticRelations.class.getName());
+    }
+
+    public HttpURIs getHttpURIs() throws OpenRDFException {
+        return (HttpURIs) getIssueInstanceByClassName(HttpURIs.class.getName());
+    }
+
+    public DisjointLabelsViolations getDisjointLabelsViolations() throws OpenRDFException {
+        return (DisjointLabelsViolations) getIssueInstanceByClassName(DisjointLabelsViolations.class.getName());
+    }
+
+    public OverlappingLabels getOverlappingLabels() throws OpenRDFException {
+        return (OverlappingLabels) getIssueInstanceByClassName(OverlappingLabels.class.getName());
+    }
+
+    public OmittedOrInvalidLanguageTags getOmittedOrInvalidLanguageTags() throws OpenRDFException {
+        return (OmittedOrInvalidLanguageTags) getIssueInstanceByClassName(OmittedOrInvalidLanguageTags.class.getName());
+    }
+
+    public BrokenLinks getBrokenLinks() throws OpenRDFException {
+        return (BrokenLinks) getIssueInstanceByClassName(BrokenLinks.class.getName());
+    }
+
+    public MissingInLinks getMissingInLinks() throws OpenRDFException {
+        return (MissingInLinks) getIssueInstanceByClassName(MissingInLinks.class.getName());
+    }
+
+    public ConceptSchemes getConceptSchemes() throws OpenRDFException {
+        return (ConceptSchemes) getIssueInstanceByClassName(ConceptSchemes.class.getName());
+    }
+
+    public InvolvedConcepts getInvolvedConcepts() throws OpenRDFException {
+        return (InvolvedConcepts) getIssueInstanceByClassName(InvolvedConcepts.class.getName());
+    }
+
+    public AuthoritativeConcepts getAuthoritativeConcepts() throws OpenRDFException {
+        return (AuthoritativeConcepts) getIssueInstanceByClassName(AuthoritativeConcepts.class.getName());
+    }
+
+    public UndocumentedConcepts getUndocumentedConcepts() throws OpenRDFException {
+        return (UndocumentedConcepts) getIssueInstanceByClassName(UndocumentedConcepts.class.getName());
+    }
+
+    public UnidirectionallyRelatedConcepts getUnidirectionallyRelatedConcepts() throws OpenRDFException {
+        return (UnidirectionallyRelatedConcepts) getIssueInstanceByClassName(UnidirectionallyRelatedConcepts.class.getName());
+    }
+
+    public AggregationRelations getAggregationRelations() throws OpenRDFException {
+        return (AggregationRelations) getIssueInstanceByClassName(AggregationRelations.class.getName());
+    }
+
+    public OmittedTopConcepts getOmittedTopConcepts() throws OpenRDFException {
+        return (OmittedTopConcepts) getIssueInstanceByClassName(OmittedTopConcepts.class.getName());
+    }
+
+    public LexicalRelations getLexicalRelations() throws OpenRDFException {
+        return (LexicalRelations) getIssueInstanceByClassName(LexicalRelations.class.getName());
+    }
+
+    public OrphanConcepts getOrphanConcepts() throws OpenRDFException {
+        return (OrphanConcepts) getIssueInstanceByClassName(OrphanConcepts.class.getName());
+    }
+
+    public ValuelessAssociativeRelations getValuelessAssociativeRelations() throws OpenRDFException {
+        return (ValuelessAssociativeRelations) getIssueInstanceByClassName(ValuelessAssociativeRelations.class.getName());
+    }
+
+    public MissingOutLinks getMissingOutLinks() throws OpenRDFException {
+        return (MissingOutLinks) getIssueInstanceByClassName(MissingOutLinks.class.getName());
+    }
+
+    public TopConceptsHavingBroaderConcepts getTopConceptsHavingBroaderConcepts() throws OpenRDFException {
+        return (TopConceptsHavingBroaderConcepts) getIssueInstanceByClassName(TopConceptsHavingBroaderConcepts.class.getName());
+    }
+
+    public IncompleteLanguageCoverage getIncompleteLanguageCoverage() throws OpenRDFException {
+        return (IncompleteLanguageCoverage) getIssueInstanceByClassName(IncompleteLanguageCoverage.class.getName());
+    }
+
+    public UndefinedSkosResources getUndefinedSkosResources() throws OpenRDFException {
+        return (UndefinedSkosResources) getIssueInstanceByClassName(UndefinedSkosResources.class.getName());
+    }
+
+    public at.ac.univie.mminf.qskos4j.issues.count.Collections getCollections() throws OpenRDFException {
+        return (at.ac.univie.mminf.qskos4j.issues.count.Collections) getIssueInstanceByClassName(
+            at.ac.univie.mminf.qskos4j.issues.count.Collections.class.getName());
+    }
+
+    public HttpUriSchemeViolations getHttpUriSchemeViolations() throws OpenRDFException {
+        return (HttpUriSchemeViolations) getIssueInstanceByClassName(HttpUriSchemeViolations.class.getName());
+    }
+
+    public SolelyTransitivelyRelatedConcepts getSolelyTransitivelyRelatedConcepts() throws OpenRDFException {
+        return (SolelyTransitivelyRelatedConcepts) getIssueInstanceByClassName(SolelyTransitivelyRelatedConcepts.class.getName());
+    }
+
+    public HierarchicalCycles getHierarchicalCycles() throws OpenRDFException {
+        return (HierarchicalCycles) getIssueInstanceByClassName(HierarchicalCycles.class.getName());
+    }
+
+    public InconsistentPrefLabels getInconsistentPrefLabels() throws OpenRDFException {
+        return (InconsistentPrefLabels) getIssueInstanceByClassName(InconsistentPrefLabels.class.getName());
+    }
+
+    public RelationClashes getRelationClashes() throws OpenRDFException {
+        return (RelationClashes) getIssueInstanceByClassName(RelationClashes.class.getName());
+    }
+
+    private Issue getIssueInstanceByClassName(String className) {
+        for (Issue issue : registeredIssues) {
+            if (issue.getClass().getName().equals(className)) return issue;
+        }
+
+        throw new IllegalArgumentException("No issue class '" +className+ "' found");
     }
 
 }

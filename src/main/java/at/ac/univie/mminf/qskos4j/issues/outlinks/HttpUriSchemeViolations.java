@@ -31,7 +31,7 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
     }
 
     @Override
-    protected Collection<String> prepareData() throws OpenRDFException {
+    protected Collection<String> computeResult() throws OpenRDFException {
         Set<String> nonHttpURIs = new HashSet<String>();
 
         RepositoryResult<Statement> allStatements = repCon.getStatements(null, null, null, false);
@@ -56,7 +56,7 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
     }
 
     @Override
-    protected Report prepareReport(Collection<String> preparedData) {
+    protected Report generateReport(Collection<String> preparedData) {
         return new CollectionReport<String>(preparedData);
     }
 

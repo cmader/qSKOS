@@ -31,13 +31,13 @@ public class TopConceptsHavingBroaderConcepts extends Issue<Collection<Value>> {
     }
 
     @Override
-    protected Collection<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> computeResult() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createTopConceptsHavingBroaderConceptQuery());
         return createUriResultList(query.evaluate());
     }
 
     @Override
-    protected Report prepareReport(Collection<Value> preparedData) {
+    protected Report generateReport(Collection<Value> preparedData) {
         return new CollectionReport<Value>(preparedData);
     }
 

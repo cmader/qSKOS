@@ -33,10 +33,10 @@ public class OmittedTopConcepts extends Issue<Collection<Resource>> {
     }
 
     @Override
-    protected Collection<Resource> prepareData() throws OpenRDFException {
+    protected Collection<Resource> computeResult() throws OpenRDFException {
         Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
 
-        for (Resource conceptScheme : conceptSchemes.getPreparedData()) {
+        for (Resource conceptScheme : conceptSchemes.getResult()) {
 
             BooleanQuery hasTopConceptQuery = repCon.prepareBooleanQuery(
                     QueryLanguage.SPARQL,
@@ -51,7 +51,7 @@ public class OmittedTopConcepts extends Issue<Collection<Resource>> {
     }
 
     @Override
-    protected Report prepareReport(Collection<Resource> preparedData) {
+    protected Report generateReport(Collection<Resource> preparedData) {
         return new CollectionReport<Resource>(preparedData);
     }
 

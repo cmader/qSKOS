@@ -29,12 +29,12 @@ public class HierarchicalCyclesTest {
 
     @Test
     public void testCycleCount() throws OpenRDFException {
-        Assert.assertEquals(2, hierarchicalCycles.getPreparedData().size());
+        Assert.assertEquals(2, hierarchicalCycles.getResult().size());
     }
 
     @Test
     public void testComponentsCycleCount() throws OpenRDFException {
-        Assert.assertEquals(3, hierarchicalCyclesForComponents.getPreparedData().size());
+        Assert.assertEquals(3, hierarchicalCyclesForComponents.getResult().size());
     }
 
 }

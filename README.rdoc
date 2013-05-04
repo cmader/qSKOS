@@ -19,7 +19,7 @@ You have two options:
 === 2) Build the tool
 
 * Change into the newly created +qSKOS+ directory and build the application: <tt>mvn clean package</tt>. Wait for tests and build to complete.
-* Two jar files are now located in the +qSKOS+ directory:
+* Two jar files are now located in the +qSKOS/target+ directory:
   * <tt>qSKOS-cmd.jar</tt>: The *executable* jar file that can directly be used for vocabulary evaluation
   * <tt>qSKOS-[version].jar</tt>: The library to integrate qSKOS' functionality into other applications
 
@@ -57,18 +57,18 @@ or
 
 Here's an excerpt from the output:
 
-  ID: alr
-  Name: Ambiguously Labeled Resources
-  Description: Finds resources with more then one prefLabel per language
+  ID: chr
+  Name: Cyclic Hierarchical Relations
+  Description: Finds all hierarchy cycle containing components
 
 Every property/issue is identified by an ID string, has a name and a description. For more detailed information on the quality issues see the qSKOS {wiki page}[https://github.com/cmader/qSKOS/wiki/Quality-Issues].
 
 ==== 4) Testing for a specific issue or a subset of issues
 Specific issues can be tested by passing the <tt>-c</tt> parameter followed by one or more (comma-separated) issue IDs (see example above). Keep in mind, that the <tt>-c</tt> parameter has to be placed between between the +analyze+ command and the vocabulary file like this:
 
-<tt>java -jar qSKOS-cmd.jar analyze -c lc,alr ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze -c ol,oc ipsv_skos.rdf</tt>
 
-The command above triggers analysis of the "Label Conflicts" and "Ambiguously Labeled Resources" issues. In a very similar way it is possible to explicitly *exclude* issues from testing. For example, the command
+The command above triggers analysis of the "Overlapping Labels" and "Orphan Concepts" issues. In a very similar way it is possible to explicitly *exclude* issues from testing. For example, the command
 
 <tt>java -jar qSKOS-cmd.jar analyze -dc mil ipsv_skos.rdf</tt>
 

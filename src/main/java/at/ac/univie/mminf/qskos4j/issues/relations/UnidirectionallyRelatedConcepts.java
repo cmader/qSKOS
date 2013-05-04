@@ -41,7 +41,7 @@ import java.util.Map;
     }
 
     @Override
-    protected Map<Pair<Resource>, String> prepareData() throws OpenRDFException {
+    protected Map<Pair<Resource>, String> computeResult() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
             TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOmittedRelationsQuery(inversePropertyPair));
 			addToOmittedInverseRelationsMap(query.evaluate(), inversePropertyPair);
@@ -51,7 +51,7 @@ import java.util.Map;
 	}
 
     @Override
-    protected Report prepareReport(Map<Pair<Resource>, String> preparedData) {
+    protected Report generateReport(Map<Pair<Resource>, String> preparedData) {
         return new UnidirectionallyRelatedConceptsReport(preparedData);
     }
 

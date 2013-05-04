@@ -23,7 +23,7 @@ public class InvalidCharactersTest {
         // all issues must run without exception
         try {
             for (Issue issue : qSkosInvalidCharacters.getAllIssues()) {
-                issue.getPreparedData();
+                issue.getResult();
             }
         }
         catch (Exception e) {

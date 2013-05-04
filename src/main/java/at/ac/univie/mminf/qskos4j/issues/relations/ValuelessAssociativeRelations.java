@@ -25,7 +25,7 @@ public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> 
     }
 
     @Override
-    protected Collection<Pair<URI>> prepareData() throws OpenRDFException {
+    protected Collection<Pair<URI>> computeResult() throws OpenRDFException {
 		Collection<Pair<URI>> redundantAssociativeRelations = new HashSet<Pair<URI>>();
 
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRedundantAssociativeRelationsQuery());
@@ -35,7 +35,7 @@ public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> 
 	}
 
     @Override
-    protected Report prepareReport(Collection<Pair<URI>> preparedData) {
+    protected Report generateReport(Collection<Pair<URI>> preparedData) {
         return new CollectionReport<Pair<URI>>(preparedData);
     }
 

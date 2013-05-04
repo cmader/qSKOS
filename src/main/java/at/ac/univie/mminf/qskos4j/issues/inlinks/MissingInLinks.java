@@ -46,7 +46,7 @@ public class MissingInLinks extends Issue<Collection<Value>> {
     }
 
     @Override
-    protected Collection<Value> prepareData() throws OpenRDFException {
+    protected Collection<Value> computeResult() throws OpenRDFException {
         Collection<Value> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
@@ -66,17 +66,17 @@ public class MissingInLinks extends Issue<Collection<Value>> {
     }
 
     @Override
-    protected Report prepareReport(Collection<Value> preparedData) {
+    protected Report generateReport(Collection<Value> preparedData) {
         return new ExtrapolatedCollectionReport<Value>(preparedData, randomSubsetSize_percent);
     }
 
     private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
     {
 		if (randomSubsetSize_percent == null) {
-			return authoritativeConcepts.getPreparedData();
+			return authoritativeConcepts.getResult();
 		}
 		else {
-			return new RandomSubSet<Value>(authoritativeConcepts.getPreparedData(), randomSubsetSize_percent);
+			return new RandomSubSet<Value>(authoritativeConcepts.getResult(), randomSubsetSize_percent);
 		}
 	}
 	

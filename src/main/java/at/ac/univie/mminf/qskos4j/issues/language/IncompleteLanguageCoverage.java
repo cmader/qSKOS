@@ -37,7 +37,7 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
     }
 
     @Override
-    protected Map<Value, Collection<String>> prepareData() throws OpenRDFException {
+    protected Map<Value, Collection<String>> computeResult() throws OpenRDFException {
 		incompleteLanguageCoverage = new HashMap<Value, Collection<String>>();
 		
 		checkLanguageCoverage();
@@ -47,7 +47,7 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
 	}
 
     @Override
-    protected Report prepareReport(Map<Value, Collection<String>> preparedData) {
+    protected Report generateReport(Map<Value, Collection<String>> preparedData) {
         return new IncompleteLangCovReport(incompleteLanguageCoverage);
     }
 
@@ -55,7 +55,7 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
 	{
 		languageCoverage = new HashMap<Value, Collection<String>>();
 		
-		Iterator<URI> it = new MonitoredIterator<URI>(involvedConcepts.getPreparedData(), progressMonitor);
+		Iterator<URI> it = new MonitoredIterator<URI>(involvedConcepts.getResult(), progressMonitor);
 		while (it.hasNext()) {
             Value concept = it.next();
 

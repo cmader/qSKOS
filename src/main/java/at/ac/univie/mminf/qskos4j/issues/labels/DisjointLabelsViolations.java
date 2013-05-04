@@ -35,13 +35,13 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
     }
 
     @Override
-    protected Map<Literal, LabelConflict> prepareData() throws OpenRDFException {
+    protected Map<Literal, LabelConflict> computeResult() throws OpenRDFException {
         findNonDisjointLabels();
         return nonDisjointLabels;
     }
 
     @Override
-    protected Report prepareReport(Map<Literal, LabelConflict> preparedData) {
+    protected Report generateReport(Map<Literal, LabelConflict> preparedData) {
         return new CollectionReport<LabelConflict>(nonDisjointLabels.values());
     }
 

@@ -30,14 +30,14 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
     }
 
     @Override
-    protected Map<Resource, Collection<Literal>> prepareData() throws OpenRDFException {
+    protected Map<Resource, Collection<Literal>> computeResult() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createMissingLangTagQuery()).evaluate();
         generateMissingLangTagMap(result);
         return missingLangTags;
 	}
 
     @Override
-    protected Report prepareReport(Map<Resource, Collection<Literal>> preparedData) {
+    protected Report generateReport(Map<Resource, Collection<Literal>> preparedData) {
         return new MissingLangTagReport(preparedData);
     }
 

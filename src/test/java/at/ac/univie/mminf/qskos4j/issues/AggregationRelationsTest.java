@@ -27,7 +27,7 @@ public class AggregationRelationsTest {
     @Test
     public void testAggregationRelationsCount() throws OpenRDFException
     {
-        Assert.assertEquals(5, aggregationRelations.getPreparedData().longValue());
+        Assert.assertEquals(5, aggregationRelations.getResult().longValue());
     }
 
 }

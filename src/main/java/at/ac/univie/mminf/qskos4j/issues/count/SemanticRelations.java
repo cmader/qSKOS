@@ -28,13 +28,13 @@ public class SemanticRelations extends Issue<Long> {
     }
 
     @Override
-    protected Long prepareData() throws OpenRDFException {
+    protected Long computeResult() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createSemanticRelationsQuery());
         return TupleQueryResultUtil.countResults(query.evaluate());
     }
 
     @Override
-    protected Report prepareReport(Long preparedData) {
+    protected Report generateReport(Long preparedData) {
         return new NumberReport<Long>(preparedData);
     }
 
