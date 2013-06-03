@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -17,7 +17,7 @@ import java.util.HashSet;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
  */
-public class MappingClashes extends Issue<Collection<Pair<Value>>> {
+public class MappingClashes extends Issue<Collection<Tuple<Value>>> {
 
     public MappingClashes() {
         super("mc",
@@ -28,21 +28,21 @@ public class MappingClashes extends Issue<Collection<Pair<Value>>> {
     }
 
     @Override
-    protected Collection<Pair<Value>> computeResult() throws OpenRDFException {
+    protected Collection<Tuple<Value>> computeResult() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createExVsAssMappingQuery());
 
-        Collection<Pair<Value>> valuePairs = TupleQueryResultUtil.createCollectionOfValuePairs(
+        Collection<Tuple<Value>> valuePairs = TupleQueryResultUtil.createCollectionOfValuePairs(
             query.evaluate(),
             "concept1", "concept2");
-        Collection<Pair<Value>> distinctPairs = new HashSet<Pair<Value>>();
+        Collection<Tuple<Value>> distinctPairs = new HashSet<Tuple<Value>>();
         distinctPairs.addAll(valuePairs);
 
         return distinctPairs;
     }
 
     @Override
-    protected Report generateReport(Collection<Pair<Value>> preparedData) {
-        return new CollectionReport<Pair<Value>>(preparedData);
+    protected Report generateReport(Collection<Tuple<Value>> preparedData) {
+        return new CollectionReport<Tuple<Value>>(preparedData);
     }
 
     private String createExVsAssMappingQuery() {

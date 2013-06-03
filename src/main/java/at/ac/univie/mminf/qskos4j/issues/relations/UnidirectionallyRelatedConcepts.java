@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Unidirectionally_Related_Concepts">Unidirectionally Related Concepts</a>.
  */
- public class UnidirectionallyRelatedConcepts extends Issue<Map<Pair<Resource>, String>> {
+ public class UnidirectionallyRelatedConcepts extends Issue<Map<Tuple<Resource>, String>> {
 
 	private String[][] inversePropertyPairs = {
 		{"skos:broader", "skos:narrower"}, 
@@ -31,7 +31,7 @@ import java.util.Map;
     };
 
     private final Logger logger = LoggerFactory.getLogger(UnidirectionallyRelatedConcepts.class);
-	private Map<Pair<Resource>, String> omittedInverseRelations = new HashMap<Pair<Resource>, String>();
+	private Map<Tuple<Resource>, String> omittedInverseRelations = new HashMap<Tuple<Resource>, String>();
 
     public UnidirectionallyRelatedConcepts() {
         super("urc",
@@ -41,7 +41,7 @@ import java.util.Map;
     }
 
     @Override
-    protected Map<Pair<Resource>, String> computeResult() throws OpenRDFException {
+    protected Map<Tuple<Resource>, String> computeResult() throws OpenRDFException {
 		for (String[] inversePropertyPair : inversePropertyPairs) {
             TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOmittedRelationsQuery(inversePropertyPair));
 			addToOmittedInverseRelationsMap(query.evaluate(), inversePropertyPair);
@@ -51,7 +51,7 @@ import java.util.Map;
 	}
 
     @Override
-    protected Report generateReport(Map<Pair<Resource>, String> preparedData) {
+    protected Report generateReport(Map<Tuple<Resource>, String> preparedData) {
         return new UnidirectionallyRelatedConceptsReport(preparedData);
     }
 
@@ -89,7 +89,7 @@ import java.util.Map;
             Resource resource2 = (Resource) value2;
 
             omittedInverseRelations.put(
-                new Pair<Resource>(resource1, resource2),
+                new Tuple<Resource>(resource1, resource2),
                     inverseProperties);
         }
         catch (ClassCastException e) {

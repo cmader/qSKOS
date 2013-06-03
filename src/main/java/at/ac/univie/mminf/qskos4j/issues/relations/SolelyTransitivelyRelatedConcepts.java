@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -16,13 +16,13 @@ import java.util.Set;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Solely_Transitively_Related_Concepts">Solely Transitively Related Concepts</a>.
  */
-public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI>>> {
+public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Tuple<URI>>> {
 
 	private String[][] transitiveNontransiviteInverseProperties = {
 			{"skos:broaderTransitive", "skos:broader", "skos:narrower"},
 			{"skos:narrowerTransitive", "skos:narrower", "skos:broader"}};
 	
-	private Set<Pair<URI>> solitaryTransitiveRelations = new HashSet<Pair<URI>>();
+	private Set<Tuple<URI>> solitaryTransitiveRelations = new HashSet<Tuple<URI>>();
 
     public SolelyTransitivelyRelatedConcepts() {
         super("strc",
@@ -33,7 +33,7 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
     }
 
     @Override
-    protected Collection<Pair<URI>> computeResult() throws OpenRDFException {
+    protected Collection<Tuple<URI>> computeResult() throws OpenRDFException {
 		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
             TupleQuery query = repCon.prepareTupleQuery(
                 QueryLanguage.SPARQL,
@@ -45,8 +45,8 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
 	}
 
     @Override
-    protected Report generateReport(Collection<Pair<URI>> preparedData) {
-        return new CollectionReport<Pair<URI>>(preparedData);
+    protected Report generateReport(Collection<Tuple<URI>> preparedData) {
+        return new CollectionReport<Tuple<URI>>(preparedData);
     }
 
     private String createSolitaryTransitiveRelationsQuery(
@@ -68,7 +68,7 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
 			URI resource1 = (URI) queryResult.getValue("resource1");
 			URI resource2 = (URI) queryResult.getValue("resource2");
 			
-			solitaryTransitiveRelations.add(new Pair<URI>(resource1, resource2));
+			solitaryTransitiveRelations.add(new Tuple<URI>(resource1, resource2));
 		}
 	}
 

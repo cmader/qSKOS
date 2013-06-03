@@ -24,6 +24,12 @@
 		<skos:related rdf:resource="conceptD"/>
   </rdf:Description>
 
+    <!-- Case 2.1: second common parent -->
+    <rdf:Description rdf:about="conceptG">
+        <skos:narrower rdf:resource="conceptD"/>
+        <skos:narrower rdf:resource="conceptF"/>
+    </rdf:Description>
+
 	<!-- Case 3 -->
 	<rdf:Description rdf:about="conceptG">
 		<skos:broaderTransitive rdf:resource="conceptH"/>
