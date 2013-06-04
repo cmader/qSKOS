@@ -29,7 +29,11 @@ public class Tuple<T> {
 	}
 	
 	public int hashCode() {
-        return elements.hashCode();
+        int hashCode = 0;
+        for (T element : elements) {
+            hashCode += element.hashCode();
+        }
+        return hashCode;
     }
 
 	@Override
