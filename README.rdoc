@@ -127,6 +127,22 @@ A subset of the quality issues qSKOS supports (including an analysis of several 
         abstract = {The Simple Knowledge Organization System (SKOS) is a standard model for controlled vocabularies on the Web. However, SKOS   vocabularies often differ in terms of quality, which reduces their applicability across system boundaries. Here we investigate how we can support taxonomists in improving SKOS vocabularies by pointing out quality issues that go beyond the integrity constraints defined in the SKOS specification. We identified potential quality issues and formalized them into computable quality checking functions that can find affected resources in a given SKOS vocabulary. We implemented these functions in the qSKOS quality assessment tool, analyzed 15 existing vocabularies, and found possible quality issues in all of them.}
   }
 
+
+We performed a survey among experts in the field of vocabulary development in order to get feedback about the quality issues checked by qSKOS. The paper {Perception and Relevance of Quality Issues in Web Vocabularies}[http://eprints.cs.univie.ac.at/3720/1/iSemantics2013-cr_version-mader-haslhofer.pdf] reports on a subset of these issues. It has been published at I-SEMANTICS 2013, and sets them into relation to common usage scenarios for controlled vocabularies on the Web. 
+
+
+@inproceedings{cs3720,
+       booktitle = {I-SEMANTICS 2013},
+           title = {Perception and Relevance of Quality Issues in Web Vocabularies},
+          author = {Christian Mader and Bernhard Haslhofer},
+         address = {Graz, AUT},
+            year = {2013},
+             url = {http://eprints.cs.univie.ac.at/3720/},
+        abstract = {Web vocabularies provide organization and orientation in information environments and can facilitate resource discovery and retrieval. Several tools have been developed that support quality assessment for the increasing amount of vocabularies expressed in SKOS and published as Linked Data. However, these tools do not yet take into account the users?
+perception of vocabulary quality. In this paper, we report the findings from an online survey conducted among experts in the field of vocabulary development to study the perception and relevance of vocabulary quality issues in the context of real-world application scenarios. Our results indicate that structural and labeling issues are the most relevant ones. We also derived design recommendations for vocabulary quality checking tools.}
+}
+
+
 == Contributors
 
 * Christian Mader ({@cmader}[https://github.com/cmader])
