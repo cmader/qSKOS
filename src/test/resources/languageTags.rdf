@@ -58,4 +58,10 @@
         <skos:prefLabel xml:lang="sl-rozaj">conceptI</skos:prefLabel>
     </rdf:Description>
 
+    <!-- error, private tag -->
+    <rdf:Description rdf:about="conceptJ">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:definition xml:lang="x-other">def with private langtag</skos:definition>
+    </rdf:Description>
+
 </rdf:RDF>

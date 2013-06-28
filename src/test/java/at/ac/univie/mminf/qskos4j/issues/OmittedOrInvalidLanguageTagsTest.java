@@ -59,7 +59,7 @@ public class OmittedOrInvalidLanguageTagsTest {
     @Test
     public void testMissingLangTagCount_3() throws OpenRDFException {
         Map<Resource, Collection<Literal>> missingLangTags = oiltLangTags.getResult();
-        Assert.assertEquals(1, countEntries(missingLangTags.values()));
+        Assert.assertEquals(2, countEntries(missingLangTags.values()));
     }
 
 }
