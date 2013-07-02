@@ -1,11 +1,10 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.HierarchicalRedundancy;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
-import junit.framework.Assert;
-import junit.framework.Test;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.openrdf.OpenRDFException;
 
 import java.io.IOException;

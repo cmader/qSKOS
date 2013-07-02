@@ -44,11 +44,17 @@
     </rdf:Description>
 
     <rdf:Description rdf:about="conceptK">
-        <skos:narrower rdf:resource="conceptL"/>
+        <skos:broader rdf:resource="conceptL"/>
     </rdf:Description>
 
     <rdf:Description rdf:about="conceptL">
-        <skos:narrower rdf:resource="conceptM"/>
+        <skos:broader rdf:resource="conceptM"/>
+    </rdf:Description>
+
+    <!-- no redundancy -->
+    <rdf:Description rdf:about="conceptN">
+        <skos:broader rdf:resource="conceptO"/>
+        <skos:broader rdf:resource="conceptO"/>
     </rdf:Description>
 
 </rdf:RDF>

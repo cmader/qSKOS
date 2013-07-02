@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Iterator;
 
 public class SkosOntology {
 
@@ -35,11 +33,6 @@ public class SkosOntology {
             new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrower"),
             new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowerTransitive"),
             new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowMatch")
-    };
-
-    public final static URI[] SKOS_ASSOCIATIVE_PROPERTIES = {
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "related"),
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "relatedMatch")
     };
 
     private final String SKOS_GRAPH_URL = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
@@ -99,39 +92,6 @@ public class SkosOntology {
             "SELECT ?" +bindingName+ " WHERE {" +
                 "?" +bindingName+ " rdfs:subPropertyOf+ skos:semanticRelation" +
             "}";
-    }
-
-    public String getHierarchicalPropertiesPath(HierarchyType hierarchyType)
-    {
-        Iterator<URI> broaderIt = Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).iterator();
-        Iterator<URI> narrowerIt = Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).iterator();
-
-        switch (hierarchyType) {
-            case BROADER:
-                return concatWithOrOperator(broaderIt, false) +"|"+ concatWithOrOperator(narrowerIt, true);
-
-            case NARROWER:
-                return concatWithOrOperator(narrowerIt, false) +"|"+ concatWithOrOperator(broaderIt, true);
-
-            default:
-                return "";
-        }
-    }
-
-    private String concatWithOrOperator(Iterator<URI> iterator, boolean addInversePrefix) {
-        String concatedEntries = "";
-        while (iterator.hasNext()) {
-            concatedEntries += (addInversePrefix ? "^" : "") +"<"+ iterator.next() +">"+ (iterator.hasNext() ? "|" : "");
-        }
-        return concatedEntries;
-    }
-
-    public HierarchyType getPredicateHierarchyType(URI predicate)
-    {
-        if (Arrays.asList(SkosOntology.SKOS_BROADER_PROPERTIES).contains(predicate)) return HierarchyType.BROADER;
-        if (Arrays.asList(SkosOntology.SKOS_NARROWER_PROPERTIES).contains(predicate)) return HierarchyType.NARROWER;
-
-        throw new IllegalArgumentException("Predicate not a hierarchical property");
     }
 
     public Repository getRepository() {
