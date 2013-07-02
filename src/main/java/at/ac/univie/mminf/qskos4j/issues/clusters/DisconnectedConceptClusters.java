@@ -107,11 +107,11 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
 
     private String createConnectionsQuery(Value concept) throws OpenRDFException {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
-                "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
-                "{" +
-                    "<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept . " +
-                    "?semanticRelation rdfs:subPropertyOf skos:semanticRelation" +
-                "}";
+            "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
+            "{" +
+                "<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept . " +
+                "?semanticRelation rdfs:subPropertyOf skos:semanticRelation" +
+            "}";
     }
 
     private void addNodesToGraph(
