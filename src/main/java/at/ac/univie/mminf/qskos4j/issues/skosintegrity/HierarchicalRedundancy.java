@@ -16,6 +16,7 @@ import java.util.HashSet;
 
 public class HierarchicalRedundancy extends Issue<Collection<Pair<Resource>>> {
 
+    private String HIER_PROPERTIES = "skos:broaderTransitive|^skos:narrowerTransitive";
     private Collection<Pair<Resource>> hierarchicalRedundancies;
 
     public HierarchicalRedundancy() {
@@ -43,9 +44,9 @@ public class HierarchicalRedundancy extends Issue<Collection<Pair<Resource>>> {
 
     private String createQuery() {
         return SparqlPrefix.SKOS + "SELECT ?concept ?otherConcept WHERE {" +
-            "?concept skos:broader|^skos:narrower ?otherConcept . " +
-            "?concept (skos:broader|^skos:narrower)+ ?imConcept ." +
-            "?imConcept (skos:broader|^skos:narrower)+ ?otherConcept ." +
+            "?concept " +HIER_PROPERTIES+" ?otherConcept . " +
+            "?concept ("+HIER_PROPERTIES+")+ ?imConcept ." +
+            "?imConcept ("+HIER_PROPERTIES+") ?otherConcept ." +
         "}";
     }
 

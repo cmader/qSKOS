@@ -1,11 +1,8 @@
 package at.ac.univie.mminf.qskos4j.util.vocab;
 
-import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sail.SailRepository;
@@ -21,22 +18,8 @@ public class SkosOntology {
 
     private final static Logger logger = LoggerFactory.getLogger(SkosOntology.class);
 
-    public enum HierarchyType {BROADER, NARROWER}
-
-    public final static URI[] SKOS_BROADER_PROPERTIES = {
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broader"),
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broaderTransitive"),
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "broadMatch")
-    };
-
-    public final static URI[] SKOS_NARROWER_PROPERTIES = {
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrower"),
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowerTransitive"),
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "narrowMatch")
-    };
-
-    private final String SKOS_GRAPH_URL = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
-    private final String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
+    public final static String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
+    public final static String SKOS_ONTO_URI = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
 
     private static SkosOntology ourInstance = new SkosOntology();
     private static Repository skosRepo;
@@ -59,10 +42,9 @@ public class SkosOntology {
 
         RepositoryConnection repCon = skosRepo.getConnection();
         try {
-            repCon.add(new URL(SKOS_GRAPH_URL),
-                        SKOS_BASE_URI,
-                        RDFFormat.RDFXML,
-                        new URIImpl(SKOS_GRAPH_URL));
+            repCon.add(new URL(SKOS_ONTO_URI),
+                SKOS_BASE_URI,
+                RDFFormat.RDFXML);
         }
         finally {
             repCon.close();
@@ -72,26 +54,8 @@ public class SkosOntology {
     private SkosOntology() {
     }
 
-    public String getSubPropertiesOfSemanticRelationsFilter(String bindingName) throws OpenRDFException
-    {
-        RepositoryConnection repCon = skosRepo.getConnection();
-        try {
-            TupleQuery tupleQuery = repCon.prepareTupleQuery(
-                QueryLanguage.SPARQL,
-                createSubPropertiesOfSemanticRelationsQuery(bindingName));
-
-            return TupleQueryResultUtil.getFilterForBindingName(tupleQuery.evaluate(), bindingName);
-        }
-        finally {
-            repCon.close();
-        }
-    }
-
-    private String createSubPropertiesOfSemanticRelationsQuery(String bindingName) {
-        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-            "SELECT ?" +bindingName+ " WHERE {" +
-                "?" +bindingName+ " rdfs:subPropertyOf+ skos:semanticRelation" +
-            "}";
+    public URI getUri(String element) {
+        return new URIImpl(SKOS_BASE_URI +"#"+ element);
     }
 
     public Repository getRepository() {

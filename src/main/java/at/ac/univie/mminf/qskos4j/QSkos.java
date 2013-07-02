@@ -37,9 +37,9 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -68,7 +68,7 @@ public class QSkos {
 
     private List<Issue> registeredIssues = new ArrayList<Issue>();
 
-    public QSkos(File file) throws RepositoryException {
+    public QSkos(File file) throws OpenRDFException, IOException {
         this();
 
         RepositoryBuilder repositoryBuilder = new RepositoryBuilder();

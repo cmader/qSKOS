@@ -4,7 +4,6 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.NumberReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.query.QueryLanguage;
@@ -40,12 +39,11 @@ public class SemanticRelations extends Issue<Long> {
 
     private String createSemanticRelationsQuery() throws OpenRDFException
     {
-        String skosSemanticRelationSubPropertiesFilter = SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("relationType");
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
             "SELECT ?relationType WHERE " +
             "{" +
-                "{?concept ?relationType ?otherConcept} "+
-                skosSemanticRelationSubPropertiesFilter+
+                "?concept ?relationType ?otherConcept ." +
+                "?relationType rdfs:subPropertyOf skos:semanticRelation"+
             "}";
     }
 

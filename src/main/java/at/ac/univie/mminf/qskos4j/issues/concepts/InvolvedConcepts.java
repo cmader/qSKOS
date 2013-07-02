@@ -3,7 +3,6 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -46,21 +45,10 @@ public class InvolvedConcepts extends Issue<Collection<URI>> {
     }
 
     private String createConceptsQuery() throws OpenRDFException {
-        String skosSemanticRelationSubPropertiesFilter = SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semRelSubProp");
-
-        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
-            "SELECT DISTINCT ?concept "+
-                "WHERE {" +
-                    "{?concept rdf:type skos:Concept} UNION "+
-                    "{?concept skos:topConceptOf ?conceptScheme} UNION "+
-                    "{?conceptScheme skos:hasTopConcept ?concept} UNION " +
-                    "{" +
-                        "{?concept ?p ?x . } UNION" +
-                        "{?x ?p ?concept . }" +
-                        "?p rdfs:subPropertyOf ?semRelSubProp .  " +
-                        skosSemanticRelationSubPropertiesFilter+
-                    "}"+
-                "}";
+        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF+
+            "SELECT DISTINCT ?concept WHERE {" +
+                "?concept rdf:type skos:Concept"+
+            "}";
     }
 
 }
