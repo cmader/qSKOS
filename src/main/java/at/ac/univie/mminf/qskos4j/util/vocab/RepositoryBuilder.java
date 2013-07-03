@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.util.vocab;
 import org.junit.Assert;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.GraphQuery;
 import org.openrdf.query.GraphQueryResult;
 import org.openrdf.query.QueryLanguage;
@@ -64,7 +65,8 @@ public class RepositoryBuilder {
         repository.getConnection().add(
             new URL(SkosOntology.SKOS_ONTO_URI),
             SkosOntology.SKOS_BASE_URI,
-            RDFFormat.RDFXML);
+            RDFFormat.RDFXML,
+            new URIImpl(SkosOntology.SKOS_ONTO_URI));
     }
 
     private String createDataDirName() {
