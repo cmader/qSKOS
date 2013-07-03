@@ -5,7 +5,6 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
@@ -108,14 +107,11 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
 
     private String createConnectionsQuery(Value concept) throws OpenRDFException {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
-                "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
-                "{" +
-                    "{" +
-                        "<" +concept.stringValue()+ "> ?p ?otherConcept . " +
-                        "?p rdfs:subPropertyOf ?semanticRelation" +
-                    "}" +
-                    SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semanticRelation")+
-                "}";
+            "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
+            "{" +
+                "<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept . " +
+                "?semanticRelation rdfs:subPropertyOf skos:semanticRelation" +
+            "}";
     }
 
     private void addNodesToGraph(

@@ -155,7 +155,7 @@
   </repositories>
 
   <properties>
-    <sesame.version>2.6.10</sesame.version>
+    <sesame.version>2.7.3</sesame.version>
   </properties>
 
 </project>

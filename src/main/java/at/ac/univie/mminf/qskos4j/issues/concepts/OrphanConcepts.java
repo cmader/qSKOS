@@ -4,7 +4,6 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
@@ -55,12 +54,9 @@ public class OrphanConcepts extends Issue<Collection<Value>> {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept WHERE " +
             "{" +
-                "{"+
-                    "{?concept ?rel ?otherConcept} UNION " +
-                    "{?otherConcept ?rel ?concept}" +
-                    "?rel rdfs:subPropertyOf ?semRel . " +
-                "}"+
-                SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semRel")+
+                "{?concept ?rel ?otherConcept} UNION " +
+                "{?otherConcept ?rel ?concept}" +
+                "?rel rdfs:subPropertyOf skos:semanticRelation" +
             "}";
     }
 

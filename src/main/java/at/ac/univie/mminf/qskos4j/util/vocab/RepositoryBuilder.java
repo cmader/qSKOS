@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 public class RepositoryBuilder {
@@ -25,8 +26,7 @@ public class RepositoryBuilder {
 
     private Repository repository;
 
-    public Repository setUpFromTestResource(String testFileName) throws RepositoryException
-    {
+    public Repository setUpFromTestResource(String testFileName) throws OpenRDFException, IOException {
         URL conceptsUrl = RepositoryBuilder.class.getResource("/" +testFileName);
         File conceptsFile = new File(conceptsUrl.getFile());
         Assert.assertNotNull(conceptsFile);
@@ -34,9 +34,11 @@ public class RepositoryBuilder {
         return repository;
     }
 
-    public Repository setUpFromFile(File rdfFile, String baseURI, RDFFormat dataFormat) throws RepositoryException
+    public Repository setUpFromFile(File rdfFile, String baseURI, RDFFormat dataFormat)
+        throws OpenRDFException, IOException
     {
         createRepositoryForFile();
+        addSkosOntology();
         RepositoryConnection repCon = repository.getConnection();
 
         try {
@@ -56,6 +58,13 @@ public class RepositoryBuilder {
         File tempDir = new File(createDataDirName());
         repository = new SailRepository(new ForwardChainingRDFSInferencer(new MemoryStore(tempDir)));
         repository.initialize();
+    }
+
+    private void addSkosOntology() throws OpenRDFException, IOException {
+        repository.getConnection().add(
+            new URL(SkosOntology.SKOS_ONTO_URI),
+            SkosOntology.SKOS_BASE_URI,
+            RDFFormat.RDFXML);
     }
 
     private String createDataDirName() {
