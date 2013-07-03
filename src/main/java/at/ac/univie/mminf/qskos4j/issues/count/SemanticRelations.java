@@ -3,11 +3,10 @@ package at.ac.univie.mminf.qskos4j.issues.count;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.NumberReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import org.openrdf.OpenRDFException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
+import org.openrdf.model.Statement;
+import org.openrdf.repository.RepositoryResult;
 
 /**
  * Created by christian
@@ -28,23 +27,23 @@ public class SemanticRelations extends Issue<Long> {
 
     @Override
     protected Long computeResult() throws OpenRDFException {
-        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createSemanticRelationsQuery());
-        return TupleQueryResultUtil.countResults(query.evaluate());
+        RepositoryResult<Statement> result = repCon.getStatements(
+            null,
+            SkosOntology.getInstance().getUri("semanticRelation"),
+            null,
+            true);
+
+        long semanticRelationsCount = 0;
+        while (result.hasNext()) {
+            result.next();
+            semanticRelationsCount++;
+        }
+        return semanticRelationsCount;
     }
 
     @Override
     protected Report generateReport(Long preparedData) {
         return new NumberReport<Long>(preparedData);
-    }
-
-    private String createSemanticRelationsQuery() throws OpenRDFException
-    {
-        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-            "SELECT ?relationType WHERE " +
-            "{" +
-                "?concept ?relationType ?otherConcept ." +
-                "?relationType rdfs:subPropertyOf skos:semanticRelation"+
-            "}";
     }
 
 }

@@ -28,6 +28,7 @@ import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.issues.relations.SolelyTransitivelyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.UnidirectionallyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
+import at.ac.univie.mminf.qskos4j.issues.skosintegrity.HierarchicalRedundancy;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.MappingClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.RelationClashes;
 import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
@@ -115,6 +116,7 @@ public class QSkos {
         registeredIssues.add(new SolelyTransitivelyRelatedConcepts());
         registeredIssues.add(new OmittedTopConcepts(conceptSchemes));
         registeredIssues.add(new TopConceptsHavingBroaderConcepts());
+        registeredIssues.add(new HierarchicalRedundancy());
 
         missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(EXT_ACCESS_MILLIS);

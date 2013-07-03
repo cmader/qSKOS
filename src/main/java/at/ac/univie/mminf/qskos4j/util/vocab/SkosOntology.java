@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.util.vocab;
 
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.Repository;
@@ -60,6 +61,10 @@ public class SkosOntology {
 
     public Repository getRepository() {
         return skosRepo;
+    }
+
+    public boolean isSkosResource(Resource resource) {
+        return resource.stringValue().startsWith(SparqlPrefix.SKOS.getNameSpace());
     }
 
 }
