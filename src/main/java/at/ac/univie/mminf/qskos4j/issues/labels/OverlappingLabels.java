@@ -12,7 +12,7 @@ import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.query.*;
 import org.slf4j.Logger;
@@ -61,10 +61,10 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
 		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
 
         progressMonitor.setTaskDescription("Collecting resource labels");
-        Iterator<URI> it = new MonitoredIterator<URI>(involvedConcepts.getResult(), progressMonitor);
+        Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult(), progressMonitor);
 
 		while (it.hasNext()) {
-            Value concept = it.next();
+            Resource concept = it.next();
 
             try {
                 TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptLabelQuery(concept));

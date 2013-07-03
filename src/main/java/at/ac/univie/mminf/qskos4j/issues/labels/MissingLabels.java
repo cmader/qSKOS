@@ -1,31 +1,27 @@
 package at.ac.univie.mminf.qskos4j.issues.labels;
 
-import at.ac.univie.mminf.qskos.issues.RepairFailedException;
-import at.ac.univie.mminf.qskos.issues.RepairableIssue;
-import at.ac.univie.mminf.qskos.issues.concepts.AuthoritativeConcepts;
-import at.ac.univie.mminf.qskos.issues.conceptscheme.ConceptSchemes;
-import at.ac.univie.mminf.qskos.result.CollectionResult;
-import at.ac.univie.mminf.qskos.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
+import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
+import at.ac.univie.mminf.qskos4j.report.CollectionReport;
+import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.StatementImpl;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MissingLabels extends RepairableIssue<CollectionResult<Value>> {
+public class MissingLabels extends Issue<Collection<Resource>> {
 
     private final Logger logger = LoggerFactory.getLogger(MissingLabels.class);
 
-    private Literal defaultLabel;
+    private Collection<Resource> unlabeledConceptsAndConceptSchemes;
     private AuthoritativeConcepts allAuthConcepts;
     private ConceptSchemes allConceptSchemes;
     private Collection<Value> unlabeledConcepts, unlabeledConceptSchemes;
@@ -34,70 +30,32 @@ public class MissingLabels extends RepairableIssue<CollectionResult<Value>> {
         super("ml",
             "Missing Labels",
             "Finds concepts and conceptschemes with missing labels",
-            "Injects default labels for all missing labels with a default language");
+            IssueType.ANALYTICAL);
 
         this.allAuthConcepts = authConcepts;
         this.allConceptSchemes = conceptSchemes;
-        qualityProperty = "hasMissingLabel";
-    }
-
-    public void setDefaultLabel(Literal defaultLabel) {
-        this.defaultLabel = defaultLabel;
     }
 
     @Override
-    protected void invokeRepair() throws RepairFailedException, OpenRDFException {
-        if (!invoke().indicatesProblem()) return;
+    protected Collection<Resource> computeResult() throws OpenRDFException {
+        unlabeledConceptsAndConceptSchemes = new ArrayList<Resource>();
 
-        if (defaultLabel == null) {
-            throw new RepairFailedException("Default label literal not provided", this);
-        }
+        unlabeledConceptsAndConceptSchemes.addAll(findUnlabeledConcepts());
+        unlabeledConceptsAndConceptSchemes.addAll(findUnlabeledConceptSchemes());
 
-        for (Value concept : unlabeledConcepts) {
-            repairConcept(concept);
-        }
-
-        for (Value conceptScheme : unlabeledConceptSchemes) {
-            repairConceptScheme(conceptScheme);
-        }
-    }
-
-    private void repairConcept(Value concept) throws RepositoryException {
-        repCon.add(new StatementImpl(
-            (Resource) concept,
-            new URIImpl(SparqlPrefix.SKOS.getNameSpace() + "prefLabel"),
-            defaultLabel)
-        );
-    }
-
-    private void repairConceptScheme(Value conceptScheme) throws RepositoryException {
-        repCon.add(new StatementImpl(
-            (Resource) conceptScheme,
-            new URIImpl(SparqlPrefix.RDFS.getNameSpace() + "label"),
-            defaultLabel)
-        );
-        repCon.add(new StatementImpl(
-            (Resource) conceptScheme,
-            new URIImpl(SparqlPrefix.DC.getNameSpace() + "title"),
-            defaultLabel));
+        return unlabeledConceptsAndConceptSchemes;
     }
 
     @Override
-    protected CollectionResult<Value> invoke() throws OpenRDFException {
-        Collection<Value> unlabeledConceptsAndConceptSchemes = new ArrayList<Value>();
-
-        unlabeledConcepts = findUnlabeledConcepts();
-        unlabeledConceptSchemes = findUnlabeledConceptSchemes();
-        unlabeledConceptsAndConceptSchemes.addAll(unlabeledConcepts);
-        unlabeledConceptsAndConceptSchemes.addAll(unlabeledConceptSchemes);
-
-        return new CollectionResult<Value>(unlabeledConceptsAndConceptSchemes).setQualityProperty(qualityProperty);
+    protected Report generateReport(Collection<Resource> preparedData) {
+        return new CollectionReport<Resource>(unlabeledConceptsAndConceptSchemes);
     }
 
-    private Collection<Value> findUnlabeledConcepts() throws OpenRDFException {
-        Collection<Value> unlabeledConcepts = new ArrayList<Value>();
 
-        for (Value authConcept : allAuthConcepts.getResult().getData()) {
+    private Collection<Resource> findUnlabeledConcepts() throws OpenRDFException {
+        Collection<Resource> unlabeledConcepts = new ArrayList<Resource>();
+
+        for (Resource authConcept : allAuthConcepts.getResult()) {
             if (hasNoPrefLabel(authConcept)) unlabeledConcepts.add(authConcept);
         }
 
@@ -116,10 +74,10 @@ public class MissingLabels extends RepairableIssue<CollectionResult<Value>> {
         }
     }
 
-    private Collection<Value> findUnlabeledConceptSchemes() throws OpenRDFException {
-        Collection<Value> unlabeledConceptSchemes = new ArrayList<Value>();
+    private Collection<Resource> findUnlabeledConceptSchemes() throws OpenRDFException {
+        Collection<Resource> unlabeledConceptSchemes = new ArrayList<Resource>();
 
-        for (Value conceptScheme : allConceptSchemes.getResult().getData()) {
+        for (Resource conceptScheme : allConceptSchemes.getResult()) {
             if (hasNoRdfsLabelAndNoDcTitle(conceptScheme)) unlabeledConceptSchemes.add(conceptScheme);
         }
 

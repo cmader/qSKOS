@@ -19,9 +19,9 @@ import java.util.*;
 /**
  * Finds concepts without links to "external" resources (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_OutLinks">Missing Out-Links</a>.
  */
-public class MissingOutLinks extends Issue<Collection<Value>> {
+public class MissingOutLinks extends Issue<Collection<Resource>> {
 
-	private Map<Value, Collection<URI>> extResourcesForConcept;
+	private Map<Resource, Collection<URI>> extResourcesForConcept;
     private AuthoritativeConcepts authoritativeConcepts;
 	
 	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
@@ -36,8 +36,8 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 	}
 
     @Override
-    public Collection<Value> computeResult() throws OpenRDFException {
-		extResourcesForConcept = new HashMap<Value, Collection<URI>>();
+    public Collection<Resource> computeResult() throws OpenRDFException {
+		extResourcesForConcept = new HashMap<Resource, Collection<URI>>();
 
 		findResourcesForConcepts(authoritativeConcepts.getResult());
 		
@@ -45,20 +45,20 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 	}
 
     @Override
-    protected Report generateReport(Collection<Value> preparedData) {
-        return new CollectionReport<Value>(preparedData);
+    protected Report generateReport(Collection<Resource> preparedData) {
+        return new CollectionReport<Resource>(preparedData);
     }
 
-    private void findResourcesForConcepts(Collection<Value> concepts) throws RepositoryException {
-		Iterator<Value> conceptIt = new MonitoredIterator<Value>(concepts, progressMonitor, "finding resources");
+    private void findResourcesForConcepts(Collection<Resource> concepts) throws RepositoryException {
+		Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(concepts, progressMonitor, "finding resources");
 
 		while (conceptIt.hasNext()) {
-            Value concept = conceptIt.next();
+            Resource concept = conceptIt.next();
 			extResourcesForConcept.put(concept, extractExternalResources(getURIsOfConcept(concept)));
         }
 	}
 
-    private Collection<URI> getURIsOfConcept(Value concept) throws RepositoryException {
+    private Collection<URI> getURIsOfConcept(Resource concept) throws RepositoryException {
         Collection<URI> urisForConcept = new ArrayList<URI>();
 
         if (concept instanceof Resource) {
@@ -108,10 +108,10 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 		return !url.toString().contains(SparqlPrefix.SKOS.getNameSpace());
 	}
 	
-	private Collection<Value> extractUnlinkedConcepts() {
-		Collection<Value> unlinkedConcepts = new HashSet<Value>();
+	private Collection<Resource> extractUnlinkedConcepts() {
+		Collection<Resource> unlinkedConcepts = new HashSet<Resource>();
 		
-		for (Value concept : extResourcesForConcept.keySet()) {
+		for (Resource concept : extResourcesForConcept.keySet()) {
 			if (extResourcesForConcept.get(concept).isEmpty()) {
 				unlinkedConcepts.add(concept);
 			}

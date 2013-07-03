@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class AuthoritativeConceptsTest {
     @Test
     public void testAuthoritativeConceptsCount() throws OpenRDFException
     {
-        Collection<Value> authoritativeConceptValues = authoritativeConcepts.getResult();
+        Collection<Resource> authoritativeConceptValues = authoritativeConcepts.getResult();
         Assert.assertEquals(9, authoritativeConceptValues.size());
     }
 }
