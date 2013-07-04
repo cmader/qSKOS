@@ -23,7 +23,7 @@ public class IssueInvocationTest {
             new VocEvaluate(new String[] {command, testFileName});
         }
         catch (Exception e) {
-            Assert.fail();
+            Assert.fail(e.getMessage() + ", command: " +command);
         }
     }
 

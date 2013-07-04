@@ -34,6 +34,6 @@ public class HttpURIsTest {
 
     @Test
     public void testResourcesHttpUriCount() throws OpenRDFException {
-        Assert.assertEquals(9, httpURIs2.getResult().size());
+        Assert.assertEquals(8, httpURIs2.getResult().size());
     }
 }

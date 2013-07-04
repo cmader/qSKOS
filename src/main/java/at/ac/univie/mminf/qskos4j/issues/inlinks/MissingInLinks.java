@@ -13,6 +13,7 @@ import org.openrdf.model.Value;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
@@ -203,7 +204,9 @@ public class MissingInLinks extends Issue<Collection<Resource>> {
      * @param endpointUrl SPARL endpoint URL
      */
     public void addSparqlEndPoint(String endpointUrl) throws OpenRDFException {
-        connections.add(new SPARQLRepository(endpointUrl).getConnection());
+        Repository repo = new SPARQLRepository(endpointUrl);
+        repo.initialize();
+        connections.add(repo.getConnection());
     }
 
 }
