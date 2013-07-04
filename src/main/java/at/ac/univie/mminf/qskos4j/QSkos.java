@@ -8,6 +8,7 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.UndocumentedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
+import at.ac.univie.mminf.qskos4j.issues.conceptscheme.MappingRelationsMisuse;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.OmittedTopConcepts;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.TopConceptsHavingBroaderConcepts;
 import at.ac.univie.mminf.qskos4j.issues.count.AggregationRelations;
@@ -117,6 +118,7 @@ public class QSkos {
         registeredIssues.add(new OmittedTopConcepts(conceptSchemes));
         registeredIssues.add(new TopConceptsHavingBroaderConcepts());
         registeredIssues.add(new HierarchicalRedundancy());
+        registeredIssues.add(new MappingRelationsMisuse(authoritativeConcepts));
 
         missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(EXT_ACCESS_MILLIS);

@@ -57,4 +57,14 @@
         <skos:broader rdf:resource="conceptO"/>
     </rdf:Description>
 
+    <!-- Redundancy caused by mapping relations -->
+    <rdf:Description rdf:about="conceptP">
+        <skos:broadMatch rdf:resource="conceptQ"/>
+        <skos:broadMatch rdf:resource="conceptR"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptQ">
+        <skos:broadMatch rdf:resource="conceptR"/>
+    </rdf:Description>
+
 </rdf:RDF>

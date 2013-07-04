@@ -21,6 +21,6 @@ public class HierarchicalRedundancyTest {
 
     @Test
     public void redundancyCount() throws OpenRDFException {
-        Assert.assertEquals(4, hierarchicalRedundancy.getResult().size());
+        Assert.assertEquals(5, hierarchicalRedundancy.getResult().size());
     }
 }
