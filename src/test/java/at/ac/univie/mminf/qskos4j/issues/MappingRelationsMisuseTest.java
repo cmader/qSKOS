@@ -25,7 +25,7 @@ public class MappingRelationsMisuseTest {
 
     @Test
     public void mappingRelationsMisuseCount() throws OpenRDFException {
-        Assert.assertEquals(1, mappingRelationsMisuse.getResult().size());
+        Assert.assertEquals(2, mappingRelationsMisuse.getResult().size());
 
     }
 

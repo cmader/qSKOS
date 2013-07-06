@@ -17,4 +17,12 @@
         <skos:inScheme rdf:resource="myScheme"/>
     </rdf:Description>
 
+    <!-- undefined concept schemes -->
+    <rdf:Description rdf:about="conceptC">
+        <skos:broadMatch rdf:resource="conceptD"/>
+    </rdf:Description>
+
+    <!-- concept schemes with hasTopConcept -->
+    <!-- concept schemes with topConceptOf -->
+
 </rdf:RDF>
