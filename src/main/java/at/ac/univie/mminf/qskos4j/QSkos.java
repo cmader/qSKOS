@@ -118,7 +118,7 @@ public class QSkos {
         registeredIssues.add(new OmittedTopConcepts(conceptSchemes));
         registeredIssues.add(new TopConceptsHavingBroaderConcepts());
         registeredIssues.add(new HierarchicalRedundancy());
-        registeredIssues.add(new MappingRelationsMisuse(authoritativeConcepts));
+        registeredIssues.add(new MappingRelationsMisuse());
 
         missingInLinks = new MissingInLinks(authoritativeConcepts);
         missingInLinks.setQueryDelayMillis(EXT_ACCESS_MILLIS);

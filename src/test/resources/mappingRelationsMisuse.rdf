@@ -5,7 +5,7 @@
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
          xml:base="http://mminf.univie.ac.at/vocab/">
 
-    <!-- Mapped concepts in the same concept scheme -->
+    <!-- Mapped concepts in the same concept scheme - ERROR -->
 	<rdf:Description rdf:about="conceptA">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:broadMatch rdf:resource="conceptB"/>
@@ -17,12 +17,54 @@
         <skos:inScheme rdf:resource="myScheme"/>
     </rdf:Description>
 
-    <!-- undefined concept schemes -->
+    <!-- undefined concept schemes - ERROR -->
     <rdf:Description rdf:about="conceptC">
         <skos:broadMatch rdf:resource="conceptD"/>
     </rdf:Description>
 
-    <!-- concept schemes with hasTopConcept -->
-    <!-- concept schemes with topConceptOf -->
+    <!-- different concept schemes - OK -->
+    <rdf:Description rdf:about="conceptE">
+        <skos:broadMatch rdf:resource="conceptF"/>
+        <skos:inScheme rdf:resource="myScheme"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptF">
+        <skos:inScheme rdf:resource="otherScheme"/>
+    </rdf:Description>
+
+    <!-- concept schemes with topConceptOf - OK -->
+    <rdf:Description rdf:about="conceptG">
+        <skos:topConceptOf rdf:resource="myScheme"/>
+        <skos:broadMatch rdf:resource="conceptH"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptH">
+        <skos:inScheme rdf:resource="otherScheme"/>
+    </rdf:Description>
+
+    <!-- concept schemes with topConceptOf - ERROR -->
+    <rdf:Description rdf:about="conceptI">
+        <skos:topConceptOf rdf:resource="myScheme"/>
+        <skos:broadMatch rdf:resource="conceptJ"/>
+    </rdf:Description>
+
+    <!-- concept schemes with topConceptOf - OK -->
+    <rdf:Description rdf:about="someConceptScheme">
+        <skos:hasTopConcept rdf:resource="conceptK"/>
+        <skos:hasTopConcept rdf:resource="conceptL"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptK">
+        <skos:broadMatch rdf:resource="conceptL"/>
+    </rdf:Description>
+
+    <!-- concept schemes with topConceptOf - ERROR -->
+    <rdf:Description rdf:about="someOtherConceptScheme">
+        <skos:hasTopConcept rdf:resource="conceptM"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptM">
+        <skos:broadMatch rdf:resource="conceptN"/>
+    </rdf:Description>
 
 </rdf:RDF>
