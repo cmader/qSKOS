@@ -18,12 +18,15 @@ import java.util.Collection;
 
 public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
 
+    private AuthoritativeConcepts authoritativeConcepts;
+
     public MappingRelationsMisuse(AuthoritativeConcepts authoritativeConcepts) {
         super(authoritativeConcepts,
             "mri",
             "Mapping Relations Misuse",
             "Finds concepts within the same concept scheme that are related by a mapping relation",
             IssueType.ANALYTICAL);
+        this.authoritativeConcepts = authoritativeConcepts;
     }
 
     @Override
@@ -51,9 +54,16 @@ public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
         return problematicRelations;
     }
 
-    private boolean areAuthoritativeConcepts() {
-        //TODO: implment me
-        return false;
+    private boolean areAuthoritativeConcepts(Resource... concepts) throws OpenRDFException {
+        for (Resource concept : concepts) {
+            boolean isAuthoritativeConcept = false;
+            for (Resource authoritativeConcept : authoritativeConcepts.getResult()) {
+                if (concept.equals(authoritativeConcept)) isAuthoritativeConcept = true;
+            }
+            if (!isAuthoritativeConcept) return false;
+        }
+
+        return true;
     }
 
     private boolean inSameConceptScheme(Resource concept, Resource otherConcept) throws OpenRDFException {

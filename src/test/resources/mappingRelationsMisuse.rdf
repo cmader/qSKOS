@@ -48,7 +48,7 @@
         <skos:broadMatch rdf:resource="conceptJ"/>
     </rdf:Description>
 
-    <!-- concept schemes with topConceptOf - OK -->
+    <!-- concept schemes with topConceptOf - ERROR -->
     <rdf:Description rdf:about="someConceptScheme">
         <skos:hasTopConcept rdf:resource="conceptK"/>
         <skos:hasTopConcept rdf:resource="conceptL"/>
