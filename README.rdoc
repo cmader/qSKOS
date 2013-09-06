@@ -2,7 +2,7 @@
 
 qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API. For release information please see the {changelog}[https://github.com/cmader/qSKOS/blob/devel/CHANGELOG.rdoc].
 
-Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[http://www.poolparty.biz], a commercially available Web-based development tool for SKOS vocabularies. In it's final stage we combine qSKOS' scientifically-grounded quality checks with the easy-to-use graphical interface of the PoolParty software. Integrated in the development workflow, quality checks can work as an assistive technology, just as spell-checkers are in word processing applications.
+Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[http://www.poolparty.biz], a commercially available Web-based development tool for SKOS vocabularies. In it's final stage we combine qSKOS' scientifically-grounded quality checks with the easy-to-use graphical interface of the PoolParty software. Integrated in the development workflow, quality checks can work as an assistive technology, just like syntax-checkers in development environments or spell-checkers in word processing applications.
 
 == Installation
 
