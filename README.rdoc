@@ -2,6 +2,8 @@
 
 qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API. For release information please see the {changelog}[https://github.com/cmader/qSKOS/blob/devel/CHANGELOG.rdoc].
 
+Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[http://www.poolparty.biz], a commercially available Web-based development tool for SKOS vocabularies. In it's final stage we combine qSKOS' scientifically-grounded quality checks with the easy-to-use graphical interface of the PoolParty software. Integrated in the development workflow, quality checks can work as an assistive technology, just as spell-checkers are in word processing applications.
+
 == Installation
 
 === Requirements
@@ -140,8 +142,7 @@ We performed a survey among experts in the field of vocabulary development in or
         abstract = {Web vocabularies provide organization and orientation in information environments and can facilitate resource discovery and retrieval. Several tools have been developed that support quality assessment for the increasing amount of vocabularies expressed in SKOS and published as Linked Data. However, these tools do not yet take into account the users' perception of vocabulary quality. In this paper, we report the findings from an online survey conducted among experts in the field of vocabulary development to study the perception and relevance of vocabulary quality issues in the context of real-world application scenarios. Our results indicate that structural and labeling issues are the most relevant ones. We also derived design recommendations for vocabulary quality checking tools.}
   }
 
-Also see my {presentation slides}[https://docs.google.com/file/d/0BzYMwvL-nDZ1NG1ZekJrZ3dPN0E/edit?usp=sharing] at the ISKO 2013 conference.
-
+Presentation slides are available for the {I-SEMANTICS 2013 talk}[https://docs.google.com/presentation/d/1QMprChHRNbci_4wcbccm6Z9pTsXCvbkboGw5aldReYI/edit?usp=sharing] as well as for my {ISKO 2013 presentation}[https://docs.google.com/file/d/0BzYMwvL-nDZ1NG1ZekJrZ3dPN0E/edit?usp=sharing].
 
 == Contributors
 
