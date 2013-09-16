@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="qskos_logo.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.0875"
+     inkscape:cx="1261.4872"
+     inkscape:cy="-241.2049"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1265"
+     inkscape:window-height="933"
+     inkscape:window-x="1482"
+     inkscape:window-y="199"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#d4af37;fill-opacity:1;stroke:none"
+       id="rect2985"
+       width="1030.5667"
+       height="415.35297"
+       x="2339.4919"
+       y="1065.9944" />
+    <g
+       id="g3815"
+       transform="matrix(3.3397993,0,0,4.6894694,1959.4982,627.79348)">
+      <rect
+         y="226.6479"
+         x="-97.14286"
+         height="88.571426"
+         width="308.57144"
+         id="rect2985-9"
+         style="fill:#d4af37;fill-opacity:1;stroke:none" />
+      <rect
+         y="226.64792"
+         x="331.42859"
+         height="88.571411"
+         width="183.3125"
+         id="rect2985-8"
+         style="fill:#d4af37;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       id="g3819"
+       transform="matrix(3.3397993,0,0,4.6894694,2045.43,560.60638)">
+      <rect
+         y="374.17944"
+         x="-215.99062"
+         height="88.571411"
+         width="240.13277"
+         id="rect2985-97"
+         style="fill:#d4af37;fill-opacity:1;stroke:none" />
+      <rect
+         y="374.17944"
+         x="192.42538"
+         height="88.571411"
+         width="423.1976"
+         id="rect2985-6"
+         style="fill:#d4af37;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       id="g3823"
+       transform="matrix(3.3397993,0,0,4.6894694,1771.8388,449.21785)">
+      <rect
+         y="531.13666"
+         x="-454.26706"
+         height="88.571426"
+         width="308.57144"
+         id="rect2985-2"
+         style="fill:#d4af37;fill-opacity:1;stroke:none" />
+      <rect
+         y="531.13666"
+         x="-61.081944"
+         height="88.571426"
+         width="308.57144"
+         id="rect2985-1"
+         style="fill:#d4af37;fill-opacity:1;stroke:none" />
+      <rect
+         y="531.13666"
+         x="312.07254"
+         height="88.571411"
+         width="419.68823"
+         id="rect2985-89"
+         style="fill:#d4af37;fill-opacity:1;stroke:none" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:1071.4519043px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="419.53351"
+       y="2913.009"
+       id="text4106"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4108"
+         x="419.53351"
+         y="2913.009"
+         style="font-weight:bold;-inkscape-font-specification:Sans Bold">SKOS</tspan></text>
+    <g
+       transform="matrix(0.82419383,0.5663078,-0.5663078,0.82419383,88.893424,0)"
+       style="font-size:1197.36633301px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;font-family:Sans"
+       id="text4084">
+      <path
+         d="m 1216.1262,2182.3175 c -2e-4,79.1231 16.1752,141.291 48.5261,186.5038 32.7402,44.8234 77.5635,67.235 134.4698,67.235 56.9057,0 101.729,-22.4116 134.4699,-67.235 32.74,-45.2128 49.1102,-107.3807 49.1107,-186.5038 -5e-4,-79.1224 -16.3707,-141.0954 -49.1107,-185.9192 -32.7409,-45.2125 -77.5642,-67.819 -134.4699,-67.8196 -56.9063,6e-4 -101.7296,22.6071 -134.4698,67.8196 -32.3509,44.8238 -48.5263,106.7968 -48.5261,185.9192 m 366.5765,228.5987 c -22.607,38.9769 -51.2549,68.0145 -85.9437,87.1131 -34.3,18.7089 -75.6154,28.0633 -123.9462,28.0633 -79.1231,0 -143.6296,-31.5712 -193.5196,-94.7136 -49.5006,-63.1422 -74.2508,-146.1626 -74.2508,-249.0615 0,-102.8982 24.7502,-185.9187 74.2508,-249.0616 49.89,-63.1417 114.3965,-94.7128 193.5196,-94.7135 48.3308,7e-4 89.6462,9.55 123.9462,28.6479 34.6888,18.7095 63.3367,47.5523 85.9437,86.5284 l 0,-99.3907 160.2262,-1.8588 -8.7866,1076.5935 -160.2262,1.8588 8.7866,-520.0053"
+         id="path4111"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccsccccccccscsccccccccc"
+         style="fill:#008000" />
+    </g>
+    <rect
+       style="fill:#008000;fill-opacity:1;stroke:none"
+       id="rect2985-72"
+       width="526.81708"
+       height="151.216"
+       x="1336.4955"
+       y="2839.905"
+       transform="matrix(0.8139057,0.580997,-0.580997,0.8139057,0,0)" />
+  </g>
+</svg>
