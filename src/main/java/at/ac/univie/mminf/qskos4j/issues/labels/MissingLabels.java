@@ -24,7 +24,6 @@ public class MissingLabels extends Issue<Collection<Resource>> {
     private Collection<Resource> unlabeledConceptsAndConceptSchemes;
     private AuthoritativeConcepts allAuthConcepts;
     private ConceptSchemes allConceptSchemes;
-    private Collection<Value> unlabeledConcepts, unlabeledConceptSchemes;
 
     public MissingLabels(AuthoritativeConcepts authConcepts, ConceptSchemes conceptSchemes) {
         super("ml",
@@ -50,7 +49,6 @@ public class MissingLabels extends Issue<Collection<Resource>> {
     protected Report generateReport(Collection<Resource> preparedData) {
         return new CollectionReport<Resource>(unlabeledConceptsAndConceptSchemes);
     }
-
 
     private Collection<Resource> findUnlabeledConcepts() throws OpenRDFException {
         Collection<Resource> unlabeledConcepts = new ArrayList<Resource>();
