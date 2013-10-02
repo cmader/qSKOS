@@ -73,12 +73,6 @@ public class VocEvaluate {
 		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
 		private boolean writeGraphs = false;
 
-        @SuppressWarnings("unused")
-        @Parameter(
-            names = {"-utf", "--uri-track-file"},
-            description = "A file that contains concept URIs. The output will contain the issues in which each of the concepts shows up.")
-        private String uriTrackFilename;
-			
 	}
 	
 	public static void main(String[] args) {
@@ -173,13 +167,7 @@ public class VocEvaluate {
 		setup();
 
         reportCollector = new ReportCollector(extractMeasures());
-
-        if (uriTrackingEnabled()) {
-            reportCollector.outputURITrackingReport(new File(((CommandAnalyze) parsedCommand).uriTrackFilename));
-        }
-        else {
-            reportCollector.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
-        }
+        reportCollector.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
 	}
 	
 	private void setup() throws OpenRDFException, IOException {
@@ -200,7 +188,7 @@ public class VocEvaluate {
             repositoryBuilder.enableSkosXlSupport();
 		}
 
-        if (!uriTrackingEnabled() && !parsedCommand.noProgressBar) {
+        if (!parsedCommand.noProgressBar) {
             qskos.setProgressMonitor(new ConsoleProgressMonitor());
         }
     }
@@ -211,10 +199,6 @@ public class VocEvaluate {
         }
     }
 
-    private boolean uriTrackingEnabled() {
-        return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).uriTrackFilename != null;
-    }
-	
 	private boolean shouldOutputExtReport() {
 		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).extensiveReport;
 	}
