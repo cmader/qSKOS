@@ -58,6 +58,9 @@ public class VocEvaluate {
         @Parameter(names = {"-d", "--debug"}, description = "Enable additional informative/debug output")
         private boolean debug;
 
+        @Parameter(names = {"-o", "--output"}, description = "Name of the file that holds the generated report")
+        private String reportFileName;
+
     }
 	
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
@@ -80,7 +83,8 @@ public class VocEvaluate {
 			new VocEvaluate(args);
 		}
 		catch (ParameterException paramExc) {
-			jc.usage();
+            jc.usage();
+            System.err.println("!! " +paramExc.getMessage());
 		}
 		catch (IOException ioException) {
 			System.out.println("Error reading file: " +ioException.getMessage());
@@ -158,15 +162,18 @@ public class VocEvaluate {
 	private void checkVocabFilenameGiven() throws ParameterException
 	{
 		if (parsedCommand.vocabFilenames == null) {
-			throw new ParameterException("No vocabulary file given");
-		}		
+			throw new ParameterException("Please provide a vocabulary file");
+		}
+        if (parsedCommand.reportFileName == null) {
+            throw new ParameterException("Please provide a report output file");
+        }
 	}
 	
 	private void evaluate() throws OpenRDFException, IOException
 	{
 		setup();
 
-        reportCollector = new ReportCollector(extractMeasures());
+        reportCollector = new ReportCollector(extractMeasures(), parsedCommand.reportFileName);
         reportCollector.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
 	}
 	

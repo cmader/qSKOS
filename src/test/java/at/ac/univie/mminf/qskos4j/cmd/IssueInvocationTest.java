@@ -20,7 +20,7 @@ public class IssueInvocationTest {
         String testFileName = getTestFileName();
 
         try {
-            new VocEvaluate(new String[] {command, testFileName});
+            new VocEvaluate(new String[] {command, "-o", "/tmp/testreport", testFileName});
         }
         catch (Exception e) {
             Assert.fail(e.getMessage() + ", command: " +command);
