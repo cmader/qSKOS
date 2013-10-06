@@ -3,6 +3,8 @@ package at.ac.univie.mminf.qskos4j.cmd;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,7 +12,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 
+
 class ReportCollector {
+
+    private final Logger logger = LoggerFactory.getLogger(ReportCollector.class);
 
     private Collection<Issue> issues;
     private String reportFileName;
@@ -27,7 +32,7 @@ class ReportCollector {
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
         for (Issue issue : issues) {
-            System.out.println("Processing issue '" +issue.getName()+ "'");
+            logger.info("Processing issue '" +issue.getName()+ "'");
             writeTextReport(issue, reportWriter, outputExtendedReport);
 
             if (shouldWriteGraphs) {

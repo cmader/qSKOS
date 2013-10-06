@@ -87,10 +87,10 @@ public class VocEvaluate {
             System.err.println("!! " +paramExc.getMessage());
 		}
 		catch (IOException ioException) {
-			System.out.println("Error reading file: " +ioException.getMessage());
+			System.err.println("Error reading file: " +ioException.getMessage());
 		}
 		catch (OpenRDFException rdfException) {
-			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
+			System.err.println("Error processing vocabulary: " +rdfException.getMessage());
 		} 
 	}
 		
