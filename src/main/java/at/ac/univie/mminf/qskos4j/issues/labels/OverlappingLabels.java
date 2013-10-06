@@ -8,7 +8,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -59,10 +59,9 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
     private void generateConceptsLabelMap() throws OpenRDFException
 	{
 		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
-
-        progressMonitor.setTaskDescription("Collecting resource labels");
         Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult(), progressMonitor);
 
+        progressMonitor.setTaskDescription("Collecting resource labels");
 		while (it.hasNext()) {
             Resource concept = it.next();
 

@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
-import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
+import at.ac.univie.mminf.qskos4j.progress.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.progress.StubProgressMonitor;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.RepositoryConnection;
 

@@ -38,7 +38,7 @@ public class RepositoryBuilder {
     public Repository setUpFromFile(File rdfFile, String baseURI, RDFFormat dataFormat)
         throws OpenRDFException, IOException
     {
-        logger.info("Initializing evaluation repository");
+        logger.info("Initializing evaluation repository...");
 
         createRepositoryForFile();
         addSkosOntology();

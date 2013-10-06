@@ -2,6 +2,8 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.progress.ConsoleProgressMonitor;
+import at.ac.univie.mminf.qskos4j.progress.StreamProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -58,8 +60,13 @@ public class VocEvaluate {
         @Parameter(names = {"-d", "--debug"}, description = "Enable additional informative/debug output")
         private boolean debug;
 
+        @SuppressWarnings("unused")
         @Parameter(names = {"-o", "--output"}, description = "Name of the file that holds the generated report")
         private String reportFileName;
+
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-sf", "--stream-friendly"}, description = "Print the progress indicator in a stream-friendly format")
+        private boolean streamFriendly;
 
     }
 	
@@ -196,7 +203,12 @@ public class VocEvaluate {
 		}
 
         if (!parsedCommand.noProgressBar) {
-            qskos.setProgressMonitor(new ConsoleProgressMonitor());
+            if (parsedCommand.streamFriendly) {
+                qskos.setProgressMonitor(new StreamProgressMonitor());
+            }
+            else {
+                qskos.setProgressMonitor(new ConsoleProgressMonitor());
+            }
         }
     }
 
