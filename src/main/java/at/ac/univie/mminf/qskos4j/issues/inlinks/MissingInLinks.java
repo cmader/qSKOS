@@ -52,7 +52,7 @@ public class MissingInLinks extends Issue<Collection<Resource>> {
         Collection<Resource> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
-            logger.info("using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
+            logger.info("Using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
         }
 
         Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(

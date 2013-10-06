@@ -87,7 +87,7 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 		}
 
         RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs.getResult(), randomSubsetSize_percent);
-        logger.info("using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
+        logger.info("Using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
 
 		return urisToBeDereferenced;
 	}

@@ -63,7 +63,7 @@ public class ResourceLabelsCollector {
                 }
             }
             catch (ClassCastException e) {
-                logger.info("literal label expected for resource " +resource.toString()+ ", " +e.toString());
+                logger.error("Literal label expected for resource " +resource.toString()+ ", " +e.toString());
             }
         }
     }

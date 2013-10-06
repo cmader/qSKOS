@@ -27,6 +27,7 @@ class ReportCollector {
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
         for (Issue issue : issues) {
+            System.out.println("Processing issue '" +issue.getName()+ "'");
             writeTextReport(issue, reportWriter, outputExtendedReport);
 
             if (shouldWriteGraphs) {

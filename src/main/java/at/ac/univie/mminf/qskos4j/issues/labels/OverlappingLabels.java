@@ -128,7 +128,7 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
                     ret.add(skosLabel);
                 }
                 catch (ClassCastException e) {
-                    logger.info("literal label expected for concept " +concept.toString()+ ", " +e.toString());
+                    logger.error("Literal label expected for concept " +concept.toString()+ ", " +e.toString());
                 }
 			}			
 		}

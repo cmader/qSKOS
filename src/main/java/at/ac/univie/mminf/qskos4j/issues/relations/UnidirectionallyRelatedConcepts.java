@@ -93,7 +93,7 @@ import java.util.Map;
                     inverseProperties);
         }
         catch (ClassCastException e) {
-            logger.info("resource expected for relation " +inverseProperties+ " (" +value1+ " <-> " +value2+ ")");
+            logger.error("Resource expected for relation " +inverseProperties+ " (" +value1+ " <-> " +value2+ ")");
         }
 	}
 
