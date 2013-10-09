@@ -31,8 +31,11 @@ class ReportCollector {
         File reportFile = createReportFile();
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
+        int issueNumber = 0;
         for (Issue issue : issues) {
-            logger.info("Processing issue '" +issue.getName()+ "'");
+            issueNumber++;
+
+            logger.info("Processing issue " +issueNumber+ " of " +issues.size()+ "(" +issue.getName()+ ")");
             writeTextReport(issue, reportWriter, outputExtendedReport);
 
             if (shouldWriteGraphs) {
@@ -40,6 +43,7 @@ class ReportCollector {
             }
         }
 
+        logger.info("Report complete!");
         reportWriter.close();
     }
 

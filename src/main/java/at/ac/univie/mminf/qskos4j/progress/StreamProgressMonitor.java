@@ -32,7 +32,6 @@ public class StreamProgressMonitor implements IProgressMonitor {
 
     @Override
     public void onFinish() {
-        System.out.println("done");
     }
 
 }
