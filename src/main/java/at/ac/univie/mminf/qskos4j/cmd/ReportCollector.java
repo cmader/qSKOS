@@ -35,7 +35,7 @@ class ReportCollector {
         for (Issue issue : issues) {
             issueNumber++;
 
-            logger.info("Processing issue " +issueNumber+ " of " +issues.size()+ "(" +issue.getName()+ ")");
+            logger.info("Processing issue " +issueNumber+ " of " +issues.size()+ " (" +issue.getName()+ ")");
             writeTextReport(issue, reportWriter, outputExtendedReport);
 
             if (shouldWriteGraphs) {
