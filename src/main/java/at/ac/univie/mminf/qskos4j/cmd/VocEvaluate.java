@@ -4,6 +4,7 @@ import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.ConsoleProgressMonitor;
 import at.ac.univie.mminf.qskos4j.progress.StreamProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.vocab.InvalidRdfException;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -94,10 +95,10 @@ public class VocEvaluate {
             System.err.println("!! " +paramExc.getMessage());
 		}
 		catch (IOException ioException) {
-			System.err.println("Error reading file: " +ioException.getMessage());
+			System.err.println("!! Error reading file: " +ioException.getMessage());
 		}
 		catch (OpenRDFException rdfException) {
-			System.err.println("Error processing vocabulary: " +rdfException.getMessage());
+			System.err.println("!! Error processing vocabulary: " +rdfException.getMessage());
 		} 
 	}
 		
@@ -112,10 +113,14 @@ public class VocEvaluate {
 		
 		if (parsedCommand == null) {
 			jc.usage();
+            return;
 		}
-		else {
+		try {
 			listIssuesOrEvaluate();
-		}		
+		}
+        catch (InvalidRdfException e) {
+            System.err.println("!! Provided input file does not contain valid RDF data");
+        }
 	}
 	
 	private void parseCmdParams(String[] args) {

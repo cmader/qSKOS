@@ -48,7 +48,7 @@ public class RepositoryBuilder {
             repCon.add(rdfFile, baseURI, dataFormat);
         }
         catch (Exception e) {
-            logger.error("Could not add RDF data from file to temporary repository");
+            throw new InvalidRdfException("Could not add RDF data from file to temporary repository");
         }
         finally {
             repCon.close();
