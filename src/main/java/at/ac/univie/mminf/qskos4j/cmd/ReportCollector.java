@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 
 class ReportCollector {
@@ -33,11 +34,17 @@ class ReportCollector {
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
         int issueNumber = 0;
-        for (Issue issue : issues) {
+
+        Iterator<Issue> issueIt = issues.iterator();
+        while (issueIt.hasNext()) {
+            Issue issue = issueIt.next();
             issueNumber++;
 
             logger.info("Processing issue " +issueNumber+ " of " +issues.size()+ " (" +issue.getName()+ ")");
             writeTextReport(issue, reportWriter, outputExtendedReport);
+            if (issueIt.hasNext()) {
+                reportWriter.newLine();
+            }
 
             if (shouldWriteGraphs) {
                 writeGraphFiles(issue, getDotFilesPath(reportFile));

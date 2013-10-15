@@ -8,6 +8,7 @@ import org.openrdf.model.Resource;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 public class MissingLangTagReport extends Report {
@@ -34,13 +35,19 @@ public class MissingLangTagReport extends Report {
 
 	private String generateExtensiveReport() {
         StringBuilder extensiveReport = new StringBuilder();
-		
-		for (Resource resource : data.keySet()) {
-			Collection<Literal> affectedLiterals = data.get(resource);
-			
-			extensiveReport.append("resource: '").append(resource).append("', affected literals: ").append(affectedLiterals.toString()).append("\n");
-		}
-		
+
+        Iterator<Resource> resourceIt = data.keySet().iterator();
+        while (resourceIt.hasNext()) {
+            Resource resource = resourceIt.next();
+            Collection<Literal> affectedLiterals = data.get(resource);
+
+            extensiveReport.append("resource: '")
+                           .append(resource)
+                           .append("', affected literals: ")
+                           .append(affectedLiterals.toString())
+                           .append(resourceIt.hasNext() ? "\n" : "");
+        }
+
 		return extensiveReport.toString();
 	}
 
