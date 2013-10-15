@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
 
@@ -27,7 +28,8 @@ public class OmittedTopConcepts extends Issue<Collection<Resource>> {
             "otc",
             "Omitted Top Concepts",
             "Finds skos:ConceptSchemes without top concepts",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-top-concepts"));
 
         this.conceptSchemes = conceptSchemes;
     }

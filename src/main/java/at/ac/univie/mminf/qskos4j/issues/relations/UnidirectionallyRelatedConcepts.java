@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,8 @@ import java.util.Map;
         super("urc",
               "Unidirectionally Related Concepts",
               "Concepts not including reciprocal relations",
-              IssueType.ANALYTICAL);
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#unidirectionally-related-concepts"));
     }
 
     @Override

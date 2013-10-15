@@ -9,6 +9,7 @@ import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,8 @@ public class HierarchicalCycles extends Issue<Collection<Set<Value>>> {
         super("chr",
               "Cyclic Hierarchical Relations",
               "Finds all hierarchy cycle containing components",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#cyclic-hierarchical-relations")
         );
         this.hierarchyGraphBuilder = hierarchyGraphBuilder;
     }

@@ -13,6 +13,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
@@ -32,7 +33,8 @@ public class RelationClashes extends Issue<Collection<Pair<Value>>> {
         super("rc",
               "Relation Clashes",
               "Covers condition S27 from the SKOS reference document (Associative vs. Hierarchical Relation Clashes)",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#relation-clashes")
         );
 
         this.hierarchyGraphBuilder = hierarchyGraphBuilder;

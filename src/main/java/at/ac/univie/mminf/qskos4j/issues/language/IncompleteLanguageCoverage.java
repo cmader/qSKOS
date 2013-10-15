@@ -8,6 +8,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,8 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
             "ilc",
             "Incomplete Language Coverage",
             "Finds concepts lacking description in languages that are present for other concepts",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#incomplete-language-coverage")
         );
 
         this.involvedConcepts = involvedConcepts;

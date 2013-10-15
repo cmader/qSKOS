@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 
 import java.util.Collection;
@@ -21,7 +22,8 @@ public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> 
         super("var",
               "Valueless Associative Relations",
               "Two concepts are sibling, but also connected by an associative relation",
-              IssueType.ANALYTICAL);
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#valueless-associative-relations"));
     }
 
     @Override

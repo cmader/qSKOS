@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -26,7 +27,8 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
         super("oilt",
               "Omitted or Invalid Language Tags",
               "Finds omitted or invalid language tags of text literals",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-or-invalid-language-tags")
         );
     }
 

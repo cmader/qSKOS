@@ -9,6 +9,7 @@ import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,8 @@ public class BrokenLinks extends Issue<Collection<URL>> {
               "bl",
               "Broken Links",
               "Checks dereferencability of all links",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#broken-links")
         );
 
         this.httpURIs = httpURIs;

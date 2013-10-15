@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
@@ -23,7 +24,8 @@ public class HierarchicalRedundancy extends Issue<Collection<Pair<Resource>>> {
         super("hr",
             "Hierarchical Redundancy",
             "Finds broader/narrower relations over multiple hierarchy levels",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#hierarchical-redundancy"));
     }
 
     @Override

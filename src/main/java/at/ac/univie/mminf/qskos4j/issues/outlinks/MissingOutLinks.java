@@ -11,6 +11,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 
@@ -29,7 +30,8 @@ public class MissingOutLinks extends Issue<Collection<Resource>> {
             "mol",
             "Missing Out-Links",
             "Finds concepts that are not linked to other vocabularies on the Web",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-out-links")
         );
 
         this.authoritativeConcepts = authoritativeConcepts;

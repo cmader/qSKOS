@@ -14,6 +14,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,8 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
             "ol",
             "Overlapping Labels",
             "Finds concepts with similar (identical) labels",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#overlapping-labels"));
 
         this.involvedConcepts = involvedConcepts;
     }

@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 
@@ -27,7 +28,8 @@ public class OrphanConcepts extends Issue<Collection<Value>> {
             "oc",
             "Orphan Concepts",
             "Finds all orphan concepts, i.e. those not having semantic relationships to other concepts",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#orphan-concepts")
         );
 
         this.involvedConcepts = involvedConcepts;

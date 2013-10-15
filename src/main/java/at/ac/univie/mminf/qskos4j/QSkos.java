@@ -79,6 +79,7 @@ public class QSkos {
         addStatisticalIssues();
         addAnalyticalIssues();
         addSkosIntegrityIssues();
+        addSlowIssues();
 
         setProgressMonitor(new StubProgressMonitor());
     }
@@ -118,21 +119,13 @@ public class QSkos {
         registeredIssues.add(new HierarchicalRedundancy());
         registeredIssues.add(new MappingRelationsMisuse(authoritativeConcepts));
 
-        missingInLinks = new MissingInLinks(authoritativeConcepts);
-        missingInLinks.setQueryDelayMillis(EXT_ACCESS_MILLIS);
-        registeredIssues.add(missingInLinks);
-
         registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
-
-        brokenLinks = new BrokenLinks(httpURIs);
-        brokenLinks.setExtAccessDelayMillis(EXT_ACCESS_MILLIS);
-        registeredIssues.add(brokenLinks);
-
         registeredIssues.add(new UndefinedSkosResources());
         registeredIssues.add(new UnidirectionallyRelatedConcepts());
         registeredIssues.add(new HttpUriSchemeViolations());
         registeredIssues.add(new RelationClashes(hierarchyGraphBuilder));
         registeredIssues.add(new MappingClashes());
+
     }
 
     private void addSkosIntegrityIssues() {
@@ -140,6 +133,16 @@ public class QSkos {
 
         registeredIssues.add(new InconsistentPrefLabels(resourceLabelsCollector));
         registeredIssues.add(new DisjointLabelsViolations(resourceLabelsCollector));
+    }
+
+    private void addSlowIssues() {
+        brokenLinks = new BrokenLinks(httpURIs);
+        brokenLinks.setExtAccessDelayMillis(EXT_ACCESS_MILLIS);
+        registeredIssues.add(brokenLinks);
+
+        missingInLinks = new MissingInLinks(authoritativeConcepts);
+        missingInLinks.setQueryDelayMillis(EXT_ACCESS_MILLIS);
+        registeredIssues.add(missingInLinks);
     }
 
     public List<Issue> getAllIssues() {

@@ -1,9 +1,9 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.slf4j.Logger;

@@ -8,6 +8,7 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Collection;
@@ -29,7 +30,8 @@ public class DisjointLabelsViolations extends Issue<Map<Literal, LabelConflict>>
         super("dlv",
             "Disjoint Labels Violation",
             "Finds resources with identical entries for different label types",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disjoint-labels-violation"));
 
         this.resourceLabelsCollector = resourceLabelsCollector;
     }

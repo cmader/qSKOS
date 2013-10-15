@@ -10,6 +10,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryResult;
 
@@ -25,7 +26,8 @@ public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
             "mri",
             "Mapping Relations Misuse",
             "Finds concepts within the same concept scheme that are related by a mapping relation",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#mapping-relations-misuse"));
         this.authoritativeConcepts = authoritativeConcepts;
     }
 

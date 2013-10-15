@@ -10,6 +10,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
@@ -42,7 +43,8 @@ public class MissingInLinks extends Issue<Collection<Resource>> {
             "mil",
             "Missing In-Links",
             "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-in-links"));
 
         this.authoritativeConcepts = authoritativeConcepts;
     }

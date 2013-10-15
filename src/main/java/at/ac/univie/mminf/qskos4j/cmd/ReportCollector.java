@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.cmd;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,7 @@ class ReportCollector {
     private void writeTextReport(Issue issue, BufferedWriter writer, boolean outputExtendedReport)
         throws IOException, OpenRDFException
     {
-        writer.write("--- " +issue.getName());
+        writer.write(createIssueHeader(issue));
         writer.newLine();
         issue.getReport().generateReport(writer, Report.ReportFormat.TXT, Report.ReportStyle.SHORT);
 
@@ -67,6 +68,15 @@ class ReportCollector {
 
         writer.newLine();
         writer.flush();
+    }
+
+    private String createIssueHeader(Issue issue) {
+        String header = "--- " +issue.getName();
+        URI weblink = issue.getWeblink();
+        if (weblink != null) {
+            header += ", cf. <" +weblink.stringValue()+ ">";
+        }
+        return header;
     }
 
     private String getDotFilesPath(File reportFile) {

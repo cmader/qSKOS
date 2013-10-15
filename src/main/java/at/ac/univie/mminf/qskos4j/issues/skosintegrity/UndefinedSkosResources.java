@@ -9,6 +9,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.openrdf.repository.RepositoryConnection;
 
@@ -30,7 +31,8 @@ public class UndefinedSkosResources extends Issue<Collection<URI>> {
         super("usr",
               "Undefined SKOS Resources",
               "Finds 'invented' new terms within the SKOS namespace or deprecated properties",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#undefined-skos-resources")
         );
     }
 

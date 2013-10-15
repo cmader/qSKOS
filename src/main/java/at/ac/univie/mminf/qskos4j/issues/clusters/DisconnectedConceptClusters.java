@@ -12,6 +12,7 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -44,7 +45,8 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
             "dcc",
             "Disconnected Concept Clusters",
             "Finds sets of concepts that are isolated from the rest of the vocabulary",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disconnected-concept-clusters")
         );
         this.involvedConcepts = involvedConcepts;
     }

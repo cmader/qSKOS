@@ -167,6 +167,9 @@ public class VocEvaluate {
 				System.out.println("ID: " +issue.getId());
 				System.out.println("Name: " +issue.getName());
 				System.out.println("Description: " +issue.getDescription());
+                if (issue.getWeblink() != null) {
+                    System.out.println("Further Informaton: <" +issue.getWeblink().stringValue()+ ">");
+                }
 			}
 		}
 	}
