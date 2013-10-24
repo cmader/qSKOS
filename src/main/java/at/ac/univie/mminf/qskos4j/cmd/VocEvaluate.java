@@ -120,6 +120,11 @@ public class VocEvaluate {
 		}
         catch (InvalidRdfException e) {
             System.err.println("!! Provided input file does not contain valid RDF data");
+            System.exit(1);
+        }
+        catch (Exception e) {
+            e.printStackTrace(System.err);
+            System.exit(1);
         }
 	}
 	
