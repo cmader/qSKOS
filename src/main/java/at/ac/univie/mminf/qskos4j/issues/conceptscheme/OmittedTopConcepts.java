@@ -27,7 +27,7 @@ public class OmittedTopConcepts extends Issue<Collection<Resource>> {
         super(conceptSchemes,
             "otc",
             "Omitted Top Concepts",
-            "Finds skos:ConceptSchemes without top concepts",
+            "Finds skos:ConceptSchemes that don't have top concepts defined",
             IssueType.ANALYTICAL,
             new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-top-concepts"));
 

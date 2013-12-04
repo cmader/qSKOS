@@ -21,7 +21,7 @@ public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> 
     public ValuelessAssociativeRelations() {
         super("var",
               "Valueless Associative Relations",
-              "Two concepts are sibling, but also connected by an associative relation",
+              "Finds sibling concept pairs that are also connected by an associative relation",
               IssueType.ANALYTICAL,
               new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#valueless-associative-relations"));
     }

@@ -36,7 +36,7 @@ public class HierarchicalCycles extends Issue<Collection<Set<Value>>> {
     public HierarchicalCycles(HierarchyGraphBuilder hierarchyGraphBuilder) {
         super("chr",
               "Cyclic Hierarchical Relations",
-              "Finds all hierarchy cycle containing components",
+              "Finds concepts that are hierarchically related to each other",
               IssueType.ANALYTICAL,
               new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#cyclic-hierarchical-relations")
         );

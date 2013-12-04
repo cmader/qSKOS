@@ -100,8 +100,10 @@ class ReportCollector {
     private String createIssueHeader(Issue issue) {
         String header = "--- " +issue.getName();
         URI weblink = issue.getWeblink();
+        header += "\nDescription: " +issue.getDescription();
+
         if (weblink != null) {
-            header += ", cf. <" +weblink.stringValue()+ ">";
+            header += "\nDetailed information: " +weblink.stringValue();
         }
         return header;
     }
