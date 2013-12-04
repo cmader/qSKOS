@@ -11,7 +11,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 
@@ -33,8 +35,26 @@ class ReportCollector {
         File reportFile = createReportFile();
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
-        int issueNumber = 0;
+        writeReportHeader(reportWriter, reportFile);
+        writeReportBody(reportWriter, reportFile, outputExtendedReport, shouldWriteGraphs);
+    }
 
+    private void writeReportHeader(BufferedWriter reportWriter,
+                                   File reportFile) throws IOException {
+        String issuedDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").format(new Date());
+        String fileName = reportFile.getAbsolutePath();
+        reportWriter.write("This is the quality report of file " +fileName+ ", generated on " +issuedDate);
+        reportWriter.newLine();
+        reportWriter.newLine();
+    }
+
+    private void writeReportBody(BufferedWriter reportWriter,
+                                 File reportFile,
+                                 boolean outputExtendedReport,
+                                 boolean shouldWriteGraphs)
+        throws IOException, OpenRDFException
+    {
+        int issueNumber = 0;
         Iterator<Issue> issueIt = issues.iterator();
         while (issueIt.hasNext()) {
             Issue issue = issueIt.next();

@@ -9,7 +9,6 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryResult;
@@ -43,7 +42,6 @@ public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
         while (result.hasNext()) {
             Statement st = result.next();
             Resource concept = st.getSubject();
-            URI mappingRelation = st.getPredicate();
             Resource otherConcept = (Resource) st.getObject();
 
             if (areAuthoritativeConcepts(concept, otherConcept) &&
