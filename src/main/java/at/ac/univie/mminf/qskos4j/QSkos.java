@@ -121,7 +121,7 @@ public class QSkos {
 
         registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
         registeredIssues.add(new UndefinedSkosResources());
-        registeredIssues.add(new UnidirectionallyRelatedConcepts());
+        registeredIssues.add(new UnidirectionallyRelatedConcepts(authoritativeConcepts));
         registeredIssues.add(new HttpUriSchemeViolations());
         registeredIssues.add(new RelationClashes(hierarchyGraphBuilder));
         registeredIssues.add(new MappingClashes());

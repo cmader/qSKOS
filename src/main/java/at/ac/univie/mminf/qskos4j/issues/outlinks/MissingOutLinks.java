@@ -51,7 +51,7 @@ public class MissingOutLinks extends Issue<Collection<Resource>> {
         return new CollectionReport<Resource>(preparedData);
     }
 
-    private void findResourcesForConcepts(Collection<Resource> concepts) throws RepositoryException {
+    private void findResourcesForConcepts(Collection<Resource> concepts) throws OpenRDFException {
 		Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(concepts, progressMonitor, "finding resources");
 
 		while (conceptIt.hasNext()) {
@@ -84,7 +84,7 @@ public class MissingOutLinks extends Issue<Collection<Resource>> {
         if (value instanceof URI) uris.add((URI) value);
     }
 	
-	private Collection<URI> extractExternalResources(Collection<URI> allResources) {
+	private Collection<URI> extractExternalResources(Collection<URI> allResources) throws OpenRDFException {
 		Collection<URI> validExternalResources = new HashSet<URI>();
 		
 		for (URI uri : allResources) {
@@ -96,7 +96,7 @@ public class MissingOutLinks extends Issue<Collection<Resource>> {
 		return validExternalResources;
 	}
 	
-	private boolean isExternalResource(URI url) {
+	private boolean isExternalResource(URI url) throws OpenRDFException {
         String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {

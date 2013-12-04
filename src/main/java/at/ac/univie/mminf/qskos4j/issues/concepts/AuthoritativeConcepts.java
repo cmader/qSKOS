@@ -39,10 +39,7 @@ public class AuthoritativeConcepts extends Issue<Collection<Resource>> {
 
     @Override
     protected Collection<Resource> computeResult() throws OpenRDFException {
-        if (authResourceIdentifier == null) {
-            determineAuthResourceIdentifier();
-        }
-
+        getAuthResourceIdentifier();
         return extractAuthoritativeConceptsFromInvolved();
     }
 
@@ -107,7 +104,10 @@ public class AuthoritativeConcepts extends Issue<Collection<Resource>> {
         reset();
     }
 
-    public String getAuthResourceIdentifier() {
+    public String getAuthResourceIdentifier() throws OpenRDFException {
+        if (authResourceIdentifier == null) {
+            determineAuthResourceIdentifier();
+        }
         return authResourceIdentifier;
     }
 
