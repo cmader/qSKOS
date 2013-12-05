@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -10,7 +9,6 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryResult;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +19,7 @@ import java.util.Set;
  *
  * Finds resources not within the HTTP URI scheme (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-HTTP_URI_Scheme_Violation">HTTP URI Scheme Violation</a>.
  */
-public class HttpUriSchemeViolations extends Issue<Collection<String>> {
+public class HttpUriSchemeViolations extends Issue<CollectionResult<String>> {
 
     public HttpUriSchemeViolations() {
         super("husv",
@@ -33,7 +31,7 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
     }
 
     @Override
-    protected Collection<String> computeResult() throws OpenRDFException {
+    protected CollectionResult<String> invoke() throws OpenRDFException {
         Set<String> nonHttpURIs = new HashSet<String>();
 
         RepositoryResult<Statement> allStatements = repCon.getStatements(null, null, null, false);
@@ -44,7 +42,7 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
             }
         }
 
-        return nonHttpURIs;
+        return new CollectionResult<String>(nonHttpURIs);
     }
 
     private boolean isNonHttpURI(Resource resource) {
@@ -56,12 +54,5 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
         }
         return false;
     }
-
-    @Override
-    protected Report generateReport(Collection<String> preparedData) {
-        return new CollectionReport<String>(preparedData);
-    }
-
-
 
 }

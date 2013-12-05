@@ -2,10 +2,9 @@ package at.ac.univie.mminf.qskos4j.issues.inlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
-import at.ac.univie.mminf.qskos4j.report.ExtrapolatedCollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -28,7 +27,7 @@ import java.util.*;
 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_InLinks">Missing In-Links</a>
 * ).
 */
-public class MissingInLinks extends Issue<Collection<Resource>> {
+public class MissingInLinks extends Issue<CollectionResult<Resource>> {
 
 	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
 
@@ -50,7 +49,7 @@ public class MissingInLinks extends Issue<Collection<Resource>> {
     }
 
     @Override
-    protected Collection<Resource> computeResult() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws OpenRDFException {
         Collection<Resource> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
@@ -66,21 +65,16 @@ public class MissingInLinks extends Issue<Collection<Resource>> {
             rankConcept(conceptIt.next());
         }
 
-        return extractUnreferencedConcepts();
-    }
-
-    @Override
-    protected Report generateReport(Collection<Resource> preparedData) {
-        return new ExtrapolatedCollectionReport<Resource>(preparedData, randomSubsetSize_percent);
+        return new CollectionResult<Resource>(extractUnreferencedConcepts());
     }
 
     private Collection<Resource> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
     {
 		if (randomSubsetSize_percent == null) {
-			return authoritativeConcepts.getResult();
+			return authoritativeConcepts.getResult().getData();
 		}
 		else {
-			return new RandomSubSet<Resource>(authoritativeConcepts.getResult(), randomSubsetSize_percent);
+			return new RandomSubSet<Resource>(authoritativeConcepts.getResult().getData(), randomSubsetSize_percent);
 		}
 	}
 	

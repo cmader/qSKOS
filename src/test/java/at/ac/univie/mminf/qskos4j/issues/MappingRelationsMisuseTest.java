@@ -27,12 +27,12 @@ public class MappingRelationsMisuseTest {
 
     @Test
     public void mappingRelationsMisuseCount() throws OpenRDFException {
-        Assert.assertEquals(5, mappingRelationsMisuse.getResult().size());
+        Assert.assertEquals(5, mappingRelationsMisuse.getResult().getData().size());
     }
 
     @Test
     public void affectedConcepts() throws OpenRDFException {
-        Collection<Statement> result = mappingRelationsMisuse.getResult();
+        Collection<Statement> result = mappingRelationsMisuse.getResult().getData();
 
         Assert.assertTrue(isAffected("conceptA", "conceptB", result));
         Assert.assertTrue(isAffected("conceptC", "conceptD", result));

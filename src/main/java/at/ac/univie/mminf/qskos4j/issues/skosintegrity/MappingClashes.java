@@ -1,13 +1,12 @@
 package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -18,7 +17,7 @@ import java.util.HashSet;
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Mapping_Clashes">Exact vs. Associative and Hierarchical Mapping Clashes</a>.
  */
-public class MappingClashes extends Issue<Collection<Pair<Value>>> {
+public class MappingClashes extends Issue<CollectionResult<Tuple<Resource>>> {
 
     public MappingClashes() {
         super("mc",
@@ -30,21 +29,16 @@ public class MappingClashes extends Issue<Collection<Pair<Value>>> {
     }
 
     @Override
-    protected Collection<Pair<Value>> computeResult() throws OpenRDFException {
+    protected CollectionResult<Tuple<Resource>> invoke() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createExVsAssMappingQuery());
 
-        Collection<Pair<Value>> valuePairs = TupleQueryResultUtil.createCollectionOfValuePairs(
+        Collection<Tuple<Resource>> valuePairs = TupleQueryResultUtil.createCollectionOfResourcePairs(
             query.evaluate(),
             "concept1", "concept2");
-        Collection<Pair<Value>> distinctPairs = new HashSet<Pair<Value>>();
+        Collection<Tuple<Resource>> distinctPairs = new HashSet<Tuple<Resource>>();
         distinctPairs.addAll(valuePairs);
 
-        return distinctPairs;
-    }
-
-    @Override
-    protected Report generateReport(Collection<Pair<Value>> preparedData) {
-        return new CollectionReport<Pair<Value>>(preparedData);
+        return new CollectionResult<Tuple<Resource>>(distinctPairs);
     }
 
     private String createExVsAssMappingQuery() {

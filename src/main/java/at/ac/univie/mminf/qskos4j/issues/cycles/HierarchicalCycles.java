@@ -2,13 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues.cycles;
 
 import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
@@ -26,11 +25,11 @@ import java.util.Set;
  *
  * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Cyclic_Hierarchical_Relations">Cyclic Hierarchical Relations</a>.
  */
-public class HierarchicalCycles extends Issue<Collection<Set<Value>>> {
+public class HierarchicalCycles extends Issue<HierarchicalCyclesResult> {
 
     private final Logger logger = LoggerFactory.getLogger(HierarchicalCycles.class);
 
-    private DirectedGraph<Value, NamedEdge> hierarchyGraph;
+    private DirectedGraph<Resource, NamedEdge> hierarchyGraph;
     private HierarchyGraphBuilder hierarchyGraphBuilder;
 
     public HierarchicalCycles(HierarchyGraphBuilder hierarchyGraphBuilder) {
@@ -44,31 +43,26 @@ public class HierarchicalCycles extends Issue<Collection<Set<Value>>> {
     }
 
     @Override
-    protected Collection<Set<Value>> computeResult() throws OpenRDFException {
+    protected HierarchicalCyclesResult invoke() throws OpenRDFException {
         hierarchyGraph = hierarchyGraphBuilder.createGraph();
-        return findCycleContainingComponents();
+        return new HierarchicalCyclesResult(findCycleContainingComponents(), hierarchyGraph);
     }
 
-    @Override
-    protected Report generateReport(Collection<Set<Value>> preparedData) {
-        return new HierarchicalCyclesReport(preparedData, hierarchyGraph);
-    }
-
-    private List<Set<Value>> findCycleContainingComponents() {
+    private List<Collection<Resource>> findCycleContainingComponents() {
         logger.debug("Finding cycles");
 
-        Set<Value> nodesInCycles = new CycleDetector<Value, NamedEdge>(hierarchyGraph).findCycles();
+        Set<Resource> nodesInCycles = new CycleDetector<Resource, NamedEdge>(hierarchyGraph).findCycles();
         return trackNodesInCycles(nodesInCycles);
     }
 
-    private List<Set<Value>> trackNodesInCycles(Set<Value> nodesInCycles)
+    private List<Collection<Resource>> trackNodesInCycles(Set<Resource> nodesInCycles)
     {
-        List<Set<Value>> ret = new ArrayList<Set<Value>>();
-        List<Set<Value>> stronglyConnectedSets =
-                new StrongConnectivityInspector<Value, NamedEdge>(hierarchyGraph).stronglyConnectedSets();
+        List<Collection<Resource>> ret = new ArrayList<Collection<Resource>>();
+        List<Set<Resource>> stronglyConnectedSets =
+                new StrongConnectivityInspector<Resource, NamedEdge>(hierarchyGraph).stronglyConnectedSets();
 
-        for (Value node : nodesInCycles) {
-            for (Set<Value> stronglyConnectedSet : stronglyConnectedSets) {
+        for (Resource node : nodesInCycles) {
+            for (Set<Resource> stronglyConnectedSet : stronglyConnectedSets) {
                 if (stronglyConnectedSet.contains(node)) {
                     if (!ret.contains(stronglyConnectedSet)) {
                         ret.add(stronglyConnectedSet);

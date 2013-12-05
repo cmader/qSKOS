@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.util;
 
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
@@ -44,17 +45,17 @@ public class TupleQueryResultUtil {
         return count;
     }
 
-    public static Collection<Pair<Value>> createCollectionOfValuePairs(TupleQueryResult result, String value1, String value2)
+    public static Collection<Tuple<Resource>> createCollectionOfResourcePairs(TupleQueryResult result, String value1, String value2)
         throws OpenRDFException
     {
-        Collection<Pair<Value>> resultCollection = new ArrayList<Pair<Value>>();
+        Collection<Tuple<Resource>> resultCollection = new ArrayList<Tuple<Resource>>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
-            Value concept1 = queryResult.getValue(value1);
-            Value concept2 = queryResult.getValue(value2);
+            Resource concept1 = (Resource) queryResult.getValue(value1);
+            Resource concept2 = (Resource) queryResult.getValue(value2);
 
-            resultCollection.add(new Pair<Value>(concept1, concept2));
+            resultCollection.add(new Tuple<Resource>(concept1, concept2));
         }
 
         return resultCollection;

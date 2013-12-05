@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -17,7 +16,7 @@ import java.util.Collection;
 /**
  * Finds all <a href="http://www.w3.org/TR/skos-reference/#concepts">SKOS Concepts</a> involved in the vocabulary.
  */
-public class InvolvedConcepts extends Issue<Collection<Resource>> {
+public class InvolvedConcepts extends Issue<CollectionResult<Resource>> {
 
     public InvolvedConcepts() {
         super("c",
@@ -28,8 +27,7 @@ public class InvolvedConcepts extends Issue<Collection<Resource>> {
     }
 
     @Override
-    protected Collection<Resource> computeResult() throws OpenRDFException
-    {
+    protected CollectionResult<Resource> invoke() throws OpenRDFException {
         RepositoryResult<Statement> result = repCon.getStatements(
             null,
             RDF.TYPE,
@@ -40,12 +38,8 @@ public class InvolvedConcepts extends Issue<Collection<Resource>> {
         while (result.hasNext()) {
             involvedConcepts.add(result.next().getSubject());
         }
-        return involvedConcepts;
-    }
 
-    @Override
-    protected Report generateReport(Collection<Resource> preparedData) {
-        return new CollectionReport<Resource>(preparedData);
+        return new CollectionResult<Resource>(involvedConcepts);
     }
 
     private String createConceptsQuery() throws OpenRDFException {

@@ -30,7 +30,7 @@ public class BrokenLinksTest {
 
     @Test
     public void testBrokenLinks() throws OpenRDFException {
-        Collection<URL> brokenLinkURLs = brokenLinks.getResult();
+        Collection<URL> brokenLinkURLs = brokenLinks.getResult().getData();
         Assert.assertEquals(1, brokenLinkURLs.size());
     }
 

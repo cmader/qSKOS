@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.NumberReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -16,7 +15,7 @@ import org.openrdf.query.TupleQuery;
  *
  * Finds the number of triples that assign concepts to concept schemes or lists.
  */
-public class AggregationRelations extends Issue<Long> {
+public class AggregationRelations extends Issue<NumberResult<Long>> {
 
     private final String AGGREGATION_RELATIONS =
         "skos:topConceptOf, skos:hasTopConcept, skos:inScheme, skos:member, skos:memberList";
@@ -30,14 +29,9 @@ public class AggregationRelations extends Issue<Long> {
     }
 
     @Override
-    protected Long computeResult() throws OpenRDFException {
+    protected NumberResult<Long> invoke() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createAggregationRelationsQuery());
-        return TupleQueryResultUtil.countResults(query.evaluate());
-    }
-
-    @Override
-    protected Report generateReport(Long preparedData) {
-        return new NumberReport<Long>(preparedData);
+        return new NumberResult<Long>(TupleQueryResultUtil.countResults(query.evaluate()));
     }
 
     private String createAggregationRelationsQuery() {

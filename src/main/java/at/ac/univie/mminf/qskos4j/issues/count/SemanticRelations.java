@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.NumberReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
@@ -15,7 +14,7 @@ import org.openrdf.repository.RepositoryResult;
  *
  * Finds the number of triples involving (subproperties of) skos:semanticRelation.
  */
-public class SemanticRelations extends Issue<Long> {
+public class SemanticRelations extends Issue<NumberResult<Long>> {
 
     public SemanticRelations() {
         super("sr",
@@ -26,7 +25,7 @@ public class SemanticRelations extends Issue<Long> {
     }
 
     @Override
-    protected Long computeResult() throws OpenRDFException {
+    protected NumberResult<Long> invoke() throws OpenRDFException {
         RepositoryResult<Statement> result = repCon.getStatements(
             null,
             SkosOntology.getInstance().getUri("semanticRelation"),
@@ -38,12 +37,7 @@ public class SemanticRelations extends Issue<Long> {
             result.next();
             semanticRelationsCount++;
         }
-        return semanticRelationsCount;
-    }
-
-    @Override
-    protected Report generateReport(Long preparedData) {
-        return new NumberReport<Long>(preparedData);
+        return new NumberResult<Long>(semanticRelationsCount);
     }
 
 }

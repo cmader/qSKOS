@@ -1,16 +1,13 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -29,14 +26,18 @@ class ReportCollector {
         this.reportFileName = reportFileName;
     }
 
-    void outputIssuesReport(boolean outputExtendedReport, boolean shouldWriteGraphs)
+    void outputIssuesReport(boolean shouldWriteGraphs)
         throws IOException, OpenRDFException
     {
         File reportFile = createReportFile();
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
+        processIssues();
         writeReportHeader(reportWriter, reportFile);
-        writeReportBody(reportWriter, reportFile, outputExtendedReport, shouldWriteGraphs);
+        writeReportSummary(reportWriter);
+        writeReportBody(reportWriter, reportFile, shouldWriteGraphs);
+
+        reportWriter.close();
     }
 
     private void writeReportHeader(BufferedWriter reportWriter,
@@ -46,22 +47,57 @@ class ReportCollector {
         reportWriter.write("This is the quality report of file " +fileName+ ", generated on " +issuedDate);
         reportWriter.newLine();
         reportWriter.newLine();
+
     }
 
-    private void writeReportBody(BufferedWriter reportWriter,
-                                 File reportFile,
-                                 boolean outputExtendedReport,
-                                 boolean shouldWriteGraphs)
-        throws IOException, OpenRDFException
-    {
+    private void processIssues() throws OpenRDFException {
         int issueNumber = 0;
         Iterator<Issue> issueIt = issues.iterator();
         while (issueIt.hasNext()) {
             Issue issue = issueIt.next();
             issueNumber++;
 
-            logger.info("Processing issue " +issueNumber+ " of " +issues.size()+ " (" +issue.getName()+ ")");
-            writeTextReport(issue, reportWriter, outputExtendedReport);
+            logger.info("Processing issue " + issueNumber + " of " + issues.size() + " (" + issue.getName() + ")");
+            issue.getResult();
+
+        }
+
+        logger.info("Result complete!");
+
+
+    }
+
+    private void writeReportSummary(BufferedWriter reportWriter) throws IOException, OpenRDFException {
+        reportWriter.write("Summary of Quality Issues:\n");
+
+        for (Issue issue : issues) {
+            issue.getResult().indicatesProblem();
+
+
+            StringWriter stringWriter = new StringWriter();
+            BufferedWriter writer = new BufferedWriter(stringWriter);
+            issue.getResult().generateReport(
+                    writer,
+                    Result.ReportFormat.TXT,
+                    Result.ReportStyle.SHORT);
+            writer.close();
+            reportWriter.write(issue.getName() + ": " +stringWriter.toString()+ "\n");
+        }
+
+        reportWriter.newLine();
+    }
+
+    private void writeReportBody(BufferedWriter reportWriter,
+                                 File reportFile,
+                                 boolean shouldWriteGraphs)
+        throws IOException, OpenRDFException
+    {
+        Iterator<Issue> issueIt = issues.iterator();
+        while (issueIt.hasNext()) {
+            Issue issue = issueIt.next();
+
+            writeTextReport(issue, reportWriter);
+
             if (issueIt.hasNext()) {
                 reportWriter.newLine();
             }
@@ -70,9 +106,6 @@ class ReportCollector {
                 writeGraphFiles(issue, getDotFilesPath(reportFile));
             }
         }
-
-        logger.info("Report complete!");
-        reportWriter.close();
     }
 
     private File createReportFile() throws IOException {
@@ -81,17 +114,15 @@ class ReportCollector {
         return file;
     }
 
-    private void writeTextReport(Issue issue, BufferedWriter writer, boolean outputExtendedReport)
+    private void writeTextReport(Issue issue, BufferedWriter writer)
         throws IOException, OpenRDFException
     {
         writer.write(createIssueHeader(issue));
         writer.newLine();
-        issue.getReport().generateReport(writer, Report.ReportFormat.TXT, Report.ReportStyle.SHORT);
+        issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.SHORT);
 
-        if (outputExtendedReport) {
-            writer.newLine();
-            issue.getReport().generateReport(writer, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
-        }
+        writer.newLine();
+        issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
 
         writer.newLine();
         writer.flush();
@@ -115,7 +146,7 @@ class ReportCollector {
 
     private void writeGraphFiles(Issue issue, String dotFilesPath) throws IOException, OpenRDFException {
         BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(dotFilesPath + issue.getId() + ".dot"));
-        issue.getReport().generateReport(graphFileWriter, Report.ReportFormat.DOT);
+        issue.getResult().generateReport(graphFileWriter, Result.ReportFormat.DOT);
         graphFileWriter.close();
     }
 

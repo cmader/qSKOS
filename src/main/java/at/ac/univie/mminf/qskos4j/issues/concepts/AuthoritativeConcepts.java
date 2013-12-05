@@ -2,8 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ import java.util.Iterator;
  * Finds all "authoritative concepts". See the <a href="https://github.com/cmader/qSKOS/blob/master/README.rdoc">
  * qSKOS readme</a> for further information.
  */
-public class AuthoritativeConcepts extends Issue<Collection<Resource>> {
+public class AuthoritativeConcepts extends Issue<CollectionResult<Resource>> {
 
     private final Logger logger = LoggerFactory.getLogger(AuthoritativeConcepts.class);
 
@@ -38,14 +37,9 @@ public class AuthoritativeConcepts extends Issue<Collection<Resource>> {
     }
 
     @Override
-    protected Collection<Resource> computeResult() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws OpenRDFException {
         getAuthResourceIdentifier();
-        return extractAuthoritativeConceptsFromInvolved();
-    }
-
-    @Override
-    protected Report generateReport(Collection<Resource> preparedData) {
-        return new CollectionReport<Resource>(preparedData);
+        return new CollectionResult<Resource>(extractAuthoritativeConceptsFromInvolved());
     }
 
     private void determineAuthResourceIdentifier() throws OpenRDFException {
@@ -65,7 +59,7 @@ public class AuthoritativeConcepts extends Issue<Collection<Resource>> {
         HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
 
         Iterator<Resource> resourcesListIt = new MonitoredIterator<Resource>(
-                involvedConcepts.getResult(),
+                involvedConcepts.getResult().getData(),
                 progressMonitor,
                 "guessing publishing host");
 
@@ -87,7 +81,7 @@ public class AuthoritativeConcepts extends Issue<Collection<Resource>> {
     {
         Collection<Resource> authoritativeConcepts = new HashSet<Resource>();
 
-        for (Resource concept : involvedConcepts.getResult()) {
+        for (Resource concept : involvedConcepts.getResult().getData()) {
             String lowerCaseUriValue = concept.toString().toLowerCase();
 
             if (lowerCaseUriValue.contains(authResourceIdentifier.toLowerCase()))

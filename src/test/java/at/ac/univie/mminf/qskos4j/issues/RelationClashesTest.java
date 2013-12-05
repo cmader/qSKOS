@@ -21,7 +21,7 @@ public class RelationClashesTest {
 
     @Test
     public void testAssociativeVsHierarchicalClashes() throws OpenRDFException {
-        Assert.assertEquals(10, relationClashes.getResult().size());
+        Assert.assertEquals(10, relationClashes.getResult().getData().size());
     }
 
 }

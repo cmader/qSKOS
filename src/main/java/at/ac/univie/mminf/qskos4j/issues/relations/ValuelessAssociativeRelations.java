@@ -1,11 +1,11 @@
 package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.graph.AssociativeRelation;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
@@ -16,7 +16,7 @@ import java.util.HashSet;
 /**
 * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Valueless_Associative_Relations">Valueless Associative Relations</a>.
 */
-public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> {
+public class ValuelessAssociativeRelations extends Issue<CollectionResult<ValuelessAssociativeRelations.ValuelessAssociativeRelation>> {
 
     public ValuelessAssociativeRelations() {
         super("var",
@@ -27,23 +27,18 @@ public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> 
     }
 
     @Override
-    protected Collection<Pair<URI>> computeResult() throws OpenRDFException {
-		Collection<Pair<URI>> redundantAssociativeRelations = new HashSet<Pair<URI>>();
+    protected CollectionResult<ValuelessAssociativeRelation> invoke() throws OpenRDFException {
+		Collection<ValuelessAssociativeRelation> foundValuelessRelations = new HashSet<ValuelessAssociativeRelation>();
 
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRedundantAssociativeRelationsQuery());
-        generateResultsList(redundantAssociativeRelations, query.evaluate());
+        generateResultsList(foundValuelessRelations, query.evaluate());
 		
-		return redundantAssociativeRelations;
+		return new CollectionResult<ValuelessAssociativeRelation>(foundValuelessRelations);
 	}
-
-    @Override
-    protected Report generateReport(Collection<Pair<URI>> preparedData) {
-        return new CollectionReport<Pair<URI>>(preparedData);
-    }
 
     private String createRedundantAssociativeRelationsQuery() {
 		return SparqlPrefix.SKOS +
-			"SELECT ?parent ?child ?otherchild "+
+			"SELECT ?parent ?child ?otherchild ?relation "+
 			"WHERE {" +
 				"{" +
 					"?parent skos:narrower|skos:narrowerTransitive|^skos:broader|^skos:broaderTransitive ?child . " +
@@ -55,20 +50,61 @@ public class ValuelessAssociativeRelations extends Issue<Collection<Pair<URI>>> 
 					"?otherchild skos:narrower|skos:narrowerTransitive|^skos:broader|^skos:broaderTransitive ?parent . " +
 				"}" +
 
-				"?child skos:related|skos:relatedMatch ?otherchild. "+
+				"?child ?relation ?otherchild. "+
+                "FILTER (?relation IN (skos:related, skos:relatedMatch))"+
 			"}";
 	}
 	
-	private void generateResultsList(Collection<Pair<URI>> allResults, TupleQueryResult result)
+	private void generateResultsList(Collection<ValuelessAssociativeRelation> allResults, TupleQueryResult result)
 		throws QueryEvaluationException
 	{
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
-			URI child = (URI) queryResult.getValue("child");
-			URI otherchild = (URI) queryResult.getValue("otherchild");
 
-			allResults.add(new Pair<URI>(child, otherchild));
+            Resource parent = (Resource) queryResult.getValue("parent");
+            Resource child = (Resource) queryResult.getValue("child");
+            Resource otherchild = (Resource) queryResult.getValue("otherchild");
+
+            URI relation = (URI) queryResult.getValue("relation");
+
+			allResults.add(new ValuelessAssociativeRelation(
+                    new AssociativeRelation(child, otherchild, relation),
+                    parent));
 		}
 	}
+
+    public class ValuelessAssociativeRelation {
+
+        private AssociativeRelation relatedConcepts;
+        private Resource commonParent;
+
+        ValuelessAssociativeRelation(AssociativeRelation relatedConcepts, Resource commonParent) {
+            this.relatedConcepts = relatedConcepts;
+            this.commonParent = commonParent;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof ValuelessAssociativeRelation) {
+                ValuelessAssociativeRelation other = (ValuelessAssociativeRelation) obj;
+                return relatedConcepts.equals(other.relatedConcepts) && commonParent.equals(other.commonParent);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return relatedConcepts.hashCode() + commonParent.hashCode();
+        }
+
+        public AssociativeRelation getRelatedConcepts() {
+            return relatedConcepts;
+        }
+
+        public Resource getCommonParent() {
+            return commonParent;
+        }
+
+    }
 
 }

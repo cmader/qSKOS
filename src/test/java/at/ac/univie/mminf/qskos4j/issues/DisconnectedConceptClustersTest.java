@@ -7,11 +7,10 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Created by christian
@@ -32,17 +31,17 @@ public class DisconnectedConceptClustersTest {
 
     @Test
     public void testComponentCount() throws OpenRDFException {
-        long conceptCount = involvedConcepts.getResult().size();
-        Collection<Set<Value>> components = disconnectedConceptClusters.getResult();
+        long conceptCount = involvedConcepts.getResult().getData().size();
+        Collection<Collection<Resource>> components = disconnectedConceptClusters.getResult().getData();
 
         Assert.assertEquals(7, components.size());
         Assert.assertTrue(getVertexCount(components) <= conceptCount);
     }
 
-    private long getVertexCount(Collection<Set<Value>> components) {
+    private long getVertexCount(Collection<Collection<Resource>> components) {
         long ret = 0;
 
-        for (Set<Value> component : components) {
+        for (Collection<Resource> component : components) {
             ret += component.size();
         }
 

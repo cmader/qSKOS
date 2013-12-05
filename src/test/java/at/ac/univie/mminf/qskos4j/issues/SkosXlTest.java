@@ -42,22 +42,22 @@ public class SkosXlTest {
 	
 	@Test
 	public void lexicalRelationsCountTest() throws OpenRDFException {
-		Assert.assertEquals(5, lexicalRelations.getResult().intValue());
+		Assert.assertEquals(5, lexicalRelations.getResult().getData().intValue());
 	}
 	
 	@Test
 	public void omittedLangTagCount() throws OpenRDFException {
-		Assert.assertEquals(2, omittedOrInvalidLanguageTags.getResult().size());
+		Assert.assertEquals(2, omittedOrInvalidLanguageTags.getResult().getData().size());
 	}
 	
 	@Test
 	public void incompleteLangCovCount() throws OpenRDFException {
-		Assert.assertEquals(2, incompleteLanguageCoverage.getResult().size());
+		Assert.assertEquals(2, incompleteLanguageCoverage.getResult().getData().size());
 	}
 
 	@Test
 	public void labelConflictCount() throws OpenRDFException {
-		Assert.assertEquals(1, overlappingLabels.getResult().size());
+		Assert.assertEquals(1, overlappingLabels.getResult().getData().size());
 	}
 
 }

@@ -2,8 +2,9 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.Tuple;
+import at.ac.univie.mminf.qskos4j.util.graph.UnidirectionalRelation;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -13,13 +14,14 @@ import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Unidirectionally_Related_Concepts">Unidirectionally Related Concepts</a>.
  */
- public class UnidirectionallyRelatedConcepts extends Issue<Map<Pair<Resource>, String>> {
+ public class UnidirectionallyRelatedConcepts extends Issue<CollectionResult<UnidirectionalRelation>> {
 
 	private String[][] inversePropertyPairs = {
 		{"skos:broader", "skos:narrower"}, 
@@ -33,7 +35,8 @@ import java.util.Map;
     };
 
     private final Logger logger = LoggerFactory.getLogger(UnidirectionallyRelatedConcepts.class);
-	private Map<Pair<Resource>, String> omittedInverseRelations = new HashMap<Pair<Resource>, String>();
+
+    private Collection<UnidirectionalRelation> unidirectionalRelations;
     private AuthoritativeConcepts authoritativeConcepts;
 
     public UnidirectionallyRelatedConcepts(AuthoritativeConcepts authoritativeConcepts) {
@@ -48,22 +51,18 @@ import java.util.Map;
     }
 
     @Override
-    protected Map<Pair<Resource>, String> computeResult() throws OpenRDFException {
-
+    protected CollectionResult<UnidirectionalRelation> invoke() throws OpenRDFException {
+        unidirectionalRelations = new HashSet<UnidirectionalRelation>();
         String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         for (String[] inversePropertyPair : inversePropertyPairs) {
             TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOmittedRelationsQuery(inversePropertyPair));
-			addToOmittedInverseRelationsMap(query.evaluate(), inversePropertyPair, authResourceIdentifier);
+
+            addToOmittedInverseRelationsMap(query.evaluate(), inversePropertyPair, authResourceIdentifier);
 		}
 		
-		return omittedInverseRelations;
+		return new CollectionResult<UnidirectionalRelation>(unidirectionalRelations);
 	}
-
-    @Override
-    protected Report generateReport(Map<Pair<Resource>, String> preparedData) {
-        return new UnidirectionallyRelatedConceptsReport(preparedData);
-    }
 
     private String createOmittedRelationsQuery(String[] inverseRelations) {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
@@ -85,12 +84,14 @@ import java.util.Map;
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
 
-            Value value1 = queryResult.getValue("resource1");
-            Value value2 = queryResult.getValue("resource2");
+            Resource resource1 = (Resource) queryResult.getValue("resource1");
+            Resource resource2 = (Resource) queryResult.getValue("resource2");
             String inverseProperties = inversePropertyPair[0] +"/"+ inversePropertyPair[1];
 
-            if (bothResourcesAreAuthoritative(value1, value2, authResourceIdentifier)) {
-                addToMap(value1, value2, inverseProperties);
+            if (bothResourcesAreAuthoritative(resource1, resource2, authResourceIdentifier)) {
+                unidirectionalRelations.add(new UnidirectionalRelation(
+                    new Tuple<Resource>(resource1, resource2),
+                        Arrays.asList(inversePropertyPair)));
             }
         }
     }
@@ -101,20 +102,5 @@ import java.util.Map;
         return res1.stringValue().contains(authResourceIdentifier) &&
                res2.stringValue().contains(authResourceIdentifier);
     }
-
-    private void addToMap(Value value1, Value value2, String inverseProperties)
-    {
-        try {
-            Resource resource1 = (Resource) value1;
-            Resource resource2 = (Resource) value2;
-
-            omittedInverseRelations.put(
-                new Pair<Resource>(resource1, resource2),
-                    inverseProperties);
-        }
-        catch (ClassCastException e) {
-            logger.error("Resource expected for relation " +inverseProperties+ " (" +value1+ " <-> " +value2+ ")");
-        }
-	}
 
 }
