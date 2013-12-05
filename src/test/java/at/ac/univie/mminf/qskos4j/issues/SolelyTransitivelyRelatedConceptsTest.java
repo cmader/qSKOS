@@ -21,7 +21,7 @@ public class SolelyTransitivelyRelatedConceptsTest {
 
 	@Test
 	public void testSolitaryTransitiveRelationsCount() throws OpenRDFException {
-		Assert.assertEquals(4, solelyTransitivelyRelatedConcepts.getResult().size());
+		Assert.assertEquals(4, solelyTransitivelyRelatedConcepts.getResult().getData().size());
 	}
 	
 }

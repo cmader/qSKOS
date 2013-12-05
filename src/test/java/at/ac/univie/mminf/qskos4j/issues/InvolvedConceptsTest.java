@@ -27,14 +27,14 @@ public class InvolvedConceptsTest {
     @Test
     public void testConceptCount_1() throws OpenRDFException
     {
-        Collection<Resource> involvedConceptValues = involvedConceptsForConcepts.getResult();
+        Collection<Resource> involvedConceptValues = involvedConceptsForConcepts.getResult().getData();
         Assert.assertEquals(10, involvedConceptValues.size());
     }
 
     @Test
     public void testConceptCount_2() throws OpenRDFException
     {
-        Collection<Resource> involvedConceptValues = involvedConceptsForComponents.getResult();
+        Collection<Resource> involvedConceptValues = involvedConceptsForComponents.getResult().getData();
         Assert.assertEquals(21, involvedConceptValues.size());
     }
 }

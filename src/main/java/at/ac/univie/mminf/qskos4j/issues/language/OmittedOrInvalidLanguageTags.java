@@ -17,9 +17,9 @@ import java.util.*;
 /**
 * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">Omitted or Invalid Language Tags</a>.
 */
-public class OmittedOrInvalidLanguageTags extends Issue<CollectionResult<Statement>> {
+public class OmittedOrInvalidLanguageTags extends Issue<OmittedOrInvalidLanguageTagsResult> {
 
-    private Collection<Statement> affectedStatements;
+    private Map<Resource, Collection<String>> untaggedLiterals;
     private Map<String, Boolean> checkedLanguageTags;
 
     public OmittedOrInvalidLanguageTags() {
@@ -32,24 +32,24 @@ public class OmittedOrInvalidLanguageTags extends Issue<CollectionResult<Stateme
     }
 
     @Override
-    protected CollectionResult<Statement> invoke() throws OpenRDFException {
+    protected OmittedOrInvalidLanguageTagsResult invoke() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createMissingLangTagQuery())
             .evaluate();
 
         findAffectedStatements(result);
-        return new CollectionResult<Statement>(affectedStatements);
+        return new OmittedOrInvalidLanguageTagsResult(untaggedLiterals);
 	}
 
     private String createMissingLangTagQuery() throws OpenRDFException
     {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
-			"SELECT ?literal ?s "+
+			"SELECT ?s ?p ?literal "+
 			"WHERE {" +
-				"?s ?textProp ?literal . " +
+				"?s ?p ?literal . " +
 
-                "{?textProp rdfs:subPropertyOf rdfs:label}" +
+                "{?p rdfs:subPropertyOf rdfs:label}" +
                 "UNION" +
-                "{?textProp rdfs:subPropertyOf skos:note}" +
+                "{?p rdfs:subPropertyOf skos:note}" +
 
 				"FILTER isLiteral(?literal) " +
 			"}";
@@ -59,14 +59,13 @@ public class OmittedOrInvalidLanguageTags extends Issue<CollectionResult<Stateme
             throws QueryEvaluationException
     {
         checkedLanguageTags = new HashMap<String, Boolean>();
+        affectedStatements = new ArrayList<>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
             Resource subject = (Resource) queryResult.getValue("s");
-            URI predicate = (URI) queryResult.getValue("textProp");
+            URI predicate = (URI) queryResult.getValue("p");
             Literal literal = (Literal) queryResult.getValue("literal");
-
-            if (subject instanceof BNode) continue;
 
             if (literal.getDatatype() == null) {
                 String langTag = literal.getLanguage();

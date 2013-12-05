@@ -7,11 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Created by christian
@@ -36,16 +34,12 @@ public class OmittedOrInvalidLanguageTagsTest {
 
     @Test
     public void testMissingLangTagCount_1() throws OpenRDFException {
-        Map<Resource, Collection<Literal>> missingLangTags = oiltComponents.getResult();
-        Assert.assertEquals(3, missingLangTags.size());
+        Assert.assertEquals(3, oiltComponents.getResult().getData().size());
     }
 
     @Test
     public void testMissingLangTagCount_2() throws OpenRDFException {
-        Map<Resource, Collection<Literal>> missingLangTags = oiltDeprecatedAndIllegal.getResult();
-
-        Assert.assertEquals(1, missingLangTags.keySet().size());
-        Assert.assertEquals(2, countEntries(missingLangTags.values()));
+        Assert.assertEquals(2, oiltDeprecatedAndIllegal.getResult().getData().size());
     }
 
     private int countEntries(Collection<Collection<Literal>> allLiterals) {
@@ -58,8 +52,7 @@ public class OmittedOrInvalidLanguageTagsTest {
 
     @Test
     public void testMissingLangTagCount_3() throws OpenRDFException {
-        Map<Resource, Collection<Literal>> missingLangTags = oiltLangTags.getResult();
-        Assert.assertEquals(1, countEntries(missingLangTags.values()));
+        Assert.assertEquals(1, oiltLangTags.getResult().getData().size());
     }
 
 }
