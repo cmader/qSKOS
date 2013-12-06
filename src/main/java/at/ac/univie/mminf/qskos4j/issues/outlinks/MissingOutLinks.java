@@ -57,12 +57,10 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
     private Collection<URI> getURIsOfConcept(Resource concept) throws RepositoryException {
         Collection<URI> urisForConcept = new ArrayList<URI>();
 
-        if (concept instanceof Resource) {
-            RepositoryResult<Statement> conceptAsSubject = repCon.getStatements((Resource) concept, null, null, false);
-            while (conceptAsSubject.hasNext()) {
-                Value object = conceptAsSubject.next().getObject();
-                addToUriCollection(object, urisForConcept);
-            }
+        RepositoryResult<Statement> conceptAsSubject = repCon.getStatements((Resource) concept, null, null, false);
+        while (conceptAsSubject.hasNext()) {
+            Value object = conceptAsSubject.next().getObject();
+            addToUriCollection(object, urisForConcept);
         }
 
         RepositoryResult<Statement> conceptAsObject = repCon.getStatements(null, null, concept, false);

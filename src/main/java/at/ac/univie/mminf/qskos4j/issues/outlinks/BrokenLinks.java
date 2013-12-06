@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
@@ -24,7 +24,7 @@ import java.util.*;
  *
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Broken_Links">Broken Links</a>.
  */
-public class BrokenLinks extends Issue<CollectionResult<URL>> {
+public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 	
 	private final Logger logger = LoggerFactory.getLogger(BrokenLinks.class);
 	private final static String NO_CONTENT_TYPE = "n/a";
@@ -48,9 +48,9 @@ public class BrokenLinks extends Issue<CollectionResult<URL>> {
 	}
 
     @Override
-    protected CollectionResult<URL> invoke() throws OpenRDFException {
+    protected ExtrapolatedCollectionResult<URL> invoke() throws OpenRDFException {
         dereferenceURIs();
-		return new CollectionResult<URL>(collectUnavailableURLs());
+		return new ExtrapolatedCollectionResult<URL>(collectUnavailableURLs(), randomSubsetSize_percent);
 	}
 
     private void dereferenceURIs() throws OpenRDFException
