@@ -39,8 +39,7 @@ public class OmittedOrInvalidLanguageTags extends Issue<OmittedOrInvalidLanguage
         return new OmittedOrInvalidLanguageTagsResult(missingLangTags);
     }
 
-    private String createMissingLangTagQuery() throws OpenRDFException
-    {
+    private String createMissingLangTagQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
                 "SELECT ?literal ?s "+
                 "WHERE {" +

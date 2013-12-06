@@ -3,7 +3,6 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -40,13 +39,6 @@ public class InvolvedConcepts extends Issue<CollectionResult<Resource>> {
         }
 
         return new CollectionResult<Resource>(involvedConcepts);
-    }
-
-    private String createConceptsQuery() throws OpenRDFException {
-        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF+
-            "SELECT DISTINCT ?concept WHERE {" +
-                "?concept rdf:type skos:Concept"+
-            "}";
     }
 
 }

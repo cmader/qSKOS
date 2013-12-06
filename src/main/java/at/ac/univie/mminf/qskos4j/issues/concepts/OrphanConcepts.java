@@ -45,8 +45,7 @@ public class OrphanConcepts extends Issue<CollectionResult<Resource>> {
         return new CollectionResult<Resource>(orphanConcepts);
     }
 
-    private String createOrphanConceptsQuery() throws OpenRDFException
-    {
+    private String createOrphanConceptsQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept WHERE " +
             "{" +

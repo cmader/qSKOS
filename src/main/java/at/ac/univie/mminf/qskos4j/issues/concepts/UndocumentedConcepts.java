@@ -62,9 +62,7 @@ public class UndocumentedConcepts extends Issue<CollectionResult<Resource>> {
 		return new CollectionResult<Resource>(undocumentedConcepts);
 	}
 
-    private boolean isConceptDocumented(Value concept)
-		throws OpenRDFException 
-	{		
+    private boolean isConceptDocumented(Value concept) {
 		for (String docProperty : documentationProperties) {
 			if (conceptHasProperty(concept, docProperty)) {
 				return true;

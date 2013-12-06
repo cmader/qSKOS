@@ -103,7 +103,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
         return allRelations;
     }
 
-    private String createConnectionsQuery(Value concept) throws OpenRDFException {
+    private String createConnectionsQuery(Value concept) {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
             "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
             "{" +

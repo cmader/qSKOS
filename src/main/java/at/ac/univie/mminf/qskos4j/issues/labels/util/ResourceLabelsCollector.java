@@ -22,7 +22,7 @@ public class ResourceLabelsCollector {
     private RepositoryConnection repCon;
     private Collection<LabeledConcept> labeledResources;
 
-    public Collection<LabeledConcept> getLabeledConcepts() throws OpenRDFException {
+    public Collection<LabeledConcept> getLabeledConcepts() {
         labeledResources = new HashSet<LabeledConcept>();
         createLabeledResources();
         return labeledResources;

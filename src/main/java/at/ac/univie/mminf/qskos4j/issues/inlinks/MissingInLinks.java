@@ -85,17 +85,11 @@ public class MissingInLinks extends Issue<CollectionResult<Resource>> {
         }
 
         for (RepositoryConnection connection : connections) {
-            try {
-                rankConceptForConnection(concept, connection);
-            }
-            catch (OpenRDFException e) {
-                logger.error("Error ranking concept '" +concept+ "', " + e.toString());
-            }
+            rankConceptForConnection(concept, connection);
 		}
 	}
 	
 	private void rankConceptForConnection(Resource concept, RepositoryConnection connection)
-          throws OpenRDFException
 	{
 		String query = "SELECT distinct ?resource WHERE " +
 			"{?resource ?p <"+concept.toString()+">  " +

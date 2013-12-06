@@ -39,8 +39,7 @@ public class DisjointLabelsViolations extends Issue<LabelConflictsResult> {
     protected LabelConflictsResult invoke() throws OpenRDFException {
         findNonDisjointLabels();
 
-        LabelConflictsResult labelConflictsResult = new LabelConflictsResult(nonDisjointLabels.values());
-        return labelConflictsResult;
+        return new LabelConflictsResult(nonDisjointLabels.values());
     }
 
     private void findNonDisjointLabels() throws OpenRDFException {
