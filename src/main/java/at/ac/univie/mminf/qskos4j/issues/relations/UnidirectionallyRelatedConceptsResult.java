@@ -41,7 +41,7 @@ public class UnidirectionallyRelatedConceptsResult extends Result<Map<Tuple<Reso
     }
 
     @Override
-    public boolean indicatesProblem() {
-        return !getData().isEmpty();
+    public long occurrenceCount() {
+        return getData().size();
     }
 }

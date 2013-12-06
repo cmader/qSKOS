@@ -49,7 +49,7 @@ public class OmittedOrInvalidLanguageTagsResult extends Result<Map<Resource, Col
     }
 
     @Override
-    public boolean indicatesProblem() {
-        return !getData().isEmpty();
+    public long occurrenceCount() {
+        return getData().size();
     }
 }

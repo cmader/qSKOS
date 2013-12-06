@@ -61,6 +61,6 @@ public abstract class Result<T> {
         }
 	}
 
-    public abstract boolean indicatesProblem();
+    public abstract long occurrenceCount();
 	
 }

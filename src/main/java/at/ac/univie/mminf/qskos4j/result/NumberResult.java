@@ -23,8 +23,8 @@ public class NumberResult<T extends Number> extends Result<T> {
     }
 
     @Override
-    public boolean indicatesProblem() {
-        return getData().intValue() != 0;
+    public long occurrenceCount() {
+        return getData().longValue();
     }
 
 }

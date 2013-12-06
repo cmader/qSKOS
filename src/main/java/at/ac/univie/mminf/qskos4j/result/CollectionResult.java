@@ -26,8 +26,8 @@ public class CollectionResult<T> extends Result<Collection<T>> {
     }
 
     @Override
-    public boolean indicatesProblem() {
-        return !getData().isEmpty();
+    public long occurrenceCount() {
+        return getData().size();
     }
 
     public String generateExtensiveTextReport() {

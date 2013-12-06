@@ -49,8 +49,8 @@ public class IncompleteLangCovResult extends Result<Map<Value, Collection<String
 	}
 
     @Override
-    public boolean indicatesProblem() {
-        return !getData().isEmpty();
+    public long occurrenceCount() {
+        return getData().size();
     }
 
 }
