@@ -7,9 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
+import org.openrdf.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by christian
@@ -39,7 +41,10 @@ public class OmittedOrInvalidLanguageTagsTest {
 
     @Test
     public void testMissingLangTagCount_2() throws OpenRDFException {
-        Assert.assertEquals(2, oiltDeprecatedAndIllegal.getResult().getData().size());
+        Map<Resource, Collection<Literal>> missingLangTags = oiltDeprecatedAndIllegal.getResult().getData();
+
+        Assert.assertEquals(1, missingLangTags.keySet().size());
+        Assert.assertEquals(2, countEntries(missingLangTags.values()));
     }
 
     private int countEntries(Collection<Collection<Literal>> allLiterals) {

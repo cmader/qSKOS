@@ -45,10 +45,6 @@ public class IncompleteLangCovResult extends Result<Map<Value, Collection<String
                            .append(entryIt.hasNext() ? "\n" : "");
         }
 
-        for (Entry<Value, Collection<String>> entry : getData().entrySet()) {
-
-		}
-
 		return extensiveReport.toString();
 	}
 

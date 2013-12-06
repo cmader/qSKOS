@@ -1,11 +1,11 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.StatementImpl;
+import org.openrdf.model.Literal;
+import org.openrdf.model.Resource;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
@@ -15,68 +15,71 @@ import org.openrdf.query.TupleQueryResult;
 import java.util.*;
 
 /**
-* Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">Omitted or Invalid Language Tags</a>.
-*/
+ * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_or_Invalid_Language_Tags">Omitted or Invalid Language Tags</a>.
+ */
 public class OmittedOrInvalidLanguageTags extends Issue<OmittedOrInvalidLanguageTagsResult> {
 
-    private Map<Resource, Collection<String>> untaggedLiterals;
+    private Map<Resource, Collection<Literal>> missingLangTags;
     private Map<String, Boolean> checkedLanguageTags;
 
     public OmittedOrInvalidLanguageTags() {
         super("oilt",
-              "Omitted or Invalid Language Tags",
-              "Finds omitted or invalid language tags of text literals",
-              IssueType.ANALYTICAL,
-              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-or-invalid-language-tags")
+                "Omitted or Invalid Language Tags",
+                "Finds omitted or invalid language tags of text literals",
+                IssueType.ANALYTICAL,
+                new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-or-invalid-language-tags")
         );
     }
 
     @Override
     protected OmittedOrInvalidLanguageTagsResult invoke() throws OpenRDFException {
-        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createMissingLangTagQuery())
-            .evaluate();
+        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createMissingLangTagQuery()).evaluate();
+        generateMissingLangTagMap(result);
 
-        findAffectedStatements(result);
-        return new OmittedOrInvalidLanguageTagsResult(untaggedLiterals);
-	}
+        return new OmittedOrInvalidLanguageTagsResult(missingLangTags);
+    }
 
     private String createMissingLangTagQuery() throws OpenRDFException
     {
-		return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
-			"SELECT ?s ?p ?literal "+
-			"WHERE {" +
-				"?s ?p ?literal . " +
+        return SparqlPrefix.SKOS +" "+ SparqlPrefix.SKOSXL +" "+ SparqlPrefix.RDFS +
+                "SELECT ?literal ?s "+
+                "WHERE {" +
+                "?s ?textProp ?literal . " +
 
-                "{?p rdfs:subPropertyOf rdfs:label}" +
+                "{?textProp rdfs:subPropertyOf rdfs:label}" +
                 "UNION" +
-                "{?p rdfs:subPropertyOf skos:note}" +
+                "{?textProp rdfs:subPropertyOf skos:note}" +
 
-				"FILTER isLiteral(?literal) " +
-			"}";
-	}
+                "FILTER isLiteral(?literal) " +
+                "}";
+    }
 
-    private void findAffectedStatements(TupleQueryResult result)
+    private void generateMissingLangTagMap(TupleQueryResult result)
             throws QueryEvaluationException
     {
+        missingLangTags = new HashMap<Resource, Collection<Literal>>();
         checkedLanguageTags = new HashMap<String, Boolean>();
-        affectedStatements = new ArrayList<>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
             Resource subject = (Resource) queryResult.getValue("s");
-            URI predicate = (URI) queryResult.getValue("p");
             Literal literal = (Literal) queryResult.getValue("literal");
 
-            if (literal.getDatatype() == null) {
-                String langTag = literal.getLanguage();
-                if (langTag == null || !isValidLangTag(langTag)) {
-                    affectedStatements.add(new StatementImpl(subject, predicate, literal));
-                }
+            if (!SkosOntology.getInstance().isSkosResource(subject) && hasNoOrInvalidTag(literal)) {
+                addToMissingLangTagMap(subject, literal);
             }
         }
     }
 
-	private boolean isValidLangTag(String langTag) {
+    private boolean hasNoOrInvalidTag(Literal literal) {
+        if (literal.getDatatype() == null) {
+            String langTag = literal.getLanguage();
+            return langTag == null || !isValidLangTag(langTag);
+        }
+        return false;
+    }
+
+    private boolean isValidLangTag(String langTag) {
         Boolean validTag = checkedLanguageTags.get(langTag);
 
         if (validTag == null) {
@@ -110,6 +113,15 @@ public class OmittedOrInvalidLanguageTags extends Issue<OmittedOrInvalidLanguage
         }
 
         return hasIsoLanguage;
-	}
+    }
+
+    private void addToMissingLangTagMap(Resource resource, Literal literal) {
+        Collection<Literal> literals = missingLangTags.get(resource);
+        if (literals == null) {
+            literals = new HashSet<Literal>();
+            missingLangTags.put(resource, literals);
+        }
+        literals.add(literal);
+    }
 
 }
