@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Tuple;
+import at.ac.univie.mminf.qskos4j.util.Pair;
 import org.openrdf.model.Resource;
 
 import java.io.BufferedWriter;
@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class UnidirectionallyRelatedConceptsReport extends Report {
 
-    private Map<Tuple<Resource>, String> data;
+    private Map<Pair<Resource>, String> data;
 
-	public UnidirectionallyRelatedConceptsReport(Map<Tuple<Resource>, String> data) {
+	public UnidirectionallyRelatedConceptsReport(Map<Pair<Resource>, String> data) {
 		this.data = data;
 	}
 
@@ -22,7 +22,7 @@ public class UnidirectionallyRelatedConceptsReport extends Report {
     {
         switch (style) {
             case SHORT:
-                new CollectionReport<Tuple<Resource>>(data.keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
+                new CollectionReport<Pair<Resource>>(data.keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
                 break;
 
             case EXTENSIVE:
@@ -35,7 +35,7 @@ public class UnidirectionallyRelatedConceptsReport extends Report {
     {
 		StringBuilder extensiveReport = new StringBuilder();
 		
-		for (Tuple<Resource> concepts : data.keySet()) {
+		for (Pair<Resource> concepts : data.keySet()) {
 			extensiveReport.append("concepts: ").append(concepts.toString()).append(", related by: '").append(data.get(concepts)).append("'\n");
 		}
 

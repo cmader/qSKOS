@@ -44,17 +44,17 @@ public class TupleQueryResultUtil {
         return count;
     }
 
-    public static Collection<Tuple<Value>> createCollectionOfValuePairs(TupleQueryResult result, String value1, String value2)
+    public static Collection<Pair<Value>> createCollectionOfValuePairs(TupleQueryResult result, String value1, String value2)
         throws OpenRDFException
     {
-        Collection<Tuple<Value>> resultCollection = new ArrayList<Tuple<Value>>();
+        Collection<Pair<Value>> resultCollection = new ArrayList<Pair<Value>>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
             Value concept1 = queryResult.getValue(value1);
             Value concept2 = queryResult.getValue(value2);
 
-            resultCollection.add(new Tuple<Value>(concept1, concept2));
+            resultCollection.add(new Pair<Value>(concept1, concept2));
         }
 
         return resultCollection;

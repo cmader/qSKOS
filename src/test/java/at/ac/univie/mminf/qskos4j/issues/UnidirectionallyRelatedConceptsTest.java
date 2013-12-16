@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.UnidirectionallyRelatedConcepts;
-import at.ac.univie.mminf.qskos4j.util.Tuple;
+import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -26,7 +26,7 @@ public class UnidirectionallyRelatedConceptsTest {
 
     @Test
     public void testMissingInverseRelationsCount() throws OpenRDFException {
-        Map<Tuple<Resource>, String> missingRelations = unidirectionallyRelatedConcepts.getResult();
+        Map<Pair<Resource>, String> missingRelations = unidirectionallyRelatedConcepts.getResult();
         Assert.assertEquals(8, missingRelations.size());
     }
 }

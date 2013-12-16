@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
-import at.ac.univie.mminf.qskos4j.util.Tuple;
+import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -24,7 +24,7 @@ public class ValuelessAssociativeRelationsTest {
 
     @Test
     public void testRedundantAssociativeRelationsCount() throws OpenRDFException {
-        Collection<Tuple<Resource>> redAssRels = valuelessAssociativeRelations.getResult();
+        Collection<Pair<Resource>> redAssRels = valuelessAssociativeRelations.getResult();
         Assert.assertEquals(7, redAssRels.size());
     }
 }
