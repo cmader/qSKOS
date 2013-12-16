@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
+import org.openrdf.model.URI;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -24,7 +24,7 @@ public class ValuelessAssociativeRelationsTest {
 
     @Test
     public void testRedundantAssociativeRelationsCount() throws OpenRDFException {
-        Collection<Pair<Resource>> redAssRels = valuelessAssociativeRelations.getResult();
-        Assert.assertEquals(7, redAssRels.size());
+        Collection<Pair<URI>> redAssRels = valuelessAssociativeRelations.getResult();
+        Assert.assertEquals(6, redAssRels.size());
     }
 }
