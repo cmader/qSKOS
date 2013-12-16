@@ -1,151 +1,122 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Date;
+import java.util.Iterator;
+
 
 class ReportCollector {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(ReportCollector.class);
+    private final Logger logger = LoggerFactory.getLogger(ReportCollector.class);
 
     private Collection<Issue> issues;
+    private String reportFileName;
 
-    public ReportCollector(Collection<Issue> issues) {
+    public ReportCollector(Collection<Issue> issues, String reportFileName) {
         this.issues = issues;
-    }
-
-    void outputURITrackingReport(File uriTrackFile) throws IOException
-    {
-        Map<String, Collection<String>> conceptIssuesMapping = collectIssuesForConcepts(uriTrackFile);
-
-        outputCsvHeader();
-        outputIssuesAsCsv(conceptIssuesMapping);
-    }
-
-    private void outputCsvHeader() {
-        System.out.print("Concept;");
-        for (Issue issue : issues) {
-            System.out.print(issue.getId() + ";");
-        }
-        System.out.println();
-    }
-
-    private void outputIssuesAsCsv(Map<String, Collection<String>> conceptIssuesMapping) {
-        for (Map.Entry<String, Collection<String>> entry : conceptIssuesMapping.entrySet()) {
-            System.out.print(entry.getKey() + ";");
-
-            for (Issue issue : issues) {
-                for (String issueForConcept : entry.getValue()) {
-                    if (issueForConcept.contains(issue.getId())) {
-                        System.out.print(issueForConcept);
-                    }
-                }
-                System.out.print(";");
-            }
-            System.out.println();
-        }
-    }
-
-    public Map<String, Collection<String>> collectIssuesForConcepts(File uriTrackFile) throws IOException
-    {
-        Map<String, Collection<String>> uriSubstringToIssuesMapping = new LinkedHashMap<String, Collection<String>>();
-
-        for (Issue issue : issues) {
-            ConceptIterator conceptIterator = new ConceptIterator(uriTrackFile);
-
-            try {
-                StringWriter extensiveTextReportStringWriter = new StringWriter();
-                BufferedWriter extensiveTextReportStringBufWriter = new BufferedWriter(extensiveTextReportStringWriter);
-                issue.getReport().generateReport(extensiveTextReportStringBufWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
-                extensiveTextReportStringBufWriter.close();
-
-                addConceptOccurences(uriSubstringToIssuesMapping, issue, extensiveTextReportStringWriter.toString(), conceptIterator);
-            }
-            catch (OpenRDFException e) {
-                logger.error("Error invoking measure " +issue.getName()+ " (" +issue.getId()+ ")");
-            }
-        }
-
-        return uriSubstringToIssuesMapping;
-    }
-
-    private void addConceptOccurences(
-        Map<String, Collection<String>> uriSubstringToIssuesMapping,
-        Issue issue,
-        String report,
-        ConceptIterator conceptIterator)
-    {
-        while (conceptIterator.hasNext()) {
-            String conceptSubString = conceptIterator.next();
-
-            Collection<String> containingMeasures = uriSubstringToIssuesMapping.get(conceptSubString);
-            if (containingMeasures == null) {
-                containingMeasures = new HashSet<String>();
-                uriSubstringToIssuesMapping.put(conceptSubString, containingMeasures);
-            }
-
-            int conceptPosInReport = report.indexOf(conceptSubString);
-            if (conceptPosInReport != -1) {
-                StringBuilder measureId = new StringBuilder(issue.getId());
-
-                if (issue instanceof DisconnectedConceptClusters) {
-                    measureId.append("(").append(getWccSize(conceptPosInReport, report)).append(")");
-                }
-
-                containingMeasures.add(measureId.toString());
-            }
-        }
-    }
-
-    private String getWccSize(int conceptPosInReport, String report) {
-        String WCC_SIZE_DESC = "size: ";
-
-        int sizeDescPos = report.lastIndexOf(WCC_SIZE_DESC, conceptPosInReport);
-        int newLinePos = report.indexOf("\n", sizeDescPos);
-
-        return report.substring(sizeDescPos + WCC_SIZE_DESC.length(), newLinePos);
+        this.reportFileName = reportFileName;
     }
 
     void outputIssuesReport(boolean outputExtendedReport, boolean shouldWriteGraphs)
+        throws IOException, OpenRDFException
     {
-        for (Issue issue : issues) {
-            System.out.println("--- " +issue.getName());
+        File reportFile = createReportFile();
+        BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
-            try {
-                StringWriter stringWriter = new StringWriter();
-                BufferedWriter reportStringWriter = new BufferedWriter(stringWriter);
-                issue.getReport().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.SHORT);
+        writeReportHeader(reportWriter, reportFile);
+        writeReportBody(reportWriter, reportFile, outputExtendedReport, shouldWriteGraphs);
+    }
 
-                if (outputExtendedReport) {
-                    reportStringWriter.newLine();
-                    issue.getReport().generateReport(reportStringWriter, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
-                }
+    private void writeReportHeader(BufferedWriter reportWriter,
+                                   File reportFile) throws IOException {
+        String issuedDate = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").format(new Date());
+        String fileName = reportFile.getAbsolutePath();
+        reportWriter.write("This is the quality report of file " +fileName+ ", generated on " +issuedDate);
+        reportWriter.newLine();
+        reportWriter.newLine();
+    }
 
-                reportStringWriter.close();
-                System.out.println(stringWriter.toString());
+    private void writeReportBody(BufferedWriter reportWriter,
+                                 File reportFile,
+                                 boolean outputExtendedReport,
+                                 boolean shouldWriteGraphs)
+        throws IOException, OpenRDFException
+    {
+        int issueNumber = 0;
+        Iterator<Issue> issueIt = issues.iterator();
+        while (issueIt.hasNext()) {
+            Issue issue = issueIt.next();
+            issueNumber++;
 
-                if (shouldWriteGraphs) {
-                    BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(issue.getId() + ".dot"));
-                    issue.getReport().generateReport(graphFileWriter, Report.ReportFormat.DOT);
-                    graphFileWriter.close();
-                }
+            logger.info("Processing issue " +issueNumber+ " of " +issues.size()+ " (" +issue.getName()+ ")");
+            writeTextReport(issue, reportWriter, outputExtendedReport);
+            if (issueIt.hasNext()) {
+                reportWriter.newLine();
             }
-            catch (OpenRDFException rdfEx) {
-                logger.error("Error getting issue report", rdfEx);
-            }
-            catch (IOException ioEx) {
-                logger.error("Error generating report output", ioEx);
+
+            if (shouldWriteGraphs) {
+                writeGraphFiles(issue, getDotFilesPath(reportFile));
             }
         }
+
+        logger.info("Report complete!");
+        reportWriter.close();
+    }
+
+    private File createReportFile() throws IOException {
+        File file = new File(reportFileName);
+        file.createNewFile();
+        return file;
+    }
+
+    private void writeTextReport(Issue issue, BufferedWriter writer, boolean outputExtendedReport)
+        throws IOException, OpenRDFException
+    {
+        writer.write(createIssueHeader(issue));
+        writer.newLine();
+        issue.getReport().generateReport(writer, Report.ReportFormat.TXT, Report.ReportStyle.SHORT);
+
+        if (outputExtendedReport) {
+            writer.newLine();
+            issue.getReport().generateReport(writer, Report.ReportFormat.TXT, Report.ReportStyle.EXTENSIVE);
+        }
+
+        writer.newLine();
+        writer.flush();
+    }
+
+    private String createIssueHeader(Issue issue) {
+        String header = "--- " +issue.getName();
+        URI weblink = issue.getWeblink();
+        header += "\nDescription: " +issue.getDescription();
+
+        if (weblink != null) {
+            header += "\nDetailed information: " +weblink.stringValue();
+        }
+        return header;
+    }
+
+    private String getDotFilesPath(File reportFile) {
+        String absolutePath = reportFile.getAbsolutePath();
+        return absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
+    }
+
+    private void writeGraphFiles(Issue issue, String dotFilesPath) throws IOException, OpenRDFException {
+        BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(dotFilesPath + issue.getId() + ".dot"));
+        issue.getReport().generateReport(graphFileWriter, Report.ReportFormat.DOT);
+        graphFileWriter.close();
     }
 
 }

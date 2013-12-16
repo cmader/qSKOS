@@ -69,7 +69,7 @@ public class ConceptSchemes extends Issue<Collection<Resource>> {
                 allResources.add((Resource) conceptScheme);
             }
             catch (ClassCastException e) {
-                logger.info("resource expected for conceptscheme " +conceptScheme.toString()+ ", " +e.toString());
+                logger.error("Resource expected for conceptscheme " +conceptScheme.toString()+ ", " +e.toString());
             }
         }
 

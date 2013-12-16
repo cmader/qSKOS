@@ -7,6 +7,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryResult;
 
 import java.util.Collection;
@@ -26,7 +27,8 @@ public class HttpUriSchemeViolations extends Issue<Collection<String>> {
         super("husv",
               "HTTP URI Scheme Violation",
               "Finds triple subjects that are no HTTP URIs",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#http-uri-scheme-violation")
         );
     }
 

@@ -2,14 +2,16 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
-import org.openrdf.query.*;
-import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.model.impl.URIImpl;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQueryResult;
 
 import java.util.*;
 
@@ -25,7 +27,8 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
         super("oilt",
               "Omitted or Invalid Language Tags",
               "Finds omitted or invalid language tags of text literals",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-or-invalid-language-tags")
         );
     }
 
@@ -33,6 +36,7 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
     protected Map<Resource, Collection<Literal>> computeResult() throws OpenRDFException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createMissingLangTagQuery()).evaluate();
         generateMissingLangTagMap(result);
+
         return missingLangTags;
 	}
 
@@ -48,31 +52,13 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 			"WHERE {" +
 				"?s ?textProp ?literal . " +
 
+                "{?textProp rdfs:subPropertyOf rdfs:label}" +
+                "UNION" +
+                "{?textProp rdfs:subPropertyOf skos:note}" +
+
 				"FILTER isLiteral(?literal) " +
-                createSkosTextualPropertiesFilter()+
 			"}";
 	}
-
-    private String createSkosTextualPropertiesFilter() throws OpenRDFException
-    {
-        RepositoryConnection skosRepConn = SkosOntology.getInstance().getRepository().getConnection();
-        try {
-            TupleQuery skosTextPropQuery = skosRepConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosTextualPropertiesQuery());
-            return TupleQueryResultUtil.getFilterForBindingName(skosTextPropQuery.evaluate(), "textProp");
-        }
-        finally {
-            skosRepConn.close();
-        }
-    }
-
-    private String createSkosTextualPropertiesQuery() {
-        return SparqlPrefix.SKOS +" "+  SparqlPrefix.RDFS +
-            "SELECT ?textProp WHERE {" +
-                "{?textProp rdfs:subPropertyOf* rdfs:label}" +
-                "UNION" +
-                "{?textProp rdfs:subPropertyOf* skos:note}" +
-            "}";
-    }
 
 	private void generateMissingLangTagMap(TupleQueryResult result)
 		throws QueryEvaluationException 
@@ -82,17 +68,22 @@ public class OmittedOrInvalidLanguageTags extends Issue<Map<Resource, Collection
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
+            Resource subject = (Resource) queryResult.getValue("s");
 			Literal literal = (Literal) queryResult.getValue("literal");
-			Resource subject = (Resource) queryResult.getValue("s");
 
-            if (literal.getDatatype() == null) {
-				String langTag = literal.getLanguage();			
-				if (langTag == null || !isValidLangTag(langTag)) {
-					addToMissingLangTagMap(subject, literal);
-				}
-			}
+            if (!SkosOntology.getInstance().isSkosResource(subject) && hasNoOrInvalidTag(literal)) {
+                addToMissingLangTagMap(subject, literal);
+            }
 		}
 	}
+
+    private boolean hasNoOrInvalidTag(Literal literal) {
+        if (literal.getDatatype() == null) {
+            String langTag = literal.getLanguage();
+            return langTag == null || !isValidLangTag(langTag);
+        }
+        return false;
+    }
 	
 	private boolean isValidLangTag(String langTag) {
         Boolean validTag = checkedLanguageTags.get(langTag);

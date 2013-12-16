@@ -5,13 +5,16 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.report.ExtrapolatedCollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
@@ -25,13 +28,13 @@ import java.util.*;
 * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_InLinks">Missing In-Links</a>
 * ).
 */
-public class MissingInLinks extends Issue<Collection<Value>> {
+public class MissingInLinks extends Issue<Collection<Resource>> {
 
 	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
 
 	private AuthoritativeConcepts authoritativeConcepts;
 	private Collection<RepositoryConnection> connections = new ArrayList<RepositoryConnection>();
-	private Map<Value, Set<URI>> conceptReferencingResources = new HashMap<Value, Set<URI>>();
+	private Map<Resource, Set<URI>> conceptReferencingResources = new HashMap<Resource, Set<URI>>();
     private Integer queryDelayMillis = 0;
     private Float randomSubsetSize_percent;
 
@@ -40,20 +43,21 @@ public class MissingInLinks extends Issue<Collection<Value>> {
             "mil",
             "Missing In-Links",
             "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-in-links"));
 
         this.authoritativeConcepts = authoritativeConcepts;
     }
 
     @Override
-    protected Collection<Value> computeResult() throws OpenRDFException {
-        Collection<Value> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
+    protected Collection<Resource> computeResult() throws OpenRDFException {
+        Collection<Resource> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
-            logger.info("using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
+            logger.info("Using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
         }
 
-        Iterator<Value> conceptIt = new MonitoredIterator<Value>(
+        Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(
                 conceptsToCheck,
                 progressMonitor,
                 "finding In-Links");
@@ -66,21 +70,21 @@ public class MissingInLinks extends Issue<Collection<Value>> {
     }
 
     @Override
-    protected Report generateReport(Collection<Value> preparedData) {
-        return new ExtrapolatedCollectionReport<Value>(preparedData, randomSubsetSize_percent);
+    protected Report generateReport(Collection<Resource> preparedData) {
+        return new ExtrapolatedCollectionReport<Resource>(preparedData, randomSubsetSize_percent);
     }
 
-    private Collection<Value> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
+    private Collection<Resource> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
     {
 		if (randomSubsetSize_percent == null) {
 			return authoritativeConcepts.getResult();
 		}
 		else {
-			return new RandomSubSet<Value>(authoritativeConcepts.getResult(), randomSubsetSize_percent);
+			return new RandomSubSet<Resource>(authoritativeConcepts.getResult(), randomSubsetSize_percent);
 		}
 	}
 	
-	private void rankConcept(Value concept)
+	private void rankConcept(Resource concept)
 	{
         if (connections.isEmpty()) {
             logger.warn("no repository for querying defined");
@@ -96,7 +100,7 @@ public class MissingInLinks extends Issue<Collection<Value>> {
 		}
 	}
 	
-	private void rankConceptForConnection(Value concept, RepositoryConnection connection)
+	private void rankConceptForConnection(Resource concept, RepositoryConnection connection)
           throws OpenRDFException
 	{
 		String query = "SELECT distinct ?resource WHERE " +
@@ -121,7 +125,7 @@ public class MissingInLinks extends Issue<Collection<Value>> {
         }
 	}
 	
-	private void addToConceptsRankMap(Value concept, TupleQueryResult result)
+	private void addToConceptsRankMap(Resource concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
 		Set<URI> referencingResourcesOnOtherHost = 
@@ -168,10 +172,10 @@ public class MissingInLinks extends Issue<Collection<Value>> {
 		return !host.equalsIgnoreCase(otherHost);		
 	}
 	
-	private Collection<Value> extractUnreferencedConcepts() {
-		Collection<Value> unrefConcepts = new HashSet<Value>();
+	private Collection<Resource> extractUnreferencedConcepts() {
+		Collection<Resource> unrefConcepts = new HashSet<Resource>();
 		
-		for (Value concept : conceptReferencingResources.keySet()) {
+		for (Resource concept : conceptReferencingResources.keySet()) {
 			if (conceptReferencingResources.get(concept).isEmpty()) {
 				unrefConcepts.add(concept);
 			}
@@ -202,7 +206,9 @@ public class MissingInLinks extends Issue<Collection<Value>> {
      * @param endpointUrl SPARL endpoint URL
      */
     public void addSparqlEndPoint(String endpointUrl) throws OpenRDFException {
-        connections.add(new SPARQLRepository(endpointUrl).getConnection());
+        Repository repo = new SPARQLRepository(endpointUrl);
+        repo.initialize();
+        connections.add(repo.getConnection());
     }
 
 }

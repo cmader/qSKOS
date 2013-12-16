@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
-	
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xml:base="http://myvocab.org/concept/">
+
 	<!-- Case 1; error -->
 	<rdf:Description rdf:about="conceptA">
 		<skos:broader rdf:resource="conceptB"/>
@@ -84,6 +85,11 @@
 
     <rdf:Description rdf:about="conceptZ">
         <skos:closeMatch rdf:resource="conceptY"/>
+    </rdf:Description>
+
+    <!-- Case 12; ok because external mapping -->
+    <rdf:Description rdf:about="conceptAA">
+        <skos:closeMatch rdf:resource="http://dbpedia.org/someconcept"/>
     </rdf:Description>
 
 </rdf:RDF>

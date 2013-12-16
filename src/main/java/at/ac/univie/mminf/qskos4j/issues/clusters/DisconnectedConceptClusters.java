@@ -4,15 +4,15 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -45,7 +45,8 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
             "dcc",
             "Disconnected Concept Clusters",
             "Finds sets of concepts that are isolated from the rest of the vocabulary",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disconnected-concept-clusters")
         );
         this.involvedConcepts = involvedConcepts;
     }
@@ -67,9 +68,9 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
     {
         graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
 
-        Iterator<URI> conceptIt = new MonitoredIterator<URI>(involvedConcepts.getResult(), progressMonitor);
+        Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(involvedConcepts.getResult(), progressMonitor);
         while (conceptIt.hasNext()) {
-            Value concept = conceptIt.next();
+            Resource concept = conceptIt.next();
             Collection<Relation> relations = findRelations(concept);
 
             for (Relation relation : relations) {
@@ -108,14 +109,11 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
 
     private String createConnectionsQuery(Value concept) throws OpenRDFException {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
-                "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
-                "{" +
-                    "{" +
-                        "<" +concept.stringValue()+ "> ?p ?otherConcept . " +
-                        "?p rdfs:subPropertyOf ?semanticRelation" +
-                    "}" +
-                    SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semanticRelation")+
-                "}";
+            "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
+            "{" +
+                "<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept . " +
+                "?semanticRelation rdfs:subPropertyOf skos:semanticRelation" +
+            "}";
     }
 
     private void addNodesToGraph(

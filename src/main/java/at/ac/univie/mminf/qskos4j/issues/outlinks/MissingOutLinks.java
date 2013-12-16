@@ -4,13 +4,14 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 
@@ -19,9 +20,9 @@ import java.util.*;
 /**
  * Finds concepts without links to "external" resources (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Missing_OutLinks">Missing Out-Links</a>.
  */
-public class MissingOutLinks extends Issue<Collection<Value>> {
+public class MissingOutLinks extends Issue<Collection<Resource>> {
 
-	private Map<Value, Collection<URI>> extResourcesForConcept;
+	private Map<Resource, Collection<URI>> extResourcesForConcept;
     private AuthoritativeConcepts authoritativeConcepts;
 	
 	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
@@ -29,15 +30,16 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
             "mol",
             "Missing Out-Links",
             "Finds concepts that are not linked to other vocabularies on the Web",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-out-links")
         );
 
         this.authoritativeConcepts = authoritativeConcepts;
 	}
 
     @Override
-    public Collection<Value> computeResult() throws OpenRDFException {
-		extResourcesForConcept = new HashMap<Value, Collection<URI>>();
+    public Collection<Resource> computeResult() throws OpenRDFException {
+		extResourcesForConcept = new HashMap<Resource, Collection<URI>>();
 
 		findResourcesForConcepts(authoritativeConcepts.getResult());
 		
@@ -45,20 +47,20 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 	}
 
     @Override
-    protected Report generateReport(Collection<Value> preparedData) {
-        return new CollectionReport<Value>(preparedData);
+    protected Report generateReport(Collection<Resource> preparedData) {
+        return new CollectionReport<Resource>(preparedData);
     }
 
-    private void findResourcesForConcepts(Collection<Value> concepts) throws RepositoryException {
-		Iterator<Value> conceptIt = new MonitoredIterator<Value>(concepts, progressMonitor, "finding resources");
+    private void findResourcesForConcepts(Collection<Resource> concepts) throws OpenRDFException {
+		Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(concepts, progressMonitor, "finding resources");
 
 		while (conceptIt.hasNext()) {
-            Value concept = conceptIt.next();
+            Resource concept = conceptIt.next();
 			extResourcesForConcept.put(concept, extractExternalResources(getURIsOfConcept(concept)));
         }
 	}
 
-    private Collection<URI> getURIsOfConcept(Value concept) throws RepositoryException {
+    private Collection<URI> getURIsOfConcept(Resource concept) throws RepositoryException {
         Collection<URI> urisForConcept = new ArrayList<URI>();
 
         if (concept instanceof Resource) {
@@ -82,7 +84,7 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
         if (value instanceof URI) uris.add((URI) value);
     }
 	
-	private Collection<URI> extractExternalResources(Collection<URI> allResources) {
+	private Collection<URI> extractExternalResources(Collection<URI> allResources) throws OpenRDFException {
 		Collection<URI> validExternalResources = new HashSet<URI>();
 		
 		for (URI uri : allResources) {
@@ -94,7 +96,7 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 		return validExternalResources;
 	}
 	
-	private boolean isExternalResource(URI url) {
+	private boolean isExternalResource(URI url) throws OpenRDFException {
         String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {
@@ -108,10 +110,10 @@ public class MissingOutLinks extends Issue<Collection<Value>> {
 		return !url.toString().contains(SparqlPrefix.SKOS.getNameSpace());
 	}
 	
-	private Collection<Value> extractUnlinkedConcepts() {
-		Collection<Value> unlinkedConcepts = new HashSet<Value>();
+	private Collection<Resource> extractUnlinkedConcepts() {
+		Collection<Resource> unlinkedConcepts = new HashSet<Resource>();
 		
-		for (Value concept : extResourcesForConcept.keySet()) {
+		for (Resource concept : extResourcesForConcept.keySet()) {
 			if (extResourcesForConcept.get(concept).isEmpty()) {
 				unlinkedConcepts.add(concept);
 			}

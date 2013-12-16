@@ -9,6 +9,7 @@ import at.ac.univie.mminf.qskos4j.report.CollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryConnection;
 
 import java.util.ArrayList;
@@ -29,7 +30,8 @@ public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
         super("ipl",
             "Inconsistent Preferred Labels",
             "Finds resources with more then one prefLabel per language",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#inconsistent-preferred-labels"));
 
         this.resourceLabelsCollector =  resourceLabelsCollector;
     }

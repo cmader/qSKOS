@@ -22,12 +22,6 @@ public class TupleQueryResultUtil {
         return ret;
     }
 
-    public static String getFilterForBindingName(TupleQueryResult result, String bindingName)
-            throws QueryEvaluationException
-    {
-        return TupleQueryResultUtil.getFilterForBindingName(result, bindingName, false);
-    }
-
     public static String getFilterForBindingName(TupleQueryResult result, String bindingName, boolean exclusive)
         throws QueryEvaluationException
     {
@@ -39,8 +33,7 @@ public class TupleQueryResultUtil {
         return filterExpression;
     }
 
-    public static long countResults(TupleQueryResult result) throws QueryEvaluationException
-    {
+    public static long countResults(TupleQueryResult result) throws QueryEvaluationException {
         long count = 0;
 
         while (result.hasNext()) {

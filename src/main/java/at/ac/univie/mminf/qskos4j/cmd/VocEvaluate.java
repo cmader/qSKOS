@@ -2,6 +2,9 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.progress.ConsoleProgressMonitor;
+import at.ac.univie.mminf.qskos4j.progress.StreamProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.vocab.InvalidRdfException;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -58,6 +61,14 @@ public class VocEvaluate {
         @Parameter(names = {"-d", "--debug"}, description = "Enable additional informative/debug output")
         private boolean debug;
 
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-o", "--output"}, description = "Name of the file that holds the generated report")
+        private String reportFileName;
+
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-sf", "--stream-friendly"}, description = "Print the progress indicator in a stream-friendly format")
+        private boolean streamFriendly;
+
     }
 	
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
@@ -73,12 +84,6 @@ public class VocEvaluate {
 		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
 		private boolean writeGraphs = false;
 
-        @SuppressWarnings("unused")
-        @Parameter(
-            names = {"-utf", "--uri-track-file"},
-            description = "A file that contains concept URIs. The output will contain the issues in which each of the concepts shows up.")
-        private String uriTrackFilename;
-			
 	}
 	
 	public static void main(String[] args) {
@@ -86,13 +91,14 @@ public class VocEvaluate {
 			new VocEvaluate(args);
 		}
 		catch (ParameterException paramExc) {
-			jc.usage();
+            jc.usage();
+            System.err.println("!! " +paramExc.getMessage());
 		}
 		catch (IOException ioException) {
-			System.out.println("Error reading file: " +ioException.getMessage());
+			System.err.println("!! Error reading file: " +ioException.getMessage());
 		}
 		catch (OpenRDFException rdfException) {
-			System.out.println("Error processing vocabulary: " +rdfException.getMessage());
+			System.err.println("!! Error processing vocabulary: " +rdfException.getMessage());
 		} 
 	}
 		
@@ -107,10 +113,19 @@ public class VocEvaluate {
 		
 		if (parsedCommand == null) {
 			jc.usage();
+            return;
 		}
-		else {
+		try {
 			listIssuesOrEvaluate();
-		}		
+		}
+        catch (InvalidRdfException e) {
+            System.err.println("!! Provided input file does not contain valid RDF data");
+            System.exit(1);
+        }
+        catch (Exception e) {
+            e.printStackTrace(System.err);
+            System.exit(1);
+        }
 	}
 	
 	private void parseCmdParams(String[] args) {
@@ -157,6 +172,9 @@ public class VocEvaluate {
 				System.out.println("ID: " +issue.getId());
 				System.out.println("Name: " +issue.getName());
 				System.out.println("Description: " +issue.getDescription());
+                if (issue.getWeblink() != null) {
+                    System.out.println("Further Informaton: <" +issue.getWeblink().stringValue()+ ">");
+                }
 			}
 		}
 	}
@@ -164,22 +182,19 @@ public class VocEvaluate {
 	private void checkVocabFilenameGiven() throws ParameterException
 	{
 		if (parsedCommand.vocabFilenames == null) {
-			throw new ParameterException("No vocabulary file given");
-		}		
+			throw new ParameterException("Please provide a vocabulary file");
+		}
+        if (parsedCommand.reportFileName == null) {
+            throw new ParameterException("Please provide a report output file");
+        }
 	}
 	
 	private void evaluate() throws OpenRDFException, IOException
 	{
 		setup();
 
-        reportCollector = new ReportCollector(extractMeasures());
-
-        if (uriTrackingEnabled()) {
-            reportCollector.outputURITrackingReport(new File(((CommandAnalyze) parsedCommand).uriTrackFilename));
-        }
-        else {
-            reportCollector.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
-        }
+        reportCollector = new ReportCollector(extractMeasures(), parsedCommand.reportFileName);
+        reportCollector.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
 	}
 	
 	private void setup() throws OpenRDFException, IOException {
@@ -200,8 +215,13 @@ public class VocEvaluate {
             repositoryBuilder.enableSkosXlSupport();
 		}
 
-        if (!uriTrackingEnabled() && !parsedCommand.noProgressBar) {
-            qskos.setProgressMonitor(new ConsoleProgressMonitor());
+        if (!parsedCommand.noProgressBar) {
+            if (parsedCommand.streamFriendly) {
+                qskos.setProgressMonitor(new StreamProgressMonitor());
+            }
+            else {
+                qskos.setProgressMonitor(new ConsoleProgressMonitor());
+            }
         }
     }
 
@@ -211,10 +231,6 @@ public class VocEvaluate {
         }
     }
 
-    private boolean uriTrackingEnabled() {
-        return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).uriTrackFilename != null;
-    }
-	
 	private boolean shouldOutputExtReport() {
 		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).extensiveReport;
 	}

@@ -4,11 +4,12 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.report.ExtrapolatedCollectionReport;
 import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,8 @@ public class BrokenLinks extends Issue<Collection<URL>> {
               "bl",
               "Broken Links",
               "Checks dereferencability of all links",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#broken-links")
         );
 
         this.httpURIs = httpURIs;
@@ -87,7 +89,7 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 		}
 
         RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs.getResult(), randomSubsetSize_percent);
-        logger.info("using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
+        logger.info("Using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
 
 		return urisToBeDereferenced;
 	}

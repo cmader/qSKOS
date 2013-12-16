@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xml:base="http://myvocab.org/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+    <!-- Error, concept without label -->
+    <rdf:Description rdf:about="conceptA">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    </rdf:Description>
+
+    <!-- OK, concept with a prefLabel -->
+    <rdf:Description rdf:about="conceptB">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel>Concept B</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Error, concept with only a altLabel -->
+    <rdf:Description rdf:about="conceptC">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:altLabel>Concept C</skos:altLabel>
+    </rdf:Description>
+
+    <!-- Error, two implicit concepts with no labels -->
+    <rdf:Description rdf:about="conceptD">
+        <skos:broader rdf:resource="conceptE"/>
+    </rdf:Description>
+
+    <!-- Error, two implicit concepts, only one labeled -->
+    <rdf:Description rdf:about="conceptF">
+        <skos:broader rdf:resource="conceptG"/>
+        <skos:prefLabel>concept F</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Ok, two implicit concepts both labeled -->
+    <rdf:Description rdf:about="conceptH">
+        <skos:broader rdf:resource="conceptI"/>
+        <skos:prefLabel>concept F</skos:prefLabel>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptI">
+        <skos:prefLabel>concept I</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Ok, conceptScheme with rdfs label -->
+    <rdf:Description rdf:about="conceptSchemeA">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+        <rdfs:label>concept scheme A</rdfs:label>
+    </rdf:Description>
+
+    <!-- Ok, conceptScheme with dc title -->
+    <rdf:Description rdf:about="conceptSchemeB">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+        <dc:title>concept scheme B</dc:title>
+    </rdf:Description>
+
+    <!-- Error, conceptScheme without label -->
+    <rdf:Description rdf:about="conceptSchemeC">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    </rdf:Description>
+
+    <!-- Error, implicit conceptScheme without label -->
+    <rdf:Description rdf:about="conceptJ">
+        <skos:inScheme rdf:resource="conceptSchemeD"/>
+    </rdf:Description>
+
+    <!-- Ok, implicit conceptScheme with label -->
+    <rdf:Description rdf:about="conceptK">
+        <skos:inScheme rdf:resource="conceptSchemeE"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptSchemeE">
+        <rdfs:label>concept scheme E</rdfs:label>
+    </rdf:Description>
+
+</rdf:RDF>

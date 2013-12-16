@@ -29,7 +29,7 @@ public class HierarchicalCyclesTest {
 
     @Test
     public void testCycleCount() throws OpenRDFException {
-        Assert.assertEquals(2, hierarchicalCycles.getResult().size());
+        Assert.assertEquals(3, hierarchicalCycles.getResult().size());
     }
 
     @Test

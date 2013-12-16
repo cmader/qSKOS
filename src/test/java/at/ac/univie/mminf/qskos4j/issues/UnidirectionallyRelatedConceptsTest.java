@@ -1,5 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
+import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
+import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.UnidirectionallyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
@@ -18,7 +20,7 @@ public class UnidirectionallyRelatedConceptsTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        unidirectionallyRelatedConcepts = new UnidirectionallyRelatedConcepts();
+        unidirectionallyRelatedConcepts = new UnidirectionallyRelatedConcepts(new AuthoritativeConcepts(new InvolvedConcepts()));
         unidirectionallyRelatedConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("omittedInverseRelations.rdf").getConnection());
     }
 

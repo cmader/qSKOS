@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 
 import java.util.Collection;
@@ -28,7 +29,8 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Tuple<UR
         super("strc",
               "Solely Transitively Related Concepts",
               "Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#solely-transitively-related-concepts")
         );
     }
 

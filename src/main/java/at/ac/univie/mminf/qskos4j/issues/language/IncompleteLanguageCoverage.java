@@ -3,11 +3,12 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,8 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
             "ilc",
             "Incomplete Language Coverage",
             "Finds concepts lacking description in languages that are present for other concepts",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#incomplete-language-coverage")
         );
 
         this.involvedConcepts = involvedConcepts;
@@ -55,9 +57,9 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
 	{
 		languageCoverage = new HashMap<Value, Collection<String>>();
 		
-		Iterator<URI> it = new MonitoredIterator<URI>(involvedConcepts.getResult(), progressMonitor);
+		Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult(), progressMonitor);
 		while (it.hasNext()) {
-            Value concept = it.next();
+            Resource concept = it.next();
 
             try {
 			    TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createLanguageLiteralQuery(concept));

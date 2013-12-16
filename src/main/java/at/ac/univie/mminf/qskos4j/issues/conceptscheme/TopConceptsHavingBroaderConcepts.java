@@ -7,6 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -26,7 +27,8 @@ public class TopConceptsHavingBroaderConcepts extends Issue<Collection<Value>> {
         super("tchbc",
               "Top Concepts Having Broader Concepts",
               "Finds top concepts internal to the vocabulary hierarchy tree",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#top-concepts-having-broader-concepts")
         );
     }
 

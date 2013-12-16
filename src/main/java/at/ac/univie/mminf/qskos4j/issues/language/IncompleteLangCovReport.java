@@ -7,6 +7,7 @@ import org.openrdf.model.Value;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -36,8 +37,18 @@ public class IncompleteLangCovReport extends Report {
 	private String generateExtensiveTextReport() {
         StringBuilder extensiveReport = new StringBuilder();
 
+        Iterator<Entry<Value, Collection<String>>> entryIt = data.entrySet().iterator();
+        while (entryIt.hasNext()) {
+            Entry<Value, Collection<String>> entry = entryIt.next();
+            extensiveReport.append("concept: '")
+                           .append(entry.getKey().stringValue())
+                           .append("', not covered languages: ")
+                           .append(entry.getValue().toString())
+                           .append(entryIt.hasNext() ? "\n" : "");
+        }
+
         for (Entry<Value, Collection<String>> entry : data.entrySet()) {
-			extensiveReport.append("concept: '").append(entry.getKey().stringValue()).append("', not covered languages: ").append(entry.getValue().toString()).append("\n");
+
 		}
 
 		return extensiveReport.toString();

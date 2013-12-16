@@ -1,4 +1,4 @@
-package at.ac.univie.mminf.qskos4j.util.progress;
+package at.ac.univie.mminf.qskos4j.progress;
 
 public interface IProgressMonitor {
 
