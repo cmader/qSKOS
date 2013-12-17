@@ -6,8 +6,13 @@ Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[htt
 
 == Installation
 
-=== Requirements
+=== Use latest Release Version
 
+You can find the released versions on the {qSKOS GitHub page}[https://github.com/cmader/qSKOS/releases] and download the latest .jar file, e.g. for {qSKOS Version 1.0}[https://github.com/cmader/qSKOS/releases/download/1.0/qSKOS-cmd.jar].
+
+=== Build from Source
+
+Requirements:
 * Verify that Java v.1.7 or greater is installed: <tt>javac -version</tt>
 * Make sure Maven v.3.0 or greater is installed: <tt>mvn -v</tt>
 * Make sure you have the current version of the {git version control system}[http://git-scm.com/] installed on your system
