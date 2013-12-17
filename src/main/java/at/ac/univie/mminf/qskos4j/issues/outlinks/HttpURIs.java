@@ -1,25 +1,23 @@
 package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryResult;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by christian
  * Date: 26.01.13
  * Time: 15:23
  */
-public class HttpURIs extends Issue<Collection<URI>> {
+public class HttpURIs extends Issue<CollectionResult<URI>> {
 
     private Set<URI> httpURIs = new HashSet<URI>();
     private Set<String> invalidResources = new HashSet<String>();
@@ -33,32 +31,20 @@ public class HttpURIs extends Issue<Collection<URI>> {
     }
 
     @Override
-    protected Collection<URI> computeResult() throws OpenRDFException {
-
-        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createIRIQuery()).evaluate();
-
+    protected CollectionResult<URI> invoke() throws OpenRDFException {
+        RepositoryResult<Statement> result = repCon.getStatements(null, null, null, false, (Resource) null);
         while (result.hasNext()) {
-            Value iri = result.next().getValue("iri");
-            addToUrlList(iri);
+            Statement st = result.next();
+
+            Collection<Value> tripleValues = new ArrayList<Value>();
+            tripleValues.addAll(Arrays.asList(st.getSubject(), st.getObject(), st.getPredicate()));
+
+            for (Value value : tripleValues) {
+                if (value instanceof org.openrdf.model.URI) addToUrlList(value);
+            }
         }
 
-        return httpURIs;
-    }
-
-    @Override
-    protected Report generateReport(Collection<URI> preparedData) {
-        return new CollectionReport<URI>(preparedData);
-    }
-
-    private String createIRIQuery() {
-        return "SELECT DISTINCT ?iri "+
-            "FROM default "+
-                "WHERE {" +
-                    "{{?s ?p ?iri .} UNION "+
-                    "{?iri ?p ?o .} UNION "+
-                    "{?s ?iri ?p .}} "+
-                    "FILTER isIRI(?iri)" +
-                "}";
+        return new CollectionResult<URI>(httpURIs);
     }
 
     private void addToUrlList(Value iri) {

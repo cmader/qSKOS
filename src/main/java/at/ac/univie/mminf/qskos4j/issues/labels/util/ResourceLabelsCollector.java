@@ -22,7 +22,7 @@ public class ResourceLabelsCollector {
     private RepositoryConnection repCon;
     private Collection<LabeledConcept> labeledResources;
 
-    public Collection<LabeledConcept> getLabeledConcepts() throws OpenRDFException {
+    public Collection<LabeledConcept> getLabeledConcepts() {
         labeledResources = new HashSet<LabeledConcept>();
         createLabeledResources();
         return labeledResources;
@@ -63,7 +63,7 @@ public class ResourceLabelsCollector {
                 }
             }
             catch (ClassCastException e) {
-                logger.info("literal label expected for resource " +resource.toString()+ ", " +e.toString());
+                logger.error("Literal label expected for resource " +resource.toString()+ ", " +e.toString());
             }
         }
     }

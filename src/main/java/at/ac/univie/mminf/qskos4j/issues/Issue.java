@@ -1,12 +1,13 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
-import at.ac.univie.mminf.qskos4j.util.progress.StubProgressMonitor;
+import at.ac.univie.mminf.qskos4j.progress.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.progress.StubProgressMonitor;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryConnection;
 
-public abstract class Issue<T> {
+public abstract class Issue<T extends Result<?>> {
 
     public enum IssueType {STATISTICAL, ANALYTICAL}
 
@@ -18,12 +19,17 @@ public abstract class Issue<T> {
     private IssueType type;
     private T result;
     private Issue dependentIssue;
+    private URI weblink;
 
-    public Issue(String id, String name, String description, IssueType type) {
-        this.id = id;
+    private Issue(String name, String description, IssueType type) {
         this.name = name;
         this.description = description;
         this.type = type;
+    }
+
+    public Issue(String id, String name, String description, IssueType type) {
+        this(name, description, type);
+        this.id = id;
     }
 
     public Issue(Issue dependentIssue, String id, String name, String description, IssueType type) {
@@ -31,20 +37,23 @@ public abstract class Issue<T> {
         this.dependentIssue = dependentIssue;
     }
 
+    public Issue(String id, String name, String description, IssueType type, URI weblink) {
+        this(id, name, description, type);
+        this.weblink = weblink;
+    }
 
-    protected abstract T computeResult() throws OpenRDFException;
-    protected abstract Report generateReport(T preparedData);
+    public Issue(Issue dependentIssue, String id, String name, String description, IssueType type, URI weblink) {
+        this(dependentIssue, id, name, description, type);
+        this.weblink = weblink;
+    }
+
+    protected abstract T invoke() throws OpenRDFException;
 
     public final T getResult() throws OpenRDFException {
         if (result == null) {
-            result = computeResult();
+            result = invoke();
         }
         return result;
-    }
-
-    public final Report getReport() throws OpenRDFException
-    {
-        return generateReport(getResult());
     }
 
     protected final void reset() {
@@ -81,6 +90,10 @@ public abstract class Issue<T> {
 
     public final IssueType getType() {
         return type;
+    }
+
+    public URI getWeblink() {
+        return weblink;
     }
 
     @Override

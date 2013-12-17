@@ -2,17 +2,17 @@ package at.ac.univie.mminf.qskos4j.issues.clusters;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Created by christian
@@ -33,11 +32,11 @@ import java.util.Set;
  * Finds all <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Disconnected_Concept_Clusters">
  * Disconnected Concept Clusters</a>.
  */
-public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
+public class DisconnectedConceptClusters extends Issue<ClustersResult> {
 
     private final Logger logger = LoggerFactory.getLogger(DisconnectedConceptClusters.class);
 
-    private DirectedGraph<Value, NamedEdge> graph;
+    private DirectedGraph<Resource, NamedEdge> graph;
     private InvolvedConcepts involvedConcepts;
 
     public DisconnectedConceptClusters(InvolvedConcepts involvedConcepts) {
@@ -45,31 +44,29 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
             "dcc",
             "Disconnected Concept Clusters",
             "Finds sets of concepts that are isolated from the rest of the vocabulary",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disconnected-concept-clusters")
         );
         this.involvedConcepts = involvedConcepts;
     }
 
     @Override
-    protected Collection<Set<Value>> computeResult() throws OpenRDFException {
+    protected ClustersResult invoke() throws OpenRDFException {
         createGraph();
 
-        return new ConnectivityInspector<Value, NamedEdge>(graph).connectedSets();
+        Collection<Collection<Resource>> connectedSets = new ArrayList<Collection<Resource>>();
+        connectedSets.addAll(new ConnectivityInspector<Resource, NamedEdge>(graph).connectedSets());
+
+        return new ClustersResult(connectedSets, graph);
     }
 
-    @Override
-    protected Report generateReport(Collection<Set<Value>> preparedData) {
-        return new ClustersReport(preparedData, graph);
-    }
-
-    private void createGraph()
-            throws OpenRDFException
+    private void createGraph() throws OpenRDFException
     {
-        graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
+        graph = new DirectedMultigraph<Resource, NamedEdge>(NamedEdge.class);
 
-        Iterator<URI> conceptIt = new MonitoredIterator<URI>(involvedConcepts.getResult(), progressMonitor);
+        Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
         while (conceptIt.hasNext()) {
-            Value concept = conceptIt.next();
+            Resource concept = conceptIt.next();
             Collection<Relation> relations = findRelations(concept);
 
             for (Relation relation : relations) {
@@ -81,7 +78,7 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
         }
     }
 
-    private Collection<Relation> findRelations(Value concept)
+    private Collection<Relation> findRelations(Resource concept)
     {
         Collection<Relation> allRelations = new ArrayList<Relation>();
 
@@ -91,8 +88,8 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
 
             while (result.hasNext()) {
                 BindingSet bindingSet = result.next();
-                Value otherConcept = bindingSet.getValue("otherConcept");
-                Value semanticRelation = bindingSet.getValue("semanticRelation");
+                Resource otherConcept = (Resource) bindingSet.getValue("otherConcept");
+                URI semanticRelation = (URI) bindingSet.getValue("semanticRelation");
 
                 if (otherConcept != null && semanticRelation != null) {
                     allRelations.add(new Relation(concept, otherConcept, semanticRelation));
@@ -106,22 +103,19 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
         return allRelations;
     }
 
-    private String createConnectionsQuery(Value concept) throws OpenRDFException {
+    private String createConnectionsQuery(Value concept) {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS+
-                "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
-                "{" +
-                    "{" +
-                        "<" +concept.stringValue()+ "> ?p ?otherConcept . " +
-                        "?p rdfs:subPropertyOf ?semanticRelation" +
-                    "}" +
-                    SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semanticRelation")+
-                "}";
+            "SELECT DISTINCT ?otherConcept ?semanticRelation WHERE " +
+            "{" +
+                "<" +concept.stringValue()+ "> ?semanticRelation ?otherConcept . " +
+                "?semanticRelation rdfs:subPropertyOf skos:semanticRelation" +
+            "}";
     }
 
     private void addNodesToGraph(
-            Value skosResource,
-            Value otherResource,
-            Value skosRelation)
+            Resource skosResource,
+            Resource otherResource,
+            Resource skosRelation)
     {
         graph.addVertex(skosResource);
 
@@ -142,9 +136,9 @@ public class DisconnectedConceptClusters extends Issue<Collection<Set<Value>>> {
     }
 
     private class Relation {
-        private Value sourceConcept, targetConcept, property;
+        private Resource sourceConcept, targetConcept, property;
 
-        private Relation(Value sourceConcept, Value targetConcept, Value property) {
+        private Relation(Resource sourceConcept, Resource targetConcept, Resource property) {
             this.sourceConcept = sourceConcept;
             this.targetConcept = targetConcept;
             this.property = property;

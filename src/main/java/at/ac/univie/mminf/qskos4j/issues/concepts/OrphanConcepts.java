@@ -1,17 +1,16 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ import java.util.Set;
  * Finds all "orphan concepts". Further info on <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Orphan_Concepts">Orphan
  * Concepts</a>.
  */
-public class OrphanConcepts extends Issue<Collection<Value>> {
+public class OrphanConcepts extends Issue<CollectionResult<Resource>> {
 
     private InvolvedConcepts involvedConcepts;
 
@@ -28,39 +27,31 @@ public class OrphanConcepts extends Issue<Collection<Value>> {
             "oc",
             "Orphan Concepts",
             "Finds all orphan concepts, i.e. those not having semantic relationships to other concepts",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#orphan-concepts")
         );
 
         this.involvedConcepts = involvedConcepts;
     }
 
     @Override
-    protected Collection<Value> computeResult() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOrphanConceptsQuery());
         Set<Value> connectedConcepts = TupleQueryResultUtil.getValuesForBindingName(query.evaluate(), "concept");
 
-        Set<Value> orphanConcepts = new HashSet<Value>(involvedConcepts.getResult());
+        Set<Resource> orphanConcepts = new HashSet<Resource>(involvedConcepts.getResult().getData());
         orphanConcepts.removeAll(connectedConcepts);
 
-        return orphanConcepts;
+        return new CollectionResult<Resource>(orphanConcepts);
     }
 
-    @Override
-    protected Report generateReport(Collection<Value> preparedData) {
-        return new CollectionReport<Value>(preparedData);
-    }
-
-    private String createOrphanConceptsQuery() throws OpenRDFException
-    {
+    private String createOrphanConceptsQuery() {
         return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDF +" "+ SparqlPrefix.RDFS +
             "SELECT DISTINCT ?concept WHERE " +
             "{" +
-                "{"+
-                    "{?concept ?rel ?otherConcept} UNION " +
-                    "{?otherConcept ?rel ?concept}" +
-                    "?rel rdfs:subPropertyOf ?semRel . " +
-                "}"+
-                SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("semRel")+
+                "{?concept ?rel ?otherConcept} UNION " +
+                "{?otherConcept ?rel ?concept}" +
+                "?rel rdfs:subPropertyOf skos:semanticRelation" +
             "}";
     }
 

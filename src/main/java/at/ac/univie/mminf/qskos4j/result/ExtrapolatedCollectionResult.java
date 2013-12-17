@@ -1,15 +1,15 @@
-package at.ac.univie.mminf.qskos4j.report;
+package at.ac.univie.mminf.qskos4j.result;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Collection;
 
-public class ExtrapolatedCollectionReport<T> extends CollectionReport<T> {
+public class ExtrapolatedCollectionResult<T> extends CollectionResult<T> {
 
 	private Float subsetSize_percent;
     private Collection<T> data;
 	
-	public ExtrapolatedCollectionReport(Collection<T> data, Float subsetSize_percent)
+	public ExtrapolatedCollectionResult(Collection<T> data, Float subsetSize_percent)
 	{
 		super(data);
         this.data = data;

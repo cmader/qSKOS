@@ -1,13 +1,12 @@
 package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.NumberReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import org.openrdf.OpenRDFException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
+import org.openrdf.model.Statement;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.repository.RepositoryResult;
 
 /**
  * Created by christian
@@ -16,7 +15,7 @@ import org.openrdf.query.TupleQuery;
  *
  * Finds the number of SKOS <a href="http://www.w3.org/TR/skos-reference/#collections">Collections</a>.
  */
-public class Collections extends Issue<Long> {
+public class Collections extends Issue<NumberResult<Long>> {
 
     public Collections() {
         super("cc",
@@ -27,20 +26,17 @@ public class Collections extends Issue<Long> {
     }
 
     @Override
-    protected Long computeResult() throws OpenRDFException {
-        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createCollectionsQuery());
-        return TupleQueryResultUtil.countResults(query.evaluate());
+    protected NumberResult<Long> invoke() throws OpenRDFException {
+        RepositoryResult<Statement> result = repCon.getStatements(null, RDF.TYPE, SkosOntology.getInstance().getUri("Collection"), true);
+
+        long collectionCount = 0;
+        while (result.hasNext()) {
+            result.next();
+            collectionCount++;
+        }
+        result.close();
+
+        return new NumberResult<Long>(collectionCount);
     }
 
-    @Override
-    protected Report generateReport(Long preparedData) {
-        return new NumberReport<Long>(preparedData);
-    }
-
-    private String createCollectionsQuery() {
-        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.RDF +
-            "SELECT ?collection WHERE {" +
-                "?collection rdf:type skos:Collection ." +
-            "}";
-    }
 }

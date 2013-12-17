@@ -88,12 +88,12 @@ Every concept in a SKOS vocabulary is a resource and should be identified by an 
 
 qSKOS is to some extent able to perform this distinction by examining the host part of the concept's URIs. Depending on the vocabulary's structure in some cases it might be needed to pass an "Authoritative resource identifier" (command line argument <tt>-a</tt>) to qSKOS. This is a substring of an URI that identifies a concept as authoritative.
 
-=== How can I write the report to a file?
+=== How can I write the result to a file?
 Report output is performed directly on the console (+stdout+). If you want them to be contained in text files, you can use the output redirection operator (<tt>></tt>) of your operating system's command line shell. Here's an example:
 
-<tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report.
+<tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the result.
 
-A command-line parameter that might be handy when redirecting qSKOS' output into a file is <tt>-np</tt>. It suppresses output of the progress indicator which is thus not written into the generated report.
+A command-line parameter that might be handy when redirecting qSKOS' output into a file is <tt>-np</tt>. It suppresses output of the progress indicator which is thus not written into the generated result.
 
 === What version of qSKOS do I use?
 Simply pass the command line switch <tt>-v</tt> like this:

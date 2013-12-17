@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:myonto="http://localhost/myonto#"
+         xml:base="http://myvocab.org/">
+
+    <!-- 2 level broader redundancy -->
+    <rdf:Description rdf:about="conceptA">
+        <skos:broader rdf:resource="conceptB"/>
+        <skos:broader rdf:resource="conceptC"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptB">
+        <skos:broader rdf:resource="conceptC"/>
+    </rdf:Description>
+
+    <!-- 2 level narrower redundancy -->
+    <rdf:Description rdf:about="conceptD">
+        <skos:narrower rdf:resource="conceptE"/>
+        <skos:narrower rdf:resource="conceptF"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptE">
+        <skos:narrower rdf:resource="conceptF"/>
+    </rdf:Description>
+
+    <!-- 2 level mixed redundancy -->
+    <rdf:Description rdf:about="conceptG">
+        <skos:broader rdf:resource="conceptH"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptH">
+        <skos:narrower rdf:resource="conceptI"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptI">
+        <skos:narrower rdf:resource="conceptG"/>
+    </rdf:Description>
+
+    <!-- 3 level broader redundancy -->
+    <rdf:Description rdf:about="conceptJ">
+        <skos:broader rdf:resource="conceptK"/>
+        <skos:broader rdf:resource="conceptM"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptK">
+        <skos:broader rdf:resource="conceptL"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptL">
+        <skos:broader rdf:resource="conceptM"/>
+    </rdf:Description>
+
+    <!-- no redundancy -->
+    <rdf:Description rdf:about="conceptN">
+        <skos:broader rdf:resource="conceptO"/>
+        <skos:broader rdf:resource="conceptO"/>
+    </rdf:Description>
+
+    <!-- Redundancy caused by mapping relations -->
+    <rdf:Description rdf:about="conceptP">
+        <skos:broadMatch rdf:resource="conceptQ"/>
+        <skos:broadMatch rdf:resource="conceptR"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptQ">
+        <skos:broadMatch rdf:resource="conceptR"/>
+    </rdf:Description>
+
+</rdf:RDF>

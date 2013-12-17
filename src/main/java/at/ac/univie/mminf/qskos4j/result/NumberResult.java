@@ -1,27 +1,30 @@
-package at.ac.univie.mminf.qskos4j.report;
+package at.ac.univie.mminf.qskos4j.result;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class NumberReport<T> extends Report {
+public class NumberResult<T extends Number> extends Result<T> {
 
-    private T data;
-
-	public NumberReport(T data) {
-		this.data = data;
-	}
+    public NumberResult(T data) {
+        super(data);
+    }
 
     @Override
     protected void generateTextReport(BufferedWriter osw, ReportStyle style) throws IOException
     {
         switch (style) {
             case SHORT:
-                osw.write("value: " +data.toString());
+                osw.write("value: " +getData().toString());
                 break;
 
             case EXTENSIVE:
                 // not needed for this type
         }
+    }
+
+    @Override
+    public long occurrenceCount() {
+        return getData().longValue();
     }
 
 }

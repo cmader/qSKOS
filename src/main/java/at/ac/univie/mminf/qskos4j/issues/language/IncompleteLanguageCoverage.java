@@ -2,12 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * Finds all concepts with incomplete language coverage (<a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Incomplete_Language_Coverage">Incomplete Language Coverage</a>
  */
-public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<String>>> {
+public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
 
     private final Logger logger = LoggerFactory.getLogger(IncompleteLanguageCoverage.class);
 
@@ -30,34 +30,30 @@ public class IncompleteLanguageCoverage extends Issue<Map<Value, Collection<Stri
             "ilc",
             "Incomplete Language Coverage",
             "Finds concepts lacking description in languages that are present for other concepts",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#incomplete-language-coverage")
         );
 
         this.involvedConcepts = involvedConcepts;
     }
 
     @Override
-    protected Map<Value, Collection<String>> computeResult() throws OpenRDFException {
+    protected IncompleteLangCovResult invoke() throws OpenRDFException {
 		incompleteLanguageCoverage = new HashMap<Value, Collection<String>>();
 		
 		checkLanguageCoverage();
 		generateIncompleteLanguageCoverageMap();
 		
-		return incompleteLanguageCoverage;
+		return new IncompleteLangCovResult(incompleteLanguageCoverage);
 	}
-
-    @Override
-    protected Report generateReport(Map<Value, Collection<String>> preparedData) {
-        return new IncompleteLangCovReport(incompleteLanguageCoverage);
-    }
 
     private void checkLanguageCoverage() throws OpenRDFException
 	{
 		languageCoverage = new HashMap<Value, Collection<String>>();
 		
-		Iterator<URI> it = new MonitoredIterator<URI>(involvedConcepts.getResult(), progressMonitor);
+		Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
 		while (it.hasNext()) {
-            Value concept = it.next();
+            Resource concept = it.next();
 
             try {
 			    TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createLanguageLiteralQuery(concept));

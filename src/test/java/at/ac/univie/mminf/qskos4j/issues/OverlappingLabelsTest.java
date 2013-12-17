@@ -33,7 +33,7 @@ public class OverlappingLabelsTest {
 
     @Test
     public void testLabelConflictCount_1() throws OpenRDFException {
-        Collection<LabelConflict> allLabelConflicts = overlappingLabelsForComponents.getResult();
+        Collection<LabelConflict> allLabelConflicts = overlappingLabelsForComponents.getResult().getData();
 
         Assert.assertEquals(2, allLabelConflicts.size());
         Assert.assertEquals(4, getDifferentResources(allLabelConflicts).size());
@@ -41,7 +41,7 @@ public class OverlappingLabelsTest {
 
     @Test
     public void testCaseInsensitive() throws OpenRDFException {
-        Assert.assertEquals(2, overlappingLabels.getResult().size());
+        Assert.assertEquals(2, overlappingLabels.getResult().getData().size());
     }
 
     private Collection<Value> getDifferentResources(Collection<LabelConflict> labelConflicts)
@@ -57,6 +57,6 @@ public class OverlappingLabelsTest {
 
     @Test
     public void testLabelConflictCount_2() throws OpenRDFException {
-        Assert.assertEquals(0, overlappingLabelsForRelatedConcepts.getResult().size());
+        Assert.assertEquals(0, overlappingLabelsForRelatedConcepts.getResult().getData().size());
     }
 }

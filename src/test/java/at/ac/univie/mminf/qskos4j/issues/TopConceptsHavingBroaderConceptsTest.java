@@ -22,7 +22,7 @@ public class TopConceptsHavingBroaderConceptsTest {
 	
 	@Test
 	public void testTopConceptsHavingBroaderConceptCount() throws OpenRDFException {
-		Assert.assertEquals(4, topConceptsHavingBroaderConcepts.getResult().size());
+		Assert.assertEquals(4, topConceptsHavingBroaderConcepts.getResult().getData().size());
 	}
 	
 }

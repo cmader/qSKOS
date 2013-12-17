@@ -1,12 +1,11 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
-import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.jgrapht.graph.DirectedMultigraph;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
@@ -16,53 +15,39 @@ import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
 public class HierarchyGraphBuilder {
 
     private final Logger logger = LoggerFactory.getLogger(HierarchyGraphBuilder.class);
 
-	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
+	private DirectedGraph<Resource, NamedEdge> graph;
     private RepositoryConnection repCon;
 
-	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
+	public DirectedGraph<Resource, NamedEdge> createGraph() throws OpenRDFException
 	{
         logger.debug("Creating hierarchy graph");
+        graph = new DefaultDirectedGraph<Resource, NamedEdge>(NamedEdge.class);
 
-        addResultsToGraph(findTriples(SkosOntology.SKOS_BROADER_PROPERTIES), false);
-        addResultsToGraph(findTriples(SkosOntology.SKOS_NARROWER_PROPERTIES), true);
+        addResultsToGraph(findTriples("skos:broaderTransitive"), false);
+        addResultsToGraph(findTriples("skos:narrowerTransitive"), true);
+
         return graph;
 	}
 	
-	private TupleQueryResult findTriples(URI[] skosHierarchyProperties) throws OpenRDFException
+	private TupleQueryResult findTriples(String skosHierarchyProperty) throws OpenRDFException
 	{
-		    String query = createHierarchicalGraphQuery(skosHierarchyProperties);
+		    String query = createHierarchicalGraphQuery(skosHierarchyProperty);
             return repCon.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
 	}
 	
-	private String createHierarchicalGraphQuery(URI[] skosHierarchyProperties) {
+	private String createHierarchicalGraphQuery(String skosHierarchyProperty) {
 		return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
 			"SELECT DISTINCT ?resource ?otherResource "+
 			"WHERE {" +
-                "{" +
-                    "?resource ?prop ?otherResource ." +
-                    "?prop rdfs:subPropertyOf ?hierProp" +
-                "}" +
-                "FILTER (?hierProp IN " +createHierarchyPropertyList(skosHierarchyProperties) +")" +
+                "?resource " +skosHierarchyProperty+ " ?otherResource ."+
             "}";
 	}
 
-    private String createHierarchyPropertyList(URI[] skosHierarchyProperties) {
-        String propertyList = "(";
-        Iterator<URI> propIt = Arrays.asList(skosHierarchyProperties).iterator();
-        while (propIt.hasNext()) {
-            propertyList += "<"+ propIt.next().stringValue() +">"+ (propIt.hasNext() ? ", " : ")");
-        }
-        return propertyList;
-    }
-	
-	private void addResultsToGraph(TupleQueryResult result, boolean invertEdges) 
+	private void addResultsToGraph(TupleQueryResult result, boolean invertEdges)
 		throws QueryEvaluationException
 	{	
 		while (result.hasNext()) {

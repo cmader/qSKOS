@@ -6,14 +6,14 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ import java.util.*;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
  * ).
  */
-public class OverlappingLabels extends Issue<Set<LabelConflict>> {
+public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
 
 	private final Logger logger = LoggerFactory.getLogger(OverlappingLabels.class);
 
@@ -38,33 +38,28 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
             "ol",
             "Overlapping Labels",
             "Finds concepts with similar (identical) labels",
-            IssueType.ANALYTICAL);
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#overlapping-labels"));
 
         this.involvedConcepts = involvedConcepts;
     }
 
     @Override
-    protected Set<LabelConflict> computeResult() throws OpenRDFException {
+    protected CollectionResult<LabelConflict> invoke() throws OpenRDFException {
         generateConceptsLabelMap();
         generateLabelConflictResults();
 
-		return labelConflicts;
+		return new CollectionResult<LabelConflict>(labelConflicts);
 	}
-
-    @Override
-    protected Report generateReport(Set<LabelConflict> preparedData) {
-        return new CollectionReport<LabelConflict>(preparedData);
-    }
 
     private void generateConceptsLabelMap() throws OpenRDFException
 	{
 		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
+        Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
 
         progressMonitor.setTaskDescription("Collecting resource labels");
-        Iterator<URI> it = new MonitoredIterator<URI>(involvedConcepts.getResult(), progressMonitor);
-
 		while (it.hasNext()) {
-            Value concept = it.next();
+            Resource concept = it.next();
 
             try {
                 TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptLabelQuery(concept));
@@ -108,7 +103,7 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
 				"{<"+concept.stringValue()+"> skos:hiddenLabel ?hiddenLabel .}}";
 	}
 	
-	private Set<LabeledConcept> createLabeledConceptsFromResult(Value concept, TupleQueryResult result)
+	private Set<LabeledConcept> createLabeledConceptsFromResult(Resource concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
 		Set<LabeledConcept> ret = new HashSet<LabeledConcept>();
@@ -128,7 +123,7 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
                     ret.add(skosLabel);
                 }
                 catch (ClassCastException e) {
-                    logger.info("literal label expected for concept " +concept.toString()+ ", " +e.toString());
+                    logger.error("Literal label expected for concept " +concept.toString()+ ", " +e.toString());
                 }
 			}			
 		}

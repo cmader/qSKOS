@@ -1,12 +1,12 @@
 package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -20,25 +20,21 @@ import java.util.List;
  * Finds top concepts that have broader concepts (
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Top_Concepts_Having_Broader_Concepts">Top Concepts Having Broader Concepts</a>
  */
-public class TopConceptsHavingBroaderConcepts extends Issue<Collection<Value>> {
+public class TopConceptsHavingBroaderConcepts extends Issue<CollectionResult<Value>> {
 
     public TopConceptsHavingBroaderConcepts() {
         super("tchbc",
               "Top Concepts Having Broader Concepts",
               "Finds top concepts internal to the vocabulary hierarchy tree",
-              IssueType.ANALYTICAL
+              IssueType.ANALYTICAL,
+              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#top-concepts-having-broader-concepts")
         );
     }
 
     @Override
-    protected Collection<Value> computeResult() throws OpenRDFException {
+    protected CollectionResult<Value> invoke() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createTopConceptsHavingBroaderConceptQuery());
-        return createUriResultList(query.evaluate());
-    }
-
-    @Override
-    protected Report generateReport(Collection<Value> preparedData) {
-        return new CollectionReport<Value>(preparedData);
+        return new CollectionResult<Value>(createUriResultList(query.evaluate()));
     }
 
     private String createTopConceptsHavingBroaderConceptQuery() {

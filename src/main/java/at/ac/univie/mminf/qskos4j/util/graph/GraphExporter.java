@@ -7,44 +7,42 @@ import org.jgrapht.ext.IntegerNameProvider;
 import org.jgrapht.ext.StringEdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.jgrapht.graph.DirectedSubgraph;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class GraphExporter {
 
-	private DirectedGraph<Value, NamedEdge> graph;
+	private DirectedGraph<Resource, NamedEdge> graph;
 	
-	public GraphExporter(DirectedGraph<Value, NamedEdge> graph) {
+	public GraphExporter(DirectedGraph<Resource, NamedEdge> graph) {
 		this.graph = graph;
 	}
 	
-	public Collection<String> exportSubGraphs(Collection<Set<Value>> vertexSubSets) {
+	public Collection<String> exportDotGraphs(Collection<Collection<Resource>> vertexSubSets) {
 		Set<String> dotGraphs = new HashSet<String>();
-		
-		Iterator<Set<Value>> it = vertexSubSets.iterator();
-		while (it.hasNext()) {
-			Graph<Value, NamedEdge> componentGraph = getGraphForComponent(it.next());
+
+        for (Collection<Resource> component : vertexSubSets) {
+			Graph<Resource, NamedEdge> componentGraph = getGraphForComponent(component);
 			dotGraphs.add(exportGraph(componentGraph));
 		}
 		
 		return dotGraphs;
 	}
 	
-	private Graph<Value, NamedEdge> getGraphForComponent(Collection<Value> component)
+	private Graph<Resource, NamedEdge> getGraphForComponent(Collection<Resource> component)
 	{
-		return new DirectedSubgraph<Value, NamedEdge>(graph, new HashSet<Value>(component), null);
+		return new DirectedSubgraph<Resource, NamedEdge>(graph, new HashSet<Resource>(component), null);
 	}
 	
-	private String exportGraph(Graph<Value, NamedEdge> componentGraph) {
+	private String exportGraph(Graph<Resource, NamedEdge> componentGraph) {
 		StringWriter outputWriter = new StringWriter();
 		
-		new DOTExporter<Value, NamedEdge>(
-			new IntegerNameProvider<Value>(),
+		new DOTExporter<Resource, NamedEdge>(
+			new IntegerNameProvider<Resource>(),
 			new URIVertexNameProvider(),
 			new StringEdgeNameProvider<NamedEdge>()
 		).export(outputWriter, componentGraph);
@@ -52,10 +50,10 @@ public class GraphExporter {
 		return outputWriter.toString();
 	}
 			
-	private class URIVertexNameProvider implements VertexNameProvider<Value>
+	private class URIVertexNameProvider implements VertexNameProvider<Resource>
 	{
 		@Override
-		public String getVertexName(Value vertex) {
+		public String getVertexName(Resource vertex) {
 			return vertex.stringValue();
 		}	
 	}

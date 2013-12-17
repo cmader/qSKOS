@@ -1,14 +1,11 @@
 package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.NumberReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
+import at.ac.univie.mminf.qskos4j.result.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
+import org.openrdf.model.Statement;
+import org.openrdf.repository.RepositoryResult;
 
 /**
  * Created by christian
@@ -17,7 +14,7 @@ import org.openrdf.query.TupleQuery;
  *
  * Finds the number of triples involving (subproperties of) skos:semanticRelation.
  */
-public class SemanticRelations extends Issue<Long> {
+public class SemanticRelations extends Issue<NumberResult<Long>> {
 
     public SemanticRelations() {
         super("sr",
@@ -28,25 +25,19 @@ public class SemanticRelations extends Issue<Long> {
     }
 
     @Override
-    protected Long computeResult() throws OpenRDFException {
-        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createSemanticRelationsQuery());
-        return TupleQueryResultUtil.countResults(query.evaluate());
-    }
+    protected NumberResult<Long> invoke() throws OpenRDFException {
+        RepositoryResult<Statement> result = repCon.getStatements(
+            null,
+            SkosOntology.getInstance().getUri("semanticRelation"),
+            null,
+            true);
 
-    @Override
-    protected Report generateReport(Long preparedData) {
-        return new NumberReport<Long>(preparedData);
-    }
-
-    private String createSemanticRelationsQuery() throws OpenRDFException
-    {
-        String skosSemanticRelationSubPropertiesFilter = SkosOntology.getInstance().getSubPropertiesOfSemanticRelationsFilter("relationType");
-        return SparqlPrefix.SKOS +" "+ SparqlPrefix.RDFS +
-            "SELECT ?relationType WHERE " +
-            "{" +
-                "{?concept ?relationType ?otherConcept} "+
-                skosSemanticRelationSubPropertiesFilter+
-            "}";
+        long semanticRelationsCount = 0;
+        while (result.hasNext()) {
+            result.next();
+            semanticRelationsCount++;
+        }
+        return new NumberResult<Long>(semanticRelationsCount);
     }
 
 }

@@ -39,4 +39,9 @@
 		<skos:narrower rdf:resource="conceptF"/>
   </rdf:Description>
 
+    <rdf:Description rdf:about="conceptG">
+        <skos:broadMatch rdf:resource="conceptI"/>
+        <skos:narrowMatch rdf:resource="conceptI"/>
+    </rdf:Description>
+
 </rdf:RDF>

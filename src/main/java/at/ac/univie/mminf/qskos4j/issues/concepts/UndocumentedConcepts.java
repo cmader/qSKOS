@@ -1,19 +1,19 @@
 package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undocumented_Concepts">Undocumented Concepts</a>
  * ).
  */
-public class UndocumentedConcepts extends Issue<Collection<Value>> {
+public class UndocumentedConcepts extends Issue<CollectionResult<Resource>> {
 
     private final Logger logger = LoggerFactory.getLogger(UndocumentedConcepts.class);
 
@@ -37,38 +37,32 @@ public class UndocumentedConcepts extends Issue<Collection<Value>> {
             "uc",
             "Undocumented Concepts",
             "Finds concepts that don't use any SKOS documentation properties",
-            IssueType.ANALYTICAL
+            IssueType.ANALYTICAL,
+            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#undocumented-concepts")
         );
 
         this.authoritativeConcepts = authoritativeConcepts;
     }
 
     @Override
-    protected Collection<Value> computeResult() throws OpenRDFException {
-		List<Value> undocumentedConcepts = new ArrayList<Value>();
+    protected CollectionResult<Resource> invoke() throws OpenRDFException {
+		List<Resource> undocumentedConcepts = new ArrayList<Resource>();
 		
-		Iterator<Value> conceptIt = new MonitoredIterator<Value>(
-            authoritativeConcepts.getResult(),
+		Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(
+            authoritativeConcepts.getResult().getData(),
             progressMonitor);
 
 		while (conceptIt.hasNext()) {
-            Value concept = conceptIt.next();
+            Resource concept = conceptIt.next();
 			if (!isConceptDocumented(concept)) {
 				undocumentedConcepts.add(concept);
 			}
 		}
 		
-		return undocumentedConcepts;
+		return new CollectionResult<Resource>(undocumentedConcepts);
 	}
 
-    @Override
-    protected Report generateReport(Collection<Value> preparedData) {
-        return new CollectionReport<Value>(preparedData);
-    }
-
-    private boolean isConceptDocumented(Value concept)
-		throws OpenRDFException 
-	{		
+    private boolean isConceptDocumented(Value concept) {
 		for (String docProperty : documentationProperties) {
 			if (conceptHasProperty(concept, docProperty)) {
 				return true;

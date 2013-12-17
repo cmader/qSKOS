@@ -1,6 +1,5 @@
-package at.ac.univie.mminf.qskos4j.cmd;
+package at.ac.univie.mminf.qskos4j.progress;
 
-import at.ac.univie.mminf.qskos4j.util.progress.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
