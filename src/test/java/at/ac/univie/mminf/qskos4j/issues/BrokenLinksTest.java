@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 
@@ -28,6 +29,7 @@ public class BrokenLinksTest {
         brokenLinks.setExtAccessDelayMillis(0);
     }
 
+    @Ignore
     @Test
     public void testBrokenLinks() throws OpenRDFException {
         Collection<URL> brokenLinkURLs = brokenLinks.getResult().getData();

@@ -104,6 +104,7 @@ public class QSkos {
     private void addAnalyticalIssues() {
         HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder();
 
+        registeredIssues.add(new EmptyLabeledResources());
         registeredIssues.add(new OmittedOrInvalidLanguageTags());
         registeredIssues.add(new IncompleteLanguageCoverage(involvedConcepts));
         registeredIssues.add(new UndocumentedConcepts(authoritativeConcepts));
@@ -125,7 +126,6 @@ public class QSkos {
         registeredIssues.add(new HttpUriSchemeViolations());
         registeredIssues.add(new RelationClashes(hierarchyGraphBuilder));
         registeredIssues.add(new MappingClashes());
-
     }
 
     private void addSkosIntegrityIssues() {
