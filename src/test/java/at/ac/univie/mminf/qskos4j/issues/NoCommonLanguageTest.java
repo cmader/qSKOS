@@ -1,7 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.language.NoCommonLanguage;
-import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +14,8 @@ public class NoCommonLanguageTest {
 
     @Before
     public void setUp() throws OpenRDFException, IOException {
-        noCommonLanguage = new NoCommonLanguage();
-        noCommonLanguage.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("nocommonlanguage.rdf").getConnection());
+        //noCommonLanguage = new NoCommonLanguage();
+        //noCommonLanguage.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("nocommonlanguage.rdf").getConnection());
     }
 
     @Test

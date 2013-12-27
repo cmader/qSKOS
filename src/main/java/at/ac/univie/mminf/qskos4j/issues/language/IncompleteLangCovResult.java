@@ -2,7 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.Result;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class IncompleteLangCovResult extends Result<Map<Value, Collection<String>>> {
+public class IncompleteLangCovResult extends Result<Map<Resource, Collection<String>>> {
 
-    IncompleteLangCovResult(Map<Value, Collection<String>> data) {
+    IncompleteLangCovResult(Map<Resource, Collection<String>> data) {
 		super(data);
 	}
 
@@ -22,7 +22,7 @@ public class IncompleteLangCovResult extends Result<Map<Value, Collection<String
     {
         switch (style) {
             case SHORT:
-                new CollectionResult<Value>(getData().keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
+                new CollectionResult<Resource>(getData().keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
                 break;
 
             case EXTENSIVE:
@@ -35,9 +35,9 @@ public class IncompleteLangCovResult extends Result<Map<Value, Collection<String
 	private String generateExtensiveTextReport() {
         StringBuilder extensiveReport = new StringBuilder();
 
-        Iterator<Entry<Value, Collection<String>>> entryIt = getData().entrySet().iterator();
+        Iterator<Entry<Resource, Collection<String>>> entryIt = getData().entrySet().iterator();
         while (entryIt.hasNext()) {
-            Entry<Value, Collection<String>> entry = entryIt.next();
+            Entry<Resource, Collection<String>> entry = entryIt.next();
             extensiveReport.append("concept: '")
                            .append(entry.getKey().stringValue())
                            .append("', not covered languages: ")

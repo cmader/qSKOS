@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class IncompleteLanguageCoverageTest {
     public void testIncompleteLanguageCoverageCount()
             throws OpenRDFException
     {
-        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
+        Map<Resource, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
         Assert.assertEquals(13, incompleteLangCoverage.size());
     }
 
@@ -42,7 +43,7 @@ public class IncompleteLanguageCoverageTest {
     public void testExistResourcesNotHavingEnglishLabels()
             throws OpenRDFException
     {
-        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
+        Map<Resource, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
 
         boolean englishTagFound = false;
         for (Collection<String> missingLanguages : incompleteLangCoverage.values()) {
@@ -57,7 +58,7 @@ public class IncompleteLanguageCoverageTest {
     public void testResourcesMissingOnlyFrenchLabelsCount()
             throws OpenRDFException
     {
-        Map<Value, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
+        Map<Resource, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
 
         List<Value> foundResources = new ArrayList<Value>();
         for (Value resource : incompleteLangCoverage.keySet()) {
