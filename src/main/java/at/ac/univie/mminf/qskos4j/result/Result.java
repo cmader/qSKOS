@@ -61,6 +61,12 @@ public abstract class Result<T> {
         }
 	}
 
-    public abstract long occurrenceCount();
+    public long occurrenceCount() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isProblematic() {
+        return occurrenceCount() != 0;
+    }
 	
 }

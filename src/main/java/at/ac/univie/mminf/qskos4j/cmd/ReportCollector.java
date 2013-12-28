@@ -74,13 +74,30 @@ class ReportCollector {
         summary.append("* Summary of Quality Issue Occurrences:\n");
 
         for (Issue issue : issues) {
-            long occurrenceCount = issue.getResult().occurrenceCount();
-            String occurrenceText = occurrenceCount == 0 ? "OK (no occurrences found)" : Long.toString(occurrenceCount);
-            summary.append(issue.getName() + ": " + occurrenceText + "\n");
+            summary.append(issue.getName() + ": " + prepareOccurrenceText(issue) + "\n");
         }
 
         summary.append("\n");
         return summary.toString();
+    }
+
+    private String prepareOccurrenceText(Issue issue) throws OpenRDFException {
+        String occurrenceText = "";
+        if (issue.getResult().isProblematic()) {
+            occurrenceText = "FAIL";
+            try {
+                String occurrenceCount = Long.toString(issue.getResult().occurrenceCount());
+                occurrenceText += " (" +occurrenceCount+ ")";
+            }
+            catch (UnsupportedOperationException e) {
+                // ignore this
+            }
+        }
+        else {
+            occurrenceText = "OK (no potential problems found)";
+        }
+
+        return occurrenceText;
     }
 
     private void writeReportBody(BufferedWriter reportWriter,
@@ -118,10 +135,8 @@ class ReportCollector {
         writer.newLine();
         issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.SHORT);
 
-        if (issue.getResult().occurrenceCount() > 0) {
-            writer.newLine();
-            issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
-        }
+        writer.newLine();
+        issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
 
         writer.newLine();
         writer.flush();

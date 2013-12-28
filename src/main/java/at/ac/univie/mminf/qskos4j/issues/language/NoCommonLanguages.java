@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.language.util.NoCommonLanguagesResult;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
-import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 
@@ -11,15 +11,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class CommonLanguages extends Issue<CollectionResult<String>> {
+public class NoCommonLanguages extends Issue<NoCommonLanguagesResult> {
 
     private LanguageCoverage languageCoverage;
     private Set<String> commonLanguages;
 
-    public CommonLanguages(LanguageCoverage languageCoverage) {
+    public NoCommonLanguages(LanguageCoverage languageCoverage) {
         super(languageCoverage,
-              "clg",
-              "Common Languages",
+              "ncl",
+              "No Common Languages",
               "Checks for common languages in all concept literals",
               IssueType.ANALYTICAL);
 
@@ -27,7 +27,7 @@ public class CommonLanguages extends Issue<CollectionResult<String>> {
     }
 
     @Override
-    protected CollectionResult<String> invoke() throws OpenRDFException {
+    protected NoCommonLanguagesResult invoke() throws OpenRDFException {
         Map<Resource, Collection<String>> langCovData = languageCoverage.getResult().getData();
         commonLanguages = new HashSet<String>();
 
@@ -36,7 +36,7 @@ public class CommonLanguages extends Issue<CollectionResult<String>> {
             findCommonLanguages();
         }
 
-        return new CollectionResult<>(commonLanguages);
+        return new NoCommonLanguagesResult(commonLanguages);
     }
 
     private void findCommonLanguages() throws OpenRDFException {

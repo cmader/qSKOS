@@ -17,7 +17,7 @@ public class LabelConflictsResult extends CollectionResult<LabelConflict> {
     @Override
     public void generateTextReport(BufferedWriter writer, ReportStyle style) throws IOException {
         if (style == ReportStyle.SHORT) {
-            writer.write("count: " +getDistinctConcepts()+ "\n");
+            writer.write("count: " +getDistinctConcepts().size()+ "\n");
         }
         else if (style == ReportStyle.EXTENSIVE) {
             generateExtensiveTextReport(writer);

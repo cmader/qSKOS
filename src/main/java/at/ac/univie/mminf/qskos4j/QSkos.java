@@ -18,7 +18,7 @@ import at.ac.univie.mminf.qskos4j.issues.inlinks.MissingInLinks;
 import at.ac.univie.mminf.qskos4j.issues.labels.*;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
-import at.ac.univie.mminf.qskos4j.issues.language.CommonLanguages;
+import at.ac.univie.mminf.qskos4j.issues.language.NoCommonLanguages;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
@@ -112,7 +112,7 @@ public class QSkos {
         registeredIssues.add(new OmittedOrInvalidLanguageTags());
         registeredIssues.add(new IncompleteLanguageCoverage(languageCoverage));
         registeredIssues.add(new UndocumentedConcepts(authoritativeConcepts));
-        registeredIssues.add(new CommonLanguages(languageCoverage));
+        registeredIssues.add(new NoCommonLanguages(languageCoverage));
         registeredIssues.add(new MissingLabels(authoritativeConcepts, conceptSchemes));
         registeredIssues.add(new OverlappingLabels(involvedConcepts));
         registeredIssues.add(new OrphanConcepts(involvedConcepts));
