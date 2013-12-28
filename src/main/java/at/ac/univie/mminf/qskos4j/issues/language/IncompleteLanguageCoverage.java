@@ -1,11 +1,9 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +17,12 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
 
     private final Logger logger = LoggerFactory.getLogger(IncompleteLanguageCoverage.class);
 
-	private Map<Resource, Collection<String>> languageCoverage, incompleteLanguageCoverage;
+	private Map<Resource, Collection<String>> incompleteLanguageCoverage;
+    private LanguageCoverage languageCoverage;
 	private Set<String> distinctLanguages;
-    private InvolvedConcepts involvedConcepts;
 
-    public IncompleteLanguageCoverage(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts,
+    public IncompleteLanguageCoverage(LanguageCoverage languageCoverage) {
+        super(languageCoverage,
             "ilc",
             "Incomplete Language Coverage",
             "Finds concepts lacking description in languages that are present for other concepts",
@@ -32,35 +30,33 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
             new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#incomplete-language-coverage")
         );
 
-        this.involvedConcepts = involvedConcepts;
+        this.languageCoverage = languageCoverage;
     }
 
     @Override
     protected IncompleteLangCovResult invoke() throws OpenRDFException {
 		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
 
-        languageCoverage = new LanguageCoverage().findLanguageCoverage(
-            involvedConcepts.getResult().getData(),
-            progressMonitor,
-            repCon);
         findDistinctLanguages();
 		generateIncompleteLanguageCoverageMap();
 		
 		return new IncompleteLangCovResult(incompleteLanguageCoverage);
 	}
 
-    private void findDistinctLanguages() {
+    private void findDistinctLanguages() throws OpenRDFException {
         distinctLanguages = new HashSet<String>();
-        for (Collection languages : languageCoverage.values()) {
+        for (Collection languages : languageCoverage.getResult().getData().values()) {
             distinctLanguages.addAll(languages);
         }
     }
 
-	private void generateIncompleteLanguageCoverageMap() {
+	private void generateIncompleteLanguageCoverageMap() throws OpenRDFException {
 		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
-		
-		for (Resource resource : languageCoverage.keySet()) {
-			Collection<String> coveredLanguages = languageCoverage.get(resource);
+
+        Map<Resource, Collection<String>> langCovData = languageCoverage.getResult().getData();
+
+		for (Resource resource : langCovData.keySet()) {
+			Collection<String> coveredLanguages = langCovData.get(resource);
 			Collection<String> notCoveredLanguages = getNotCoveredLanguages(coveredLanguages);
 			if (!notCoveredLanguages.isEmpty()) {
 				incompleteLanguageCoverage.put(resource, notCoveredLanguages);

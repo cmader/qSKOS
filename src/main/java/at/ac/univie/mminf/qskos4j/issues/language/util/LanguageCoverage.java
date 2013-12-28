@@ -1,32 +1,40 @@
 package at.ac.univie.mminf.qskos4j.issues.language.util;
 
-import at.ac.univie.mminf.qskos4j.progress.IProgressMonitor;
+import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.query.*;
-import org.openrdf.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class LanguageCoverage {
+public class LanguageCoverage extends Issue<LanguageCoverageResult> {
 
     private final Logger logger = LoggerFactory.getLogger(LanguageCoverage.class);
 
     private Map<Resource, Collection<String>> languageCoverage;
+    private InvolvedConcepts involvedConcepts;
 
-    public Map<Resource, Collection<String>> findLanguageCoverage(
-        Collection<Resource> resources,
-        IProgressMonitor progressMonitor,
-        RepositoryConnection repCon) throws OpenRDFException
-    {
+    public LanguageCoverage(InvolvedConcepts involvedConcepts) {
+        super(involvedConcepts,
+              "lc",
+              "Language Coverage",
+              "Finds all languages used in concept labels",
+              IssueType.STATISTICAL);
+
+        this.involvedConcepts = involvedConcepts;
+    }
+
+    @Override
+    protected LanguageCoverageResult invoke() throws OpenRDFException {
         languageCoverage = new HashMap<Resource, Collection<String>>();
 
-        Iterator<Resource> it = new MonitoredIterator<Resource>(resources, progressMonitor);
+        Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
         while (it.hasNext()) {
             Resource concept = it.next();
 
@@ -39,7 +47,7 @@ public class LanguageCoverage {
             }
         }
 
-        return languageCoverage;
+        return new LanguageCoverageResult(languageCoverage);
     }
 
     private String createLanguageLiteralQuery(Value concept) {

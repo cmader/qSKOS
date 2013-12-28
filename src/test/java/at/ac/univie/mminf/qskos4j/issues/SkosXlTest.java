@@ -5,6 +5,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.LexicalRelations;
 import at.ac.univie.mminf.qskos4j.issues.labels.OverlappingLabels;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
+import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -33,7 +34,7 @@ public class SkosXlTest {
         omittedOrInvalidLanguageTags = new OmittedOrInvalidLanguageTags();
         omittedOrInvalidLanguageTags.setRepositoryConnection(repo.getConnection());
 
-        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new InvolvedConcepts());
+        incompleteLanguageCoverage = new IncompleteLanguageCoverage(new LanguageCoverage(new InvolvedConcepts()));
         incompleteLanguageCoverage.setRepositoryConnection(repo.getConnection());
 
         overlappingLabels = new OverlappingLabels(new InvolvedConcepts());

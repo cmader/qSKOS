@@ -28,7 +28,7 @@ public class LexicalRelations extends Issue<NumberResult<Long>> {
 
     public LexicalRelations(InvolvedConcepts involvedConcepts) {
         super(involvedConcepts,
-            "cl",
+            "clb",
             "Concept Labels",
             "Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
             IssueType.STATISTICAL

@@ -11,10 +11,14 @@ public abstract class Issue<T extends Result<?>> {
 
     public enum IssueType {STATISTICAL, ANALYTICAL}
 
+    protected RepositoryConnection repCon;
+
     protected IProgressMonitor progressMonitor = new StubProgressMonitor();
 
     private String id, name, description;
     private IssueType type;
+    private T result;
+    private Issue dependentIssue;
     private URI weblink;
 
     private Issue(String name, String description, IssueType type) {
@@ -28,24 +32,49 @@ public abstract class Issue<T extends Result<?>> {
         this.id = id;
     }
 
+    public Issue(Issue dependentIssue, String id, String name, String description, IssueType type) {
+        this(id, name, description, type);
+        this.dependentIssue = dependentIssue;
+    }
+
     public Issue(String id, String name, String description, IssueType type, URI weblink) {
         this(id, name, description, type);
         this.weblink = weblink;
     }
 
-    protected abstract T invoke(RepositoryConnection repCon) throws OpenRDFException;
+    public Issue(Issue dependentIssue, String id, String name, String description, IssueType type, URI weblink) {
+        this(dependentIssue, id, name, description, type);
+        this.weblink = weblink;
+    }
 
-    public final T getResult(RepositoryConnection repCon) throws OpenRDFException {
+    protected abstract T invoke() throws OpenRDFException;
+
+    public final T getResult() throws OpenRDFException {
+        if (result == null) {
+            result = invoke();
+        }
+        return result;
+    }
+
+    protected final void reset() {
+        result = null;
         if (progressMonitor != null) {
             progressMonitor.reset();
         }
-
-        return invoke(repCon);
     }
 
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;
 	}
+
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        if (dependentIssue != null) {
+            dependentIssue.setRepositoryConnection(repCon);
+        }
+
+        this.repCon = repCon;
+        reset();
+    }
 
     public String getId() {
         return id;
