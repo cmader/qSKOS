@@ -18,7 +18,9 @@ import at.ac.univie.mminf.qskos4j.issues.inlinks.MissingInLinks;
 import at.ac.univie.mminf.qskos4j.issues.labels.*;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.language.IncompleteLanguageCoverage;
+import at.ac.univie.mminf.qskos4j.issues.language.NoCommonLanguages;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
+import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpUriSchemeViolations;
@@ -58,6 +60,7 @@ public class QSkos {
 
 	private String baseURI;
 
+    private LanguageCoverage languageCoverage;
     private BrokenLinks brokenLinks;
     private InvolvedConcepts involvedConcepts;
     private AuthoritativeConcepts authoritativeConcepts;
@@ -90,6 +93,7 @@ public class QSkos {
         authoritativeConcepts.setBaseURI(baseURI);
         conceptSchemes = new ConceptSchemes();
         httpURIs = new HttpURIs();
+        languageCoverage = new LanguageCoverage(involvedConcepts);
 
         registeredIssues.add(involvedConcepts);
         registeredIssues.add(authoritativeConcepts);
@@ -104,9 +108,11 @@ public class QSkos {
     private void addAnalyticalIssues() {
         HierarchyGraphBuilder hierarchyGraphBuilder = new HierarchyGraphBuilder();
 
+        registeredIssues.add(new EmptyLabeledResources());
         registeredIssues.add(new OmittedOrInvalidLanguageTags());
-        registeredIssues.add(new IncompleteLanguageCoverage(involvedConcepts));
+        registeredIssues.add(new IncompleteLanguageCoverage(languageCoverage));
         registeredIssues.add(new UndocumentedConcepts(authoritativeConcepts));
+        registeredIssues.add(new NoCommonLanguages(languageCoverage));
         registeredIssues.add(new MissingLabels(authoritativeConcepts, conceptSchemes));
         registeredIssues.add(new OverlappingLabels(involvedConcepts));
         registeredIssues.add(new OrphanConcepts(involvedConcepts));
@@ -125,7 +131,6 @@ public class QSkos {
         registeredIssues.add(new HttpUriSchemeViolations());
         registeredIssues.add(new RelationClashes(hierarchyGraphBuilder));
         registeredIssues.add(new MappingClashes());
-
     }
 
     private void addSkosIntegrityIssues() {

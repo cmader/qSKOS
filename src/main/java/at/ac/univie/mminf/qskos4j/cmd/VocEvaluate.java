@@ -77,10 +77,7 @@ public class VocEvaluate {
         @SuppressWarnings("unused")
         @Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
 		private Float randomSubsetSize_percent;
-	
-		@Parameter(names = {"-e", "--extensive"}, description = "Output extensive report")
-		private boolean extensiveReport = false;
-		
+
 		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
 		private boolean writeGraphs = false;
 
@@ -194,7 +191,7 @@ public class VocEvaluate {
 		setup();
 
         reportCollector = new ReportCollector(extractMeasures(), parsedCommand.reportFileName);
-        reportCollector.outputIssuesReport(shouldOutputExtReport(), shouldWriteGraphs());
+        reportCollector.outputIssuesReport(shouldWriteGraphs());
 	}
 	
 	private void setup() throws OpenRDFException, IOException {
@@ -231,10 +228,6 @@ public class VocEvaluate {
         }
     }
 
-	private boolean shouldOutputExtReport() {
-		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).extensiveReport;
-	}
-	
 	private boolean shouldWriteGraphs() {
 		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).writeGraphs;
 	}

@@ -1,13 +1,23 @@
-package at.ac.univie.mminf.qskos4j.report;
+package at.ac.univie.mminf.qskos4j.result;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
-public abstract class Report {
+public abstract class Result<T> {
 
-    public enum ReportFormat {TXT, DOT, RDF, HTML}
+    public enum ReportFormat {TXT, DOT}
     public enum ReportStyle {SHORT, EXTENSIVE}
+
+    private T data;
+
+    protected Result(T data) {
+        this.data = data;
+    }
+
+    public T getData() {
+        return data;
+    }
 
     public final void generateReport(BufferedWriter writer, ReportFormat format) throws IOException
     {
@@ -25,10 +35,6 @@ public abstract class Report {
                 generateDotReport(writer);
                 break;
 
-            case HTML:
-                generateHtmlReport(writer, style);
-                break;
-
             default:
                 throw new UnsupportedReportFormatException(format);
         }
@@ -42,10 +48,6 @@ public abstract class Report {
         throw new UnsupportedOperationException();
 	}
 
-    public void generateHtmlReport(BufferedWriter writer, ReportStyle style) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-	
 	@Override
 	public String toString() {
         try {
@@ -58,5 +60,13 @@ public abstract class Report {
             return "Could not create short text report (" +e.getMessage()+ ")";
         }
 	}
+
+    public long occurrenceCount() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isProblematic() {
+        return occurrenceCount() != 0;
+    }
 	
 }

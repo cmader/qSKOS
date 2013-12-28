@@ -31,7 +31,7 @@ public class AuthoritativeConceptsTest {
     @Test
     public void testAuthoritativeConceptsCount() throws OpenRDFException
     {
-        Collection<Resource> authoritativeConceptValues = authoritativeConcepts.getResult();
+        Collection<Resource> authoritativeConceptValues = authoritativeConcepts.getResult().getData();
         Assert.assertEquals(9, authoritativeConceptValues.size());
     }
 }

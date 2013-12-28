@@ -33,7 +33,7 @@ public class MissingLabelsTest {
 
     @Test
     public void checkLabeledConcepts() throws OpenRDFException {
-        conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult();
+        conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult().getData();
 
         Assert.assertTrue(isUnlabeled("conceptA"));
         Assert.assertTrue(isUnlabeled("conceptC"));
@@ -49,7 +49,7 @@ public class MissingLabelsTest {
 
     @Test
     public void checkLabeledConceptSchemes() throws OpenRDFException {
-        conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult();
+        conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult().getData();
 
 
         Assert.assertTrue(isUnlabeled("conceptSchemeC"));
@@ -62,7 +62,7 @@ public class MissingLabelsTest {
 
     @Test
     public void countMissingLabels() throws OpenRDFException {
-        conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult();
+        conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult().getData();
         Assert.assertEquals(7, conceptsAndConceptSchemesWithMissingLabels.size());
     }
 

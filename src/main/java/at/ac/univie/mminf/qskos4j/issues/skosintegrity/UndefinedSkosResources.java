@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
@@ -23,7 +22,7 @@ import java.util.Map;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undefined_SKOS_Resources">Undefined SKOS Resources</a>
  * ).
  */
-public class UndefinedSkosResources extends Issue<Collection<URI>> {
+public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 
 	private Map<URI, Collection<URI>> deprecatedProperties, illegalTerms;
 
@@ -37,17 +36,12 @@ public class UndefinedSkosResources extends Issue<Collection<URI>> {
     }
 
     @Override
-    protected Collection<URI> computeResult() throws OpenRDFException {
+    protected CollectionResult<URI> invoke() throws OpenRDFException {
 		findDeprecatedProperties();
 		findIllegalTerms();
 		
-		return collectUndefinedResources();
+		return new CollectionResult<URI>(collectUndefinedResources());
 	}
-
-    @Override
-    protected Report generateReport(Collection<URI> preparedData) {
-        return new CollectionReport<URI>(preparedData);
-    }
 
     private void findDeprecatedProperties() throws OpenRDFException
 	{

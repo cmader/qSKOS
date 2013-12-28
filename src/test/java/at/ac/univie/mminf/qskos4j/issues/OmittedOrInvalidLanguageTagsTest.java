@@ -36,13 +36,12 @@ public class OmittedOrInvalidLanguageTagsTest {
 
     @Test
     public void testMissingLangTagCount_1() throws OpenRDFException {
-        Map<Resource, Collection<Literal>> missingLangTags = oiltComponents.getResult();
-        Assert.assertEquals(3, missingLangTags.size());
+        Assert.assertEquals(3, oiltComponents.getResult().getData().size());
     }
 
     @Test
     public void testMissingLangTagCount_2() throws OpenRDFException {
-        Map<Resource, Collection<Literal>> missingLangTags = oiltDeprecatedAndIllegal.getResult();
+        Map<Resource, Collection<Literal>> missingLangTags = oiltDeprecatedAndIllegal.getResult().getData();
 
         Assert.assertEquals(1, missingLangTags.keySet().size());
         Assert.assertEquals(2, countEntries(missingLangTags.values()));
@@ -58,8 +57,7 @@ public class OmittedOrInvalidLanguageTagsTest {
 
     @Test
     public void testMissingLangTagCount_3() throws OpenRDFException {
-        Map<Resource, Collection<Literal>> missingLangTags = oiltLangTags.getResult();
-        Assert.assertEquals(2, countEntries(missingLangTags.values()));
+        Assert.assertEquals(2, oiltLangTags.getResult().getData().size());
     }
 
 }

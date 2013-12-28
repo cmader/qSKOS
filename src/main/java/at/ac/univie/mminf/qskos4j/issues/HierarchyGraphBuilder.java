@@ -2,7 +2,8 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.jgrapht.graph.DirectedMultigraph;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
@@ -18,15 +19,17 @@ public class HierarchyGraphBuilder {
 
     private final Logger logger = LoggerFactory.getLogger(HierarchyGraphBuilder.class);
 
-	private DirectedMultigraph<Value, NamedEdge> graph = new DirectedMultigraph<Value, NamedEdge>(NamedEdge.class);
+	private DirectedGraph<Resource, NamedEdge> graph;
     private RepositoryConnection repCon;
 
-	public DirectedMultigraph<Value, NamedEdge> createGraph() throws OpenRDFException
+	public DirectedGraph<Resource, NamedEdge> createGraph() throws OpenRDFException
 	{
         logger.debug("Creating hierarchy graph");
+        graph = new DefaultDirectedGraph<Resource, NamedEdge>(NamedEdge.class);
 
         addResultsToGraph(findTriples("skos:broaderTransitive"), false);
         addResultsToGraph(findTriples("skos:narrowerTransitive"), true);
+
         return graph;
 	}
 	

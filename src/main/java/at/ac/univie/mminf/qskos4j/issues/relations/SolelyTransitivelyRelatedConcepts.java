@@ -1,29 +1,32 @@
 package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Solely_Transitively_Related_Concepts">Solely Transitively Related Concepts</a>.
  */
-public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI>>> {
+public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Tuple<Resource>>> {
 
 	private String[][] transitiveNontransiviteInverseProperties = {
 			{"skos:broaderTransitive", "skos:broader", "skos:narrower"},
 			{"skos:narrowerTransitive", "skos:narrower", "skos:broader"}};
-	
-	private Set<Pair<URI>> solitaryTransitiveRelations = new HashSet<Pair<URI>>();
+
+    private Collection<Statement> solitaryTransitiveRelations;
 
     public SolelyTransitivelyRelatedConcepts() {
         super("strc",
@@ -35,21 +38,26 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
     }
 
     @Override
-    protected Collection<Pair<URI>> computeResult() throws OpenRDFException {
-		for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
-            TupleQuery query = repCon.prepareTupleQuery(
-                QueryLanguage.SPARQL,
-                createSolitaryTransitiveRelationsQuery(transitivePropertyPair));
-			addToResults(query.evaluate());
-		}
-		
-		return solitaryTransitiveRelations;
+    protected CollectionResult<Tuple<Resource>> invoke() throws OpenRDFException {
+        solitaryTransitiveRelations = new ArrayList<Statement>();
+        for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
+            String query = createSolitaryTransitiveRelationsQuery(transitivePropertyPair);
+            TupleQuery tupleQuery = repCon.prepareTupleQuery(QueryLanguage.SPARQL, query);
+            addToResults(tupleQuery.evaluate(), transitivePropertyPair[0]);
+        }
+
+        return createReport();
 	}
 
-    @Override
-    protected Report generateReport(Collection<Pair<URI>> preparedData) {
-        return new CollectionReport<Pair<URI>>(preparedData);
+    private CollectionResult<Tuple<Resource>> createReport() {
+        Collection<Tuple<Resource>> relatedConcepts = new HashSet<Tuple<Resource>>();
+        for (Statement statement : solitaryTransitiveRelations) {
+            relatedConcepts.add(new Tuple<Resource>(statement.getSubject(), (Resource) statement.getObject()));
+        }
+
+        return new CollectionResult(relatedConcepts);
     }
+
 
     private String createSolitaryTransitiveRelationsQuery(
 		String[] transitiveNontransiviteInverseProperties) 
@@ -61,17 +69,18 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<Collection<Pair<URI
 					"FILTER NOT EXISTS {?resource1 ("+transitiveNontransiviteInverseProperties[1]+ "|^"+transitiveNontransiviteInverseProperties[2]+")* ?resource2}" +
 					"}";
 	}
-	
-	private void addToResults(TupleQueryResult result) 
-		throws QueryEvaluationException
-	{
-		while (result.hasNext()) {
-			BindingSet queryResult = result.next();
-			URI resource1 = (URI) queryResult.getValue("resource1");
-			URI resource2 = (URI) queryResult.getValue("resource2");
-			
-			solitaryTransitiveRelations.add(new Pair<URI>(resource1, resource2));
-		}
-	}
+
+    private void addToResults(TupleQueryResult result, String solitaryRelation)
+            throws QueryEvaluationException
+    {
+        while (result.hasNext()) {
+            BindingSet queryResult = result.next();
+            Resource resource1 = (Resource) queryResult.getValue("resource1");
+            Value resource2 = queryResult.getValue("resource2");
+            URI relation = new URIImpl(solitaryRelation.replace("skos:", SparqlPrefix.SKOS.getNameSpace()));
+
+            solitaryTransitiveRelations.add(new StatementImpl(resource1, relation, resource2));
+        }
+    }
 
 }

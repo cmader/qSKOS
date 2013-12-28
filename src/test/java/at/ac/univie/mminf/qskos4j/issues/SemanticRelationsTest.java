@@ -27,7 +27,7 @@ public class SemanticRelationsTest {
     @Test
     public void testLexicalRelationsCount() throws OpenRDFException
     {
-        Assert.assertEquals(18, semanticRelations.getResult().longValue());
+        Assert.assertEquals(18, semanticRelations.getResult().getData().longValue());
     }
 
 }

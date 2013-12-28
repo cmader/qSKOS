@@ -6,17 +6,23 @@ Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[htt
 
 == Installation
 
-=== Requirements
+=== Use the latest released version
 
+You can find the released versions on the {qSKOS GitHub page}[https://github.com/cmader/qSKOS/releases] and download the latest .jar file, e.g. for {qSKOS Version 1.0.0}[https://github.com/cmader/qSKOS/releases/download/1.0.0/qSKOS-cmd.jar].
+Alternatively you can
+
+=== Build from Source
+
+Requirements:
 * Verify that Java v.1.7 or greater is installed: <tt>javac -version</tt>
 * Make sure Maven v.3.0 or greater is installed: <tt>mvn -v</tt>
-* Optional: Make sure you have the current version of the {git version control system}[http://git-scm.com/] installed on your system.
+* Make sure you have the current version of the {git version control system}[http://git-scm.com/] installed on your system
 
 === 1) Get the source code
 
 You have two options:
 * Clone the project (<tt>git clone https://github.com/cmader/qSKOS.git</tt>) to your system using git.
-* Download the packaged source files as {zip archive}[https://github.com/cmader/qSKOS/archive/master.zip] and extract it to a properly named directory, e.g., +qSKOS+.
+* Download the latest {release}[https://github.com/cmader/qSKOS/releases] of the project and extract it to a properly named directory, e.g., +qSKOS+.
 
 === 2) Build the tool
 
@@ -29,6 +35,7 @@ You have two options:
 
 === General Usage
 
+* Change to the +qSKOS/target+ directory
 * Run the tool using <tt>java -jar qSKOS-cmd.jar</tt>
 * A synopsis on the application's parameters is displayed.
 
@@ -37,16 +44,16 @@ You have two options:
 The following examples demonstrate typical qSKOS use cases. For demonstration purposes we use the IPSV vocabulary available from the {qSKOS-data}[https://github.com/cmader/qSKOS-data] repository: {Download IPSV vocabulary}[https://github.com/cmader/qSKOS-data/raw/master/IPSV/ipsv_skos.rdf.bz2]. In the examples below we assume that the vocabulary file is placed in the same directory than the +qSKOS-cmd.jar+ file.
 
 ==== 1) Retrieving basic vocabulary statistics
-Basic statistical properties (e.g., number of concepts, semantic relations or concept schemes) can be retrieved by issuing the command:
+Basic statistical properties (e.g., number of concepts, semantic relations or concept schemes) can be retrieved and stored into the file +report.txt+ by issuing the command:
 
-<tt>java -jar qSKOS-cmd.jar summarize ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar summarize ipsv_skos.rdf -o report.txt</tt>
 
 ==== 2) Finding quality issues
-To perform a complete analysis of all quality issues, use the following command:
+To perform an analysis for quality issues, use the following command:
 
-<tt>java -jar qSKOS-cmd.jar analyze -dc mil,mol,bl ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze -dc mil,bl ipsv_skos.rdf -o report.txt</tt>
 
-Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially link checking sometimes can take hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done. In the example above, checking for missing inlinks, missing outlinks and broken links has been disabled to speed up the checking process (using the parameter <tt>-dc mil,mol,bl</tt>).
+Please keep in mind that a full analysis can take quite some time, depending on the vocabulary size and structure. Especially link checking sometimes can take hours, so it is often useful to analyze only a subset of all issues. In the following examples you'll learn how this can be done. In the example above, checking for missing inlinks and broken links has been disabled to speed up the checking process (using the parameter <tt>-dc mil,bl</tt>).
 
 ==== 3) Output a list of *supported* statistical properties and quality issues
 By starting the evaluation using either the +summarize+ or +analyze+ command and omitting the vocabulary filename, you get an overview about the supported statistical properties and quality issues:
@@ -68,18 +75,13 @@ Every property/issue is identified by an ID string, has a name and a description
 ==== 4) Testing for a specific issue or a subset of issues
 Specific issues can be tested by passing the <tt>-c</tt> parameter followed by one or more (comma-separated) issue IDs (see example above). Keep in mind, that the <tt>-c</tt> parameter has to be placed between between the +analyze+ command and the vocabulary file like this:
 
-<tt>java -jar qSKOS-cmd.jar analyze -c ol,oc ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze -c ol,oc ipsv_skos.rdf -o report.txt</tt>
 
 The command above triggers analysis of the "Overlapping Labels" and "Orphan Concepts" issues. In a very similar way it is possible to explicitly *exclude* issues from testing. For example, the command
 
-<tt>java -jar qSKOS-cmd.jar analyze -dc mil ipsv_skos.rdf</tt>
+<tt>java -jar qSKOS-cmd.jar analyze -dc mil ipsv_skos.rdf -o report.txt </tt>
 
 checks for all issues except "Missing In-Links".
-
-==== 5) Producing more detailed reports
-In most cases it is not sufficient to know about the presence and number of quality issues but also which resource cause these potential problems. This can be reported by using the <tt>-e</tt> (extensive) command line switch.
-
-For example, the command <tt>java -jar qSKOS-cmd.jar analyze -c usr ipsv_skos.rdf</tt> reports one "Undefined SKOS Resources". Issuing the command <tt>java -jar qSKOS-cmd.jar analyze -e -c usr ipsv_skos.rdf</tt> (mind the additional <tt>-e</tt> parameter after the +analyze+ command) reports the resource (<tt>http://www.w3.org/2004/02/skos/core#prefSymbol</tt>) causing a potential problem.
 
 == FAQ
 
@@ -87,13 +89,6 @@ For example, the command <tt>java -jar qSKOS-cmd.jar analyze -c usr ipsv_skos.rd
 Every concept in a SKOS vocabulary is a resource and should be identified by an URI to be referenced from other vocabularies on the Web. However, when using qSKOS, for some issues it is required to distinguish between concepts that are originally specified (authoritative) in the vocabulary that's about to be analyzed, and concepts (implictly or explicitly) defined in other vocabularies somewhere on the Web. 
 
 qSKOS is to some extent able to perform this distinction by examining the host part of the concept's URIs. Depending on the vocabulary's structure in some cases it might be needed to pass an "Authoritative resource identifier" (command line argument <tt>-a</tt>) to qSKOS. This is a substring of an URI that identifies a concept as authoritative.
-
-=== How can I write the report to a file?
-Report output is performed directly on the console (+stdout+). If you want them to be contained in text files, you can use the output redirection operator (<tt>></tt>) of your operating system's command line shell. Here's an example:
-
-<tt>java -jar qSKOS-cmd.jar summarize -q -c ac ipsv_skos.rdf > auth_concepts.txt</tt> generates a text file <tt>auth_concepts.txt</tt> containing the report.
-
-A command-line parameter that might be handy when redirecting qSKOS' output into a file is <tt>-np</tt>. It suppresses output of the progress indicator which is thus not written into the generated report.
 
 === What version of qSKOS do I use?
 Simply pass the command line switch <tt>-v</tt> like this:
@@ -108,11 +103,11 @@ The +QSkos+ class serves as facade for calculating all criteria. For each criter
 
   // instantiation
   qskos = new QSkos(new File("stw.rdf"));
-  qskos.setAuthoritativeResourceIdentifier("zbw.eu");
+  qskos.setAuthResourceIdentifier("zbw.eu");
 
   // the fun part
-  DisconnectedConceptClusters dcc = qskos.getDisconnectedConceptClusters();
-  dcc.getResult();
+  Issue orphanConcepts = qSkos.getIssues("oc").iterator().next();
+  long numberOfOrphans = issue.getResult().occurrenceCount());
 
 == Publications
 A subset of the quality issues qSKOS supports (including an analysis of several existing vocabularies) have been published in our paper {Finding Quality Issues in SKOS Vocabularies}[http://arxiv.org/abs/1206.1339v1].

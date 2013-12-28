@@ -6,9 +6,8 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -26,7 +25,7 @@ import java.util.*;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Overlapping_Labels">Overlapping Labels</a>
  * ).
  */
-public class OverlappingLabels extends Issue<Set<LabelConflict>> {
+public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
 
 	private final Logger logger = LoggerFactory.getLogger(OverlappingLabels.class);
 
@@ -46,22 +45,17 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
     }
 
     @Override
-    protected Set<LabelConflict> computeResult() throws OpenRDFException {
+    protected CollectionResult<LabelConflict> invoke() throws OpenRDFException {
         generateConceptsLabelMap();
         generateLabelConflictResults();
 
-		return labelConflicts;
+		return new CollectionResult<LabelConflict>(labelConflicts);
 	}
-
-    @Override
-    protected Report generateReport(Set<LabelConflict> preparedData) {
-        return new CollectionReport<LabelConflict>(preparedData);
-    }
 
     private void generateConceptsLabelMap() throws OpenRDFException
 	{
 		conceptLabels = new HashMap<Literal, Set<LabeledConcept>>();
-        Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult(), progressMonitor);
+        Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
 
         progressMonitor.setTaskDescription("Collecting resource labels");
 		while (it.hasNext()) {
@@ -109,7 +103,7 @@ public class OverlappingLabels extends Issue<Set<LabelConflict>> {
 				"{<"+concept.stringValue()+"> skos:hiddenLabel ?hiddenLabel .}}";
 	}
 	
-	private Set<LabeledConcept> createLabeledConceptsFromResult(Value concept, TupleQueryResult result)
+	private Set<LabeledConcept> createLabeledConceptsFromResult(Resource concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
 		Set<LabeledConcept> ret = new HashSet<LabeledConcept>();

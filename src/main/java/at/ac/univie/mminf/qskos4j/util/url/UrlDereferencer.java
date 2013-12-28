@@ -19,9 +19,7 @@ public class UrlDereferencer {
 	private final Logger logger = LoggerFactory.getLogger(UrlDereferencer.class);
 	private final int HTTP_GET_TIMOUT_MILLIS = 60000;
 	
-	public String getContentType(URL url) 
-		throws UrlNotDereferencableException, NoContentTypeProvidedException
-	{
+	public String getContentType(URL url) throws UrlNotDereferencableException {
 		try {
 			HttpResponse response = sendRequest(url);
 			

@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -32,13 +32,13 @@ public class OrphanConceptsTest {
 
     @Test
     public void testConceptsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConceptsForConcepts.getResult();
+        Collection<Resource> orphanConceptValues = orphanConceptsForConcepts.getResult().getData();
         Assert.assertEquals(7, orphanConceptValues.size());
     }
 
     @Test
     public void testComponentsLooseConceptCount() throws OpenRDFException {
-        Collection<Value> orphanConceptValues = orphanConceptsForComponents.getResult();
+        Collection<Resource> orphanConceptValues = orphanConceptsForComponents.getResult().getData();
         Assert.assertEquals(2, orphanConceptValues.size());
     }
 }

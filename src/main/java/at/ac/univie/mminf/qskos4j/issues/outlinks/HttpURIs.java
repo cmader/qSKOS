@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -18,7 +17,7 @@ import java.util.*;
  * Date: 26.01.13
  * Time: 15:23
  */
-public class HttpURIs extends Issue<Collection<URI>> {
+public class HttpURIs extends Issue<CollectionResult<URI>> {
 
     private Set<URI> httpURIs = new HashSet<URI>();
     private Set<String> invalidResources = new HashSet<String>();
@@ -32,7 +31,7 @@ public class HttpURIs extends Issue<Collection<URI>> {
     }
 
     @Override
-    protected Collection<URI> computeResult() throws OpenRDFException {
+    protected CollectionResult<URI> invoke() throws OpenRDFException {
         RepositoryResult<Statement> result = repCon.getStatements(null, null, null, false, (Resource) null);
         while (result.hasNext()) {
             Statement st = result.next();
@@ -45,12 +44,7 @@ public class HttpURIs extends Issue<Collection<URI>> {
             }
         }
 
-        return httpURIs;
-    }
-
-    @Override
-    protected Report generateReport(Collection<URI> preparedData) {
-        return new CollectionReport<URI>(preparedData);
+        return new CollectionResult<URI>(httpURIs);
     }
 
     private void addToUrlList(Value iri) {

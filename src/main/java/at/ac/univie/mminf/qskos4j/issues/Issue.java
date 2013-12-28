@@ -2,12 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.progress.StubProgressMonitor;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.Result;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryConnection;
 
-public abstract class Issue<T> {
+public abstract class Issue<T extends Result<?>> {
 
     public enum IssueType {STATISTICAL, ANALYTICAL}
 
@@ -47,20 +47,13 @@ public abstract class Issue<T> {
         this.weblink = weblink;
     }
 
-
-    protected abstract T computeResult() throws OpenRDFException;
-    protected abstract Report generateReport(T preparedData);
+    protected abstract T invoke() throws OpenRDFException;
 
     public final T getResult() throws OpenRDFException {
         if (result == null) {
-            result = computeResult();
+            result = invoke();
         }
         return result;
-    }
-
-    public final Report getReport() throws OpenRDFException
-    {
-        return generateReport(getResult());
     }
 
     protected final void reset() {

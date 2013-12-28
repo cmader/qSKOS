@@ -1,8 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues.language;
 
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import org.openrdf.model.Value;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.result.Result;
+import org.openrdf.model.Resource;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,12 +11,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class IncompleteLangCovReport extends Report {
+public class IncompleteLangCovResult extends Result<Map<Resource, Collection<String>>> {
 
-    private Map<Value, Collection<String>> data;
-
-	IncompleteLangCovReport(Map<Value, Collection<String>> data) {
-		this.data = data;
+    IncompleteLangCovResult(Map<Resource, Collection<String>> data) {
+		super(data);
 	}
 
     @Override
@@ -24,7 +22,7 @@ public class IncompleteLangCovReport extends Report {
     {
         switch (style) {
             case SHORT:
-                new CollectionReport<Value>(data.keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
+                new CollectionResult<Resource>(getData().keySet()).generateReport(writer, ReportFormat.TXT, ReportStyle.SHORT);
                 break;
 
             case EXTENSIVE:
@@ -37,9 +35,9 @@ public class IncompleteLangCovReport extends Report {
 	private String generateExtensiveTextReport() {
         StringBuilder extensiveReport = new StringBuilder();
 
-        Iterator<Entry<Value, Collection<String>>> entryIt = data.entrySet().iterator();
+        Iterator<Entry<Resource, Collection<String>>> entryIt = getData().entrySet().iterator();
         while (entryIt.hasNext()) {
-            Entry<Value, Collection<String>> entry = entryIt.next();
+            Entry<Resource, Collection<String>> entry = entryIt.next();
             extensiveReport.append("concept: '")
                            .append(entry.getKey().stringValue())
                            .append("', not covered languages: ")
@@ -47,11 +45,12 @@ public class IncompleteLangCovReport extends Report {
                            .append(entryIt.hasNext() ? "\n" : "");
         }
 
-        for (Entry<Value, Collection<String>> entry : data.entrySet()) {
-
-		}
-
 		return extensiveReport.toString();
 	}
+
+    @Override
+    public long occurrenceCount() {
+        return getData().size();
+    }
 
 }

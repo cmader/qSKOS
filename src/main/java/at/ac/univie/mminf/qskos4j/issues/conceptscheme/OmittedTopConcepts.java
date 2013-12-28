@@ -1,8 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -19,7 +18,7 @@ import java.util.HashSet;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Omitted_Top_Concepts">Omitted Top Concepts</a>
  * ).
  */
-public class OmittedTopConcepts extends Issue<Collection<Resource>> {
+public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
 
     private ConceptSchemes conceptSchemes;
 
@@ -35,10 +34,10 @@ public class OmittedTopConcepts extends Issue<Collection<Resource>> {
     }
 
     @Override
-    protected Collection<Resource> computeResult() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws OpenRDFException {
         Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
 
-        for (Resource conceptScheme : conceptSchemes.getResult()) {
+        for (Resource conceptScheme : conceptSchemes.getResult().getData()) {
 
             BooleanQuery hasTopConceptQuery = repCon.prepareBooleanQuery(
                     QueryLanguage.SPARQL,
@@ -49,12 +48,7 @@ public class OmittedTopConcepts extends Issue<Collection<Resource>> {
             }
         }
 
-        return csWithOmittedTopConcepts;
-    }
-
-    @Override
-    protected Report generateReport(Collection<Resource> preparedData) {
-        return new CollectionReport<Resource>(preparedData);
+        return new CollectionResult<Resource>(csWithOmittedTopConcepts);
     }
 
     private String createConceptSchemeWithoutTopConceptQuery(Value conceptScheme) {

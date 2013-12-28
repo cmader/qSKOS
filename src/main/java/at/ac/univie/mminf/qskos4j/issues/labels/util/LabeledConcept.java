@@ -1,17 +1,15 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import at.ac.univie.mminf.qskos4j.report.HtmlRenderable;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import org.openrdf.model.Resource;
 
-public class LabeledConcept implements HtmlRenderable {
+public class LabeledConcept {
 
 	private Literal literal;
 	private LabelType labelType;
-    private Value concept;
+    private Resource concept;
 	
-	public LabeledConcept(Value concept, Literal literal, LabelType labelType)
+	public LabeledConcept(Resource concept, Literal literal, LabelType labelType)
 	{
         this.concept = concept;
 		this.literal = literal;
@@ -22,7 +20,7 @@ public class LabeledConcept implements HtmlRenderable {
 		return literal;
 	}
 
-    public Value getConcept() {
+    public Resource getConcept() {
         return concept;
     }
 
@@ -50,19 +48,4 @@ public class LabeledConcept implements HtmlRenderable {
         return concept.equals(other.concept) && literal.equals(other.literal) && labelType.equals(other.labelType);
     }
 
-    @Override
-    public String toHtml() {
-        String htmlString = "<div class='" +this.getClass().getName()+ "'>";
-
-        if (concept instanceof URI) {
-            htmlString += "<a href='" +concept.stringValue()+ "'>" +concept.stringValue()+ "</a>";
-        }
-        else {
-            htmlString += concept.stringValue();
-        }
-        htmlString += " ("+ literal +", "+ labelType +")";
-
-        htmlString += "</div>";
-        return htmlString;
-    }
 }

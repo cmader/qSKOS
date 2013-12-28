@@ -5,8 +5,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflictsResult;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
@@ -21,7 +20,7 @@ import java.util.Map;
  * * Finds concepts with more than one preferred label (
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Inconsistent_Preferred_Labels">Inconsistent Preferred Labels</a>
  */
-public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
+public class InconsistentPrefLabels extends Issue<LabelConflictsResult> {
 
     private Map<Value, LabelConflict> ambigPrefLabels;
     private ResourceLabelsCollector resourceLabelsCollector;
@@ -37,17 +36,12 @@ public class InconsistentPrefLabels extends Issue<Map<Value, LabelConflict>> {
     }
 
     @Override
-    protected Map<Value, LabelConflict> computeResult() throws OpenRDFException {
+    protected LabelConflictsResult invoke() throws OpenRDFException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByUri = orderPrefLabelsByResource();
         extractPrefLabelConflicts(prefLabelsByUri);
 
-		return ambigPrefLabels;
+		return new LabelConflictsResult(ambigPrefLabels.values());
 	}
-
-    @Override
-    protected Report generateReport(Map<Value, LabelConflict> preparedData) {
-        return new CollectionReport<LabelConflict>(preparedData.values());
-    }
 
     private Map<Value, Collection<LabeledConcept>> orderPrefLabelsByResource() throws OpenRDFException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByResource = new HashMap<Value, Collection<LabeledConcept>>();

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+
+	<rdf:Description rdf:about="conceptA">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel></skos:prefLabel>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptB">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:hiddenLabel></skos:hiddenLabel>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptC">
+        <skos:altLabel>somelabel</skos:altLabel>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptD">
+        <skos:prefLabel></skos:prefLabel>
+        <skos:altLabel></skos:altLabel>
+    </rdf:Description>
+
+</rdf:RDF>

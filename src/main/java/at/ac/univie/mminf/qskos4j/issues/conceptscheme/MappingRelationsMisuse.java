@@ -2,8 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
@@ -16,7 +15,7 @@ import org.openrdf.repository.RepositoryResult;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
+public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
 
     private AuthoritativeConcepts authoritativeConcepts;
 
@@ -31,7 +30,7 @@ public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
     }
 
     @Override
-    protected Collection<Statement> computeResult() throws OpenRDFException {
+    protected CollectionResult<Statement> invoke() throws OpenRDFException {
         Collection<Statement> problematicRelations = new ArrayList<Statement>();
 
         RepositoryResult<Statement> result = repCon.getStatements(
@@ -51,13 +50,13 @@ public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
             }
         }
 
-        return problematicRelations;
+        return new CollectionResult<Statement>(problematicRelations);
     }
 
     private boolean areAuthoritativeConcepts(Resource... concepts) throws OpenRDFException {
         for (Resource concept : concepts) {
             boolean isAuthoritativeConcept = false;
-            for (Resource authoritativeConcept : authoritativeConcepts.getResult()) {
+            for (Resource authoritativeConcept : authoritativeConcepts.getResult().getData()) {
                 if (concept.equals(authoritativeConcept)) isAuthoritativeConcept = true;
             }
             if (!isAuthoritativeConcept) return false;
@@ -87,8 +86,4 @@ public class MappingRelationsMisuse extends Issue<Collection<Statement>> {
         return query + "}";
     }
 
-    @Override
-    protected Report generateReport(Collection<Statement> preparedData) {
-        return new CollectionReport<Statement>(preparedData);
-    }
 }

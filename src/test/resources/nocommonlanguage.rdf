@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:myonto="http://localhost/myonto#" xml:base="http://zbw.eu/stw/">
+
+    <rdf:Description rdf:about="conceptA">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:prefLabel xml:lang="en">conceptA</skos:prefLabel>
+    </rdf:Description>
+
+	<rdf:Description rdf:about="conceptB">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:altLabel xml:lang="de">konzeptB</skos:altLabel>
+    </rdf:Description>
+
+	<rdf:Description rdf:about="conceptC">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:hiddenLabel xml:lang="cz">conceptC</skos:hiddenLabel>
+    </rdf:Description>
+
+	<rdf:Description rdf:about="conceptD">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<rdfs:label xml:lang="es">conceptD</rdfs:label>
+    </rdf:Description>
+
+</rdf:RDF>

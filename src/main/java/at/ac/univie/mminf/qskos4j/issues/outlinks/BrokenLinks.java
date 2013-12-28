@@ -1,10 +1,9 @@
 package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.ExtrapolatedCollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.result.ExtrapolatedCollectionResult;
+import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
@@ -25,7 +24,7 @@ import java.util.*;
  *
  * Finds <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Broken_Links">Broken Links</a>.
  */
-public class BrokenLinks extends Issue<Collection<URL>> {
+public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 	
 	private final Logger logger = LoggerFactory.getLogger(BrokenLinks.class);
 	private final static String NO_CONTENT_TYPE = "n/a";
@@ -49,15 +48,10 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 	}
 
     @Override
-    protected Collection<URL> computeResult() throws OpenRDFException {
+    protected ExtrapolatedCollectionResult<URL> invoke() throws OpenRDFException {
         dereferenceURIs();
-		return collectUnavailableURLs();
+		return new ExtrapolatedCollectionResult<URL>(collectUnavailableURLs(), randomSubsetSize_percent);
 	}
-
-    @Override
-    protected Report generateReport(Collection<URL> preparedData) {
-        return new ExtrapolatedCollectionReport<URL>(preparedData, randomSubsetSize_percent);
-    }
 
     private void dereferenceURIs() throws OpenRDFException
 	{
@@ -85,10 +79,12 @@ public class BrokenLinks extends Issue<Collection<URL>> {
 	
 	private Collection<URI> collectUrisToBeDereferenced() throws OpenRDFException {
 		if (randomSubsetSize_percent == null) {
-			return httpURIs.getResult();
+			return httpURIs.getResult().getData();
 		}
 
-        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(httpURIs.getResult(), randomSubsetSize_percent);
+        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(
+            httpURIs.getResult().getData(),
+            randomSubsetSize_percent);
         logger.info("Using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
 
 		return urisToBeDereferenced;

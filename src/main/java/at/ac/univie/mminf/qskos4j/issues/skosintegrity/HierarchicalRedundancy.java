@@ -1,9 +1,8 @@
 package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
-import at.ac.univie.mminf.qskos4j.report.CollectionReport;
-import at.ac.univie.mminf.qskos4j.report.Report;
-import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -15,10 +14,10 @@ import org.openrdf.query.TupleQueryResult;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class HierarchicalRedundancy extends Issue<Collection<Pair<Resource>>> {
+public class HierarchicalRedundancy extends Issue<CollectionResult<Tuple<Resource>>> {
 
     private String HIER_PROPERTIES = "skos:broaderTransitive|^skos:narrowerTransitive";
-    private Collection<Pair<Resource>> hierarchicalRedundancies;
+    private Collection<Tuple<Resource>> hierarchicalRedundancies;
 
     public HierarchicalRedundancy() {
         super("hr",
@@ -29,8 +28,8 @@ public class HierarchicalRedundancy extends Issue<Collection<Pair<Resource>>> {
     }
 
     @Override
-    protected Collection<Pair<Resource>> computeResult() throws OpenRDFException {
-        hierarchicalRedundancies = new HashSet<Pair<Resource>>();
+    protected CollectionResult<Tuple<Resource>> invoke() throws OpenRDFException {
+        hierarchicalRedundancies = new HashSet<Tuple<Resource>>();
 
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createQuery()).evaluate();
         while (result.hasNext()) {
@@ -38,10 +37,10 @@ public class HierarchicalRedundancy extends Issue<Collection<Pair<Resource>>> {
             Resource concept = (Resource) bs.getValue("concept");
             Resource otherConcept = (Resource) bs.getValue("otherConcept");
 
-            hierarchicalRedundancies.add(new Pair<Resource>(concept, otherConcept));
+            hierarchicalRedundancies.add(new Tuple<Resource>(concept, otherConcept));
         }
 
-        return hierarchicalRedundancies;
+        return new CollectionResult<Tuple<Resource>>(hierarchicalRedundancies);
     }
 
     private String createQuery() {
@@ -50,11 +49,6 @@ public class HierarchicalRedundancy extends Issue<Collection<Pair<Resource>>> {
             "?concept ("+HIER_PROPERTIES+")+ ?imConcept ." +
             "?imConcept ("+HIER_PROPERTIES+") ?otherConcept ." +
         "}";
-    }
-
-    @Override
-    protected Report generateReport(Collection<Pair<Resource>> preparedData) {
-        return new CollectionReport<Pair<Resource>>(hierarchicalRedundancies);
     }
 
 }

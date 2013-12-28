@@ -1,6 +1,5 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
@@ -22,14 +21,14 @@ public class ResourceLabelsCollector {
     private RepositoryConnection repCon;
     private Collection<LabeledConcept> labeledResources;
 
-    public Collection<LabeledConcept> getLabeledConcepts() throws OpenRDFException {
+    public Collection<LabeledConcept> getLabeledConcepts() {
         labeledResources = new HashSet<LabeledConcept>();
         createLabeledResources();
         return labeledResources;
     }
 
     private void createLabeledResources() {
-        for (LabelType labelType : LabelType.values()) {
+        for (LabelType labelType : LabelType.getSkosLabels()) {
             String labelQuery = createLabelQuery(labelType);
             try {
                 TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, labelQuery).evaluate();
@@ -42,10 +41,9 @@ public class ResourceLabelsCollector {
     }
 
     private String createLabelQuery(LabelType labelType) {
-        return SparqlPrefix.SKOS +
-            "SELECT DISTINCT ?resource ?label"+
+        return "SELECT DISTINCT ?resource ?label"+
             "{" +
-                "?resource "+labelType.getSkosProperty()+" ?label ." +
+                "?resource <"+labelType.getPredicate()+"> ?label ." +
             "}";
     }
 
