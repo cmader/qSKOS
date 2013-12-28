@@ -8,7 +8,7 @@ Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[htt
 
 === Use the latest released version
 
-You can find the released versions on the {qSKOS GitHub page}[https://github.com/cmader/qSKOS/releases] and download the latest .jar file, e.g. for {qSKOS Version 1.0.0}[https://github.com/cmader/qSKOS/releases/download/1.0.0/qSKOS-cmd.jar].
+You can find the released versions on the {qSKOS GitHub releases page}[https://github.com/cmader/qSKOS/releases] and download the {latest}[https://github.com/cmader/qSKOS/releases/latest] .jar files.
 Alternatively you can
 
 === Build from Source
