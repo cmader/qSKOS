@@ -2,9 +2,24 @@
 
 qSKOS is a tool for finding {quality issues}[https://github.com/cmader/qSKOS/wiki/Quality-Issues] in SKOS vocabularies. It can be used as command line tool or API. For release information please see the {changelog}[https://github.com/cmader/qSKOS/blob/devel/CHANGELOG.rdoc].
 
+qSKOS is also the basis for the {PoolParty SKOS Quality Checker}[http://qskos.poolparty.biz/], an online service that lets you check your vocabularies without needing to locally
+install qSKOS.
+
 Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[http://www.poolparty.biz], a commercially available Web-based development tool for SKOS vocabularies. In it's final stage we combine qSKOS' scientifically-grounded quality checks with the easy-to-use graphical interface of the PoolParty software. Integrated in the development workflow, quality checks can work as an assistive technology, just like syntax-checkers in development environments or spell-checkers in word processing applications.
 
-== Installation
+== Using the Online Service
+
+Navigate to the {PoolParty SKOS Quality Checker}[http://qskos.poolparty.biz/] in your browser. To use the service, you need to login with your existing accounts at the
+networks of Google, LinkedIn, Xing or Twitter. If you want to perform a quality check on a SKOS vocabulary, you first need to provide a name for the vocabulary in the text
+box on the top of the page. Afterwards you can directly upload the SKOS vocabulary and the checking process starts. If the check takes longer, you can also leave the page
+and come back later - the checks will continue running and, once finished, the report is available for download on the vocabulary overview page which is presented directly after
+you log in.
+
+*Please note*: The intention behind requiring the user to give a name for uploaded vocabularies is to "group" different versions of the same vocabulary. For example, if you
+develop a thesaurus <tt>MyThesaurus_Version1.rdf</tt>, you will give it the name "MyThesaurus" on the online service and upload it. As development of the vocabulary progresses, you
+might want to upload subsequent versions of the vocabulary, e.g. <tt>MyThesaurus_Ver2.rdf</tt>. You are advised to upload these improved vocabularies also under the name "MyThesaurus". In future versions of the tool we may be able to exploit this information by sending you a report on how your vocabulary improved over time.
+
+== Local Installation
 
 === Use the latest released version
 

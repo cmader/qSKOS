@@ -1,5 +1,11 @@
 = Changelog
 
+== Release 1.2.0, Jan 2014
+
+* Additional Quality Issues
+* Revised API
+* Usability Improvements (new command line options, quality issue descriptions)
+
 == Release 0.9.5, May 2013
 * RDFS inferencing support
 * performance improvements
