@@ -9,13 +9,15 @@ Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[htt
 
 == Using the Online Service
 
-Navigate to the {PoolParty SKOS Quality Checker}[http://qskos.poolparty.biz/] in your browser. To use the service, you need to login with your existing accounts at the
-networks of Google, LinkedIn, Xing or Twitter. If you want to perform a quality check on a SKOS vocabulary, you first need to provide a name for the vocabulary in the text
-box on the top of the page. Afterwards you can directly upload the SKOS vocabulary and the checking process starts. If the check takes longer, you can also leave the page
-and come back later - the checks will continue running and, once finished, the report is available for download on the vocabulary overview page which is presented directly after
-you log in.
+To use the service, you need to:
+* Navigate to the {PoolParty SKOS Quality Checker}[http://qskos.poolparty.biz/] in your browser
+* Login with your existing accounts at the networks of Google, LinkedIn, Xing or Twitter
+* If you want to perform a quality check on a SKOS vocabulary, you first need to provide a name for the vocabulary in the text box on the top of the page
+* Upload the SKOS vocabulary into the newly created vocabulary section and the checking process starts
 
-*Please note*: The intention behind requiring the user to give a name for uploaded vocabularies is to "group" different versions of the same vocabulary. For example, if you
+If the check takes longer, you can also leave the page and come back later - the checks will continue running and, once finished, the report is available for download on the vocabulary overview page which is presented directly after you log in.
+
+__Please note__: The intention behind requiring the user to give a name for uploaded vocabularies is to "group" different versions of the same vocabulary. For example, if you
 develop a thesaurus <tt>MyThesaurus_Version1.rdf</tt>, you will give it the name "MyThesaurus" on the online service and upload it. As development of the vocabulary progresses, you
 might want to upload subsequent versions of the vocabulary, e.g. <tt>MyThesaurus_Ver2.rdf</tt>. You are advised to upload these improved vocabularies also under the name "MyThesaurus". In future versions of the tool we may be able to exploit this information by sending you a report on how your vocabulary improved over time.
 
