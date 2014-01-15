@@ -19,8 +19,7 @@ If the check takes longer, you can also leave the page and come back later - the
 
 === Please note
 The intention behind requiring the user to give a name for uploaded vocabularies is to "group" different versions of the same vocabulary. For example, if you
-develop a thesaurus <tt>MyThesaurus_Version1.rdf</tt>, you will give it the name "MyThesaurus" on the online service and upload it. As development of the vocabulary progresses, you
-might want to upload subsequent versions of the vocabulary, e.g. <tt>MyThesaurus_Ver2.rdf</tt>. You are advised to upload these improved vocabularies also under the name "MyThesaurus". In future versions of the tool we may be able to exploit this information by sending you a report on how your vocabulary improved over time.
+develop a thesaurus <tt>MyThesaurus_Version1.rdf</tt>, you will give it the name <tt>MyThesaurus</tt> on the online service and upload it. As development of the vocabulary progresses, you might want to upload subsequent versions of the vocabulary, e.g. <tt>MyThesaurus_Ver2.rdf</tt>. You are advised to upload these improved vocabularies also under the name <tt>MyThesaurus</tt>. In future versions of the service we may be able to exploit this information by sending you a report on how your vocabulary improved over time.
 
 == Local Installation
 
