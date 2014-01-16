@@ -190,7 +190,10 @@ public class VocEvaluate {
 	{
 		setup();
 
-        reportCollector = new ReportCollector(extractMeasures(), parsedCommand.reportFileName);
+        String command = jc.getParsedCommand();
+        reportCollector = new ReportCollector(extractMeasures(),
+                parsedCommand.reportFileName,
+                command.equals(CMD_NAME_ANALYZE));
         reportCollector.outputIssuesReport(shouldWriteGraphs());
 	}
 	

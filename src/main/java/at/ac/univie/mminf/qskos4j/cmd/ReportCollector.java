@@ -20,10 +20,12 @@ class ReportCollector {
 
     private Collection<Issue> issues;
     private String reportFileName;
+    private boolean includeSummary;
 
-    public ReportCollector(Collection<Issue> issues, String reportFileName) {
+    public ReportCollector(Collection<Issue> issues, String reportFileName, boolean includeSummary) {
         this.issues = issues;
         this.reportFileName = reportFileName;
+        this.includeSummary = includeSummary;
     }
 
     void outputIssuesReport(boolean shouldWriteGraphs)
@@ -33,9 +35,12 @@ class ReportCollector {
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
 
         processIssues();
-        String reportSummary = createReportSummary();
-        logger.info("\n" +reportSummary);
 
+        String reportSummary = "";
+        if (includeSummary) {
+            reportSummary = createReportSummary();
+            logger.info("\n" +reportSummary);
+        }
         writeReportHeader(reportWriter, reportFile, reportSummary);
         writeReportBody(reportWriter, reportFile, shouldWriteGraphs);
 
