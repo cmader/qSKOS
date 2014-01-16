@@ -79,10 +79,11 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
     }
 
     private boolean hasNoRdfsLabelAndNoDcTitle(Value conceptScheme) throws OpenRDFException {
-        String labelQuery = SparqlPrefix.RDFS +" "+ SparqlPrefix.DC+
+        String labelQuery = SparqlPrefix.RDFS +" "+ SparqlPrefix.DC +" "+ SparqlPrefix.DCTERMS+
             " ASK {" +
                 "{<" +conceptScheme+ "> rdfs:label ?label} UNION " +
-                "{<" +conceptScheme+ "> dc:title ?label}" +
+                "{<" +conceptScheme+ "> dc:title ?label} UNION " +
+                "{<" +conceptScheme+ "> dcterms:title ?label}" +
             "}";
 
         return !repCon.prepareBooleanQuery(QueryLanguage.SPARQL, labelQuery).evaluate();

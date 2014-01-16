@@ -51,13 +51,13 @@ public class MissingLabelsTest {
     public void checkLabeledConceptSchemes() throws OpenRDFException {
         conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult().getData();
 
-
         Assert.assertTrue(isUnlabeled("conceptSchemeC"));
         Assert.assertTrue(isUnlabeled("conceptSchemeD"));
 
         Assert.assertFalse(isUnlabeled("conceptSchemeA"));
         Assert.assertFalse(isUnlabeled("conceptSchemeB"));
         Assert.assertFalse(isUnlabeled("conceptSchemeE"));
+        Assert.assertFalse(isUnlabeled("conceptSchemeF"));
     }
 
     @Test
