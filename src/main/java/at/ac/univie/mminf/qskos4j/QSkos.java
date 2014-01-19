@@ -25,6 +25,7 @@ import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpUriSchemeViolations;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
+import at.ac.univie.mminf.qskos4j.issues.relations.ReflexivelyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.SolelyTransitivelyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.UnidirectionallyRelatedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.relations.ValuelessAssociativeRelations;
@@ -124,6 +125,7 @@ public class QSkos {
         registeredIssues.add(new TopConceptsHavingBroaderConcepts());
         registeredIssues.add(new HierarchicalRedundancy());
         registeredIssues.add(new MappingRelationsMisuse(authoritativeConcepts));
+        registeredIssues.add(new ReflexivelyRelatedConcepts(authoritativeConcepts));
 
         registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
         registeredIssues.add(new UndefinedSkosResources());

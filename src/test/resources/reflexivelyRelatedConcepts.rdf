@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:myonto="http://localhost/myonto#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xml:base="http://mminf.univie.ac.at/vocab/">
+
+    <!-- error -->
+	<rdf:Description rdf:about="conceptA">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:broader rdf:resource="conceptA"/>
+	</rdf:Description>
+
+    <!-- error -->
+	<rdf:Description rdf:about="conceptB">
+		<skos:broadMatch rdf:resource="conceptB"/>
+	</rdf:Description>
+
+    <!-- ok, not an authoritative concept -->
+	<rdf:Description rdf:about="someresource">
+		<skos:related rdf:resource="someresource"/>
+	</rdf:Description>
+
+</rdf:RDF>
