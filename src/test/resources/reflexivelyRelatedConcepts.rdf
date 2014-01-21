@@ -18,7 +18,7 @@
 
     <!-- ok, not an authoritative concept -->
 	<rdf:Description rdf:about="someresource">
-		<skos:related rdf:resource="someresource"/>
+		<skos:member rdf:resource="someresource"/>
 	</rdf:Description>
 
 </rdf:RDF>

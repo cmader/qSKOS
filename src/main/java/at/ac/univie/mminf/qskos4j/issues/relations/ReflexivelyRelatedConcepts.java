@@ -2,19 +2,19 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement>> {
 
@@ -39,22 +39,25 @@ public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement
     {
         Collection<Statement> results = new ArrayList<>();
 
-        TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL,
-                                                    "SELECT ?resource ?relation WHERE {" +
-                                                            "?resourceA ?relation ?resourceB . " +
-                                                            "FILTER (?resourceA = ?resourceB)" +
-                                                            "}");
-        TupleQueryResult result = query.evaluate();
-        while (result.hasNext()) {
-            Resource resource = (Resource) result.next().getValue("resource");
-            URI relation = (URI) result.next().getValue("relation");
-
-            if (isAuthoritativeConcept(resource)) {
-                results.add(new StatementImpl(resource, relation, resource));
+        Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(authoritativeConcepts.getResult().getData(), progressMonitor);
+        while (conceptIt.hasNext()) {
+            Resource concept = conceptIt.next();
+            if (concept instanceof URI && isReflexivelyRelated((URI) concept)) {
+                System.out.println(concept.stringValue());
             }
         }
 
         return results;
+    }
+
+    private boolean isReflexivelyRelated(URI resource) throws OpenRDFException {
+        return repCon.prepareBooleanQuery(QueryLanguage.SPARQL,
+                SparqlPrefix.SKOS +" "+  SparqlPrefix.RDFS+
+                        "ASK {" +
+                            "?resource ?relation ?resource . " +
+                            "?relation rdfs:subPropertyOf skos:semanticRelation " +
+                        "}").evaluate();
+
     }
 
     private boolean isAuthoritativeConcept(Resource resource) throws OpenRDFException {
