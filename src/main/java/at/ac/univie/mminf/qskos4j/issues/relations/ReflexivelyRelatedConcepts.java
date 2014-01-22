@@ -9,14 +9,20 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.QueryLanguage;
+import org.openrdf.repository.RepositoryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement>> {
+
+    private final Logger logger = LoggerFactory.getLogger(ReflexivelyRelatedConcepts.class);
 
     private AuthoritativeConcepts authoritativeConcepts;
 
@@ -39,25 +45,34 @@ public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement
     {
         Collection<Statement> results = new ArrayList<>();
 
-        Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(authoritativeConcepts.getResult().getData(), progressMonitor);
+        Iterator<Resource> conceptIt = new MonitoredIterator<>(authoritativeConcepts.getResult().getData(), progressMonitor);
         while (conceptIt.hasNext()) {
             Resource concept = conceptIt.next();
             if (concept instanceof URI && isReflexivelyRelated((URI) concept)) {
-                System.out.println(concept.stringValue());
+                RepositoryResult<Statement> reflexiveProperties = repCon.getStatements(concept, null, concept, false);
+
+                while (reflexiveProperties.hasNext()) {
+                    results.add(new StatementImpl(concept, reflexiveProperties.next().getPredicate(), concept));
+                }
             }
         }
 
         return results;
     }
 
-    private boolean isReflexivelyRelated(URI resource) throws OpenRDFException {
-        return repCon.prepareBooleanQuery(QueryLanguage.SPARQL,
-                SparqlPrefix.SKOS +" "+  SparqlPrefix.RDFS+
-                        "ASK {" +
-                            "?resource ?relation ?resource . " +
-                            "?relation rdfs:subPropertyOf skos:semanticRelation " +
-                        "}").evaluate();
-
+    private boolean isReflexivelyRelated(URI resource) {
+        try {
+            return repCon.prepareBooleanQuery(QueryLanguage.SPARQL,
+                SparqlPrefix.SKOS + " " + SparqlPrefix.RDFS +
+                "ASK {" +
+                    "<" + resource.stringValue() + "> ?relation <" + resource.stringValue() + "> . " +
+                    "?relation rdfs:subPropertyOf skos:semanticRelation " +
+                "}").evaluate();
+        }
+        catch (OpenRDFException e) {
+            logger.error("Error finding relations of concept '" +resource+ "'");
+        }
+        return false;
     }
 
     private boolean isAuthoritativeConcept(Resource resource) throws OpenRDFException {
