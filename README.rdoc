@@ -7,7 +7,7 @@ install qSKOS.
 
 Currently we work on integrating qSKOS into the {PoolParty Thesaurus Server}[http://www.poolparty.biz], a commercially available Web-based development tool for SKOS vocabularies. In it's final stage we combine qSKOS' scientifically-grounded quality checks with the easy-to-use graphical interface of the PoolParty software. Integrated in the development workflow, quality checks can work as an assistive technology, just like syntax-checkers in development environments or spell-checkers in word processing applications.
 
-Parts of qSKOS' functionality have also been integrated into the {rsine}[https://github.com/rsine/rsine] (Resource Subscription and Notification Service) that enables you to monitor changes to, e.g., a SKOS vocabulary as they occur and send out immediate notifications if some potential quality problems occur. Rsine is also published as open source and hosted on GitHub ({here}[https://github.com/rsine/rsine]).
+Parts of qSKOS' functionality have also been integrated into the {rsine}[https://github.com/rsine/rsine] (Resource Subscription and Notification Service) project that enables you to monitor changes to SKOS vocabularies as soon as they occur and send out immediate notifications (e.g., by email) if some potential quality problems are detected. Rsine is also published as open source and hosted on GitHub ({here}[https://github.com/rsine/rsine]).
 
 == Using the Online Service
 
