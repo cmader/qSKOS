@@ -158,6 +158,19 @@ We performed a survey among experts in the field of vocabulary development in or
 
 Presentation slides are available for the {I-SEMANTICS 2013 talk}[https://docs.google.com/presentation/d/1QMprChHRNbci_4wcbccm6Z9pTsXCvbkboGw5aldReYI/edit?usp=sharing] as well as for my {ISKO 2013 presentation}[https://docs.google.com/file/d/0BzYMwvL-nDZ1NG1ZekJrZ3dPN0E/edit?usp=sharing].
 
+In order to get an impression about the impact of using qSKOS for improving vocabularies, we set up a case study with students in a teaching context. They were given the task of creating a thesaurus, checking it's quality with qSKOS and submit a revised version of the vocabulary after being confronted with the quality report. We published details of this case study at the {HSWI2014}[http://hswi.referata.com/wiki/HSWI2014 workshop], the paper can be retrieved {online}[http://eprints.cs.univie.ac.at/4045/1/HSWI2014_mader_wartena_cr_version_2.pdf]
+
+  @inproceedings{cs4045,
+       booktitle = {Workshop on Human-Semantic Web Interaction (HSWI?14)},
+           month = {May},
+           title = {Supporting Web Vocabulary Development by Automated Quality Assessment: Results of a Case Study in a Teaching Context},
+          author = {Christian Mader and Christian Wartena},
+            year = {2014},
+          series = {CEUR Workshop Proceedings},
+             url = {http://eprints.cs.univie.ac.at/4045/},
+        abstract = {Constructing controlled Web vocabularies such as thesauri for search and retrieval tasks is a widely intellectual process that relies on human experts. Thus, errors can occur which decrease the overall quality of the vocabulary. qSKOS is a tool that automatically checks Web vocabularies for potential quality problems and generates quality reports. In this paper we present the results of a case study designed to evaluate the impact of integrating qSKOS in the vocabulary creation process. It was carried out among students skilled in construction of controlled vocabularies. We collected in total 13 vocabularies in two versions and detected 15 different kinds of quality problems. For 11 of these problems we observed reduced occurrences after the vocabularies were revised by the participants based on the results of the generated quality report.}
+  }
+
 == Contributors
 
 * Christian Mader ({@cmader}[https://github.com/cmader])
@@ -171,4 +184,4 @@ Presentation slides are available for the {I-SEMANTICS 2013 talk}[https://docs.g
 
 == Copyright
 
-Copyright (c) 2011, 2012, 2013 Christian Mader. See LICENSE.txt for details
+Copyright (c) 2011-2014 Christian Mader. See LICENSE.txt for details

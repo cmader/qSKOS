@@ -46,8 +46,8 @@ public class HierarchicalRedundancy extends Issue<CollectionResult<Tuple<Resourc
     private String createQuery() {
         return SparqlPrefix.SKOS + "SELECT ?concept ?otherConcept WHERE {" +
             "?concept " +HIER_PROPERTIES+" ?otherConcept . " +
-            "?concept ("+HIER_PROPERTIES+")+ ?imConcept ." +
-            "?imConcept ("+HIER_PROPERTIES+") ?otherConcept ." +
+            "?concept "+HIER_PROPERTIES+" ?imConcept ." +
+            "?imConcept ("+HIER_PROPERTIES+")+ ?otherConcept ." +
         "}";
     }
 
