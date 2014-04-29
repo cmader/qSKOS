@@ -158,7 +158,7 @@ We performed a survey among experts in the field of vocabulary development in or
 
 Presentation slides are available for the {I-SEMANTICS 2013 talk}[https://docs.google.com/presentation/d/1QMprChHRNbci_4wcbccm6Z9pTsXCvbkboGw5aldReYI/edit?usp=sharing] as well as for my {ISKO 2013 presentation}[https://docs.google.com/file/d/0BzYMwvL-nDZ1NG1ZekJrZ3dPN0E/edit?usp=sharing].
 
-In order to get an impression about the impact of using qSKOS for improving vocabularies, we set up a case study with students in a teaching context. They were given the task of creating a thesaurus, checking it's quality with qSKOS and submit a revised version of the vocabulary after being confronted with the quality report. We published details of this case study at the {HSWI2014}[http://hswi.referata.com/wiki/HSWI2014 workshop], the paper can be retrieved {online}[http://eprints.cs.univie.ac.at/4045/1/HSWI2014_mader_wartena_cr_version_2.pdf]
+In order to get an impression about the impact of using qSKOS for improving vocabularies, we set up a case study with students in a teaching context. They were given the task of creating a thesaurus, checking it's quality with qSKOS and submit a revised version of the vocabulary after being confronted with the quality report. We published details of this case study at the {HSWI2014 workshop}[http://hswi.referata.com/wiki/HSWI2014]. The paper can be retrieved {online}[http://eprints.cs.univie.ac.at/4045/1/HSWI2014_mader_wartena_cr_version_2.pdf]
 
   @inproceedings{cs4045,
        booktitle = {Workshop on Human-Semantic Web Interaction (HSWI?14)},
