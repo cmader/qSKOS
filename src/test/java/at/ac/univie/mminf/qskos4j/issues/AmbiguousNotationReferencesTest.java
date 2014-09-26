@@ -28,7 +28,6 @@ public class AmbiguousNotationReferencesTest {
 
     @Test
     public void mappingRelationsMisuseCount() throws OpenRDFException {
-        //Assert.assertEquals(5, mappingRelationsMisuse.getResult().getData().size());
-        Assert.fail();
+        Assert.assertEquals(6, ambiguousNotationReferences.getResult().getData().size());
     }
 }

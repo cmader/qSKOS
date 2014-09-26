@@ -4,12 +4,10 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryResult;
 
 import java.util.ArrayList;
@@ -44,7 +42,8 @@ public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
             Resource otherConcept = (Resource) st.getObject();
 
             if (areAuthoritativeConcepts(concept, otherConcept) &&
-               (inSameConceptScheme(concept, otherConcept) || inNoConceptScheme(concept, otherConcept)))
+               (ConceptSchemeUtil.inSameConceptScheme(concept, otherConcept, repCon) ||
+                ConceptSchemeUtil.inNoConceptScheme(concept, otherConcept, repCon)))
             {
                 problematicRelations.add(st);
             }
@@ -63,27 +62,6 @@ public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
         }
 
         return true;
-    }
-
-    private boolean inSameConceptScheme(Resource concept, Resource otherConcept) throws OpenRDFException {
-        return repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(concept, otherConcept)).evaluate();
-    }
-
-    private boolean inNoConceptScheme(Resource concept, Resource otherConcept) throws OpenRDFException {
-        boolean conceptInScheme = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(concept)).evaluate();
-        boolean otherConceptInScheme = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(otherConcept)).evaluate();
-
-        return !conceptInScheme || !otherConceptInScheme;
-    }
-
-    private String createInSchemeQuery(Resource... concepts) {
-        String query = SparqlPrefix.SKOS + "ASK {";
-
-        for (Resource concept : concepts) {
-            query += "<" +concept.stringValue()+ "> skos:inScheme ?conceptScheme .";
-        }
-
-        return query + "}";
     }
 
 }

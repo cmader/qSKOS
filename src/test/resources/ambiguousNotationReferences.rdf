@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:myonto="http://localhost/myonto#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xml:base="http://mminf.univie.ac.at/vocab/">
+
+    <!-- Identical notations in the same concept scheme; literal type plaintext - ERROR -->
+	<rdf:Description rdf:about="conceptA">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:inScheme rdf:resource="myScheme"/>
+		<skos:notation>notation</skos:notation>
+	</rdf:Description>
+
+    <rdf:Description rdf:about="conceptB">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="myScheme"/>
+        <skos:notation>notation</skos:notation>
+    </rdf:Description>
+
+    <!-- Identical notations in the same concept scheme; literal type string vs untyped - ERROR -->
+	<rdf:Description rdf:about="conceptC">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:inScheme rdf:resource="myScheme2"/>
+		<skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">notationA</skos:notation>
+	</rdf:Description>
+
+    <rdf:Description rdf:about="conceptD">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="myScheme2"/>
+        <skos:notation>notationA</skos:notation>
+    </rdf:Description>
+
+    <!-- Identical notations in the same concept scheme; literal type int - ERROR -->
+	<rdf:Description rdf:about="conceptE">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:inScheme rdf:resource="myScheme3"/>
+		<skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</skos:notation>
+	</rdf:Description>
+
+    <rdf:Description rdf:about="conceptF">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="myScheme3"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</skos:notation>
+    </rdf:Description>
+
+    <!-- undefined concept schemes; untyped literals - ERROR -->
+    <rdf:Description rdf:about="conceptG">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation>notationB</skos:notation>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptH">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation>notationB</skos:notation>
+    </rdf:Description>
+
+    <!-- undefined concept schemes; int typed literals - ERROR -->
+    <rdf:Description rdf:about="conceptI">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2</skos:notation>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptJ">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2</skos:notation>
+    </rdf:Description>
+
+    <!-- different concept schemes; untyped literals - OK -->
+    <rdf:Description rdf:about="conceptK">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="myScheme"/>
+        <skos:notation>notationC</skos:notation>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptL">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="otherScheme"/>
+        <skos:notation>notationC</skos:notation>
+    </rdf:Description>
+
+    <!-- different concept schemes; int typed literals - OK -->
+    <rdf:Description rdf:about="conceptM">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">3</skos:notation>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptN">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="otherScheme"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">3</skos:notation>
+    </rdf:Description>
+
+    <!-- same concept scheme, different int notation - OK -->
+    <rdf:Description rdf:about="conceptO">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="myScheme"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">4</skos:notation>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptP">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="myScheme"/>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">5</skos:notation>
+    </rdf:Description>
+
+    <!-- no concept scheme, different untyped notation - OK -->
+    <rdf:Description rdf:about="conceptQ">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation>notationD</skos:notation>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="conceptR">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation>notationE</skos:notation>
+    </rdf:Description>
+
+    <!-- multiple notations for same concept - ERROR -->
+    <rdf:Description rdf:about="conceptS">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation>notationF</skos:notation>
+        <skos:notation>notationG</skos:notation>
+    </rdf:Description>
+
+
+</rdf:RDF>
