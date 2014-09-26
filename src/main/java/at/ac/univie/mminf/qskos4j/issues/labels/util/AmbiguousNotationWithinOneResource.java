@@ -10,8 +10,12 @@ import java.util.Collection;
  */
 public class AmbiguousNotationWithinOneResource extends AmbiguousNotationResult {
 
-    public AmbiguousNotationWithinOneResource(Resource authConcept, Collection<Literal> notationsForConcept) {
+    private Resource authConcept;
+    private Collection<Literal> notationsForConcept;
 
+    public AmbiguousNotationWithinOneResource(Resource authConcept, Collection<Literal> notationsForConcept) {
+        this.authConcept = authConcept;
+        this.notationsForConcept = notationsForConcept;
     }
 
 

@@ -8,9 +8,29 @@ import org.openrdf.model.Resource;
  */
 public class AmbiguousNotationMultipleResources extends AmbiguousNotationResult {
 
-    public AmbiguousNotationMultipleResources(Resource authConcept, Resource conflictingResource, Literal notationLiteral) {
+    private Resource authConcept, conflictingResource;
+    private Literal notationLiteral;
 
+    public AmbiguousNotationMultipleResources(Resource authConcept, Resource conflictingResource, Literal notationLiteral) {
+        this.authConcept = authConcept;
+        this.conflictingResource = conflictingResource;
+        this.notationLiteral = notationLiteral;
     }
 
+    @Override
+    public int hashCode() {
+        return authConcept.hashCode() + conflictingResource.hashCode();
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AmbiguousNotationMultipleResources) {
+            AmbiguousNotationMultipleResources other = (AmbiguousNotationMultipleResources) obj;
+
+            return (authConcept.equals(other.authConcept) && conflictingResource.equals(other.conflictingResource)) ||
+                   (authConcept.equals(other.conflictingResource) && conflictingResource.equals(other.authConcept));
+        }
+        return false;
+
+    }
 }
