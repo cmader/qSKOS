@@ -6,7 +6,7 @@ import org.openrdf.model.Resource;
 /**
  * Created by christian on 26.09.14.
  */
-public class AmbiguousNotationMultipleResources extends AmbiguousNotationResult {
+public class AmbiguousNotationMultipleResources extends AmbiguousNotation {
 
     private Resource authConcept, conflictingResource;
     private Literal notationLiteral;
@@ -31,6 +31,11 @@ public class AmbiguousNotationMultipleResources extends AmbiguousNotationResult 
                    (authConcept.equals(other.conflictingResource) && conflictingResource.equals(other.authConcept));
         }
         return false;
+    }
 
+    @Override
+    public String toString() {
+        return "Resource: " +authConcept.stringValue()+ ", conflicting Resource: " +conflictingResource.stringValue()
+               +", Notation: " +notationLiteral.stringValue();
     }
 }

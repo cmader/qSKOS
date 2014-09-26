@@ -28,7 +28,7 @@
     <rdf:Description rdf:about="conceptD">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:inScheme rdf:resource="myScheme2"/>
-        <skos:notation>notationA</skos:notation>
+        <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">notationA</skos:notation>
     </rdf:Description>
 
     <!-- Identical notations in the same concept scheme; literal type int - ERROR -->
@@ -79,7 +79,7 @@
         <skos:notation>notationC</skos:notation>
     </rdf:Description>
 
-    <!-- different concept schemes; int typed literals - OK -->
+    <!-- mixed defined and undefined concept scheme; int typed literals - ERROR -->
     <rdf:Description rdf:about="conceptM">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#int">3</skos:notation>

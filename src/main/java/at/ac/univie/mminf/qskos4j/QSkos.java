@@ -7,10 +7,7 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.OrphanConcepts;
 import at.ac.univie.mminf.qskos4j.issues.concepts.UndocumentedConcepts;
-import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
-import at.ac.univie.mminf.qskos4j.issues.conceptscheme.MappingRelationsMisuse;
-import at.ac.univie.mminf.qskos4j.issues.conceptscheme.OmittedTopConcepts;
-import at.ac.univie.mminf.qskos4j.issues.conceptscheme.TopConceptsHavingBroaderConcepts;
+import at.ac.univie.mminf.qskos4j.issues.conceptscheme.*;
 import at.ac.univie.mminf.qskos4j.issues.count.AggregationRelations;
 import at.ac.univie.mminf.qskos4j.issues.count.SemanticRelations;
 import at.ac.univie.mminf.qskos4j.issues.cycles.HierarchicalCycles;
@@ -126,6 +123,7 @@ public class QSkos {
         registeredIssues.add(new HierarchicalRedundancy());
         registeredIssues.add(new MappingRelationsMisuse(authoritativeConcepts));
         registeredIssues.add(new ReflexivelyRelatedConcepts(authoritativeConcepts));
+        registeredIssues.add(new AmbiguousNotationReferences(authoritativeConcepts));
 
         registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
         registeredIssues.add(new UndefinedSkosResources());

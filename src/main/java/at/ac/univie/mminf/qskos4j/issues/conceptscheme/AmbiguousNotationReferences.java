@@ -2,8 +2,8 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
+import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotation;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotationMultipleResources;
-import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotationResult;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotationWithinOneResource;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import org.openrdf.OpenRDFException;
@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Created by christian on 25.09.14.
  */
-public class AmbiguousNotationReferences extends Issue<CollectionResult<AmbiguousNotationResult>> {
+public class AmbiguousNotationReferences extends Issue<CollectionResult<AmbiguousNotation>> {
 
     private AuthoritativeConcepts authoritativeConcepts;
 
@@ -37,8 +37,8 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
     }
 
     @Override
-    protected CollectionResult<AmbiguousNotationResult> invoke() throws OpenRDFException {
-        Set<AmbiguousNotationResult> problematicRelations = new HashSet<>();
+    protected CollectionResult<AmbiguousNotation> invoke() throws OpenRDFException {
+        Set<AmbiguousNotation> problematicRelations = new HashSet<>();
 
         for (Resource authConcept : authoritativeConcepts.getResult().getData()) {
             RepositoryResult<Statement> conceptsWithNotation = repCon.getStatements(authConcept, SKOS.NOTATION, null, false);
