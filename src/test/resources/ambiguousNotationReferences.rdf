@@ -122,5 +122,20 @@
         <skos:notation>notationG</skos:notation>
     </rdf:Description>
 
+    <!-- Identical notations in the same concept scheme defined by hasTopConcept; literal type plaintext - ERROR -->
+    <rdf:Description rdf:about="someConceptScheme">
+        <skos:hasTopConcept rdf:resource="conceptT"/>
+        <skos:hasTopConcept rdf:resource="conceptU"/>
+    </rdf:Description>
+
+	<rdf:Description rdf:about="conceptT">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+		<skos:notation>notationH</skos:notation>
+	</rdf:Description>
+
+    <rdf:Description rdf:about="conceptU">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:notation>notationH</skos:notation>
+    </rdf:Description>
 
 </rdf:RDF>
