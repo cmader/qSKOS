@@ -20,9 +20,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by christian on 25.09.14.
- */
 public class AmbiguousNotationReferences extends Issue<CollectionResult<AmbiguousNotation>> {
 
     private AuthoritativeConcepts authoritativeConcepts;
@@ -31,7 +28,7 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
         super(authoritativeConcepts,
                 "anr",
                 "Ambiguous Notation References",
-                "Finds concepts within the same concept scheme with identical notations",
+                "Finds concepts with multiple or identical notations within the same concept scheme",
                 IssueType.ANALYTICAL,
                 new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#Ambiguous_Notation_References"));
         this.authoritativeConcepts = authoritativeConcepts;
