@@ -24,7 +24,7 @@ public class HierarchyGraphBuilder {
 
 	public DirectedGraph<Resource, NamedEdge> createGraph() throws OpenRDFException
 	{
-        logger.debug("Creating hierarchy graph");
+        logger.info("Creating hierarchy graph");
         graph = new DefaultDirectedGraph<Resource, NamedEdge>(NamedEdge.class);
 
         addResultsToGraph(findTriples("skos:broaderTransitive"), false);

@@ -120,7 +120,7 @@ public class QSkos {
         registeredIssues.add(new SolelyTransitivelyRelatedConcepts());
         registeredIssues.add(new OmittedTopConcepts(conceptSchemes));
         registeredIssues.add(new TopConceptsHavingBroaderConcepts());
-        registeredIssues.add(new HierarchicalRedundancy());
+        registeredIssues.add(new HierarchicalRedundancy(hierarchyGraphBuilder));
         registeredIssues.add(new MappingRelationsMisuse(authoritativeConcepts));
         registeredIssues.add(new ReflexivelyRelatedConcepts(authoritativeConcepts));
         registeredIssues.add(new AmbiguousNotationReferences(authoritativeConcepts));
