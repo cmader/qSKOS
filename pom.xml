@@ -159,7 +159,7 @@
   </repositories>
 
   <properties>
-    <sesame.version>2.7.13</sesame.version>
+    <sesame.version>2.7.9</sesame.version>
   </properties>
 
 </project>
