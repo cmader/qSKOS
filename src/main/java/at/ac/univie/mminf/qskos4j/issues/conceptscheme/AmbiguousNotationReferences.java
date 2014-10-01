@@ -15,14 +15,12 @@ import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class AmbiguousNotationReferences extends Issue<CollectionResult<AmbiguousNotation>> {
 
     private AuthoritativeConcepts authoritativeConcepts;
+    private Map<Literal, Collection<Resource>> multiResourceConflicts;
 
     public AmbiguousNotationReferences(AuthoritativeConcepts authoritativeConcepts) {
         super(authoritativeConcepts,
@@ -36,10 +34,15 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
 
     @Override
     protected CollectionResult<AmbiguousNotation> invoke() throws OpenRDFException {
+        multiResourceConflicts = new HashMap<>();
         Set<AmbiguousNotation> ambiguousNotations = new HashSet<>();
 
         for (Resource authConcept : authoritativeConcepts.getResult().getData()) {
             ambiguousNotations.addAll(checkNotationsForConcept(authConcept));
+        }
+
+        for (Map.Entry<Literal, Collection<Resource>> entry : multiResourceConflicts.entrySet()) {
+            ambiguousNotations.add(new AmbiguousNotationMultipleResources(entry.getKey(), entry.getValue()));
         }
 
         return new CollectionResult<>(ambiguousNotations);
@@ -49,7 +52,7 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
         Set<AmbiguousNotation> ambiguousNotations = new HashSet<>();
 
         ambiguousNotations.addAll(findAmbiguousNotationsWithinResource(concept));
-        ambiguousNotations.addAll(findAmbiguousNotationsInMultipleResources(concept));
+        findAmbiguousNotationsInMultipleResources(concept);
 
         return ambiguousNotations;
     }
@@ -71,23 +74,17 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
         return ambiguousNotations;
     }
 
-    private Set<AmbiguousNotation> findAmbiguousNotationsInMultipleResources(Resource concept) throws OpenRDFException {
-        Set<AmbiguousNotation> ambiguousNotations = new HashSet<>();
-
+    private void findAmbiguousNotationsInMultipleResources(Resource concept) throws OpenRDFException {
         RepositoryResult<Statement> notationsForConcept = repCon.getStatements(concept, SKOS.NOTATION, null, false);
         while (notationsForConcept.hasNext()) {
             Literal notationLiteral = (Literal) notationsForConcept.next().getObject();
-            ambiguousNotations.addAll(getNotationClashes(concept, notationLiteral));
+            getNotationClashes(concept, notationLiteral);
         }
-
-        return ambiguousNotations;
     }
 
-    private Set<AmbiguousNotation> getNotationClashes(Resource concept, Literal notationLiteral)
+    private void getNotationClashes(Resource concept, Literal notationLiteral)
         throws OpenRDFException
     {
-        Set<AmbiguousNotation> ambiguousNotations = new HashSet<>();
-
         RepositoryResult<Statement> conceptsWithSameNotation = repCon.getStatements(null, SKOS.NOTATION, notationLiteral, false);
         while (conceptsWithSameNotation.hasNext()) {
             Resource conflictingResource = conceptsWithSameNotation.next().getSubject();
@@ -97,11 +94,19 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
             if (ConceptSchemeUtil.inSameConceptScheme(concept, conflictingResource, repCon) ||
                 ConceptSchemeUtil.inNoConceptScheme(concept, conflictingResource, repCon))
             {
-                ambiguousNotations.add(new AmbiguousNotationMultipleResources(concept, conflictingResource, notationLiteral));
+                addToResultsMap(concept, conflictingResource, notationLiteral);
             }
         }
+    }
 
-        return ambiguousNotations;
+    private void addToResultsMap(Resource resource, Resource otherResource, Literal notation) {
+        Collection<Resource> resources = multiResourceConflicts.get(notation);
+        if (resources == null) {
+            resources = new HashSet<>();
+            multiResourceConflicts.put(notation, resources);
+        }
+        resources.add(resource);
+        resources.add(otherResource);
     }
 
 }
