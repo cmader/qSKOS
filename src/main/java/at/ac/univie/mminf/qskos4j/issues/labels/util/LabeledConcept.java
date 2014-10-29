@@ -35,7 +35,7 @@ public class LabeledConcept {
 
     @Override
     public int hashCode() {
-        return concept.hashCode() * literal.hashCode();
+        return concept.hashCode() + literal.hashCode() + labelType.hashCode();
     }
 
     @Override
