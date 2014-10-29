@@ -11,7 +11,8 @@ public enum LabelType {
     PREF_LABEL(SparqlPrefix.SKOS.getNameSpace() + "prefLabel", true),
     ALT_LABEL(SparqlPrefix.SKOS.getNameSpace() + "altLabel", true),
     HIDDEN_LABEL(SparqlPrefix.SKOS.getNameSpace() + "hiddenLabel", true),
-    TITLE(SparqlPrefix.DCTERMS.getNameSpace() + "title"),
+    DCTERMS_TITLE(SparqlPrefix.DCTERMS.getNameSpace() + "title"),
+    DC_TITLE(SparqlPrefix.DC.getNameSpace() + "title"),
     LABEL(SparqlPrefix.RDFS.getNameSpace() + "label"),
     UNKNOWN(null);
 

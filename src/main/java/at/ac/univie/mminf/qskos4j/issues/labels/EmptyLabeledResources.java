@@ -57,7 +57,7 @@ public class EmptyLabeledResources extends Issue<EmptyLabelsResult> {
     private void addToResults(Resource resource, LabelType labelType) {
         Collection<LabelType> values = result.get(resource);
         if (values == null) {
-            values = new HashSet<LabelType>();
+            values = new HashSet<>();
             result.put(resource, values);
         }
         values.add(labelType);
