@@ -193,6 +193,7 @@ public class VocEvaluate {
         String command = jc.getParsedCommand();
         reportCollector = new ReportCollector(extractMeasures(),
                 parsedCommand.reportFileName,
+                parsedCommand.vocabFilenames,
                 command.equals(CMD_NAME_ANALYZE));
         reportCollector.outputIssuesReport(shouldWriteGraphs());
 	}
@@ -257,7 +258,7 @@ public class VocEvaluate {
 	}
 	
 	private Collection<Issue> getAllIssuesForCommand() {
-		List<Issue> issuesForCommand = new ArrayList<Issue>();
+		List<Issue> issuesForCommand = new ArrayList<>();
 		
 		for (Issue issue : qskos.getAllIssues()) {
 			String command = jc.getParsedCommand();

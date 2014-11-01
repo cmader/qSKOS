@@ -32,7 +32,7 @@ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelat
     };
 
     private final Logger logger = LoggerFactory.getLogger(UnidirectionallyRelatedConcepts.class);
-    private Map<Tuple<Resource>, String> omittedInverseRelations = new HashMap<Tuple<Resource>, String>();
+    private Map<Tuple<Resource>, String> omittedInverseRelations = new HashMap<>();
     private AuthoritativeConcepts authoritativeConcepts;
 
     public UnidirectionallyRelatedConcepts(AuthoritativeConcepts authoritativeConcepts) {
@@ -102,7 +102,7 @@ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelat
             Resource resource2 = (Resource) value2;
 
             omittedInverseRelations.put(
-                    new Tuple<Resource>(resource1, resource2),
+                    new Tuple<>(resource1, resource2),
                     inverseProperties);
         }
         catch (ClassCastException e) {

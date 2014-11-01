@@ -29,7 +29,7 @@ public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
 
     @Override
     protected CollectionResult<Statement> invoke() throws OpenRDFException {
-        Collection<Statement> problematicRelations = new ArrayList<Statement>();
+        Collection<Statement> problematicRelations = new ArrayList<>();
 
         RepositoryResult<Statement> result = repCon.getStatements(
                 null,
@@ -49,7 +49,7 @@ public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
             }
         }
 
-        return new CollectionResult<Statement>(problematicRelations);
+        return new CollectionResult<>(problematicRelations);
     }
 
     private boolean areAuthoritativeConcepts(Resource... concepts) throws OpenRDFException {

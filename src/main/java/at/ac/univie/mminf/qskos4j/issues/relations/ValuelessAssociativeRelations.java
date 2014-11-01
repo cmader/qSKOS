@@ -27,12 +27,12 @@ public class ValuelessAssociativeRelations extends Issue<CollectionResult<Tuple<
 
     @Override
     protected CollectionResult<Tuple<URI>> invoke() throws OpenRDFException {
-        Collection<Tuple<URI>> redundantAssociativeRelations = new HashSet<Tuple<URI>>();
+        Collection<Tuple<URI>> redundantAssociativeRelations = new HashSet<>();
 
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRedundantAssociativeRelationsQuery());
         generateResultsList(redundantAssociativeRelations, query.evaluate());
 
-        return new CollectionResult<Tuple<URI>>(redundantAssociativeRelations);
+        return new CollectionResult<>(redundantAssociativeRelations);
     }
 
     private String createRedundantAssociativeRelationsQuery() {
@@ -61,7 +61,7 @@ public class ValuelessAssociativeRelations extends Issue<CollectionResult<Tuple<
             URI child = (URI) queryResult.getValue("child");
             URI otherchild = (URI) queryResult.getValue("otherchild");
 
-            allResults.add(new Tuple<URI>(child, otherchild));
+            allResults.add(new Tuple<>(child, otherchild));
         }
     }
 

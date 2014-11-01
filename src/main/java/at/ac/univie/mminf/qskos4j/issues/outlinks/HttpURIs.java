@@ -19,8 +19,8 @@ import java.util.*;
  */
 public class HttpURIs extends Issue<CollectionResult<URI>> {
 
-    private Set<URI> httpURIs = new HashSet<URI>();
-    private Set<String> invalidResources = new HashSet<String>();
+    private Set<URI> httpURIs = new HashSet<>();
+    private Set<String> invalidResources = new HashSet<>();
 
     public HttpURIs() {
         super("huc",
@@ -36,7 +36,7 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
         while (result.hasNext()) {
             Statement st = result.next();
 
-            Collection<Value> tripleValues = new ArrayList<Value>();
+            Collection<Value> tripleValues = new ArrayList<>();
             tripleValues.addAll(Arrays.asList(st.getSubject(), st.getObject(), st.getPredicate()));
 
             for (Value value : tripleValues) {
@@ -44,7 +44,7 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
             }
         }
 
-        return new CollectionResult<URI>(httpURIs);
+        return new CollectionResult<>(httpURIs);
     }
 
     private void addToUrlList(Value iri) {

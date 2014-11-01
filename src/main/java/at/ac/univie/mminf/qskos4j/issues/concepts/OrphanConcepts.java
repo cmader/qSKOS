@@ -39,10 +39,10 @@ public class OrphanConcepts extends Issue<CollectionResult<Resource>> {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createOrphanConceptsQuery());
         Set<Value> connectedConcepts = TupleQueryResultUtil.getValuesForBindingName(query.evaluate(), "concept");
 
-        Set<Resource> orphanConcepts = new HashSet<Resource>(involvedConcepts.getResult().getData());
+        Set<Resource> orphanConcepts = new HashSet<>(involvedConcepts.getResult().getData());
         orphanConcepts.removeAll(connectedConcepts);
 
-        return new CollectionResult<Resource>(orphanConcepts);
+        return new CollectionResult<>(orphanConcepts);
     }
 
     private String createOrphanConceptsQuery() {

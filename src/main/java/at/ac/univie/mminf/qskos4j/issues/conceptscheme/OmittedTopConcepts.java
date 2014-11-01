@@ -35,7 +35,7 @@ public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
 
     @Override
     protected CollectionResult<Resource> invoke() throws OpenRDFException {
-        Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
+        Collection<Resource> csWithOmittedTopConcepts = new HashSet<>();
 
         for (Resource conceptScheme : conceptSchemes.getResult().getData()) {
 
@@ -48,7 +48,7 @@ public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
             }
         }
 
-        return new CollectionResult<Resource>(csWithOmittedTopConcepts);
+        return new CollectionResult<>(csWithOmittedTopConcepts);
     }
 
     private String createConceptSchemeWithoutTopConceptQuery(Value conceptScheme) {

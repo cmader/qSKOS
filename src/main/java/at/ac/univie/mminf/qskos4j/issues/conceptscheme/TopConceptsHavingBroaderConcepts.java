@@ -34,7 +34,7 @@ public class TopConceptsHavingBroaderConcepts extends Issue<CollectionResult<Val
     @Override
     protected CollectionResult<Value> invoke() throws OpenRDFException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createTopConceptsHavingBroaderConceptQuery());
-        return new CollectionResult<Value>(createUriResultList(query.evaluate()));
+        return new CollectionResult<>(createUriResultList(query.evaluate()));
     }
 
     private String createTopConceptsHavingBroaderConceptQuery() {
@@ -50,7 +50,7 @@ public class TopConceptsHavingBroaderConcepts extends Issue<CollectionResult<Val
 
     private Collection<Value> createUriResultList(TupleQueryResult result) throws OpenRDFException
     {
-        List<Value> resultList = new ArrayList<Value>();
+        List<Value> resultList = new ArrayList<>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();

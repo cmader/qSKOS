@@ -40,7 +40,7 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 		findDeprecatedProperties();
 		findIllegalTerms();
 		
-		return new CollectionResult<URI>(collectUndefinedResources());
+		return new CollectionResult<>(collectUndefinedResources());
 	}
 
     private void findDeprecatedProperties() throws OpenRDFException
@@ -70,7 +70,7 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 	private void generateDeprecatedPropertiesMap(TupleQueryResult result) 
 		throws QueryEvaluationException 
 	{
-		deprecatedProperties = new HashMap<URI, Collection<URI>>();
+		deprecatedProperties = new HashMap<>();
 
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -79,7 +79,7 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 			
 			Collection<URI> resources = deprecatedProperties.get(deprProperty);
 			if (resources == null) {
-				resources = new HashSet<URI>();
+				resources = new HashSet<>();
 				deprecatedProperties.put(deprProperty, resources);
 			}
 			resources.add(resource);
@@ -126,7 +126,7 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 	private void generateIllegalTermsMap(TupleQueryResult result) 
 		throws QueryEvaluationException 
 	{
-		illegalTerms = new HashMap<URI, Collection<URI>>();
+		illegalTerms = new HashMap<>();
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
@@ -143,7 +143,7 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 	private void addTermToMap(URI term, URI subject, Value object) {
 		Collection<URI> resources = illegalTerms.get(term);
 		if (resources == null) {
-			resources = new HashSet<URI>();
+			resources = new HashSet<>();
 			illegalTerms.put(term, resources);
 		}
 		
@@ -156,7 +156,7 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 	}
 	
 	private Collection<URI> collectUndefinedResources() {
-		Collection<URI> undefRes = new HashSet<URI>();
+		Collection<URI> undefRes = new HashSet<>();
 		
 		undefRes.addAll(deprecatedProperties.keySet());
 		undefRes.addAll(illegalTerms.keySet());

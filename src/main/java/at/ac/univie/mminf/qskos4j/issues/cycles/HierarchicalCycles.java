@@ -51,15 +51,15 @@ public class HierarchicalCycles extends Issue<HierarchicalCyclesResult> {
     private List<Collection<Resource>> findCycleContainingComponents() {
         logger.debug("Finding cycles");
 
-        Set<Resource> nodesInCycles = new CycleDetector<Resource, NamedEdge>(hierarchyGraph).findCycles();
+        Set<Resource> nodesInCycles = new CycleDetector<>(hierarchyGraph).findCycles();
         return trackNodesInCycles(nodesInCycles);
     }
 
     private List<Collection<Resource>> trackNodesInCycles(Set<Resource> nodesInCycles)
     {
-        List<Collection<Resource>> ret = new ArrayList<Collection<Resource>>();
+        List<Collection<Resource>> ret = new ArrayList<>();
         List<Set<Resource>> stronglyConnectedSets =
-                new StrongConnectivityInspector<Resource, NamedEdge>(hierarchyGraph).stronglyConnectedSets();
+                new StrongConnectivityInspector<>(hierarchyGraph).stronglyConnectedSets();
 
         for (Resource node : nodesInCycles) {
             for (Set<Resource> stronglyConnectedSet : stronglyConnectedSets) {

@@ -38,15 +38,15 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 
     @Override
     protected CollectionResult<Resource> invoke() throws OpenRDFException {
-		extResourcesForConcept = new HashMap<Resource, Collection<URI>>();
+		extResourcesForConcept = new HashMap<>();
 
 		findResourcesForConcepts(authoritativeConcepts.getResult().getData());
 		
-		return new CollectionResult<Resource>(extractUnlinkedConcepts());
+		return new CollectionResult<>(extractUnlinkedConcepts());
 	}
 
     private void findResourcesForConcepts(Collection<Resource> concepts) throws OpenRDFException {
-		Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(concepts, progressMonitor, "finding resources");
+		Iterator<Resource> conceptIt = new MonitoredIterator<>(concepts, progressMonitor, "finding resources");
 
 		while (conceptIt.hasNext()) {
             Resource concept = conceptIt.next();
@@ -55,9 +55,9 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 	}
 
     private Collection<URI> getURIsOfConcept(Resource concept) throws RepositoryException {
-        Collection<URI> urisForConcept = new ArrayList<URI>();
+        Collection<URI> urisForConcept = new ArrayList<>();
 
-        RepositoryResult<Statement> conceptAsSubject = repCon.getStatements((Resource) concept, null, null, false);
+        RepositoryResult<Statement> conceptAsSubject = repCon.getStatements(concept, null, null, false);
         while (conceptAsSubject.hasNext()) {
             Value object = conceptAsSubject.next().getObject();
             addToUriCollection(object, urisForConcept);
@@ -77,7 +77,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
     }
 	
 	private Collection<URI> extractExternalResources(Collection<URI> allResources) throws OpenRDFException {
-		Collection<URI> validExternalResources = new HashSet<URI>();
+		Collection<URI> validExternalResources = new HashSet<>();
 		
 		for (URI uri : allResources) {
 			if (isExternalResource(uri) && isNonSkosURL(uri)) {
@@ -103,7 +103,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 	}
 	
 	private Collection<Resource> extractUnlinkedConcepts() {
-		Collection<Resource> unlinkedConcepts = new HashSet<Resource>();
+		Collection<Resource> unlinkedConcepts = new HashSet<>();
 		
 		for (Resource concept : extResourcesForConcept.keySet()) {
 			if (extResourcesForConcept.get(concept).isEmpty()) {
