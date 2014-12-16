@@ -124,6 +124,7 @@ public class QSkos {
         registeredIssues.add(new MappingRelationsMisuse(authoritativeConcepts));
         registeredIssues.add(new ReflexivelyRelatedConcepts(authoritativeConcepts));
         registeredIssues.add(new AmbiguousNotationReferences(authoritativeConcepts));
+        registeredIssues.add(new UnprintableCharactersInLabels(authoritativeConcepts));
 
         registeredIssues.add(new MissingOutLinks(authoritativeConcepts));
         registeredIssues.add(new UndefinedSkosResources());
