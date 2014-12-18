@@ -11,6 +11,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
@@ -56,13 +57,21 @@ public class UnprintableCharactersInLabels extends Issue<CollectionResult<Labele
                     TupleQueryResult queryResult = query.evaluate();
                     while (queryResult.hasNext()) {
                         BindingSet binding = queryResult.next();
-                        Literal labelValue = (Literal) binding.getValue("labelValue");
-                        URI labelProperty = (URI) binding.getValue("labelProperty");
 
-                        String label = labelValue.stringValue();
-                        if (!label.replaceAll("\\p{C}", "?").equals(label))
-                        {
-                            result.add(new LabeledConcept(concept, labelValue, LabelType.getFromUri(labelProperty)));
+                        Value labelValue = binding.getValue("labelValue");
+                        Value labelPropertyValue = binding.getValue("labelProperty");
+                        try {
+                            Literal labelValueLiteral = (Literal) labelValue;
+                            URI labelProperty = (URI) labelPropertyValue;
+
+                            String label = labelValue.stringValue();
+                            if (!label.replaceAll("\\p{C}", "?").equals(label)) {
+                                result.add(new LabeledConcept(concept, labelValueLiteral, LabelType.getFromUri(labelProperty)));
+                            }
+                        }
+                        catch (ClassCastException e) {
+                            logger.warn("Could not cast label value (" +labelValue.stringValue()+
+                                ") or label property (" +labelPropertyValue.stringValue()+ ") value ");
                         }
                     }
                 }
