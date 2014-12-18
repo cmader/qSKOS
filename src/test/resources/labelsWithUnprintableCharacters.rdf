@@ -3,20 +3,30 @@
          xmlns:skos="http://www.w3.org/2004/02/skos/core#"
          xmlns:myonto="http://localhost/myonto#" xml:base="http://zbw.eu/stw/">
 
+    <!-- Error -->
     <rdf:Description rdf:about="conceptA">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel xml:lang="en">not
 valid</skos:prefLabel>
     </rdf:Description>
 
+    <!-- Ok -->
     <rdf:Description rdf:about="conceptB">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:prefLabel xml:lang="en">valid</skos:prefLabel>
     </rdf:Description>
 
+    <!-- Ok -->
     <rdf:Description rdf:about="conceptC">
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:prefLabel xml:lang="en">also valid</skos:prefLabel>
     </rdf:Description>
+
+    <!-- Ok -->
+    <rdf:Description rdf:about="conceptD">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">Ümlaut</skos:prefLabel>
+    </rdf:Description>
+
 
 </rdf:RDF>

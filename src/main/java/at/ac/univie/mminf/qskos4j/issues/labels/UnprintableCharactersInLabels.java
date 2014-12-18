@@ -59,7 +59,7 @@ public class UnprintableCharactersInLabels extends Issue<CollectionResult<Labele
                         Literal labelValue = (Literal) binding.getValue("labelValue");
                         URI labelProperty = (URI) binding.getValue("labelProperty");
 
-                        if (!labelValue.stringValue().matches("\\p{Print}*")) {
+                        if (!labelValue.stringValue().matches("[\\p{Print}\\p{L}]*")) {
                             result.add(new LabeledConcept(concept, labelValue, LabelType.getFromUri(labelProperty)));
                         }
                     }
