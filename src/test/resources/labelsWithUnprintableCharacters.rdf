@@ -28,5 +28,19 @@ valid</skos:prefLabel>
         <skos:prefLabel xml:lang="en">Ümlaut</skos:prefLabel>
     </rdf:Description>
 
+    <!-- Ok -->
+    <rdf:Description rdf:about="conceptE">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="en">partnerschap overheid — particuliere sector</skos:prefLabel>
+    </rdf:Description>
+
+    <!-- Ok -->
+    <rdf:Description rdf:about="conceptF">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:prefLabel xml:lang="el">∆ΓΛΠ</skos:prefLabel>
+        <skos:altLabel xml:lang="it">manuale operativo per la gestione dell’emergenza</skos:altLabel>
+        <skos:altLabel xml:lang="zh-cn">阿特拉津（莠去津)</skos:altLabel>
+        <skos:altLabel xml:lang="ca">al·luvió</skos:altLabel>
+    </rdf:Description>
 
 </rdf:RDF>
