@@ -12,6 +12,7 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import org.openrdf.OpenRDFException;
 import org.openrdf.repository.Repository;
+import org.openrdf.rio.RDFFormat;
 
 import java.io.File;
 import java.io.IOException;
@@ -202,7 +203,8 @@ public class VocEvaluate {
         setupLogging();
 
         RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
-        Repository repo = repositoryBuilder.setUpFromFile(new File(parsedCommand.vocabFilenames.get(0)), null, null);
+        File inputFile = new File(parsedCommand.vocabFilenames.get(0));
+        Repository repo = repositoryBuilder.setUpFromFile(inputFile, null, useRdfXmlFormatIfExtensionIsXml(inputFile));
         qskos.setRepositoryConnection(repo.getConnection());
 		qskos.setAuthResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
@@ -224,6 +226,13 @@ public class VocEvaluate {
                 qskos.setProgressMonitor(new ConsoleProgressMonitor());
             }
         }
+    }
+
+    private RDFFormat useRdfXmlFormatIfExtensionIsXml(File inputFile) {
+        if (inputFile.getName().toLowerCase().endsWith(".xml")) {
+            return RDFFormat.RDFXML;
+        }
+        return null;
     }
 
     private void setupLogging() {
