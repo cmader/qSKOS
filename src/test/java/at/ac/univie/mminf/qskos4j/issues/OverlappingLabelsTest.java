@@ -22,7 +22,7 @@ public class OverlappingLabelsTest {
     @Before
     public void setUp() throws OpenRDFException, IOException {
         overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts());
-        overlappingLabelsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        overlappingLabelsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
 
         overlappingLabelsForRelatedConcepts = new OverlappingLabels(new InvolvedConcepts());
         overlappingLabelsForRelatedConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("relatedConcepts.rdf").getConnection());
@@ -46,7 +46,7 @@ public class OverlappingLabelsTest {
 
     private Collection<Value> getDifferentResources(Collection<LabelConflict> labelConflicts)
     {
-        Set<Value> ret = new HashSet<Value>();
+        Set<Value> ret = new HashSet<>();
 
         for (LabelConflict labelConflict : labelConflicts) {
             ret.addAll(labelConflict.getAffectedResources());

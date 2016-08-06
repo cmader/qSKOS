@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.ac.univie.mminf</groupId>
   <artifactId>qSKOS</artifactId>
-  <version>1.4.7</version>
+  <version>1.4.8</version>
   <name>qSKOS</name>
   <dependencies>
       <dependency>
@@ -117,7 +117,7 @@
 			</configuration>
 		</plugin>
 		<plugin>
-			<groupId>org.dstovall</groupId>
+			<groupId>com.jolira</groupId>
 			<artifactId>onejar-maven-plugin</artifactId>
 			<version>1.4.4</version>
 			<configuration>

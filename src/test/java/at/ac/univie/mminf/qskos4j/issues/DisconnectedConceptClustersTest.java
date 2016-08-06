@@ -4,7 +4,6 @@ import at.ac.univie.mminf.qskos4j.issues.clusters.DisconnectedConceptClusters;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Resource;
@@ -12,30 +11,26 @@ import org.openrdf.model.Resource;
 import java.io.IOException;
 import java.util.Collection;
 
-/**
- * Created by christian
- * Date: 26.01.13
- * Time: 15:43
- */
 public class DisconnectedConceptClustersTest {
 
-    private DisconnectedConceptClusters disconnectedConceptClusters;
     private InvolvedConcepts involvedConcepts;
-
-    @Before
-    public void setUp() throws OpenRDFException, IOException {
-        involvedConcepts = new InvolvedConcepts();
-        disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
-        disconnectedConceptClusters.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
-    }
+    private DisconnectedConceptClusters disconnectedConceptClusters;
 
     @Test
-    public void testComponentCount() throws OpenRDFException {
+    public void testComponentCount() throws OpenRDFException, IOException {
+        setUp("components_1.rdf");
+
         long conceptCount = involvedConcepts.getResult().getData().size();
         Collection<Collection<Resource>> components = disconnectedConceptClusters.getResult().getData();
 
         Assert.assertEquals(7, components.size());
         Assert.assertTrue(getVertexCount(components) <= conceptCount);
+    }
+
+    private void setUp(String filename) throws IOException, OpenRDFException {
+        involvedConcepts = new InvolvedConcepts();
+        disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
+        disconnectedConceptClusters.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource(filename).getConnection());
     }
 
     private long getVertexCount(Collection<Collection<Resource>> components) {
@@ -46,6 +41,12 @@ public class DisconnectedConceptClustersTest {
         }
 
         return ret;
+    }
+
+    @Test
+    public void testComponents_ok() throws OpenRDFException, IOException {
+        setUp("components_2.rdf");
+        Assert.assertFalse(disconnectedConceptClusters.getResult().isProblematic());
     }
 
 }

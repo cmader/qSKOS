@@ -27,7 +27,7 @@ public class OrphanConceptsTest {
         orphanConceptsForConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
 
         orphanConceptsForComponents = new OrphanConcepts(new InvolvedConcepts());
-        orphanConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        orphanConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
     }
 
     @Test
