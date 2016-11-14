@@ -69,6 +69,10 @@ public class VocEvaluate {
         @SuppressWarnings("unused")
         @Parameter(names = {"-sf", "--stream-friendly"}, description = "Print the progress indicator in a stream-friendly format")
         private boolean streamFriendly;
+        
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-DQV", "--DataQualityVocabulary"}, description = "Print quality results as QualityMeasurement of W3C Data Quality Vocabulary")
+        private boolean inDQV;
 
     }
 	
@@ -192,10 +196,13 @@ public class VocEvaluate {
 		setup();
 
         String command = jc.getParsedCommand();
-        reportCollector = new ReportCollector(extractMeasures(),
+        String datasetAnalized=new String();
+        for (String s : parsedCommand.vocabFilenames) {datasetAnalized+= s;}
+        
+       reportCollector = new ReportCollector(extractMeasures(),
                 parsedCommand.reportFileName,
                 parsedCommand.vocabFilenames,
-                command.equals(CMD_NAME_ANALYZE));
+                command.equals(CMD_NAME_ANALYZE), parsedCommand.inDQV, datasetAnalized);
         reportCollector.outputIssuesReport(shouldWriteGraphs());
 	}
 	
