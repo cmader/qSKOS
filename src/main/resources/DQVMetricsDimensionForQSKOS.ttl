@@ -1,5 +1,8 @@
-
+prefix dqv: <http://www.w3.org/ns/dqv#>
 prefix qs: <http://w3id.org/quality/qskos/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 # definition of instances for some of the  metrics, dimensions and categories deployed
 # in qSKOS according to https://github.com/cmader/qSKOS/wiki/Quality-Issues
 
@@ -75,7 +78,7 @@ qs:numOfConceptsWithUndocumentedConcepts
 qs:undocumentedConcepts  a  dqv:Dimension;
     skos:prefLabel "Undocumented Concepts"@en ;
     skos:definition "The SKOS standard defines a number of properties useful for documenting the meaning of the concepts in a thesaurus (section 7) also in a human-readable form. Intense use of these properties leads to a well-documented thesaurus which should also improve its quality."@en ;
-    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#undocumented-concepts>
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#undocumented-concepts> ;
     dqv:inCategory qs:labelingDocumentationIssues .
 
 qs:numOfConceptsWithOverlappingLabels
@@ -120,7 +123,7 @@ qs:numOfConceptsWithUnprintableCharactersinLabels
 
 qs:unprintableCharactersinLabels
      a  dqv:Dimension;
-    skos:prefLabel "Unprintable Characters in Labels""@en ;
+    skos:prefLabel "Unprintable Characters in Labels"@en ;
     skos:definition "pref/alt/hiddenlabels contain characters that are not alphanumeric characters or blanks."@en ;
     rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#unprintable-characters-in-labels> ;
     dqv:inCategory qs:labelingDocumentationIssues .
@@ -162,9 +165,9 @@ qs:numOfConceptsWithCyclicHierarchicalRelations
     dqv:expectedDataType xsd:interger ;
     dqv:inDimension  qs:cyclicHierarchicalRelations .
 
-qs:cyclicHierarchicalRelations  a  dqv:Dimension;
+qs:cyclicHierarchicalRelations  a  dqv:Dimension ;
     skos:prefLabel "Cyclic Hierarchical Relations"@en ;
-    skos:definition "Although perfectly consistent with the SKOS data model, cyclic relations may reveal a logical problem in the thesaurus. Consider the following example: decision -> problem resolution -> problem (-> decision: here the cycle is closed). The concepts are connected using skos:broader relationships (indicated with "->"). Due to the fact that a thesaurus is in many cases a product of consensus between the contributors (or just the decision of one dedicated thesaurus manager), it will be almost impossible to automatically resolve the cycle (i.e. deleting an edge)."@en ;
+    skos:definition "Although perfectly consistent with the SKOS data model, cyclic relations may reveal a logical problem in the thesaurus. Consider the following example: decision -> problem resolution -> problem (-> decision: here the cycle is closed). The concepts are connected using skos:broader relationships (indicated with ->). Due to the fact that a thesaurus is in many cases a product of consensus between the contributors (or just the decision of one dedicated thesaurus manager), it will be almost impossible to automatically resolve the cycle (i.e. deleting an edge)."@en ;
     rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#cyclic-hierarchical-relations> ;
     dqv:inCategory qs:structuralIssues .
 
@@ -173,7 +176,7 @@ qs:numOfConceptsWithValuelessAssociativeRelations
     a dqv:Metric;
     skos:prefLabel "Valueless Associative Relations"@en ;
     skos:definition "Number of Valueless Associative Relations"@en ;
-    skos:note "Identification of all pairs of concepts that have the same broader or narrower concepts, i.e. they are "sibling terms". All siblings that are related by a skos:related property are returned."@en ;
+    skos:note "Identification of all pairs of concepts that have the same broader or narrower concepts, i.e. they are sibling terms. All siblings that are related by a skos:related property are returned."@en ;
     dqv:expectedDataType xsd:interger ;
     dqv:inDimension  qs:valuelessAssociativeRelations .
 
@@ -194,8 +197,8 @@ qs:numOfConceptsWithSolelyTransitivelyRelatedConcepts
 
 qs:solelyTransitivelyRelatedConcepts
      a  dqv:Dimension;
-    skos:prefLabel "Solely Transitively Related Concepts""@en ;
-    skos:definition "skos:broaderTransitive and skos:narrowerTransitive are, according to the SKOS reference document, "not used to make assertions", so they should not be the only relations hierarchically relating two concepts."@en ;
+    skos:prefLabel "Solely Transitively Related Concepts"@en ;
+    skos:definition "skos:broaderTransitive and skos:narrowerTransitive are, according to the SKOS reference document, not used to make assertions, so they should not be the only relations hierarchically relating two concepts."@en ;
     rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#solely-transitively-related-concepts> ;
     dqv:inCategory qs:structuralIssues .
 
@@ -224,7 +227,7 @@ qs:numOfConceptsWithOmittedTopConcepts
 
 qs:omittedTopConcepts
     a  dqv:Dimension;
-    skos:prefLabel "Omitted Top Concepts""@en ;
+    skos:prefLabel "Omitted Top Concepts"@en ;
     skos:definition "A vocabulary should provide entry points to the data to provide efficient access (SKOS primer) and guidance for human users."@en ;
     rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-top-concepts> ;
     dqv:inCategory qs:structuralIssues .
@@ -254,7 +257,7 @@ qs:numOfConceptsWithHierarchicalRedundancy
     dqv:inDimension  qs:hierarchicalRedundancy.
 
 qs:hierarchicalRedundancy a  dqv:Dimension;
-    skos:prefLabel "Hierarchical Redundancy""@en ;
+    skos:prefLabel "Hierarchical Redundancy"@en ;
     skos:definition "As stated in the SKOS reference document, skos:broader and skos:narrower are not transitive properties. However, they are subproperties of skos:broaderTransitive and skos:narrowerTransitive which enables inference of a transitive closure. This, in fact, leaves it up to the user to interpret wheter a vocabulary's hierarchical structure is seen as transitive or not. In the former case, this check can be useful. It finds pairs of concepts (A,B) that are directly hierarchically related but there also exits an hierarchical path through a concept C that connects A and B."@en ;
     rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#hierarchical-redundancy> ;
     dqv:inCategory qs:structuralIssues .
