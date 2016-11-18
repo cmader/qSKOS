@@ -219,7 +219,7 @@ class ReportCollector {
 		Value lval = new LiteralImpl( res , XMLSchema.INTEGER);
 		repCon.add(measure, pvalue, lval);
 
-		URI uriDimension= f.createURI(nex+"numOfConceptsWith"+issue.getName().replace(" ", ""));
+		URI uriDimension= f.createURI(nex+"numOf"+issue.getName().replace(" ", ""));
 		repCon.add(measure, pisMeasurementOf, uriDimension); //issue.getWeblink()
 	}
 
