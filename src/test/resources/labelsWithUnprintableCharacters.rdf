@@ -8,6 +8,8 @@
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 		<skos:prefLabel xml:lang="en">not
 valid</skos:prefLabel>
+<skos:prefLabel xml:lang="it">non
+valido</skos:prefLabel>
     </rdf:Description>
 
     <!-- Ok -->

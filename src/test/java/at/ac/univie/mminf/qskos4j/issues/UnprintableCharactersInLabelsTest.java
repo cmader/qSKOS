@@ -28,7 +28,7 @@ public class UnprintableCharactersInLabelsTest {
     public void labelsWithUnprintableCharacters_count() throws OpenRDFException {
         Collection<LabeledConcept> invalidLabels = unprintableCharactersInLabels.getResult().getData();
 
-        Assert.assertEquals(1, invalidLabels.size());
+        Assert.assertEquals(2, invalidLabels.size());
     }
 
 }
