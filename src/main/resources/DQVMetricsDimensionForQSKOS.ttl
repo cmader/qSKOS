@@ -67,10 +67,10 @@ qs:incompleteLanguageCoverage
 
 qs:numOfNoCommonLanguages
     a dqv:Metric;
-    skos:prefLabel "no. of  No Common Languages"@en ;
-    skos:definition "Number of No Common Languages, 0 implies that at least one common language for text literals of all concepts has been found."@en ;
+    skos:prefLabel "No Common Languages"@en ;
+    skos:definition "No Common Languages, false implies that at least one common language for text literals of all concepts has been found."@en ;
     #skos:note ""@en ;
-    dqv:expectedDataType xsd:interger ;
+    dqv:expectedDataType xsd:boolean ;
     dqv:inDimension  qs:commonLanguage .
 
 qs:commonLanguage  a  dqv:Dimension;

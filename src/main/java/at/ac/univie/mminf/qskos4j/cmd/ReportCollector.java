@@ -69,18 +69,19 @@ class ReportCollector {
 		}
 		writeReportHeader(reportWriter, reportFile, reportSummary);
 		writeReportBody(reportWriter, reportFile, shouldWriteGraphs);
-		
+
 		if (this.inDQV) {
 			File DQVFile = createDQVFile();
 			FileOutputStream out = new FileOutputStream(DQVFile, true);
 			RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
 			logger.info("\n" + "Writing results as instances of the Data Quality Vocabulary"); 
 			writeDQVReportBody(writer, DQVFile, shouldWriteGraphs);
-		    out.close();
+			logger.info("\n" + "DQV file:" + DQVFile.getPath()); 
+			out.close();
 		}
-		
+
 		reportWriter.close();
-		
+
 
 	}
 
@@ -212,15 +213,25 @@ class ReportCollector {
 		repCon.add(measure, pdate, ldate);
 		int i = new Integer(0);
 		String res ;
-		if (issue.getResult().isProblematic())
-			res = Long.toString(issue.getResult().occurrenceCount());
-		else
-			res = "0";
-		Value lval = new LiteralImpl( res , XMLSchema.INTEGER);
+		Value lval;
+		try {
+			long r = issue.getResult().occurrenceCount();
+			if (issue.getResult().isProblematic())
+				res = Long.toString(issue.getResult().occurrenceCount());	
+			else
+				res = "0";
+			 lval = new LiteralImpl( res , XMLSchema.INTEGER);
+		}catch (java.lang.UnsupportedOperationException e) {
+			// in case the issue is not associated with a list of elements having the problem the methods occurenceCount is not defined. That happen with the issue "No Common Languages:"
+			// then we  encode the result as a boolean, plus a annotation explaining .
+			if (issue.getResult().isProblematic()) lval = new LiteralImpl( "true" , XMLSchema.BOOLEAN);
+			else lval = new LiteralImpl( "false" , XMLSchema.BOOLEAN);
+		} 
 		repCon.add(measure, pvalue, lval);
 
 		URI uriDimension= f.createURI(nex+"numOf"+issue.getName().replace(" ", ""));
 		repCon.add(measure, pisMeasurementOf, uriDimension); //issue.getWeblink()
+
 	}
 
 	private String createIssueHeader(Issue issue) {
@@ -267,7 +278,7 @@ class ReportCollector {
 			Issue issue = issueIt.next();
 			writeDQVReport(issue, myConnection, factory, dateFormat.format(date));
 		}
-			
+
 		RepositoryResult<Statement> myGraph = myConnection.getStatements(null, null, null, true);
 		try {
 			rdfFile.startRDF();
@@ -283,23 +294,23 @@ class ReportCollector {
 			myGraph.close();
 			myConnection.close();
 		}
-		
+
 	}
 
 
 
-private void writeTextReport(Issue issue, BufferedWriter writer)
-		throws IOException, OpenRDFException
-{
-	writer.write(createIssueHeader(issue));
-	writer.newLine();
-	issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.SHORT);
+	private void writeTextReport(Issue issue, BufferedWriter writer)
+			throws IOException, OpenRDFException
+	{
+		writer.write(createIssueHeader(issue));
+		writer.newLine();
+		issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.SHORT);
 
-	writer.newLine();
-	issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
+		writer.newLine();
+		issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.EXTENSIVE);
 
-	writer.newLine();
-	writer.flush();
-}
+		writer.newLine();
+		writer.flush();
+	}
 
 }
