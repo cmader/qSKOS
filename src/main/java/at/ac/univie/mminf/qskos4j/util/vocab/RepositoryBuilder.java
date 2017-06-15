@@ -82,7 +82,7 @@ public class RepositoryBuilder {
      * as described in the SKOS <a href="http://www.w3.org/TR/skos-reference/#S55">reference document</a> by the axioms
      * S55-S57
      *
-     * @throws org.openrdf.RDF4JException if errors when initializing local repository
+     * @throws org.eclipse.rdf4j.RDF4JException if errors when initializing local repository
      */
     public void enableSkosXlSupport()
             throws RDF4JException

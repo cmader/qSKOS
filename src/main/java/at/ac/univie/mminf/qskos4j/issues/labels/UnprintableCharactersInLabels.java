@@ -7,16 +7,16 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public class UnprintableCharactersInLabels extends Issue<CollectionResult<Labele
 
 
     @Override
-    protected CollectionResult<LabeledConcept> invoke() throws OpenRDFException {
+    protected CollectionResult<LabeledConcept> invoke() throws RDF4JException {
         List<LabeledConcept> result = new ArrayList<>();
 
         Iterator<Resource> it = new MonitoredIterator<>(authoritativeConcepts.getResult().getData(), progressMonitor);
@@ -76,7 +76,7 @@ public class UnprintableCharactersInLabels extends Issue<CollectionResult<Labele
                     }
                 }
             }
-            catch (OpenRDFException e) {
+            catch (RDF4JException e) {
                 logger.error("Error finding labels of concept '" +concept+ "'");
             }
         }

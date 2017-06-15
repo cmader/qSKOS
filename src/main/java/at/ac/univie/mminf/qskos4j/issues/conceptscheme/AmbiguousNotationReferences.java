@@ -6,14 +6,13 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotation;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotationMultipleResources;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotationWithinOneResource;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.vocabulary.SKOS;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.*;
 
@@ -33,7 +32,7 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
     }
 
     @Override
-    protected CollectionResult<AmbiguousNotation> invoke() throws OpenRDFException {
+    protected CollectionResult<AmbiguousNotation> invoke() throws RDF4JException {
         multiResourceConflicts = new HashMap<>();
         Set<AmbiguousNotation> ambiguousNotations = new HashSet<>();
 
@@ -48,7 +47,7 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
         return new CollectionResult<>(ambiguousNotations);
     }
 
-    private Set<AmbiguousNotation> checkNotationsForConcept(Resource concept) throws OpenRDFException {
+    private Set<AmbiguousNotation> checkNotationsForConcept(Resource concept) throws RDF4JException {
         Set<AmbiguousNotation> ambiguousNotations = new HashSet<>();
 
         ambiguousNotations.addAll(findAmbiguousNotationsWithinResource(concept));
@@ -57,7 +56,7 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
         return ambiguousNotations;
     }
 
-    private Set<AmbiguousNotation> findAmbiguousNotationsWithinResource(Resource concept) throws RepositoryException {
+    private Set<AmbiguousNotation> findAmbiguousNotationsWithinResource(Resource concept) throws RDF4JException {
         Set<AmbiguousNotation> ambiguousNotations = new HashSet<>();
         RepositoryResult<Statement> notations = repCon.getStatements(concept, SKOS.NOTATION, null, false);
 
@@ -74,7 +73,7 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
         return ambiguousNotations;
     }
 
-    private void findAmbiguousNotationsInMultipleResources(Resource concept) throws OpenRDFException {
+    private void findAmbiguousNotationsInMultipleResources(Resource concept) throws RDF4JException {
         RepositoryResult<Statement> notationsForConcept = repCon.getStatements(concept, SKOS.NOTATION, null, false);
         while (notationsForConcept.hasNext()) {
             Literal notationLiteral = (Literal) notationsForConcept.next().getObject();
@@ -83,7 +82,7 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
     }
 
     private void getNotationClashes(Resource concept, Literal notationLiteral)
-        throws OpenRDFException
+        throws RDF4JException
     {
         RepositoryResult<Statement> conceptsWithSameNotation = repCon.getStatements(null, SKOS.NOTATION, notationLiteral, false);
         while (conceptsWithSameNotation.hasNext()) {

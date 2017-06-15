@@ -5,9 +5,9 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.AmbiguousNotationReferences;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
+import org.eclipse.rdf4j.RDF4JException;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ public class AmbiguousNotationReferencesTest {
     private AmbiguousNotationReferences ambiguousNotationReferences;
 
     @Before
-    public void setUp() throws IOException, OpenRDFException
+    public void setUp() throws IOException, RDF4JException
     {
         ambiguousNotationReferences = new AmbiguousNotationReferences(new AuthoritativeConcepts(new InvolvedConcepts()));
         ambiguousNotationReferences.setRepositoryConnection(
@@ -27,7 +27,7 @@ public class AmbiguousNotationReferencesTest {
     }
 
     @Test
-    public void mappingRelationsMisuseCount() throws OpenRDFException {
+    public void mappingRelationsMisuseCount() throws RDF4JException {
         Assert.assertEquals(8, ambiguousNotationReferences.getResult().getData().size());
     }
 }

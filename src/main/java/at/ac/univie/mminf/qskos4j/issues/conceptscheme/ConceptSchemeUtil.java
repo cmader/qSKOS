@@ -1,10 +1,10 @@
 package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 /**
  * Created by christian on 26.09.14.
@@ -12,7 +12,7 @@ import org.openrdf.repository.RepositoryConnection;
 class ConceptSchemeUtil {
 
     public static boolean inSameConceptScheme(Resource concept, Resource otherConcept, RepositoryConnection repCon)
-        throws OpenRDFException
+        throws RDF4JException
     {
         return repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(concept, otherConcept)).evaluate();
     }
@@ -28,7 +28,7 @@ class ConceptSchemeUtil {
     }
 
     public static boolean inNoConceptScheme(Resource concept, Resource otherConcept, RepositoryConnection repCon)
-        throws OpenRDFException
+        throws RDF4JException
     {
         boolean conceptInScheme = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(concept)).evaluate();
         boolean otherConceptInScheme = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(otherConcept)).evaluate();

@@ -49,22 +49,4 @@ public class DisconnectedConceptClustersTest {
         Assert.assertFalse(disconnectedConceptClusters.getResult().isProblematic());
     }
 
-    @Test
-    public void testComponents_2_unconnected_concepts() throws OpenRDFException, IOException {
-        setUp("components_two-top-concepts-only.rdf");
-        Assert.assertFalse(disconnectedConceptClusters.getResult().isProblematic());
-    }
-
-    @Test
-    public void testComponents_2_unconnected_concepts_one_match() throws OpenRDFException, IOException {
-        setUp("components_two-top-concepts-with-one-exactMatch.rdf");
-        Assert.assertFalse(disconnectedConceptClusters.getResult().isProblematic());
-    }
-
-    @Test
-    public void testComponents_2_unconnected_concepts_two_matches() throws OpenRDFException, IOException {
-        setUp("components_two-top-concepts-with-two-exactMatches.rdf");
-        Assert.assertTrue(disconnectedConceptClusters.getResult().isProblematic());
-    }
-
 }
