@@ -2,9 +2,9 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.impl.URIImpl;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
     }
 
     @Override
-    protected IncompleteLangCovResult invoke() throws OpenRDFException {
+    protected IncompleteLangCovResult invoke() throws RDF4JException {
 		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
 
         findDistinctLanguages();
@@ -43,14 +43,14 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
 		return new IncompleteLangCovResult(incompleteLanguageCoverage);
 	}
 
-    private void findDistinctLanguages() throws OpenRDFException {
+    private void findDistinctLanguages() throws RDF4JException {
         distinctLanguages = new HashSet<String>();
         for (Collection languages : languageCoverage.getResult().getData().values()) {
             distinctLanguages.addAll(languages);
         }
     }
 
-	private void generateIncompleteLanguageCoverageMap() throws OpenRDFException {
+	private void generateIncompleteLanguageCoverageMap() throws RDF4JException {
 		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
 
         Map<Resource, Collection<String>> langCovData = languageCoverage.getResult().getData();

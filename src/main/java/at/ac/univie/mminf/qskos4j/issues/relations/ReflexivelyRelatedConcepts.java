@@ -5,14 +5,14 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.StatementImpl;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.impl.StatementImpl;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,11 +37,11 @@ public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement
     }
 
     @Override
-    protected CollectionResult<Statement> invoke() throws OpenRDFException {
+    protected CollectionResult<Statement> invoke() throws RDF4JException {
         return new CollectionResult<>(findReflexivelyRelatedResources());
     }
 
-    private Collection<Statement> findReflexivelyRelatedResources() throws OpenRDFException
+    private Collection<Statement> findReflexivelyRelatedResources() throws RDF4JException
     {
         Collection<Statement> results = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement
                     "?relation rdfs:subPropertyOf skos:semanticRelation " +
                 "}").evaluate();
         }
-        catch (OpenRDFException e) {
+        catch (RDF4JException e) {
             logger.error("Error finding relations of concept '" +resource+ "'");
         }
         return false;

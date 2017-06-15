@@ -1,14 +1,15 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import org.openrdf.model.Literal;
-import org.openrdf.model.impl.LiteralImpl;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.impl.LiteralImpl;
 
 public class SimilarityLiteral extends LiteralImpl{
 
     public SimilarityLiteral(Literal literal) {
-        super();
-        setLabel(literal.getLabel().toUpperCase());
-        setLanguage(literal.getLanguage());
+        super(literal.getLabel().toUpperCase());
+        if(literal.getLanguage().isPresent()) {
+        	setLanguage(literal.getLanguage().get());
+        }
         setDatatype(literal.getDatatype());
     }
 

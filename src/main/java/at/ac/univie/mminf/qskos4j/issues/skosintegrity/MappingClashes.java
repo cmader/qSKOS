@@ -5,11 +5,11 @@ import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public class MappingClashes extends Issue<CollectionResult<Tuple<Resource>>> {
     }
 
     @Override
-    protected CollectionResult<Tuple<Resource>> invoke() throws OpenRDFException {
+    protected CollectionResult<Tuple<Resource>> invoke() throws RDF4JException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createExVsAssMappingQuery());
 
         Collection<Tuple<Resource>> valuePairs = TupleQueryResultUtil.createCollectionOfResourcePairs(

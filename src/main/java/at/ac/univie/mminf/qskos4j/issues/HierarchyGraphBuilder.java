@@ -4,14 +4,14 @@ import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class HierarchyGraphBuilder {
 	private DirectedGraph<Resource, NamedEdge> graph;
     private RepositoryConnection repCon;
 
-	public DirectedGraph<Resource, NamedEdge> createGraph() throws OpenRDFException
+	public DirectedGraph<Resource, NamedEdge> createGraph() throws RDF4JException
 	{
         if (graph == null) {
             logger.info("Creating hierarchy graph");
@@ -35,7 +35,7 @@ public class HierarchyGraphBuilder {
         return graph;
 	}
 	
-	private TupleQueryResult findTriples(String skosHierarchyProperty) throws OpenRDFException
+	private TupleQueryResult findTriples(String skosHierarchyProperty) throws RDF4JException
 	{
 		    String query = createHierarchicalGraphQuery(skosHierarchyProperty);
             return repCon.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();

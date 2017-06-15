@@ -6,10 +6,10 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflictsResult;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,14 +36,14 @@ public class InconsistentPrefLabels extends Issue<LabelConflictsResult> {
     }
 
     @Override
-    protected LabelConflictsResult invoke() throws OpenRDFException {
+    protected LabelConflictsResult invoke() throws RDF4JException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByUri = orderPrefLabelsByResource();
         extractPrefLabelConflicts(prefLabelsByUri);
 
 		return new LabelConflictsResult(ambigPrefLabels.values());
 	}
 
-    private Map<Value, Collection<LabeledConcept>> orderPrefLabelsByResource() throws OpenRDFException {
+    private Map<Value, Collection<LabeledConcept>> orderPrefLabelsByResource() throws RDF4JException {
         Map<Value, Collection<LabeledConcept>> prefLabelsByResource = new HashMap<Value, Collection<LabeledConcept>>();
 
         for (LabeledConcept labeledConcept : resourceLabelsCollector.getLabeledConcepts()) {
@@ -90,8 +90,8 @@ public class InconsistentPrefLabels extends Issue<LabelConflictsResult> {
 
     private boolean hasPrefLabelConflict(LabeledConcept resource1, LabeledConcept resource2) {
         if (resource1 != resource2) {
-            String langRes1 = resource1.getLiteral().getLanguage();
-            String langRes2 = resource2.getLiteral().getLanguage();
+            String langRes1 = resource1.getLiteral().getLanguage().orElse(null);
+            String langRes2 = resource2.getLiteral().getLanguage().orElse(null);
 
             if (langRes1 != null && langRes2 != null) {
                 return langRes1.equals(langRes2);

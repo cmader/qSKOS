@@ -3,9 +3,9 @@ package at.ac.univie.mminf.qskos4j.issues.count;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 /**
  * Created by christian
@@ -25,7 +25,7 @@ public class SemanticRelations extends Issue<NumberResult<Long>> {
     }
 
     @Override
-    protected NumberResult<Long> invoke() throws OpenRDFException {
+    protected NumberResult<Long> invoke() throws RDF4JException {
         RepositoryResult<Statement> result = repCon.getStatements(
             null,
             SkosOntology.getInstance().getUri("semanticRelation"),

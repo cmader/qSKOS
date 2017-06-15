@@ -4,10 +4,10 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.*;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.*;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,7 +26,7 @@ public class ValuelessAssociativeRelations extends Issue<CollectionResult<Tuple<
     }
 
     @Override
-    protected CollectionResult<Tuple<URI>> invoke() throws OpenRDFException {
+    protected CollectionResult<Tuple<URI>> invoke() throws RDF4JException {
         Collection<Tuple<URI>> redundantAssociativeRelations = new HashSet<>();
 
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRedundantAssociativeRelationsQuery());

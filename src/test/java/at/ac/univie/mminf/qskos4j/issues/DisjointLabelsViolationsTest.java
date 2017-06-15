@@ -8,7 +8,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
+import org.eclipse.rdf4j.RDF4JException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -18,13 +18,13 @@ public class DisjointLabelsViolationsTest {
     private DisjointLabelsViolations disjointLabelsViolations;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         disjointLabelsViolations = new DisjointLabelsViolations(new ResourceLabelsCollector());
         disjointLabelsViolations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("ambiguousLabels.rdf").getConnection());
     }
 
     @Test
-    public void testDisjointLabels() throws OpenRDFException {
+    public void testDisjointLabels() throws RDF4JException {
         Collection<LabelConflict> ambiguousResources = disjointLabelsViolations.getResult().getData();
 
         Assert.assertTrue(UriSuffixFinder.isPartOfConflict(ambiguousResources, "conceptD"));

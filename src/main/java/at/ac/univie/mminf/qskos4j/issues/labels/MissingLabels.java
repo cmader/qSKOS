@@ -5,12 +5,12 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
     }
 
     @Override
-    protected CollectionResult<Resource> invoke() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws RDF4JException {
         unlabeledConceptsAndConceptSchemes = new ArrayList<Resource>();
 
         unlabeledConceptsAndConceptSchemes.addAll(findUnlabeledConcepts());
@@ -46,7 +46,7 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
         return new CollectionResult<Resource>(unlabeledConceptsAndConceptSchemes);
     }
 
-    private Collection<Resource> findUnlabeledConcepts() throws OpenRDFException {
+    private Collection<Resource> findUnlabeledConcepts() throws RDF4JException {
         Collection<Resource> unlabeledConcepts = new ArrayList<Resource>();
 
         for (Resource authConcept : allAuthConcepts.getResult().getData()) {
@@ -62,13 +62,13 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
         try {
             return !repCon.prepareBooleanQuery(QueryLanguage.SPARQL, prefLabelQuery).evaluate();
         }
-        catch (OpenRDFException e) {
+        catch (RDF4JException e) {
             logger.error("Error finding preferred label of concept '" +concept.stringValue()+ "'");
             return false;
         }
     }
 
-    private Collection<Resource> findUnlabeledConceptSchemes() throws OpenRDFException {
+    private Collection<Resource> findUnlabeledConceptSchemes() throws RDF4JException {
         Collection<Resource> unlabeledConceptSchemes = new ArrayList<Resource>();
 
         for (Resource conceptScheme : allConceptSchemes.getResult().getData()) {
@@ -78,7 +78,7 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
         return unlabeledConceptSchemes;
     }
 
-    private boolean hasNoRdfsLabelAndNoDcTitle(Value conceptScheme) throws OpenRDFException {
+    private boolean hasNoRdfsLabelAndNoDcTitle(Value conceptScheme) throws RDF4JException {
         String labelQuery = SparqlPrefix.RDFS +" "+ SparqlPrefix.DC +" "+ SparqlPrefix.DCTERMS+
             " ASK {" +
                 "{<" +conceptScheme+ "> rdfs:label ?label} UNION " +

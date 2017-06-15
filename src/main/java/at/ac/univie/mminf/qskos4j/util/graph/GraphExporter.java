@@ -7,7 +7,7 @@ import org.jgrapht.ext.IntegerNameProvider;
 import org.jgrapht.ext.StringEdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.jgrapht.graph.DirectedSubgraph;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.io.StringWriter;
 import java.util.Collection;

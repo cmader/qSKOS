@@ -5,14 +5,14 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.*;
 
@@ -37,7 +37,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 	}
 
     @Override
-    protected CollectionResult<Resource> invoke() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws RDF4JException {
 		extResourcesForConcept = new HashMap<>();
 
 		findResourcesForConcepts(authoritativeConcepts.getResult().getData());
@@ -45,7 +45,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 		return new CollectionResult<>(extractUnlinkedConcepts());
 	}
 
-    private void findResourcesForConcepts(Collection<Resource> concepts) throws OpenRDFException {
+    private void findResourcesForConcepts(Collection<Resource> concepts) throws RDF4JException {
 		Iterator<Resource> conceptIt = new MonitoredIterator<>(concepts, progressMonitor, "finding resources");
 
 		while (conceptIt.hasNext()) {
@@ -76,9 +76,9 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
         if (value instanceof URI) uris.add((URI) value);
     }
 	
-	private Collection<URI> extractExternalResources(Collection<URI> allResources) throws OpenRDFException {
+	private Collection<URI> extractExternalResources(Collection<URI> allResources) throws RDF4JException {
 		Collection<URI> validExternalResources = new HashSet<>();
-		
+
 		for (URI uri : allResources) {
 			if (isExternalResource(uri) && isNonSkosURL(uri)) {
 				validExternalResources.add(uri);
@@ -88,7 +88,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 		return validExternalResources;
 	}
 	
-	private boolean isExternalResource(URI url) throws OpenRDFException {
+	private boolean isExternalResource(URI url) throws RDF4JException {
         String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {

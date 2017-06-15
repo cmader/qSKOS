@@ -5,10 +5,10 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflictsResult;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,18 +36,18 @@ public class DisjointLabelsViolations extends Issue<LabelConflictsResult> {
     }
 
     @Override
-    protected LabelConflictsResult invoke() throws OpenRDFException {
+    protected LabelConflictsResult invoke() throws RDF4JException {
         findNonDisjointLabels();
 
         return new LabelConflictsResult(nonDisjointLabels.values());
     }
 
-    private void findNonDisjointLabels() throws OpenRDFException {
+    private void findNonDisjointLabels() throws RDF4JException {
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = orderResourcesByLabel();
         extractNonDisjointConflicts(resourcesByLabel);
     }
 
-    private Map<Literal, Collection<LabeledConcept>> orderResourcesByLabel() throws OpenRDFException {
+    private Map<Literal, Collection<LabeledConcept>> orderResourcesByLabel() throws RDF4JException {
         Map<Literal, Collection<LabeledConcept>> resourcesByLabel = new HashMap<Literal, Collection<LabeledConcept>>();
 
         for (LabeledConcept labeledResource : resourceLabelsCollector.getLabeledConcepts()) {

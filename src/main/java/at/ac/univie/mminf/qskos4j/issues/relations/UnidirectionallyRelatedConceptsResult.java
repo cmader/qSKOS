@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.Tuple;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

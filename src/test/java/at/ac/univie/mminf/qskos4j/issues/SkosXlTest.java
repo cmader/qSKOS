@@ -10,8 +10,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.repository.Repository;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.repository.Repository;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class SkosXlTest {
     private OverlappingLabels overlappingLabels;
 	
 	@Before
-	public void setUp() throws OpenRDFException, IOException {
+	public void setUp() throws RDF4JException, IOException {
         RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
         Repository repo = repositoryBuilder.setUpFromTestResource("skosxl.rdf");
         repositoryBuilder.enableSkosXlSupport();
@@ -42,22 +42,22 @@ public class SkosXlTest {
     }
 	
 	@Test
-	public void lexicalRelationsCountTest() throws OpenRDFException {
+	public void lexicalRelationsCountTest() throws RDF4JException {
 		Assert.assertEquals(5, lexicalRelations.getResult().getData().intValue());
 	}
 	
 	@Test
-	public void omittedLangTagCount() throws OpenRDFException {
+	public void omittedLangTagCount() throws RDF4JException {
 		Assert.assertEquals(2, omittedOrInvalidLanguageTags.getResult().getData().size());
 	}
 	
 	@Test
-	public void incompleteLangCovCount() throws OpenRDFException {
+	public void incompleteLangCovCount() throws RDF4JException {
 		Assert.assertEquals(2, incompleteLanguageCoverage.getResult().getData().size());
 	}
 
 	@Test
-	public void labelConflictCount() throws OpenRDFException {
+	public void labelConflictCount() throws RDF4JException {
 		Assert.assertEquals(1, overlappingLabels.getResult().getData().size());
 	}
 

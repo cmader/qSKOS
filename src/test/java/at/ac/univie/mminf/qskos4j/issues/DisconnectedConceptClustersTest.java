@@ -5,8 +5,8 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -17,7 +17,7 @@ public class DisconnectedConceptClustersTest {
     private DisconnectedConceptClusters disconnectedConceptClusters;
 
     @Test
-    public void testComponentCount() throws OpenRDFException, IOException {
+    public void testComponentCount() throws RDF4JException, IOException {
         setUp("components_1.rdf");
 
         long conceptCount = involvedConcepts.getResult().getData().size();
@@ -27,7 +27,7 @@ public class DisconnectedConceptClustersTest {
         Assert.assertTrue(getVertexCount(components) <= conceptCount);
     }
 
-    private void setUp(String filename) throws IOException, OpenRDFException {
+    private void setUp(String filename) throws IOException, RDF4JException {
         involvedConcepts = new InvolvedConcepts();
         disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
         disconnectedConceptClusters.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource(filename).getConnection());
@@ -44,9 +44,27 @@ public class DisconnectedConceptClustersTest {
     }
 
     @Test
-    public void testComponents_ok() throws OpenRDFException, IOException {
+    public void testComponents_ok() throws RDF4JException, IOException {
         setUp("components_2.rdf");
         Assert.assertFalse(disconnectedConceptClusters.getResult().isProblematic());
+    }
+
+    @Test
+    public void testComponents_2_unconnected_concepts() throws OpenRDFException, IOException {
+        setUp("components_two-top-concepts-only.rdf");
+        Assert.assertFalse(disconnectedConceptClusters.getResult().isProblematic());
+    }
+
+    @Test
+    public void testComponents_2_unconnected_concepts_one_match() throws OpenRDFException, IOException {
+        setUp("components_two-top-concepts-with-one-exactMatch.rdf");
+        Assert.assertFalse(disconnectedConceptClusters.getResult().isProblematic());
+    }
+
+    @Test
+    public void testComponents_2_unconnected_concepts_two_matches() throws OpenRDFException, IOException {
+        setUp("components_two-top-concepts-with-two-exactMatches.rdf");
+        Assert.assertTrue(disconnectedConceptClusters.getResult().isProblematic());
     }
 
 }

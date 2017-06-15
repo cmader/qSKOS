@@ -6,12 +6,12 @@ import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.RepositoryConnection;
 
 import java.util.*;
 
@@ -31,7 +31,7 @@ public class HierarchicalRedundancy extends Issue<CollectionResult<Pair<Resource
     }
 
     @Override
-    protected CollectionResult<Pair<Resource>> invoke() throws OpenRDFException {
+    protected CollectionResult<Pair<Resource>> invoke() throws RDF4JException {
         hierarchicalRedundancies = new HashSet<>();
         hierarchyGraph = hierarchyGraphBuilder.createGraph();
 

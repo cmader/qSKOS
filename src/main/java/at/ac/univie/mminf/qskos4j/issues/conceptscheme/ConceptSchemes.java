@@ -3,12 +3,12 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class ConceptSchemes extends Issue<CollectionResult<Resource>> {
     }
 
     @Override
-    protected CollectionResult<Resource> invoke() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws RDF4JException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptSchemeQuery()).evaluate();
         return new CollectionResult<Resource>(identifyResources(result));
     }

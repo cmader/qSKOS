@@ -33,9 +33,9 @@ import at.ac.univie.mminf.qskos4j.issues.skosintegrity.UndefinedSkosResources;
 import at.ac.univie.mminf.qskos4j.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
-import org.openrdf.OpenRDFException;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class QSkos {
 
     private List<Issue> registeredIssues = new ArrayList<Issue>();
 
-    public QSkos(File file) throws OpenRDFException, IOException {
+    public QSkos(File file) throws RDF4JException, IOException {
         this();
 
         RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
@@ -244,7 +244,7 @@ public class QSkos {
         this.baseURI = baseURI;
     }
 
-    public void addSparqlEndPoint(String endpointUrl) throws OpenRDFException {
+    public void addSparqlEndPoint(String endpointUrl) throws RDF4JException {
         missingInLinks.addSparqlEndPoint(endpointUrl);
     }
 

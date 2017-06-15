@@ -7,8 +7,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -19,7 +19,7 @@ public class MissingInLinksTest {
     private AuthoritativeConcepts authoritativeConcepts;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         authoritativeConcepts = new AuthoritativeConcepts(new InvolvedConcepts());
 
         missingInLinks = new MissingInLinks(authoritativeConcepts);
@@ -28,7 +28,7 @@ public class MissingInLinksTest {
     }
 
     @Test
-    public void testInLinksAsDbPedia() throws OpenRDFException {
+    public void testInLinksAsDbPedia() throws RDF4JException {
         authoritativeConcepts.setAuthResourceIdentifier("dbpedia.org");
 
         Collection<Resource> conceptsMissingInLinks = missingInLinks.getResult().getData();
@@ -36,7 +36,7 @@ public class MissingInLinksTest {
     }
 
     @Test
-    public void testInLinksAsSTW() throws OpenRDFException {
+    public void testInLinksAsSTW() throws RDF4JException {
         authoritativeConcepts.setAuthResourceIdentifier("zbw.eu");
 
         Collection<Resource> conceptsMissingInLinks = missingInLinks.getResult().getData();
@@ -44,7 +44,7 @@ public class MissingInLinksTest {
     }
 
     @Test
-    public void testInLinksAsBnf() throws OpenRDFException {
+    public void testInLinksAsBnf() throws RDF4JException {
         authoritativeConcepts.setAuthResourceIdentifier("data.bnf.fr");
 
         Collection<Resource> conceptsMissingInLinks = missingInLinks.getResult().getData();
@@ -53,7 +53,7 @@ public class MissingInLinksTest {
 
 
     @Test
-    public void testInLinksAsLocal() throws OpenRDFException {
+    public void testInLinksAsLocal() throws RDF4JException {
         authoritativeConcepts.setAuthResourceIdentifier("myvocab.org");
 
         Collection<Resource> conceptsMissingInLinks = missingInLinks.getResult().getData();

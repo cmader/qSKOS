@@ -7,8 +7,8 @@ import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.impl.URIImpl;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,12 +48,12 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 	}
 
     @Override
-    protected ExtrapolatedCollectionResult<URL> invoke() throws OpenRDFException {
+    protected ExtrapolatedCollectionResult<URL> invoke() throws RDF4JException {
         dereferenceURIs();
 		return new ExtrapolatedCollectionResult<>(collectUnavailableURLs(), randomSubsetSize_percent);
 	}
 
-    private void dereferenceURIs() throws OpenRDFException
+    private void dereferenceURIs() throws RDF4JException
 	{
 		Collection<URI> urisToBeDereferenced = collectUrisToBeDereferenced();
 		Iterator<URI> it = new MonitoredIterator<>(urisToBeDereferenced, progressMonitor);
@@ -77,7 +77,7 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 		}
 	}
 	
-	private Collection<URI> collectUrisToBeDereferenced() throws OpenRDFException {
+	private Collection<URI> collectUrisToBeDereferenced() throws RDF4JException {
 		if (randomSubsetSize_percent == null) {
 			return httpURIs.getResult().getData();
 		}

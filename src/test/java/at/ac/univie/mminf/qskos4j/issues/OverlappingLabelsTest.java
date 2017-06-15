@@ -7,8 +7,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Value;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,7 +20,7 @@ public class OverlappingLabelsTest {
     private OverlappingLabels overlappingLabelsForComponents, overlappingLabelsForRelatedConcepts, overlappingLabels;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         overlappingLabelsForComponents = new OverlappingLabels(new InvolvedConcepts());
         overlappingLabelsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
 
@@ -32,7 +32,7 @@ public class OverlappingLabelsTest {
     }
 
     @Test
-    public void testLabelConflictCount_1() throws OpenRDFException {
+    public void testLabelConflictCount_1() throws RDF4JException {
         Collection<LabelConflict> allLabelConflicts = overlappingLabelsForComponents.getResult().getData();
 
         Assert.assertEquals(2, allLabelConflicts.size());
@@ -40,7 +40,7 @@ public class OverlappingLabelsTest {
     }
 
     @Test
-    public void testCaseInsensitive() throws OpenRDFException {
+    public void testCaseInsensitive() throws RDF4JException {
         Assert.assertEquals(2, overlappingLabels.getResult().getData().size());
     }
 
@@ -56,7 +56,7 @@ public class OverlappingLabelsTest {
     }
 
     @Test
-    public void testLabelConflictCount_2() throws OpenRDFException {
+    public void testLabelConflictCount_2() throws RDF4JException {
         Assert.assertEquals(0, overlappingLabelsForRelatedConcepts.getResult().getData().size());
     }
 }

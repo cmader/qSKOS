@@ -7,8 +7,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Statement;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -18,7 +18,7 @@ public class MappingRelationsMisuseTest {
     private MappingRelationsMisuse mappingRelationsMisuse;
 
     @Before
-    public void setUp() throws IOException, OpenRDFException
+    public void setUp() throws IOException, RDF4JException
     {
         mappingRelationsMisuse = new MappingRelationsMisuse(new AuthoritativeConcepts(new InvolvedConcepts()));
         mappingRelationsMisuse.setRepositoryConnection(
@@ -26,12 +26,12 @@ public class MappingRelationsMisuseTest {
     }
 
     @Test
-    public void mappingRelationsMisuseCount() throws OpenRDFException {
+    public void mappingRelationsMisuseCount() throws RDF4JException {
         Assert.assertEquals(5, mappingRelationsMisuse.getResult().getData().size());
     }
 
     @Test
-    public void affectedConcepts() throws OpenRDFException {
+    public void affectedConcepts() throws RDF4JException {
         Collection<Statement> result = mappingRelationsMisuse.getResult().getData();
 
         Assert.assertTrue(isAffected("conceptA", "conceptB", result));

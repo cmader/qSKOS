@@ -5,17 +5,17 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.ExtrapolatedCollectionResult;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
     }
 
     @Override
-    protected ExtrapolatedCollectionResult<Resource> invoke() throws OpenRDFException {
+    protected ExtrapolatedCollectionResult<Resource> invoke() throws RDF4JException {
         Collection<Resource> conceptsToCheck = getConceptsToCheck(randomSubsetSize_percent);
 
         if (randomSubsetSize_percent != null) {
@@ -68,7 +68,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
         return new ExtrapolatedCollectionResult<>(extractUnreferencedConcepts(), randomSubsetSize_percent);
     }
 
-    private Collection<Resource> getConceptsToCheck(Float randomSubsetSize_percent) throws OpenRDFException
+    private Collection<Resource> getConceptsToCheck(Float randomSubsetSize_percent) throws RDF4JException
     {
 		if (randomSubsetSize_percent == null) {
 			return authoritativeConcepts.getResult().getData();
@@ -184,7 +184,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
      * Adds the repository containing the vocabulary that's about to test to the list of
      * other repositories. This is only useful for in-link testing purposes.
      */
-    public void addRepositoryLoopback() throws OpenRDFException {
+    public void addRepositoryLoopback() throws RDF4JException {
         connections.add(repCon);
     }
 
@@ -193,7 +193,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
      *
      * @param endpointUrl SPARL endpoint URL
      */
-    public void addSparqlEndPoint(String endpointUrl) throws OpenRDFException {
+    public void addSparqlEndPoint(String endpointUrl) throws RDF4JException {
         Repository repo = new SPARQLRepository(endpointUrl);
         repo.initialize();
         connections.add(repo.getConnection());

@@ -2,12 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +31,7 @@ public class HttpUriSchemeViolations extends Issue<CollectionResult<String>> {
     }
 
     @Override
-    protected CollectionResult<String> invoke() throws OpenRDFException {
+    protected CollectionResult<String> invoke() throws RDF4JException {
         Set<String> nonHttpURIs = new HashSet<String>();
 
         RepositoryResult<Statement> allStatements = repCon.getStatements(null, null, null, false);

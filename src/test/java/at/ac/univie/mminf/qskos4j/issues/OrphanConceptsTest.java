@@ -6,8 +6,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class OrphanConceptsTest {
     private OrphanConcepts orphanConceptsForConcepts, orphanConceptsForComponents;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         orphanConceptsForConcepts = new OrphanConcepts(new InvolvedConcepts());
         orphanConceptsForConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
 
@@ -31,13 +31,13 @@ public class OrphanConceptsTest {
     }
 
     @Test
-    public void testConceptsLooseConceptCount() throws OpenRDFException {
+    public void testConceptsLooseConceptCount() throws RDF4JException {
         Collection<Resource> orphanConceptValues = orphanConceptsForConcepts.getResult().getData();
         Assert.assertEquals(7, orphanConceptValues.size());
     }
 
     @Test
-    public void testComponentsLooseConceptCount() throws OpenRDFException {
+    public void testComponentsLooseConceptCount() throws RDF4JException {
         Collection<Resource> orphanConceptValues = orphanConceptsForComponents.getResult().getData();
         Assert.assertEquals(2, orphanConceptValues.size());
     }

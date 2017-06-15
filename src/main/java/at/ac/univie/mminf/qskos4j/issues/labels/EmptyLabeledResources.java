@@ -4,13 +4,13 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.EmptyLabelsResult;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
 
 import java.util.*;
 
@@ -23,7 +23,7 @@ public class EmptyLabeledResources extends Issue<EmptyLabelsResult> {
     }
 
     @Override
-    protected EmptyLabelsResult invoke() throws OpenRDFException {
+    protected EmptyLabelsResult invoke() throws RDF4JException {
         result = new HashMap<>();
 
         TupleQueryResult result = repCon.prepareTupleQuery(

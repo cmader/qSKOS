@@ -2,22 +2,22 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.Result;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.LiteralImpl;
-import org.openrdf.model.vocabulary.XMLSchema;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryResult;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.sail.memory.MemoryStore;
+import org.eclipse.rdf4j.OpenRDFException;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.LiteralImpl;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryResult;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +54,7 @@ class ReportCollector {
 	}
 
 	void outputIssuesReport(boolean shouldWriteGraphs)
-			throws IOException, OpenRDFException
+			throws IOException, RDF4JException
 	{
 
 		File reportFile = createReportFile();
@@ -103,7 +103,7 @@ class ReportCollector {
 		reportWriter.write(reportSummary);
 	}
 
-	private void processIssues() throws OpenRDFException {
+	private void processIssues() throws RDF4JException {
 		int issueNumber = 0;
 		Iterator<Issue> issueIt = issues.iterator();
 		while (issueIt.hasNext()) {
@@ -118,7 +118,7 @@ class ReportCollector {
 		logger.info("Report complete!");
 	}
 
-	private String createReportSummary() throws IOException, OpenRDFException {
+	private String createReportSummary() throws IOException, RDF4JException {
 		StringBuffer summary = new StringBuffer();
 		summary.append("* Summary of Quality Issue Occurrences:\n");
 
@@ -130,7 +130,7 @@ class ReportCollector {
 		return summary.toString();
 	}
 
-	private String prepareOccurrenceText(Issue issue) throws OpenRDFException {
+	private String prepareOccurrenceText(Issue issue) throws RDF4JException {
 		String occurrenceText = "";
 		if (issue.getResult().isProblematic()) {
 			occurrenceText = "FAIL";
@@ -152,7 +152,7 @@ class ReportCollector {
 	private void writeReportBody(BufferedWriter reportWriter,
 			File reportFile,
 			boolean shouldWriteGraphs)
-					throws IOException, OpenRDFException
+					throws IOException, RDF4JException
 	{
 		reportWriter.write("* Detailed coverage of each Quality Issue:\n\n");
 		Iterator<Issue> issueIt = issues.iterator();
@@ -187,7 +187,7 @@ class ReportCollector {
 	}
 
 	private void writeDQVReport(Issue issue, RepositoryConnection repCon, ValueFactory f, String sdate)
-			throws IOException, OpenRDFException
+			throws IOException, RDF4JException
 	{
 
 		String ndqv= "http://www.w3.org/ns/dqv#";
@@ -205,7 +205,7 @@ class ReportCollector {
 
 		if (this.computedOn.startsWith("http://"))		repCon.add(measure, pcomputedOn,f.createURI(this.computedOn));
 		else {
-			Value  datasetPath = new LiteralImpl(this.computedOn, XMLSchema.STRING);
+			Value datasetPath = new LiteralImpl(this.computedOn, XMLSchema.STRING);
 			repCon.add(measure, pcomputedOn,datasetPath);
 		}
 
@@ -250,7 +250,7 @@ class ReportCollector {
 		return absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
 	}
 
-	private void writeGraphFiles(Issue issue, String dotFilesPath) throws IOException, OpenRDFException {
+	private void writeGraphFiles(Issue issue, String dotFilesPath) throws IOException, RDF4JException {
 		BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(dotFilesPath + issue.getId() + ".dot"));
 		issue.getResult().generateReport(graphFileWriter, Result.ReportFormat.DOT);
 		graphFileWriter.close();
@@ -259,7 +259,7 @@ class ReportCollector {
 	private void writeDQVReportBody(RDFWriter rdfFile,
 			File reportFile,
 			boolean shouldWriteGraphs)
-					throws IOException, OpenRDFException
+					throws IOException, RDF4JException
 	{
 
 		Repository myRepository = new SailRepository(new MemoryStore());
@@ -287,20 +287,17 @@ class ReportCollector {
 			}
 			rdfFile.endRDF();
 		}
-		catch (RDFHandlerException e) {
+		catch (RDF4JException e) {
 			// oh no, do something!
 		}
 		finally{
 			myGraph.close();
 			myConnection.close();
 		}
-
 	}
 
-
-
 	private void writeTextReport(Issue issue, BufferedWriter writer)
-			throws IOException, OpenRDFException
+			throws IOException, RDF4JException
 	{
 		writer.write(createIssueHeader(issue));
 		writer.newLine();

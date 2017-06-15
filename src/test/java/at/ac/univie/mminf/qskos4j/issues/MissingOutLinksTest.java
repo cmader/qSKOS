@@ -7,7 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
+import org.eclipse.rdf4j.RDF4JException;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public class MissingOutLinksTest {
     private MissingOutLinks missingOutLinksForComponents, missingOutLinksForConcepts;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         involvedConceptsForComponents = new InvolvedConcepts();
         missingOutLinksForComponents = new MissingOutLinks(new AuthoritativeConcepts(involvedConceptsForComponents));
         missingOutLinksForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
@@ -32,13 +32,13 @@ public class MissingOutLinksTest {
     }
 
     @Test
-    public void testComponentsMissingOutLinkCount() throws OpenRDFException {
+    public void testComponentsMissingOutLinkCount() throws RDF4JException {
         Assert.assertEquals(involvedConceptsForComponents.getResult().getData().size(),
                             missingOutLinksForComponents.getResult().getData().size());
     }
 
     @Test
-    public void testConceptsMissingOutLinkCount() throws OpenRDFException {
+    public void testConceptsMissingOutLinkCount() throws RDF4JException {
         Assert.assertEquals(7, missingOutLinksForConcepts.getResult().getData().size());
     }
 }

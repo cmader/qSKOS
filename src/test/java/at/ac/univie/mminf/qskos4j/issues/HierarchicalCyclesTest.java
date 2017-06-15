@@ -5,7 +5,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
+import org.eclipse.rdf4j.RDF4JException;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ public class HierarchicalCyclesTest {
     private HierarchicalCycles hierarchicalCycles, hierarchicalCyclesForComponents;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         hierarchicalCycles = new HierarchicalCycles(new HierarchyGraphBuilder());
         hierarchicalCycles.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("cycles.rdf").getConnection());
 
@@ -28,12 +28,12 @@ public class HierarchicalCyclesTest {
     }
 
     @Test
-    public void testCycleCount() throws OpenRDFException {
+    public void testCycleCount() throws RDF4JException {
         Assert.assertEquals(3, hierarchicalCycles.getResult().getData().size());
     }
 
     @Test
-    public void testComponentsCycleCount() throws OpenRDFException {
+    public void testComponentsCycleCount() throws RDF4JException {
         Assert.assertEquals(3, hierarchicalCyclesForComponents.getResult().getData().size());
     }
 

@@ -3,8 +3,8 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,12 +37,12 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Resource>> {
     }
 
     @Override
-    protected CollectionResult<Resource> invoke() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws RDF4JException {
         getAuthResourceIdentifier();
         return new CollectionResult<Resource>(extractAuthoritativeConceptsFromInvolved());
     }
 
-    private void determineAuthResourceIdentifier() throws OpenRDFException {
+    private void determineAuthResourceIdentifier() throws RDF4JException {
         try {
             extractAuthResourceIdentifierFromBaseURI();
         }
@@ -55,7 +55,7 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Resource>> {
         authResourceIdentifier = new java.net.URI(baseURI).getHost();
     }
 
-    private void guessAuthoritativeResourceIdentifier() throws OpenRDFException {
+    private void guessAuthoritativeResourceIdentifier() throws RDF4JException {
         HostNameOccurrencies hostNameOccurencies = new HostNameOccurrencies();
 
         Iterator<Resource> resourcesListIt = new MonitoredIterator<Resource>(
@@ -77,7 +77,7 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Resource>> {
         logger.info("Guessed authoritative resource identifier: '" +authResourceIdentifier+ "'");
     }
 
-    private Collection<Resource> extractAuthoritativeConceptsFromInvolved() throws OpenRDFException
+    private Collection<Resource> extractAuthoritativeConceptsFromInvolved() throws RDF4JException
     {
         Collection<Resource> authoritativeConcepts = new HashSet<Resource>();
 
@@ -98,7 +98,7 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Resource>> {
         reset();
     }
 
-    public String getAuthResourceIdentifier() throws OpenRDFException {
+    public String getAuthResourceIdentifier() throws RDF4JException {
         if (authResourceIdentifier == null) {
             determineAuthResourceIdentifier();
         }

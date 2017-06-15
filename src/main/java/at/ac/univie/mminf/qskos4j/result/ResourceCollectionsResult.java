@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.result;
 
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

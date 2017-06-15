@@ -5,12 +5,12 @@ import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.*;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,14 +36,14 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
     }
 
     @Override
-    protected CollectionResult<URI> invoke() throws OpenRDFException {
+    protected CollectionResult<URI> invoke() throws RDF4JException {
 		findDeprecatedProperties();
 		findIllegalTerms();
 		
 		return new CollectionResult<>(collectUndefinedResources());
 	}
 
-    private void findDeprecatedProperties() throws OpenRDFException
+    private void findDeprecatedProperties() throws RDF4JException
 	{
 		TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createDeprecatedPropertiesQuery());
 		generateDeprecatedPropertiesMap(query.evaluate());
@@ -86,13 +86,13 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 		}
 	}
 	
-	private void findIllegalTerms() throws OpenRDFException 
+	private void findIllegalTerms() throws RDF4JException 
 	{
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createIllegalTermsQuery());
 		generateIllegalTermsMap(query.evaluate());
 	}
 	
-	private String createIllegalTermsQuery() throws OpenRDFException {
+	private String createIllegalTermsQuery() throws RDF4JException {
 		return SparqlPrefix.SKOS+ 
 			"SELECT DISTINCT ?illTerm ?s ?o "+
 			"WHERE {" +
@@ -105,7 +105,7 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
             "} ";
 	}
 
-    private String createSkosSubjectsFilter() throws OpenRDFException {
+    private String createSkosSubjectsFilter() throws RDF4JException {
         RepositoryConnection skosRepoConn = SkosOntology.getInstance().getRepository().getConnection();
         try {
             TupleQuery skosSubjectsQuery = skosRepoConn.prepareTupleQuery(QueryLanguage.SPARQL, createSkosSubjectsQuery());

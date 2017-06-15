@@ -4,7 +4,7 @@ import at.ac.univie.mminf.qskos4j.result.ResourceCollectionsResult;
 import at.ac.univie.mminf.qskos4j.util.graph.GraphExporter;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

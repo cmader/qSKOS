@@ -1,19 +1,19 @@
 package at.ac.univie.mminf.qskos4j.util.vocab;
 
 import org.junit.Assert;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.GraphQuery;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
-import org.openrdf.sail.memory.MemoryStore;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.GraphQueryResult;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.sail.inferencer.fc.ForwardChainingRDFSInferencer;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ public class RepositoryBuilder {
 
     private Repository repository;
 
-    public Repository setUpFromTestResource(String testFileName) throws OpenRDFException, IOException {
+    public Repository setUpFromTestResource(String testFileName) throws RDF4JException, IOException {
         URL conceptsUrl = RepositoryBuilder.class.getResource("/" +testFileName);
         File conceptsFile = new File(conceptsUrl.getFile());
         Assert.assertNotNull(conceptsFile);
@@ -36,7 +36,7 @@ public class RepositoryBuilder {
     }
 
     public Repository setUpFromFile(File rdfFile, String baseURI, RDFFormat dataFormat)
-        throws OpenRDFException, IOException
+        throws RDF4JException, IOException
     {
         logger.info("Initializing evaluation repository for " +rdfFile.getName()+ "...");
 
@@ -63,7 +63,7 @@ public class RepositoryBuilder {
         repository.initialize();
     }
 
-    private void addSkosOntology() throws OpenRDFException, IOException {
+    private void addSkosOntology() throws RDF4JException, IOException {
         repository.getConnection().add(
             new URL(SkosOntology.SKOS_ONTO_URI),
             SkosOntology.SKOS_BASE_URI,
@@ -82,17 +82,17 @@ public class RepositoryBuilder {
      * as described in the SKOS <a href="http://www.w3.org/TR/skos-reference/#S55">reference document</a> by the axioms
      * S55-S57
      *
-     * @throws org.openrdf.OpenRDFException if errors when initializing local repository
+     * @throws org.openrdf.RDF4JException if errors when initializing local repository
      */
     public void enableSkosXlSupport()
-            throws OpenRDFException
+            throws RDF4JException
     {
         addSkosXlLabels("skosxl:prefLabel", "skos:prefLabel");
         addSkosXlLabels("skosxl:altLabel", "skos:altLabel");
         addSkosXlLabels("skosxl:hiddenLabel", "skos:hiddenLabel");
     }
 
-    private void addSkosXlLabels(String skosXlProperty, String skosProperty) throws OpenRDFException
+    private void addSkosXlLabels(String skosXlProperty, String skosProperty) throws RDF4JException
     {
         RepositoryConnection repCon = repository.getConnection();
 
@@ -113,7 +113,7 @@ public class RepositoryBuilder {
     private GraphQuery createSkosXlGraphQuery(
             RepositoryConnection connection,
             String skosXlProperty,
-            String skosProperty) throws OpenRDFException
+            String skosProperty) throws RDF4JException
     {
         return connection.prepareGraphQuery(
                 QueryLanguage.SPARQL,
