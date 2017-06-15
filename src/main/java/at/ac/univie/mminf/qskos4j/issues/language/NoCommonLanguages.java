@@ -3,8 +3,8 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.language.util.NoCommonLanguagesResult;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class NoCommonLanguages extends Issue<NoCommonLanguagesResult> {
     }
 
     @Override
-    protected NoCommonLanguagesResult invoke() throws OpenRDFException {
+    protected NoCommonLanguagesResult invoke() throws RDF4JException {
         Map<Resource, Collection<String>> langCovData = languageCoverage.getResult().getData();
         commonLanguages = new HashSet<String>();
 
@@ -39,7 +39,7 @@ public class NoCommonLanguages extends Issue<NoCommonLanguagesResult> {
         return new NoCommonLanguagesResult(commonLanguages);
     }
 
-    private void findCommonLanguages() throws OpenRDFException {
+    private void findCommonLanguages() throws RDF4JException {
         for (Map.Entry<Resource, Collection<String>> entry : languageCoverage.getResult().getData().entrySet()) {
             commonLanguages.retainAll(entry.getValue());
         }

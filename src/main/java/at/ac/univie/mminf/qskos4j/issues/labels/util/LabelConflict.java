@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.util.HashSet;
 import java.util.Set;

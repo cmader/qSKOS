@@ -3,9 +3,9 @@ package at.ac.univie.mminf.qskos4j.issues;
 import at.ac.univie.mminf.qskos4j.progress.IProgressMonitor;
 import at.ac.univie.mminf.qskos4j.progress.StubProgressMonitor;
 import at.ac.univie.mminf.qskos4j.result.Result;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 public abstract class Issue<T extends Result<?>> {
 
@@ -47,9 +47,9 @@ public abstract class Issue<T extends Result<?>> {
         this.weblink = weblink;
     }
 
-    protected abstract T invoke() throws OpenRDFException;
+    protected abstract T invoke() throws RDF4JException;
 
-    public final T getResult() throws OpenRDFException {
+    public final T getResult() throws RDF4JException {
         if (result == null) {
             result = invoke();
         }

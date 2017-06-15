@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.model.URI;
+import org.eclipse.rdf4j.model.URI;
 
 import java.util.ArrayList;
 import java.util.Collection;

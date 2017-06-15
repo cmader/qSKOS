@@ -2,8 +2,8 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.Result;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.URI;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ class ReportCollector {
     }
 
     void outputIssuesReport(boolean shouldWriteGraphs)
-        throws IOException, OpenRDFException
+        throws IOException, RDF4JException
     {
         File reportFile = createReportFile();
         BufferedWriter reportWriter = new BufferedWriter(new FileWriter(reportFile));
@@ -59,7 +59,7 @@ class ReportCollector {
         reportWriter.write(reportSummary);
     }
 
-    private void processIssues() throws OpenRDFException {
+    private void processIssues() throws RDF4JException {
         int issueNumber = 0;
         Iterator<Issue> issueIt = issues.iterator();
         while (issueIt.hasNext()) {
@@ -74,7 +74,7 @@ class ReportCollector {
         logger.info("Report complete!");
     }
 
-    private String createReportSummary() throws IOException, OpenRDFException {
+    private String createReportSummary() throws IOException, RDF4JException {
         StringBuffer summary = new StringBuffer();
         summary.append("* Summary of Quality Issue Occurrences:\n");
 
@@ -86,7 +86,7 @@ class ReportCollector {
         return summary.toString();
     }
 
-    private String prepareOccurrenceText(Issue issue) throws OpenRDFException {
+    private String prepareOccurrenceText(Issue issue) throws RDF4JException {
         String occurrenceText = "";
         if (issue.getResult().isProblematic()) {
             occurrenceText = "FAIL";
@@ -108,7 +108,7 @@ class ReportCollector {
     private void writeReportBody(BufferedWriter reportWriter,
                                  File reportFile,
                                  boolean shouldWriteGraphs)
-        throws IOException, OpenRDFException
+        throws IOException, RDF4JException
     {
         reportWriter.write("* Detailed coverage of each Quality Issue:\n\n");
         Iterator<Issue> issueIt = issues.iterator();
@@ -134,7 +134,7 @@ class ReportCollector {
     }
 
     private void writeTextReport(Issue issue, BufferedWriter writer)
-        throws IOException, OpenRDFException
+        throws IOException, RDF4JException
     {
         writer.write(createIssueHeader(issue));
         writer.newLine();
@@ -163,7 +163,7 @@ class ReportCollector {
         return absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
     }
 
-    private void writeGraphFiles(Issue issue, String dotFilesPath) throws IOException, OpenRDFException {
+    private void writeGraphFiles(Issue issue, String dotFilesPath) throws IOException, RDF4JException {
         BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(dotFilesPath + issue.getId() + ".dot"));
         issue.getResult().generateReport(graphFileWriter, Result.ReportFormat.DOT);
         graphFileWriter.close();

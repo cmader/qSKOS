@@ -1,13 +1,13 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class ResourceLabelsCollector {
                 TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, labelQuery).evaluate();
                 addResultToLabels(labelType, result);
             }
-            catch (OpenRDFException e) {
+            catch (RDF4JException e) {
                 logger.error("error querying repository: " +labelQuery);
             }
         }

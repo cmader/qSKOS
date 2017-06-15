@@ -4,11 +4,11 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.*;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelat
     }
 
     @Override
-    protected UnidirectionallyRelatedConceptsResult invoke() throws OpenRDFException {
+    protected UnidirectionallyRelatedConceptsResult invoke() throws RDF4JException {
         String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         for (String[] inversePropertyPair : inversePropertyPairs) {

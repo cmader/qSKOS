@@ -8,10 +8,10 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class MissingLabelsTest {
     private Collection<Resource> conceptsAndConceptSchemesWithMissingLabels;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         RepositoryConnection repCon = new RepositoryBuilder().setUpFromTestResource("missingLabels.rdf").getConnection();
 
         AuthoritativeConcepts authConcepts = new AuthoritativeConcepts(new InvolvedConcepts());
@@ -32,7 +32,7 @@ public class MissingLabelsTest {
     }
 
     @Test
-    public void checkLabeledConcepts() throws OpenRDFException {
+    public void checkLabeledConcepts() throws RDF4JException {
         conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult().getData();
 
         Assert.assertTrue(isUnlabeled("conceptA"));
@@ -48,7 +48,7 @@ public class MissingLabelsTest {
     }
 
     @Test
-    public void checkLabeledConceptSchemes() throws OpenRDFException {
+    public void checkLabeledConceptSchemes() throws RDF4JException {
         conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult().getData();
 
         Assert.assertTrue(isUnlabeled("conceptSchemeC"));
@@ -61,7 +61,7 @@ public class MissingLabelsTest {
     }
 
     @Test
-    public void countMissingLabels() throws OpenRDFException {
+    public void countMissingLabels() throws RDF4JException {
         conceptsAndConceptSchemesWithMissingLabels = missingLabels.getResult().getData();
         Assert.assertEquals(7, conceptsAndConceptSchemesWithMissingLabels.size());
     }

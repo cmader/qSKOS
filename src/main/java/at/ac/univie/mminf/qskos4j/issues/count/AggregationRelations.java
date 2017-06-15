@@ -4,9 +4,9 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
 
 /**
  * Created by christian
@@ -29,7 +29,7 @@ public class AggregationRelations extends Issue<NumberResult<Long>> {
     }
 
     @Override
-    protected NumberResult<Long> invoke() throws OpenRDFException {
+    protected NumberResult<Long> invoke() throws RDF4JException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createAggregationRelationsQuery());
         return new NumberResult<Long>(TupleQueryResultUtil.countResults(query.evaluate()));
     }

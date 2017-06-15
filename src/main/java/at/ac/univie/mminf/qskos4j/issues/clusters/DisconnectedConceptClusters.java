@@ -8,15 +8,15 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
     }
 
     @Override
-    protected ClustersResult invoke() throws OpenRDFException {
+    protected ClustersResult invoke() throws RDF4JException {
         createGraph();
 
         Collection<Collection<Resource>> connectedSets = new ArrayList<Collection<Resource>>();
@@ -60,7 +60,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
         return new ClustersResult(connectedSets, graph);
     }
 
-    private void createGraph() throws OpenRDFException
+    private void createGraph() throws RDF4JException
     {
         graph = new DirectedMultigraph<Resource, NamedEdge>(NamedEdge.class);
 
@@ -96,7 +96,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
                 }
             }
         }
-        catch (OpenRDFException e) {
+        catch (RDF4JException e) {
             logger.error("Error finding relations of concept '" +concept+ "'");
         }
 

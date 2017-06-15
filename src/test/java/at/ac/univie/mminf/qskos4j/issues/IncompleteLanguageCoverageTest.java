@@ -7,9 +7,9 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ public class IncompleteLanguageCoverageTest {
     private IncompleteLanguageCoverage incompleteLanguageCoverage;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         incompleteLanguageCoverage = new IncompleteLanguageCoverage(new LanguageCoverage(new InvolvedConcepts()));
         incompleteLanguageCoverage.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test
-    public void testIncompleteLanguageCoverageCount() throws OpenRDFException
+    public void testIncompleteLanguageCoverageCount() throws RDF4JException
     {
         Map<Resource, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
         Assert.assertEquals(13, incompleteLangCoverage.size());
@@ -36,7 +36,7 @@ public class IncompleteLanguageCoverageTest {
 
     @Test
     public void testExistResourcesNotHavingEnglishLabels()
-            throws OpenRDFException
+            throws RDF4JException
     {
         Map<Resource, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
 
@@ -51,7 +51,7 @@ public class IncompleteLanguageCoverageTest {
 
     @Test
     public void testResourcesMissingOnlyFrenchLabelsCount()
-            throws OpenRDFException
+            throws RDF4JException
     {
         Map<Resource, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
 

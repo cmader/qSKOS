@@ -1,6 +1,6 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.Collection;
 

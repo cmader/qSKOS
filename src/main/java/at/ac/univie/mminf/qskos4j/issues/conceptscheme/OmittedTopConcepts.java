@@ -3,12 +3,12 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.BooleanQuery;
-import org.openrdf.query.QueryLanguage;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.BooleanQuery;
+import org.eclipse.rdf4j.query.QueryLanguage;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
     }
 
     @Override
-    protected CollectionResult<Resource> invoke() throws OpenRDFException {
+    protected CollectionResult<Resource> invoke() throws RDF4JException {
         Collection<Resource> csWithOmittedTopConcepts = new HashSet<Resource>();
 
         for (Resource conceptScheme : conceptSchemes.getResult().getData()) {

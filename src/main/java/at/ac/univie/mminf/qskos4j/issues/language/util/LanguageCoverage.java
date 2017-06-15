@@ -3,11 +3,11 @@ package at.ac.univie.mminf.qskos4j.issues.language.util;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.query.*;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class LanguageCoverage extends Issue<LanguageCoverageResult> {
     }
 
     @Override
-    protected LanguageCoverageResult invoke() throws OpenRDFException {
+    protected LanguageCoverageResult invoke() throws RDF4JException {
         languageCoverage = new HashMap<Resource, Collection<String>>();
 
         Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
@@ -42,7 +42,7 @@ public class LanguageCoverage extends Issue<LanguageCoverageResult> {
                 TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createLanguageLiteralQuery(concept));
                 addToLanguageCoverageMap(concept, query.evaluate());
             }
-            catch (OpenRDFException e) {
+            catch (RDF4JException e) {
                 logger.error("Error finding languages for concept '" +concept+ "'");
             }
         }
@@ -64,7 +64,7 @@ public class LanguageCoverage extends Issue<LanguageCoverageResult> {
             BindingSet queryResult = result.next();
             Literal literal = (Literal) queryResult.getValue("literal");
 
-            String language = literal.getLanguage();
+            String language = literal.getLanguage().orElse(null);
             addToLanguageCoverageMap(concept, language);
         }
     }

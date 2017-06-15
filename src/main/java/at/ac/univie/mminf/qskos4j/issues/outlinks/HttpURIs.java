@@ -2,11 +2,11 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,7 +31,7 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
     }
 
     @Override
-    protected CollectionResult<URI> invoke() throws OpenRDFException {
+    protected CollectionResult<URI> invoke() throws RDF4JException {
         RepositoryResult<Statement> result = repCon.getStatements(null, null, null, false, (Resource) null);
         while (result.hasNext()) {
             Statement st = result.next();
@@ -40,7 +40,7 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
             tripleValues.addAll(Arrays.asList(st.getSubject(), st.getObject(), st.getPredicate()));
 
             for (Value value : tripleValues) {
-                if (value instanceof org.openrdf.model.URI) addToUrlList(value);
+                if (value instanceof org.eclipse.rdf4j.model.IRI) addToUrlList(value);
             }
         }
 

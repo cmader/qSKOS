@@ -10,8 +10,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
-import org.openrdf.OpenRDFException;
-import org.openrdf.repository.Repository;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.repository.Repository;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,12 +94,12 @@ public class VocEvaluate {
 		catch (IOException ioException) {
 			System.err.println("!! Error reading file: " +ioException.getMessage());
 		}
-		catch (OpenRDFException rdfException) {
+		catch (RDF4JException rdfException) {
 			System.err.println("!! Error processing vocabulary: " +rdfException.getMessage());
 		} 
 	}
 		
-	public VocEvaluate(String[] args) throws OpenRDFException, IOException
+	public VocEvaluate(String[] args) throws RDF4JException, IOException
 	{
         qskos = new QSkos();
         parseCmdParams(args);
@@ -146,7 +146,7 @@ public class VocEvaluate {
 		}
 	}
 		
-	private void listIssuesOrEvaluate() throws OpenRDFException, IOException
+	private void listIssuesOrEvaluate() throws RDF4JException, IOException
 	{
 		if (parsedCommand.vocabFilenames == null) {
 			if (parsedCommand instanceof CommandAnalyze) {
@@ -186,7 +186,7 @@ public class VocEvaluate {
         }
 	}
 	
-	private void evaluate() throws OpenRDFException, IOException
+	private void evaluate() throws RDF4JException, IOException
 	{
 		setup();
 
@@ -197,7 +197,7 @@ public class VocEvaluate {
         reportCollector.outputIssuesReport(shouldWriteGraphs());
 	}
 	
-	private void setup() throws OpenRDFException, IOException {
+	private void setup() throws RDF4JException, IOException {
         setupLogging();
 
         RepositoryBuilder repositoryBuilder = new RepositoryBuilder();

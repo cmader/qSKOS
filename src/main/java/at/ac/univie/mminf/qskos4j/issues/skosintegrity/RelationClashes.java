@@ -10,12 +10,12 @@ import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -40,7 +40,7 @@ public class RelationClashes extends Issue<CollectionResult<Tuple<Resource>>> {
     }
 
     @Override
-    protected CollectionResult<Tuple<Resource>> invoke() throws OpenRDFException {
+    protected CollectionResult<Tuple<Resource>> invoke() throws RDF4JException {
         Graph<Resource, NamedEdge> hierarchyGraph = hierarchyGraphBuilder.createGraph();
 
         Collection<Tuple<Resource>> clashes = new HashSet<Tuple<Resource>>();
@@ -64,7 +64,7 @@ public class RelationClashes extends Issue<CollectionResult<Tuple<Resource>>> {
         return new CollectionResult<Tuple<Resource>>(clashes);
     }
 
-    private Collection<Tuple<Resource>> findRelatedConcepts() throws OpenRDFException {
+    private Collection<Tuple<Resource>> findRelatedConcepts() throws RDF4JException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createRelatedConceptsQuery()).evaluate();
         return TupleQueryResultUtil.createCollectionOfResourcePairs(result, "concept1", "concept2");
     }

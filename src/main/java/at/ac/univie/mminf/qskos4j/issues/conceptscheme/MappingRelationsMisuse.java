@@ -5,12 +5,12 @@ import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
     }
 
     @Override
-    protected CollectionResult<Statement> invoke() throws OpenRDFException {
+    protected CollectionResult<Statement> invoke() throws RDF4JException {
         Collection<Statement> problematicRelations = new ArrayList<Statement>();
 
         RepositoryResult<Statement> result = repCon.getStatements(
@@ -53,7 +53,7 @@ public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
         return new CollectionResult<Statement>(problematicRelations);
     }
 
-    private boolean areAuthoritativeConcepts(Resource... concepts) throws OpenRDFException {
+    private boolean areAuthoritativeConcepts(Resource... concepts) throws RDF4JException {
         for (Resource concept : concepts) {
             boolean isAuthoritativeConcept = false;
             for (Resource authoritativeConcept : authoritativeConcepts.getResult().getData()) {
@@ -65,11 +65,11 @@ public class MappingRelationsMisuse extends Issue<CollectionResult<Statement>> {
         return true;
     }
 
-    private boolean inSameConceptScheme(Resource concept, Resource otherConcept) throws OpenRDFException {
+    private boolean inSameConceptScheme(Resource concept, Resource otherConcept) throws RDF4JException {
         return repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(concept, otherConcept)).evaluate();
     }
 
-    private boolean inNoConceptScheme(Resource concept, Resource otherConcept) throws OpenRDFException {
+    private boolean inNoConceptScheme(Resource concept, Resource otherConcept) throws RDF4JException {
         boolean conceptInScheme = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(concept)).evaluate();
         boolean otherConceptInScheme = repCon.prepareBooleanQuery(QueryLanguage.SPARQL, createInSchemeQuery(otherConcept)).evaluate();
 

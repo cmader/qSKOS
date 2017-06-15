@@ -6,8 +6,8 @@ import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Resource;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Resource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -23,14 +23,14 @@ public class DisconnectedConceptClustersTest {
     private InvolvedConcepts involvedConcepts;
 
     @Before
-    public void setUp() throws OpenRDFException, IOException {
+    public void setUp() throws RDF4JException, IOException {
         involvedConcepts = new InvolvedConcepts();
         disconnectedConceptClusters = new DisconnectedConceptClusters(involvedConcepts);
         disconnectedConceptClusters.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
     }
 
     @Test
-    public void testComponentCount() throws OpenRDFException {
+    public void testComponentCount() throws RDF4JException {
         long conceptCount = involvedConcepts.getResult().getData().size();
         Collection<Collection<Resource>> components = disconnectedConceptClusters.getResult().getData();
 
