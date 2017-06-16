@@ -32,6 +32,10 @@ public class LabelConflict {
         conflicts.add(labeledResource);
     }
 
+	public Set<LabeledConcept> getConflicts() {
+		return conflicts;
+	}
+
 	@Override
 	public String toString() {
         return conflicts.toString();
