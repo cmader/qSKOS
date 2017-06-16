@@ -39,7 +39,7 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Tu
 
     @Override
     protected CollectionResult<Tuple<Resource>> invoke() throws RDF4JException {
-        solitaryTransitiveRelations = new ArrayList<Statement>();
+        solitaryTransitiveRelations = new ArrayList<>();
         for (String[] transitivePropertyPair : transitiveNontransiviteInverseProperties) {
             String query = createSolitaryTransitiveRelationsQuery(transitivePropertyPair);
             TupleQuery tupleQuery = repCon.prepareTupleQuery(QueryLanguage.SPARQL, query);
@@ -50,9 +50,9 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Tu
 	}
 
     private CollectionResult<Tuple<Resource>> createReport() {
-        Collection<Tuple<Resource>> relatedConcepts = new HashSet<Tuple<Resource>>();
+        Collection<Tuple<Resource>> relatedConcepts = new HashSet<>();
         for (Statement statement : solitaryTransitiveRelations) {
-            relatedConcepts.add(new Tuple<Resource>(statement.getSubject(), (Resource) statement.getObject()));
+            relatedConcepts.add(new Tuple<>(statement.getSubject(), (Resource) statement.getObject()));
         }
 
         return new CollectionResult(relatedConcepts);

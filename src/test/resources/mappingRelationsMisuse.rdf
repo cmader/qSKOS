@@ -19,31 +19,37 @@
 
     <!-- undefined concept schemes - ERROR -->
     <rdf:Description rdf:about="conceptC">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:broadMatch rdf:resource="conceptD"/>
     </rdf:Description>
 
     <!-- different concept schemes - OK -->
     <rdf:Description rdf:about="conceptE">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:broadMatch rdf:resource="conceptF"/>
         <skos:inScheme rdf:resource="myScheme"/>
     </rdf:Description>
 
     <rdf:Description rdf:about="conceptF">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:inScheme rdf:resource="otherScheme"/>
     </rdf:Description>
 
     <!-- concept schemes with topConceptOf - OK -->
     <rdf:Description rdf:about="conceptG">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:topConceptOf rdf:resource="myScheme"/>
         <skos:broadMatch rdf:resource="conceptH"/>
     </rdf:Description>
 
     <rdf:Description rdf:about="conceptH">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:inScheme rdf:resource="otherScheme"/>
     </rdf:Description>
 
     <!-- concept schemes with topConceptOf - ERROR -->
     <rdf:Description rdf:about="conceptI">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:topConceptOf rdf:resource="myScheme"/>
         <skos:broadMatch rdf:resource="conceptJ"/>
     </rdf:Description>
@@ -55,6 +61,7 @@
     </rdf:Description>
 
     <rdf:Description rdf:about="conceptK">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:broadMatch rdf:resource="conceptL"/>
     </rdf:Description>
 
@@ -64,6 +71,7 @@
     </rdf:Description>
 
     <rdf:Description rdf:about="conceptM">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
         <skos:broadMatch rdf:resource="conceptN"/>
     </rdf:Description>
 

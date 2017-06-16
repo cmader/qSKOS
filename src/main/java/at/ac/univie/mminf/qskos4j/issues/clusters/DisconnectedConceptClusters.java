@@ -54,17 +54,17 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
     protected ClustersResult invoke() throws RDF4JException {
         createGraph();
 
-        Collection<Collection<Resource>> connectedSets = new ArrayList<Collection<Resource>>();
-        connectedSets.addAll(new ConnectivityInspector<Resource, NamedEdge>(graph).connectedSets());
+        Collection<Collection<Resource>> connectedSets = new ArrayList<>();
+        connectedSets.addAll(new ConnectivityInspector<>(graph).connectedSets());
 
         return new ClustersResult(connectedSets, graph);
     }
 
     private void createGraph() throws RDF4JException
     {
-        graph = new DirectedMultigraph<Resource, NamedEdge>(NamedEdge.class);
+        graph = new DirectedMultigraph<>(NamedEdge.class);
 
-        Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
+        Iterator<Resource> conceptIt = new MonitoredIterator<>(involvedConcepts.getResult().getData(), progressMonitor);
         while (conceptIt.hasNext()) {
             Resource concept = conceptIt.next();
             Collection<Relation> relations = findRelations(concept);
@@ -80,7 +80,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
 
     private Collection<Relation> findRelations(Resource concept)
     {
-        Collection<Relation> allRelations = new ArrayList<Relation>();
+        Collection<Relation> allRelations = new ArrayList<>();
 
         try {
             TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConnectionsQuery(concept));

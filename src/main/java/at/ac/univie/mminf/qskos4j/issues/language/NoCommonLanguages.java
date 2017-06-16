@@ -29,10 +29,13 @@ public class NoCommonLanguages extends Issue<NoCommonLanguagesResult> {
     @Override
     protected NoCommonLanguagesResult invoke() throws RDF4JException {
         Map<Resource, Collection<String>> langCovData = languageCoverage.getResult().getData();
-        commonLanguages = new HashSet<String>();
+        commonLanguages = new HashSet<>();
 
         if (!langCovData.isEmpty()) {
-            commonLanguages.addAll(langCovData.entrySet().iterator().next().getValue());
+            for (Collection languages : langCovData.values()) {
+                commonLanguages.addAll(languages);
+            }
+
             findCommonLanguages();
         }
 

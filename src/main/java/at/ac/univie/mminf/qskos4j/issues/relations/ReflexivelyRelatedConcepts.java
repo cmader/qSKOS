@@ -75,8 +75,4 @@ public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement
         return false;
     }
 
-    private boolean isAuthoritativeConcept(Resource resource) throws RDF4JException {
-        return authoritativeConcepts.getResult().getData().contains(resource);
-    }
-
 }

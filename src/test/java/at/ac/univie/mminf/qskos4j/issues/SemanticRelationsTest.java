@@ -21,7 +21,7 @@ public class SemanticRelationsTest {
     @Before
     public void setUp() throws RDF4JException, IOException {
         semanticRelations = new SemanticRelations();
-        semanticRelations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        semanticRelations.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
     }
 
     @Test

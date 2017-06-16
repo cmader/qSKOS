@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:cycAnnot="http://sw.cyc.com/CycAnnotations_v1#"
+	xmlns:cyc="http://sw.cyc.com/concept/"
+	xmlns:dbpedia="http://dbpedia.org/resource/"
+	xmlns:ctag="http://commontag.org/ns#"
+	xmlns:opencyc="http://sw.opencyc.org/concept/"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:csw="http://semantic-web.at/ontologies/csw.owl#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:freebase="http://rdf.freebase.com/ns/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:tags="http://www.holygoat.co.uk/owl/redwood/0.1/tags/"
+	xmlns:sesame="http://www.openrdf.org/schema/sesame#"
+	xmlns:fn="http://www.w3.org/2005/xpath-functions#">
+
+<rdf:Description rdf:about="https://editor.vocabs.ands.org.au/ands-rowan-test-2/disconnected-concept-clusters">
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:02:30Z</dcterms:created>
+	<dcterms:title xml:lang="en">disconnected concept clusters</dcterms:title>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<rdfs:label xml:lang="en">disconnected concept clusters</rdfs:label>
+	<skos:hasTopConcept rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-one"/>
+	<skos:hasTopConcept rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-two"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-one">
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:02:41Z</dcterms:created>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">top one</skos:prefLabel>
+	<skos:topConceptOf rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/disconnected-concept-clusters"/>
+	<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:03:02Z</dcterms:modified>
+	<skos:related rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-two"/>
+	<skos:narrower rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/narrow-one"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-two">
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:02:48Z</dcterms:created>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">top two</skos:prefLabel>
+	<skos:topConceptOf rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/disconnected-concept-clusters"/>
+	<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:03:02Z</dcterms:modified>
+	<skos:related rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-one"/>
+	<skos:narrower rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/narrow-two"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://editor.vocabs.ands.org.au/ands-rowan-test-2/narrow-one">
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:03:18Z</dcterms:created>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:broader rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-one"/>
+	<skos:prefLabel xml:lang="en">narrow one</skos:prefLabel>
+	<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:03:41Z</dcterms:modified>
+	<skos:related rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/narrow-two"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://editor.vocabs.ands.org.au/ands-rowan-test-2/narrow-two">
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:03:30Z</dcterms:created>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:broader rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/top-two"/>
+	<skos:prefLabel xml:lang="en">narrow two</skos:prefLabel>
+	<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2016-08-04T08:03:41Z</dcterms:modified>
+	<skos:related rdf:resource="https://editor.vocabs.ands.org.au/ands-rowan-test-2/narrow-one"/>
+</rdf:Description>
+
+</rdf:RDF>

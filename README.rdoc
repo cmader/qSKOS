@@ -174,6 +174,8 @@ In order to get an impression about the impact of using qSKOS for improving voca
 == Contributors
 
 * Christian Mader ({@cmader}[https://github.com/cmader])
+* Riccardo Albertoni ({@riccardoAlbertoni}[https://github.com/riccardoAlbertoni])
+* Thomas Francart ({@tfrancart}[https://github.com/tfrancart])
 * Bernhard Haslhofer ({@behas}[https://github.com/behas])
 * Antoine Isaac ({@aisaac}[https://github.com/aisaac])
 

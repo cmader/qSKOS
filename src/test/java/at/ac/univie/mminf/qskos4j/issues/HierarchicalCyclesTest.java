@@ -24,7 +24,7 @@ public class HierarchicalCyclesTest {
         hierarchicalCycles.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("cycles.rdf").getConnection());
 
         hierarchicalCyclesForComponents = new HierarchicalCycles(new HierarchyGraphBuilder());
-        hierarchicalCyclesForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        hierarchicalCyclesForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
     }
 
     @Test

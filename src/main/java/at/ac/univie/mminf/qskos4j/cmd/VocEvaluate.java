@@ -12,6 +12,7 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.rio.RDFFormat;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +69,10 @@ public class VocEvaluate {
         @SuppressWarnings("unused")
         @Parameter(names = {"-sf", "--stream-friendly"}, description = "Print the progress indicator in a stream-friendly format")
         private boolean streamFriendly;
+        
+        @SuppressWarnings("unused")
+        @Parameter(names = {"-DQV", "--DataQualityVocabulary"}, description = "Print quality results as QualityMeasurement of W3C Data Quality Vocabulary")
+        private boolean inDQV;
 
     }
 	
@@ -191,9 +196,13 @@ public class VocEvaluate {
 		setup();
 
         String command = jc.getParsedCommand();
-        reportCollector = new ReportCollector(extractMeasures(),
+        String datasetAnalized=new String();
+        for (String s : parsedCommand.vocabFilenames) {datasetAnalized+= s;}
+        
+       reportCollector = new ReportCollector(extractMeasures(),
                 parsedCommand.reportFileName,
-                command.equals(CMD_NAME_ANALYZE));
+                parsedCommand.vocabFilenames,
+                command.equals(CMD_NAME_ANALYZE), parsedCommand.inDQV, datasetAnalized);
         reportCollector.outputIssuesReport(shouldWriteGraphs());
 	}
 	
@@ -201,7 +210,8 @@ public class VocEvaluate {
         setupLogging();
 
         RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
-        Repository repo = repositoryBuilder.setUpFromFile(new File(parsedCommand.vocabFilenames.get(0)), null, null);
+        File inputFile = new File(parsedCommand.vocabFilenames.get(0));
+        Repository repo = repositoryBuilder.setUpFromFile(inputFile, null, useRdfXmlFormatIfExtensionIsXml(inputFile));
         qskos.setRepositoryConnection(repo.getConnection());
 		qskos.setAuthResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
 		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
@@ -223,6 +233,13 @@ public class VocEvaluate {
                 qskos.setProgressMonitor(new ConsoleProgressMonitor());
             }
         }
+    }
+
+    private RDFFormat useRdfXmlFormatIfExtensionIsXml(File inputFile) {
+        if (inputFile.getName().toLowerCase().endsWith(".xml")) {
+            return RDFFormat.RDFXML;
+        }
+        return null;
     }
 
     private void setupLogging() {
@@ -257,7 +274,7 @@ public class VocEvaluate {
 	}
 	
 	private Collection<Issue> getAllIssuesForCommand() {
-		List<Issue> issuesForCommand = new ArrayList<Issue>();
+		List<Issue> issuesForCommand = new ArrayList<>();
 		
 		for (Issue issue : qskos.getAllIssues()) {
 			String command = jc.getParsedCommand();

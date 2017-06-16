@@ -15,7 +15,7 @@ public class HierarchicalRedundancyTest {
 
     @Before
     public void setUp() throws RDF4JException, IOException {
-        hierarchicalRedundancy = new HierarchicalRedundancy();
+        hierarchicalRedundancy = new HierarchicalRedundancy(new HierarchyGraphBuilder());
         hierarchicalRedundancy.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("hierarchicalRedundancy.rdf").getConnection());
     }
 

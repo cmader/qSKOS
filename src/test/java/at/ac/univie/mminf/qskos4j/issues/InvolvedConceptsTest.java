@@ -21,7 +21,7 @@ public class InvolvedConceptsTest {
         involvedConceptsForConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());
 
         involvedConceptsForComponents = new InvolvedConcepts();
-        involvedConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        involvedConceptsForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
     }
 
     @Test

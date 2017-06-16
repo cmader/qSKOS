@@ -24,7 +24,7 @@ public class IncompleteLanguageCoverageTest {
     @Before
     public void setUp() throws RDF4JException, IOException {
         incompleteLanguageCoverage = new IncompleteLanguageCoverage(new LanguageCoverage(new InvolvedConcepts()));
-        incompleteLanguageCoverage.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        incompleteLanguageCoverage.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class IncompleteLanguageCoverageTest {
     {
         Map<Resource, Collection<String>> incompleteLangCoverage = incompleteLanguageCoverage.getResult().getData();
 
-        List<Value> foundResources = new ArrayList<Value>();
+        List<Value> foundResources = new ArrayList<>();
         for (Value resource : incompleteLangCoverage.keySet()) {
             Collection<String> missingLanguages = incompleteLangCoverage.get(resource);
             if (missingLanguages.size() == 1 && missingLanguages.contains("fr")) {

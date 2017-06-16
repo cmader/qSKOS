@@ -78,7 +78,7 @@ public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
 
             Set<LabeledConcept> affectedConcepts = conceptLabels.get(literal);
             if (affectedConcepts == null) {
-                affectedConcepts = new HashSet<LabeledConcept>();
+                affectedConcepts = new HashSet<>();
             }
 
             // We're not interested in conflicts within the same concept

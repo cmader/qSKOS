@@ -1,0 +1,466 @@
+prefix dqv: <http://www.w3.org/ns/dqv#>
+prefix qs: <http://w3id.org/quality/qskos/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# definition of instances for some of the  metrics, dimensions and categories deployed
+# in qSKOS according to https://github.com/cmader/qSKOS/wiki/Quality-Issues
+
+
+#Categories
+
+qs:labelingDocumentationIssues
+    a  dqv:Category ;
+    skos:prefLabel "Labeling and Documentation Issues"@en ;
+    skos:definition "Category grouping labeling and documentation issues"@en 
+    . 
+
+qs:structuralIssues  
+    a  dqv:Category ;
+    skos:prefLabel "Structural Issues"@en ;
+    skos:definition "Category grouping structural issues"@en 
+    . 
+
+qs:linkedDataSpecificIssues  
+    a  dqv:Category ;
+    skos:prefLabel "Linked Data Specific Issues"@en ;
+    skos:definition "Category grouping linked data specific issues"@en 
+    .
+
+qs:skosSemiFormalConsistencyIssues
+    a  dqv:Category ;
+    skos:prefLabel " SKOS Semi-Formal Consistency Issues"@en ;
+    skos:definition "Category grouping SKOS semi-formal consistency issues"@en 
+    .
+
+#Metrics and Dimensions
+
+qs:numOfOmittedorInvalidLanguageTags 
+    a dqv:Metric;
+    skos:prefLabel "no. of Omitted or Invalid Language Tags"@en ;
+    skos:definition "Number of omitted or invalid language tags"@en ;
+    skos:note "Iteration over all triples in the vocabulary that have a predicate which is a (subclass of) rdfs:label or skos:note."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:omittedOrInvalidLanguageTags  
+    .
+qs:omittedOrInvalidLanguageTags 
+    a  dqv:Dimension;
+    skos:prefLabel "Omitted Or Invalid Language Tags "@en ;
+    skos:definition "Some controlled vocabularies contain literals in natural language, but without information what language has actually been used. Language tags might also not conform to language standards, such as RFC 3066."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-or-invalid-language-tags> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+qs:numOfIncompleteLanguageCoverage
+    a dqv:Metric;
+    skos:prefLabel "no. of Incomplete Language  Concepts"@en ;
+    skos:definition "Number of concepts lacking description in languages that are present for other concepts"@en ;
+    skos:note "Iteration over all concepts in the vocabulary and creation of a global set of language tags appearing in the vocabulary. In a second iteration, each concept having a set of language tags that is not equal to the global language tag set is returned."@en ;
+     dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:incompleteLanguageCoverage .
+
+qs:incompleteLanguageCoverage
+    a  dqv:Dimension;
+    skos:prefLabel "Incomplete Language Coverage"@en ;
+    skos:definition "Some concepts in a thesaurus are labeled in only one language, some in multiple languages. It may be desirable to have each concept labeled in each of the languages that also are used on the other concepts. This is not always possible, but incompleteness of language coverage for some concepts can indicate shortcomings of the vocabulary."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#incomplete-language-coverage> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+qs:numOfNoCommonLanguages
+    a dqv:Metric;
+    skos:prefLabel "No Common Languages"@en ;
+    skos:definition "No Common Languages, false implies that at least one common language for text literals of all concepts has been found."@en ;
+    #skos:note ""@en ;
+    dqv:expectedDataType xsd:boolean ;
+    dqv:inDimension  qs:commonLanguage .
+
+qs:commonLanguage  a  dqv:Dimension;
+    skos:prefLabel "Common Languages"@en ;
+    skos:definition "Checks if all concepts have at least one common language, i.e. they have assigned at least one literal in the same language."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#no-common-language> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+qs:numOfUndocumentedConcepts
+    a dqv:Metric;
+    skos:prefLabel "no. of Undocumented Concepts"@en ;
+    skos:definition "Number of concepts undocumented, i.e. that don't use any SKOS documentation properties."@en ;
+    skos:note "Iteration over all concepts in the vocabulary and find those not using one of skos:note, skos:changeNote, skos:definition, skos:editorialNote, skos:example, skos:historyNote, or skos:scopeNote"@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:undocumentedConcepts .
+
+qs:undocumentedConcepts  a  dqv:Dimension;
+    skos:prefLabel "Undocumented Concepts"@en ;
+    skos:definition "The SKOS standard defines a number of properties useful for documenting the meaning of the concepts in a thesaurus (section 7) also in a human-readable form. Intense use of these properties leads to a well-documented thesaurus which should also improve its quality."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#undocumented-concepts> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+# checked
+qs:numOfOverlappingLabels
+a dqv:Metric;
+    skos:prefLabel "no. of Overlapping Labels"@en ;
+    skos:definition "Number of Overlapping Labels"@en ;
+    skos:note "Iteration over all authoritative concepts, collecting their respective labels. In a second pass, similarity of all possible label pairs is checked by a similarity function. Concept labels with a similarity value below a given threshold, are considered conflicting and are returned. In the current implementation, the similarity function is string equality with a threshold equal to 1."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:overlappingLabels .
+
+qs:overlappingLabels  a  dqv:Dimension;
+    skos:prefLabel "Overlapping Labels"@en ;
+    skos:definition "This is a generalization of a recommendation in the SKOS primer, that no two concepts have the same preferred lexical label in a given language when they belong to the same concept scheme. This could indicate missing disambiguation information and thus lead to problems in autocompletion application."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#overlapping-labels> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+
+qs:numOfMissingLabels
+    a dqv:Metric;
+    skos:prefLabel "no. of concepts(/schemes) with Missing Labels"@en ;
+    skos:definition "Number of concepts or conceptschemes with no Label."@en ;
+   # skos:note "To make the vocabulary more convenient for humans to use, instances of SKOS classes (Concept, ConceptScheme, Collection) should be labeled using e.g., prefLabel, altLabel, rdfs:label, dc:title."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:missingLabels .
+
+qs:missingLabels
+    a  dqv:Dimension;
+    skos:prefLabel "Missing Labels"@en ;
+    skos:definition "To make the vocabulary more convenient for humans to use, instances of SKOS classes (Concept, ConceptScheme, Collection) should be labeled using e.g., prefLabel, altLabel, rdfs:label, dc:title."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-labels> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+qs:numOfEmptyLabels
+    a dqv:Metric;
+    skos:prefLabel "no. of Empty Labels"@en ;
+    skos:definition "Number of SKOS Labels having lengh 0 after removing blank spaces."@en ;
+   # skos:note "To make the vocabulary more convenient for humans to use, instances of SKOS classes (Concept, ConceptScheme, Collection) should be labeled using e.g., prefLabel, altLabel, rdfs:label, dc:title."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:emptyLabels .
+
+qs:emptyLabels
+    a  dqv:Dimension;
+    skos:prefLabel "Empty Labels"@en ;
+    skos:definition "Labels also need to contain textual information to be useful."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#empty-labels> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+
+qs:numOfAmbiguousNotationReferences
+    a dqv:Metric;
+    skos:prefLabel "no. of Ambiguous Notation References"@en ;
+    skos:definition "Number of concepts having Ambiguous Notation References, i.e., with concepts with multiple or identical notations within the same concept scheme."@en ;
+   # skos:note "To make the vocabulary more convenient for humans to use, instances of SKOS classes (Concept, ConceptScheme, Collection) should be labeled using e.g., prefLabel, altLabel, rdfs:label, dc:title."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:AmbiguousNotationReferences .
+
+qs:AmbiguousNotationReferences
+    a  dqv:Dimension;
+    skos:prefLabel "Ambiguous Notation References"@en ;
+    skos:definition "Concepts within the same concept scheme should not have identical skos:notation literals."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#ambiguous-notation-references> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+
+qs:numOfUnprintableCharactersinLabels
+    a dqv:Metric;
+    skos:prefLabel "no. of labels with Unprintable Characters"@en ;
+    skos:definition "Number of labels with unprintable characters."@en ;
+    skos:note "pref/alt/hiddenlabels contain characters that are not alphanumeric characters or blanks. A SPARQL query would be sufficient to find labels having characters that belong to the unicode general category Zl, Zp and C"@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:unprintableCharactersinLabels
+.
+
+qs:unprintableCharactersinLabels
+     a  dqv:Dimension;
+    skos:prefLabel "Unprintable Characters in Labels"@en ;
+    skos:definition "pref/alt/hiddenlabels contain characters that are not alphanumeric characters or blanks."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#unprintable-characters-in-labels> ;
+    dqv:inCategory qs:labelingDocumentationIssues .
+
+# checked
+qs:numOfOrphanConcepts
+    a dqv:Metric;
+    skos:prefLabel "no. of Orphan Concepts"@en ;
+    skos:definition "Number of Orphan Concepts, i.e. those not having semantic relationships to other concepts."@en ;
+    skos:note "Iteration over all concepts in the vocabulary and returning that don't have associated resources using (subproperties of) skos:semanticRelation."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:orphanConcepts .
+
+qs:orphanConcepts a  dqv:Dimension;
+    skos:prefLabel "Orphan Concepts"@en ;
+    skos:definition "An orphan concept is a concept without any associative or hierarchical relations. It might have attached literals like e.g., labels, but is not connected to any other resource, lacking valuable context information. A controlled vocabulary that contains many orphan concepts is less usable for search and retrieval use cases, because, e.g., no hierarchical query expansion can be performed on search terms to find documents with more general content."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#orphan-concepts> ;
+    dqv:inCategory qs:structuralIssues
+ .
+
+qs:numOfDisconnectedConceptClusters
+    a dqv:Metric;
+    skos:prefLabel "no. of Disconnected Concept Clusters"@en ;
+    skos:definition "Number of Disconnected Concept Clusters, i.e., sets of concepts that are isolated from the rest of the vocabulary."@en ;
+    skos:note "Creation of an undirected graph that includes all non-orphan concepts as nodes and all semantic relations as edges. Tarjan's algorithm then finds and returns all weakly connected components."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:disconnectedConceptClusters .
+
+qs:disconnectedConceptClusters a  dqv:Dimension;
+    skos:prefLabel "Disconnected Concept Clusters"@en ;
+    skos:definition "Checking the connectivity of the graph, it is possible to identify all weakly connected components. These datasets form islands in the vocabulary and might be caused by incomplete data acquisition, forgotten test data, outdated terms and the like."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#disconnected-concept-clusters> ; 
+    dqv:inCategory qs:structuralIssues .
+
+qs:numOfCyclicHierarchicalRelations
+     a dqv:Metric;
+    skos:prefLabel "no. of Cyclic Hierarchical Relations"@en ;
+    skos:definition "Number of Cyclic Hierarchical Relations, i.e. concepts that are hierarchically related to each other."@en ;
+    #skos:note ""@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:cyclicHierarchicalRelations .
+
+qs:cyclicHierarchicalRelations  a  dqv:Dimension ;
+    skos:prefLabel "Cyclic Hierarchical Relations"@en ;
+    skos:definition "Although perfectly consistent with the SKOS data model, cyclic relations may reveal a logical problem in the thesaurus. Consider the following example: decision -> problem resolution -> problem (-> decision: here the cycle is closed). The concepts are connected using skos:broader relationships (indicated with ->). Due to the fact that a thesaurus is in many cases a product of consensus between the contributors (or just the decision of one dedicated thesaurus manager), it will be almost impossible to automatically resolve the cycle (i.e. deleting an edge)."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#cyclic-hierarchical-relations> ;
+    dqv:inCategory qs:structuralIssues .
+
+
+qs:numOfValuelessAssociativeRelations
+    a dqv:Metric;
+    skos:prefLabel "no. of Valueless Associative Relations"@en ;
+    skos:definition "Number of Valueless Associative Relations, i.e. sibling concept pairs that are also connected by an associative relation."@en ;
+    skos:note "Identification of all pairs of concepts that have the same broader or narrower concepts, i.e. they are sibling terms. All siblings that are related by a skos:related property are returned."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:valuelessAssociativeRelations .
+
+qs:valuelessAssociativeRelations 
+    a  dqv:Dimension;
+    skos:prefLabel "Valueless Associative Relations"@en ;
+    skos:definition "Two concepts are sibling, but also connected by an associative relation. In that context, the associative relation is not necessary. See ISO_DIS_25964-1, 11.3.2.2"@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#valueless-associative-relations> ;
+    dqv:inCategory qs:structuralIssues .
+
+qs:numOfSolelyTransitivelyRelatedConcepts
+    a dqv:Metric;
+    skos:prefLabel "no. of Solely Transitively Related Concepts"@en ;
+    skos:definition "Number of concept pairs that have solely transitively related concepts."@en ;
+    skos:note "Identification of all concept pairs that are related by skos:broaderTransitive or skos:narrowerTransitive properties but not by their skos:broader and skos:narrower subproperties."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:solelyTransitivelyRelatedConcepts .
+
+qs:solelyTransitivelyRelatedConcepts
+     a  dqv:Dimension;
+    skos:prefLabel "Solely Transitively Related Concepts"@en ;
+    skos:definition "skos:broaderTransitive and skos:narrowerTransitive are, according to the SKOS reference document, not used to make assertions, so they should not be the only relations hierarchically relating two concepts."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#solely-transitively-related-concepts> ;
+    dqv:inCategory qs:structuralIssues .
+
+
+qs:numOfUnidirectionallyRelatedConcepts
+    a dqv:Metric;
+    skos:prefLabel "no. of Unidirectionally Related Concepts"@en ;
+    skos:definition "Number of Unidirectionally Related Concepts, i.e. concepts not including reciprocal relations."@en ;
+    skos:note "This issue is checked WITHOUT inference of owl:inverseOf properties. We iterate over all triples and check for each property if an inverse property is defined in the SKOS ontology and if the respective statement using this property is included in the vocabulary. If not, the resources associated with this property are returned."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:unidirectionallyRelatedConcepts .
+
+qs:unidirectionallyRelatedConcepts a  dqv:Dimension;
+    skos:prefLabel "Unidirectionally Related Concepts"@en ;
+    skos:definition "Reciprocal relations (e.g., broader/narrower, related, hasTopConcept/topConceptOf) should be included in the controlled vocabularies to, e.g., to achieve better search results using SPARQL in systems without reasoner support."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#unidirectionally-related-concepts> ;
+    dqv:inCategory qs:structuralIssues .
+
+qs:numOfOmittedTopConcepts
+    a dqv:Metric;
+    skos:prefLabel "no. of Schemes with Omitted Top Concepts"@en ;
+    skos:definition "Number of skos:ConceptSchemes with Omitted Top Concepts"@en ;
+    skos:note "For every ConceptScheme in the controlled vocabulary, a SPARQL query is issued finding resources that are associated with this ConceptScheme by one of the properties skos:hasTopConcept or skos:topConceptOf."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:omittedTopConcepts .
+
+qs:omittedTopConcepts
+    a  dqv:Dimension;
+    skos:prefLabel "Omitted Top Concepts"@en ;
+    skos:definition "A vocabulary should provide entry points to the data to provide efficient access (SKOS primer) and guidance for human users."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-top-concepts> ;
+    dqv:inCategory qs:structuralIssues .
+
+
+qs:numOfTopConceptsHavingBroaderConcepts
+    a dqv:Metric;
+    skos:prefLabel "no. of Top Concepts Having Broader Concepts"@en ;
+    skos:definition "Number of Top Concepts Having Broader Concepts, i.e.,top concepts internal to the vocabulary hierarchy tree."@en ;
+    skos:note "A SPARQL query finds all top concepts (being defined by one of the properties skos:hasTopConcept or skos:topConceptOf) having associated a broader concept."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:topConceptsHavingBroaderConcepts.
+
+qs:topConceptsHavingBroaderConcepts a  dqv:Dimension;
+    skos:prefLabel "Top Concepts Having Broader Concepts"@en ;
+    skos:definition "Concepts internal to the tree should not be indicated as top concepts, as pointed out in [Allemang2011]."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#top-concepts-having-broader-concepts> ;
+    dqv:inCategory qs:structuralIssues .
+
+
+qs:numOfHierarchicalRedundancy
+    a dqv:Metric;
+    skos:prefLabel "no. of Hierarchical Redundancy"@en ;
+    skos:definition "Number of concept pair with Hierarchical Redundancy, i.e., with broader/narrower relations over multiple hierarchy levels."@en ;
+    #skos:note ""@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:hierarchicalRedundancy.
+
+qs:hierarchicalRedundancy a  dqv:Dimension;
+    skos:prefLabel "Hierarchical Redundancy"@en ;
+    skos:definition "As stated in the SKOS reference document, skos:broader and skos:narrower are not transitive properties. However, they are subproperties of skos:broaderTransitive and skos:narrowerTransitive which enables inference of a transitive closure. This, in fact, leaves it up to the user to interpret wheter a vocabulary's hierarchical structure is seen as transitive or not. In the former case, this check can be useful. It finds pairs of concepts (A,B) that are directly hierarchically related but there also exits an hierarchical path through a concept C that connects A and B."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#hierarchical-redundancy> ;
+    dqv:inCategory qs:structuralIssues .
+
+
+qs:numOfReflexivelyRelatedConcepts
+    a dqv:Metric;
+    skos:prefLabel "no. of Reflexive Relations"@en ;
+    skos:definition "Number of concepts related to themsevels."@en ;
+    #skos:note ""@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:reflexiveRelations .
+
+qs:reflexiveRelations a  dqv:Dimension;
+    skos:prefLabel "Reflexive Relations"@en ;
+    skos:definition "Concepts related to themsevels."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#reflexive-relations> ;
+    dqv:inCategory qs:structuralIssues .
+
+
+
+qs:numOfMissingIn-Links
+    a dqv:Metric;
+    skos:prefLabel "no. of Missing In-Links"@en ;
+    skos:definition "Number of concept with Missing In-Links "@en ;
+    skos:note "For each authoritative concept in the vocabulary, a SPARQL query (against, e.g. the Sindice endpoint) is issued that returns all triples in which the concept shows up as the object. An estimation of the number of other vocabularies referencing the concept can be obtained by examining if the host part of the returned triple subject URIs does't match the publishing host of the vocabulary. Concepts for which no such matches can be found are returned."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:missingIn-Links.
+
+qs:missingIn-Links a  dqv:Dimension;
+    skos:prefLabel "Missing In-Links"@en ;    skos:definition "The usage of its concepts can be an indicator for a vocabulary's quality. Usage can be determined by the number of external resources, referencing these concepts."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-in-links> ;
+    dqv:inCategory qs:linkedDataSpecificIssues .
+
+qs:numOfMissingOut-Links
+    a dqv:Metric;
+    skos:prefLabel "no. of Missing Out-Links"@en ;
+    skos:definition "Number of concepts with Missing Out-Links, i.e., concepts that are not linked to other vocabularies on the Web."@en ;
+    skos:note "For each authoritative concept in the vocabulary, a SPARQL query is issued that returns all IRIs that occur as subject or object in triples where this concept is involved. All IRIs that are HTTP URIs and refer to a non-authoritative resource for the concept are counted. Concepts with a count that equals zero are returned."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:missingOut-Links.
+
+qs:missingOut-Links a  dqv:Dimension ;
+    skos:prefLabel "Missing Out-Links"@en ;
+    skos:definition "KOS concepts can define links to other concepts within one and the same vocabulary, to concepts in other vocabularies, or to external resources on the Web. These external links are essential to, for example, connect the vocabulary with other Web resources and benefit from other people's knowledge about the contained terms (by, e.g., using the link as starting point for a web crawling application) act as some kind of bridge, connecting previously unconnected (unrelated) domains provide information on the context of a term, serving a documentation purpose prevent duplication of information"@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-out-links> ;
+    dqv:inCategory qs:linkedDataSpecificIssues .
+
+qs:numOfBrokenLinks
+    a dqv:Metric;
+    skos:prefLabel "no. of Broken Links"@en ;
+    skos:definition "Number of Broken Links"@en ;
+    skos:note "A SPARQL query is issued that finds all HTTP URIs being part (as subject, predicate, or object) of a triple in the vocabulary. The found URIs are then dereferenced and returned if the HTTP response code (after possible redirections) is other than 200."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:brokenLinks.
+
+qs:brokenLinks a  dqv:Dimension;
+    skos:prefLabel "Broken Links"@en ;
+    skos:definition "If concepts link to other resources (link targets) on the Web, it is important that these resources are dereferencable and return a response code other than 200 after possible redirections"@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#broken-links> ;
+    dqv:inCategory qs:linkedDataSpecificIssues .
+
+qs:numOfUndefinedSKOSResources
+    a dqv:Metric;
+    skos:prefLabel "no. of Undefined SKOS Resources"@en ;
+    skos:definition "Number of Undefined SKOS Resources, i.e., invented new terms within the SKOS namespace or deprecated properties"@en ;
+    skos:note "A SPARQL query finds all IRIs that appear in one of the vocabulary's triples in combination with a deprecated predicate. Invented new terms are found by a SPARQL query, selecting all IRIs in the vocabulary's RDF triples belonging to the SKOS namespace but are not defined in the SKOS ontology. All terms found by the two mentioned queries are returned."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:UndefinedSKOSResources.
+
+qs:UndefinedSKOSResources a  dqv:Dimension;
+    skos:prefLabel "Undefined SKOS Resources"@en ;
+    skos:definition "The vocabulary should not invent any new terms within the SKOS namespace or use “deprecated” SKOS elements like those defined in Appendix D of the SKOS reference."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#undefined-skos-resources> ;
+    dqv:inCategory qs:linkedDataSpecificIssues .
+
+qs:numOfHTTPURISchemeViolation 
+    a dqv:Metric;
+    skos:prefLabel "no. of HTTP URI Scheme Violation"@en ;
+    skos:definition "Number of URI violating the HTTP URI scheme, i.e. triple subjects that are no HTTP URIs."@en ;
+    skos:note "A SPARQL query is used to find all IRIs that occur as subject in the vocabulary's RDF triples. If their protocol identifier is other than http or https, the resource is returned."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:HTTPURISchemeViolation .
+
+qs:HTTPURISchemeViolation a  dqv:Dimension;
+    skos:prefLabel "HTTP URI Scheme Violation"@en ;
+    skos:definition "URIs should be dereferencable. C. Bizer, How to Publish Linked Data on the Web: In the context of Linked Data, we restrict ourselves to using HTTP URIs only and avoid other URI schemes such as URNs and DOIs."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#http-uri-scheme-violation> ;
+    dqv:inCategory qs:linkedDataSpecificIssues .
+
+qs:numOfRelationClashes
+    a dqv:Metric;
+    skos:prefLabel "no. of Relation Clashes"@en ;
+    skos:definition "Number of pairs of concepts causing relation clashes, i.e., breaking condition S27 from the SKOS reference document (Associative vs. Hierarchical Relation Clashes)"@en ;
+    skos:note "In a first step, all pairs of concepts are found that are associatively connected, using a SPARQL query. In the second step, a graph is created, containing only hierarchically related concepts and the respective relations. For each concept pair from the first step, we check for a path in the graph from step two. If such a path is found, a clash has been identified and the causing concepts are returned."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:relationClashes.
+
+qs:relationClashes a  dqv:Dimension;
+    skos:prefLabel "Relation Clashes"@en ;
+    skos:definition "Covers condition S27 from the SKOS reference document, that has not been defined formally."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#relation-clashes> ;
+    dqv:inCategory qs:skosSemiFormalConsistencyIssues .
+
+qs:numOfMappingClashes
+    a dqv:Metric;
+    skos:prefLabel "no. of Mapping Clashes"@en ;
+    skos:definition "Number of pair of concepts causing Mapping Clashes, i.e., breaking condition S46 from the SKOS reference document (Exact vs. Associative and Hierarchical Mapping Clashes)"@en ;
+    #skos:note ""@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:mappingClashes.
+
+qs:mappingClashes a  dqv:Dimension;
+    skos:prefLabel "Mapping Clashes"@en ;
+    skos:definition "Covers condition S46 from the SKOS reference document, that has not been defined formally."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#mapping-clashes> ;
+    dqv:inCategory qs:skosSemiFormalConsistencyIssues .
+
+
+qs:numOfInconsistentPreferredLabels
+    a dqv:Metric;
+    skos:prefLabel "no. of Concepts with Inconsistent Preferred Labels"@en ;
+    skos:definition "Number of concepts with inconsistent preferred labels, i.e., concepts with more then one prefLabel per language."@en ;
+    skos:note "A SPARQL query is used to find concepts with at least two prefLabels. In a second step, the language tags of these prefLabels are analyzed and an ambiguity is detected if they are equal."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:inconsistentPreferredLabels.
+
+qs:inconsistentPreferredLabels a  dqv:Dimension;
+    skos:prefLabel "Inconsistent Preferred Labels"@en ;
+    skos:definition "According to the SKOS reference document, A resource has no more than one value of skos:prefLabel per language tag."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#inconsistent-preferred-labels> ;
+    dqv:inCategory qs:skosSemiFormalConsistencyIssues .
+
+qs:numOfDisjointLabelsViolation
+    a dqv:Metric;
+    skos:prefLabel "no. of Disjoint Labels Violation"@en ;
+    skos:definition "Number of Disjoint Labels Violation, i.e., resources with identical entries for different label types."@en ;
+    skos:note "A SPARQL query collects all labels of all concepts, building an in-memory structure. This structure is then checked for disjoint entries."@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:disjointLabelsViolation .
+
+qs:disjointLabelsViolation a  dqv:Dimension;
+    skos:prefLabel "Disjoint Labels Violation"@en ;
+    skos:definition "Covers condition S13 from the SKOS reference document (section 5.4) stating that skos:prefLabel, skos:altLabel and skos:hiddenLabel are pairwise disjoint properties."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#disjoint-labels-violation> ;
+    dqv:inCategory qs:skosSemiFormalConsistencyIssues .
+
+
+qs:numOfMappingRelationsMisuse 
+   a dqv:Metric;
+    skos:prefLabel "no. of Mapping Relations Misuse"@en ;
+    skos:definition "Number of Mapping Relations Misuse, i.e. concept pair within the same concept scheme that are related by a mapping relation"@en ;
+   # skos:note ""@en ;
+    dqv:expectedDataType xsd:interger ;
+    dqv:inDimension  qs:mappingRelationsMisuse .
+
+qs:mappingRelationsMisuse a  dqv:Dimension;
+    skos:prefLabel "Mapping Relations Misuse"@en ;
+   skos:definition "According to the SKOS reference documentation, mapping relations (e.g., skos:broadMatch or skos:relatedMatch) should be asserted to concepts being members of different concept schemes. This check finds concepts that are related by a mapping property and are either members of the same concept scheme or members of no concept scheme at all."@en ;
+    rdfs:seeAlso <https://github.com/cmader/qSKOS/wiki/Quality-Issues#mapping-relations-misuse> ;
+    dqv:inCategory qs:skosSemiFormalConsistencyIssues .

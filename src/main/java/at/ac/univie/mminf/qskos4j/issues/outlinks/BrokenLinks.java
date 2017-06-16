@@ -29,8 +29,8 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 	private final Logger logger = LoggerFactory.getLogger(BrokenLinks.class);
 	private final static String NO_CONTENT_TYPE = "n/a";
 	
-	private Map<URL, String> urlAvailability = new HashMap<URL, String>();
-	private Set<String> invalidResources = new HashSet<String>();
+	private Map<URL, String> urlAvailability = new HashMap<>();
+	private Set<String> invalidResources = new HashSet<>();
     private HttpURIs httpURIs;
     private Integer extAccessDelayMillis;
     private Float randomSubsetSize_percent;
@@ -50,13 +50,13 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
     @Override
     protected ExtrapolatedCollectionResult<URL> invoke() throws RDF4JException {
         dereferenceURIs();
-		return new ExtrapolatedCollectionResult<URL>(collectUnavailableURLs(), randomSubsetSize_percent);
+		return new ExtrapolatedCollectionResult<>(collectUnavailableURLs(), randomSubsetSize_percent);
 	}
 
     private void dereferenceURIs() throws RDF4JException
 	{
 		Collection<URI> urisToBeDereferenced = collectUrisToBeDereferenced();
-		Iterator<URI> it = new MonitoredIterator<URI>(urisToBeDereferenced, progressMonitor);
+		Iterator<URI> it = new MonitoredIterator<>(urisToBeDereferenced, progressMonitor);
 		
 		int i = 1;
 		while (it.hasNext()) {
@@ -82,7 +82,7 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 			return httpURIs.getResult().getData();
 		}
 
-        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<URI>(
+        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<>(
             httpURIs.getResult().getData(),
             randomSubsetSize_percent);
         logger.info("Using subset of " +urisToBeDereferenced.size()+ " URIs for broken link checking");
@@ -119,7 +119,7 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 	}
 	
 	private Collection<URL> collectUnavailableURLs() {
-		Collection<URL> unavailableURLs = new ArrayList<URL>();
+		Collection<URL> unavailableURLs = new ArrayList<>();
 		
 		for (URL url : urlAvailability.keySet()) {
 			if (urlAvailability.get(url) == null) {

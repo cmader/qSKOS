@@ -32,8 +32,8 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 	private final Logger logger = LoggerFactory.getLogger(MissingInLinks.class);
 
 	private AuthoritativeConcepts authoritativeConcepts;
-	private Collection<RepositoryConnection> connections = new ArrayList<RepositoryConnection>();
-	private Map<Resource, Set<URI>> conceptReferencingResources = new HashMap<Resource, Set<URI>>();
+	private Collection<RepositoryConnection> connections = new ArrayList<>();
+	private Map<Resource, Set<URI>> conceptReferencingResources = new HashMap<>();
     private Integer queryDelayMillis = 0;
     private Float randomSubsetSize_percent;
 
@@ -56,7 +56,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
             logger.info("Using subset of " +conceptsToCheck.size()+ " concepts for In-Link checking");
         }
 
-        Iterator<Resource> conceptIt = new MonitoredIterator<Resource>(
+        Iterator<Resource> conceptIt = new MonitoredIterator<>(
                 conceptsToCheck,
                 progressMonitor,
                 "finding In-Links");
@@ -65,7 +65,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
             rankConcept(conceptIt.next());
         }
 
-        return new ExtrapolatedCollectionResult<Resource>(extractUnreferencedConcepts(), randomSubsetSize_percent);
+        return new ExtrapolatedCollectionResult<>(extractUnreferencedConcepts(), randomSubsetSize_percent);
     }
 
     private Collection<Resource> getConceptsToCheck(Float randomSubsetSize_percent) throws RDF4JException
@@ -74,7 +74,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 			return authoritativeConcepts.getResult().getData();
 		}
 		else {
-			return new RandomSubSet<Resource>(authoritativeConcepts.getResult().getData(), randomSubsetSize_percent);
+			return new RandomSubSet<>(authoritativeConcepts.getResult().getData(), randomSubsetSize_percent);
 		}
 	}
 	
@@ -121,7 +121,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 
 		Set<URI> allReferencingResources = conceptReferencingResources.get(concept);
 		if (allReferencingResources == null) {
-			allReferencingResources = new HashSet<URI>();
+			allReferencingResources = new HashSet<>();
 			conceptReferencingResources.put(concept, allReferencingResources);
 		}
 		allReferencingResources.addAll(referencingResourcesOnOtherHost);
@@ -131,7 +131,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
             Value concept,
 		TupleQueryResult result) throws QueryEvaluationException 
 	{
-		Set<URI> referencingResourcesOnOtherHost = new HashSet<URI>();
+		Set<URI> referencingResourcesOnOtherHost = new HashSet<>();
 		
 		while (result.hasNext()) {
 			Value referencingResource = result.next().getValue("resource");
@@ -161,7 +161,7 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 	}
 	
 	private Collection<Resource> extractUnreferencedConcepts() {
-		Collection<Resource> unrefConcepts = new HashSet<Resource>();
+		Collection<Resource> unrefConcepts = new HashSet<>();
 		
 		for (Resource concept : conceptReferencingResources.keySet()) {
 			if (conceptReferencingResources.get(concept).isEmpty()) {

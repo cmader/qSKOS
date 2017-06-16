@@ -25,7 +25,7 @@ public class OmittedOrInvalidLanguageTagsTest {
     @Before
     public void setUp() throws RDF4JException, IOException {
         oiltComponents = new OmittedOrInvalidLanguageTags();
-        oiltComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        oiltComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
 
         oiltDeprecatedAndIllegal = new OmittedOrInvalidLanguageTags();
         oiltDeprecatedAndIllegal.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("deprecatedAndIllegalTerms.rdf").getConnection());

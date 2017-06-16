@@ -1,54 +1,63 @@
 package at.ac.univie.mminf.qskos4j.issues.skosintegrity;
 
+import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
-import at.ac.univie.mminf.qskos4j.util.Tuple;
-import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
+import at.ac.univie.mminf.qskos4j.util.Pair;
+import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.URIImpl;
-import org.eclipse.rdf4j.query.BindingSet;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.alg.DijkstraShortestPath;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
-public class HierarchicalRedundancy extends Issue<CollectionResult<Tuple<Resource>>> {
+public class HierarchicalRedundancy extends Issue<CollectionResult<Pair<Resource>>> {
 
-    private String HIER_PROPERTIES = "skos:broaderTransitive|^skos:narrowerTransitive";
-    private Collection<Tuple<Resource>> hierarchicalRedundancies;
+    private Collection<Pair<Resource>> hierarchicalRedundancies;
+    private HierarchyGraphBuilder hierarchyGraphBuilder;
+    private DirectedGraph<Resource, NamedEdge> hierarchyGraph;
 
-    public HierarchicalRedundancy() {
+    public HierarchicalRedundancy(HierarchyGraphBuilder hierarchyGraphBuilder) {
         super("hr",
             "Hierarchical Redundancy",
             "Finds broader/narrower relations over multiple hierarchy levels",
             IssueType.ANALYTICAL,
             new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#hierarchical-redundancy"));
+        this.hierarchyGraphBuilder = hierarchyGraphBuilder;
     }
 
     @Override
-    protected CollectionResult<Tuple<Resource>> invoke() throws RDF4JException {
-        hierarchicalRedundancies = new HashSet<Tuple<Resource>>();
+    protected CollectionResult<Pair<Resource>> invoke() throws RDF4JException {
+        hierarchicalRedundancies = new HashSet<>();
+        hierarchyGraph = hierarchyGraphBuilder.createGraph();
 
-        TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createQuery()).evaluate();
-        while (result.hasNext()) {
-            BindingSet bs = result.next();
-            Resource concept = (Resource) bs.getValue("concept");
-            Resource otherConcept = (Resource) bs.getValue("otherConcept");
+        Set<NamedEdge> allEdges = new HashSet<>(hierarchyGraph.edgeSet());
+        Iterator<NamedEdge> it = new MonitoredIterator<>(allEdges, progressMonitor);
 
-            hierarchicalRedundancies.add(new Tuple<Resource>(concept, otherConcept));
+        while (it.hasNext()) {
+            NamedEdge edge = it.next();
+            Resource source = hierarchyGraph.getEdgeSource(edge);
+            Resource target = hierarchyGraph.getEdgeTarget(edge);
+
+            hierarchyGraph.removeEdge(edge);
+            List<NamedEdge> path = new DijkstraShortestPath<>(hierarchyGraph, source, target).getPathEdgeList();
+            if (path != null && !path.isEmpty()) {
+                hierarchicalRedundancies.add(new Pair<>(source, target));
+            }
+            hierarchyGraph.addEdge(source, target);
         }
 
-        return new CollectionResult<Tuple<Resource>>(hierarchicalRedundancies);
+        return new CollectionResult<>(hierarchicalRedundancies);
     }
 
-    private String createQuery() {
-        return SparqlPrefix.SKOS + "SELECT ?concept ?otherConcept WHERE {" +
-            "?concept " +HIER_PROPERTIES+" ?otherConcept . " +
-            "?concept "+HIER_PROPERTIES+" ?imConcept ." +
-            "?imConcept ("+HIER_PROPERTIES+")+ ?otherConcept ." +
-        "}";
+    @Override
+    public void setRepositoryConnection(RepositoryConnection repCon) {
+        hierarchyGraphBuilder.setRepositoryConnection(repCon);
+        super.setRepositoryConnection(repCon);
     }
 
 }

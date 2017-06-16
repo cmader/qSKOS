@@ -25,7 +25,7 @@ public class MissingOutLinksTest {
     public void setUp() throws RDF4JException, IOException {
         involvedConceptsForComponents = new InvolvedConcepts();
         missingOutLinksForComponents = new MissingOutLinks(new AuthoritativeConcepts(involvedConceptsForComponents));
-        missingOutLinksForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components.rdf").getConnection());
+        missingOutLinksForComponents.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("components_1.rdf").getConnection());
 
         missingOutLinksForConcepts = new MissingOutLinks(new AuthoritativeConcepts(new InvolvedConcepts()));
         missingOutLinksForConcepts.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("concepts.rdf").getConnection());

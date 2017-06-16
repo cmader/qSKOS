@@ -24,11 +24,13 @@ public class HierarchyGraphBuilder {
 
 	public DirectedGraph<Resource, NamedEdge> createGraph() throws RDF4JException
 	{
-        logger.debug("Creating hierarchy graph");
-        graph = new DefaultDirectedGraph<Resource, NamedEdge>(NamedEdge.class);
+        if (graph == null) {
+            logger.info("Creating hierarchy graph");
+            graph = new DefaultDirectedGraph<>(NamedEdge.class);
 
-        addResultsToGraph(findTriples("skos:broaderTransitive"), false);
-        addResultsToGraph(findTriples("skos:narrowerTransitive"), true);
+            addResultsToGraph(findTriples("skos:broaderTransitive"), false);
+            addResultsToGraph(findTriples("skos:narrowerTransitive"), true);
+        }
 
         return graph;
 	}
@@ -81,6 +83,7 @@ public class HierarchyGraphBuilder {
 
     public void setRepositoryConnection(RepositoryConnection repCon) {
         this.repCon = repCon;
+        graph = null;
     }
 
 }

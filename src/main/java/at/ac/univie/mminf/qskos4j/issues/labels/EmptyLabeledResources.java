@@ -24,7 +24,7 @@ public class EmptyLabeledResources extends Issue<EmptyLabelsResult> {
 
     @Override
     protected EmptyLabelsResult invoke() throws RDF4JException {
-        result = new HashMap<Resource, Collection<LabelType>>();
+        result = new HashMap<>();
 
         TupleQueryResult result = repCon.prepareTupleQuery(
                 QueryLanguage.SPARQL,
@@ -46,18 +46,18 @@ public class EmptyLabeledResources extends Issue<EmptyLabelsResult> {
     }
 
     private String createLexicalLabelQuery() {
-        return SparqlPrefix.SKOS +" "+ SparqlPrefix.DCTERMS +" "+ SparqlPrefix.RDFS +
+        return SparqlPrefix.SKOS +" "+ SparqlPrefix.DCTERMS +" "+ SparqlPrefix.RDFS +" "+ SparqlPrefix.DC+
                 "SELECT ?resource ?labelType ?literal WHERE " +
                 "{" +
                     "?resource ?labelType ?literal ." +
-                    "FILTER (?labelType IN (dcterms:title, skos:prefLabel, skos:altLabel, skos:hiddenLabel))" +
+                    "FILTER (?labelType IN (rdfs:label, dc:title, dcterms:title, skos:prefLabel, skos:altLabel, skos:hiddenLabel))" +
                 "}";
     }
 
     private void addToResults(Resource resource, LabelType labelType) {
         Collection<LabelType> values = result.get(resource);
         if (values == null) {
-            values = new HashSet<LabelType>();
+            values = new HashSet<>();
             result.put(resource, values);
         }
         values.add(labelType);

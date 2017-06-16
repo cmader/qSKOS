@@ -17,6 +17,9 @@ public class ClustersResult extends ResourceCollectionsResult
 	ClustersResult(Collection<Collection<Resource>> data, DirectedGraph<Resource, NamedEdge> graph) {
         super(data, "Cluster");
 
+        // one disconnected cluster is not an error, so no need to report
+        if (data.size() == 1) data.clear();
+
         this.graph = graph;
 	}
 
