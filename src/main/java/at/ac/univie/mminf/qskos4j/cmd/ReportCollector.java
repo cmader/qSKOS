@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.Result;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Statement;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -110,7 +112,7 @@ class ReportCollector {
 			Issue issue = issueIt.next();
 			issueNumber++;
 
-			logger.info("Processing issue " + issueNumber + " of " + issues.size() + " (" + issue.getName() + ")");
+			logger.info("Processing issue " + issueNumber + " of " + issues.size() + " (" + issue.getIssueDescriptor().getName() + ")");
 			issue.getResult();
 
 		}
@@ -123,7 +125,7 @@ class ReportCollector {
 		summary.append("* Summary of Quality Issue Occurrences:\n");
 
 		for (Issue issue : issues) {
-			summary.append(issue.getName() + ": " + prepareOccurrenceText(issue) + "\n");
+			summary.append(issue.getIssueDescriptor().getName() + ": " + prepareOccurrenceText(issue) + "\n");
 		}
 
 		summary.append("\n");
@@ -200,7 +202,7 @@ class ReportCollector {
 		IRI pisMeasurementOf = f.createIRI(ndqv+"isMeasurementOf");
 
 		String datasetName= this.computedOn.substring(this.computedOn.lastIndexOf("/")+1, this.computedOn.length()); 
-		IRI measure= f.createIRI(nex+datasetName+issue.getName().replace(" ", "")+sdate);
+		IRI measure= f.createIRI(nex+datasetName+issue.getIssueDescriptor().getName().replace(" ", "")+sdate);
 		repCon.add(measure, ptype, f.createIRI(ndqv+"QualityMeasurement"));
 
 		if (this.computedOn.startsWith("http://"))		repCon.add(measure, pcomputedOn,f.createIRI(this.computedOn));
@@ -229,18 +231,18 @@ class ReportCollector {
 		} 
 		repCon.add(measure, pvalue, lval);
 
-		IRI uriDimension= f.createIRI(nex+"numOf"+issue.getName().replace(" ", ""));
-		repCon.add(measure, pisMeasurementOf, uriDimension); //issue.getWeblink()
+		IRI uriDimension= f.createIRI(nex+"numOf"+issue.getIssueDescriptor().getName().replace(" ", ""));
+		repCon.add(measure, pisMeasurementOf, uriDimension);
 
 	}
 
-	private String createIssueHeader(Issue issue) {
-		String header = "--- " +issue.getName();
-		IRI weblink = issue.getWeblink();
-		header += "\nDescription: " +issue.getDescription();
+	private String createIssueHeader(IssueDescriptor issueDescriptor) {
+		String header = "--- " +issueDescriptor.getName();
+		URL weblink = issueDescriptor.getWeblink();
+		header += "\nDescription: " +issueDescriptor.getDescription();
 
 		if (weblink != null) {
-			header += "\nDetailed information: " +weblink.stringValue();
+			header += "\nDetailed information: " +weblink.toString();
 		}
 		return header;
 	}
@@ -251,7 +253,7 @@ class ReportCollector {
 	}
 
 	private void writeGraphFiles(Issue issue, String dotFilesPath) throws IOException, RDF4JException {
-		BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(dotFilesPath + issue.getId() + ".dot"));
+		BufferedWriter graphFileWriter = new BufferedWriter(new FileWriter(dotFilesPath + issue.getIssueDescriptor().getId() + ".dot"));
 		issue.getResult().generateReport(graphFileWriter, Result.ReportFormat.DOT);
 		graphFileWriter.close();
 	}
@@ -299,7 +301,7 @@ class ReportCollector {
 	private void writeTextReport(Issue issue, BufferedWriter writer)
 			throws IOException, RDF4JException
 	{
-		writer.write(createIssueHeader(issue));
+		writer.write(createIssueHeader(issue.getIssueDescriptor()));
 		writer.newLine();
 		issue.getResult().generateReport(writer, Result.ReportFormat.TXT, Result.ReportStyle.SHORT);
 

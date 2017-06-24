@@ -2,11 +2,11 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.HashSet;
@@ -22,11 +22,12 @@ import java.util.Set;
 public class HttpUriSchemeViolations extends Issue<CollectionResult<String>> {
 
     public HttpUriSchemeViolations() {
-        super("husv",
+        super(new IssueDescriptor.Builder("husv",
               "HTTP IRI Scheme Violation",
               "Finds triple subjects that are no HTTP IRIs",
-              IssueType.ANALYTICAL,
-              new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#http-uri-scheme-violation")
+              IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#http-uri-scheme-violation")
+                .build()
         );
     }
 

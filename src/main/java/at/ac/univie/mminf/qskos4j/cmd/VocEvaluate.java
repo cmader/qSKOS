@@ -4,6 +4,7 @@ import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.ConsoleProgressMonitor;
 import at.ac.univie.mminf.qskos4j.progress.StreamProgressMonitor;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.InvalidRdfException;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import com.beust.jcommander.JCommander;
@@ -155,10 +156,10 @@ public class VocEvaluate {
 	{
 		if (parsedCommand.vocabFilenames == null) {
 			if (parsedCommand instanceof CommandAnalyze) {
-				outputIssueDetails(Issue.IssueType.ANALYTICAL);
+				outputIssueDetails(IssueDescriptor.IssueType.ANALYTICAL);
 			}
 			else {
-				outputIssueDetails(Issue.IssueType.STATISTICAL);
+				outputIssueDetails(IssueDescriptor.IssueType.STATISTICAL);
 			}
 		}
 		else {
@@ -167,15 +168,17 @@ public class VocEvaluate {
 		}
 	}
 
-	private void outputIssueDetails(Issue.IssueType constraintType) {
+	private void outputIssueDetails(IssueDescriptor.IssueType constraintType) {
 		for (Issue issue : qskos.getAllIssues()) {
-			if (issue.getType() == constraintType) {
+			IssueDescriptor issueDescriptor = issue.getIssueDescriptor();
+
+			if (issueDescriptor.getType() == constraintType) {
 				System.out.println("---");
-				System.out.println("ID: " +issue.getId());
-				System.out.println("Name: " +issue.getName());
-				System.out.println("Description: " +issue.getDescription());
-                if (issue.getWeblink() != null) {
-                    System.out.println("Further Informaton: <" +issue.getWeblink().stringValue()+ ">");
+				System.out.println("ID: " +issueDescriptor.getId());
+				System.out.println("Name: " +issueDescriptor.getName());
+				System.out.println("Description: " +issueDescriptor.getDescription());
+                if (issueDescriptor.getWeblink() != null) {
+                    System.out.println("Further Informaton: <" +issueDescriptor.getWeblink().toString()+ ">");
                 }
 			}
 		}
@@ -278,9 +281,11 @@ public class VocEvaluate {
 		
 		for (Issue issue : qskos.getAllIssues()) {
 			String command = jc.getParsedCommand();
-			
-			if ((issue.getType() == Issue.IssueType.ANALYTICAL && command.equals(CMD_NAME_ANALYZE)) ||
-				(issue.getType() == Issue.IssueType.STATISTICAL && command.equals(CMD_NAME_SUMMARIZE)))
+
+            IssueDescriptor.IssueType issueType = issue.getIssueDescriptor().getType();
+
+			if ((issueType == IssueDescriptor.IssueType.ANALYTICAL && command.equals(CMD_NAME_ANALYZE)) ||
+				(issueType == IssueDescriptor.IssueType.STATISTICAL && command.equals(CMD_NAME_SUMMARIZE)))
 			{
 				issuesForCommand.add(issue);
 			}

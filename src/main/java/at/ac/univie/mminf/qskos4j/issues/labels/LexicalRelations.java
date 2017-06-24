@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.labels;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
@@ -27,11 +28,13 @@ public class LexicalRelations extends Issue<NumberResult<Long>> {
     private InvolvedConcepts involvedConcepts;
 
     public LexicalRelations(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts,
+        super(new IssueDescriptor.Builder(
             "clb",
             "Concept Labels",
             "Counts the number of relations between all concepts and lexical labels (prefLabel, altLabel, hiddenLabel and subproperties thereof)",
-            IssueType.STATISTICAL
+            IssueDescriptor.IssueType.STATISTICAL)
+                .dependentIssue(involvedConcepts)
+                .build()
         );
 
         this.involvedConcepts = involvedConcepts;
@@ -55,7 +58,7 @@ public class LexicalRelations extends Issue<NumberResult<Long>> {
             }
         }
 
-        return new NumberResult<Long>(relationsCount);
+        return new NumberResult<>(relationsCount);
     }
 
     private String createLexicalLabelQuery(Value concept) {

@@ -89,4 +89,7 @@ public class IssueDescriptor {
         return dependentIssue;
     }
 
+    public URL getWeblink() {
+        return weblink;
+    }
 }

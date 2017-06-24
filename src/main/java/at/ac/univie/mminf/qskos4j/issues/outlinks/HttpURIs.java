@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -23,10 +24,10 @@ public class HttpURIs extends Issue<CollectionResult<URI>> {
     private Set<String> invalidResources = new HashSet<>();
 
     public HttpURIs() {
-        super("huc",
+        super(new IssueDescriptor.Builder("huc",
               "HTTP URI Count",
               "Counts the total number of HTTP URIs",
-              IssueType.STATISTICAL
+              IssueDescriptor.IssueType.STATISTICAL).build()
         );
     }
 

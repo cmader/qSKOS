@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.language.util.NoCommonLanguagesResult;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 
@@ -17,11 +18,13 @@ public class NoCommonLanguages extends Issue<NoCommonLanguagesResult> {
     private Set<String> commonLanguages;
 
     public NoCommonLanguages(LanguageCoverage languageCoverage) {
-        super(languageCoverage,
+        super(new IssueDescriptor.Builder(
               "ncl",
               "No Common Languages",
               "Checks for common languages in all concept literals",
-              IssueType.ANALYTICAL);
+              IssueDescriptor.IssueType.ANALYTICAL)
+                .dependentIssue(languageCoverage)
+                .build());
 
         this.languageCoverage = languageCoverage;
     }

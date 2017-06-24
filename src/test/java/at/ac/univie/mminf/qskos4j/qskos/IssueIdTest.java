@@ -44,7 +44,7 @@ public class IssueIdTest {
     @Test
     public void whiteSpacesInIssueIdListTest() {
         Iterator<Issue> issueIt = qskos.getAllIssues().iterator();
-        String idList = issueIt.next().getId() +", "+ issueIt.next().getId();
+        String idList = issueIt.next().getIssueDescriptor().getId() +", "+ issueIt.next().getIssueDescriptor().getId();
         Collection<Issue> issues = qskos.getIssues(idList);
         Assert.assertEquals(2, issues.size());
     }
@@ -54,7 +54,7 @@ public class IssueIdTest {
         List<Issue> allIssues = qskos.getAllIssues();
         Set<String> uniqueIssueIds = new HashSet<String>();
         for (Issue issue : allIssues) {
-            uniqueIssueIds.add(issue.getId());
+            uniqueIssueIds.add(issue.getIssueDescriptor().getId());
         }
         Assert.assertEquals(allIssues.size(), uniqueIssueIds.size());
     }
@@ -64,7 +64,7 @@ public class IssueIdTest {
 
         Iterator<Issue> issueIt = qskos.getAllIssues().iterator();
         while (issueIt.hasNext()) {
-            idList += issueIt.next().getId() + (issueIt.hasNext() ? "," : "");
+            idList += issueIt.next().getIssueDescriptor().getId() + (issueIt.hasNext() ? "," : "");
         }
 
         return idList;

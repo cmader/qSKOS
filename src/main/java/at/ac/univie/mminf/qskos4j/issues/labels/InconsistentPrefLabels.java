@@ -6,9 +6,9 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflictsResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.ArrayList;
@@ -26,11 +26,13 @@ public class InconsistentPrefLabels extends Issue<LabelConflictsResult> {
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public InconsistentPrefLabels(ResourceLabelsCollector resourceLabelsCollector) {
-        super("ipl",
+        super(new IssueDescriptor.Builder("ipl",
             "Inconsistent Preferred Labels",
             "Finds resources with more then one prefLabel per language",
-            IssueType.ANALYTICAL,
-            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#inconsistent-preferred-labels"));
+            IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#inconsistent-preferred-labels")
+                .build()
+        );
 
         this.resourceLabelsCollector =  resourceLabelsCollector;
     }

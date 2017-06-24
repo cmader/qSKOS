@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.labels;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.EmptyLabelsResult;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
@@ -19,7 +20,10 @@ public class EmptyLabeledResources extends Issue<EmptyLabelsResult> {
     private Map<Resource, Collection<LabelType>> result;
 
     public EmptyLabeledResources() {
-        super("el", "Empty Labels", "Finds empty labels or labels containing only whitespaces", IssueType.ANALYTICAL);
+        super(new IssueDescriptor.Builder("el",
+                "Empty Labels",
+                "Finds empty labels or labels containing only whitespaces",
+                IssueDescriptor.IssueType.ANALYTICAL).build());
     }
 
     @Override

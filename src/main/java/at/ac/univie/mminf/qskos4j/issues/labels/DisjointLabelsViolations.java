@@ -5,9 +5,9 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflict;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.ResourceLabelsCollector;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelConflictsResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.util.Collection;
@@ -26,11 +26,12 @@ public class DisjointLabelsViolations extends Issue<LabelConflictsResult> {
     private ResourceLabelsCollector resourceLabelsCollector;
 
     public DisjointLabelsViolations(ResourceLabelsCollector resourceLabelsCollector) {
-        super("dlv",
+        super(new IssueDescriptor.Builder("dlv",
             "Disjoint Labels Violation",
             "Finds resources with identical entries for different label types",
-            IssueType.ANALYTICAL,
-            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disjoint-labels-violation"));
+            IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disjoint-labels-violation")
+                .build());
 
         this.resourceLabelsCollector = resourceLabelsCollector;
     }

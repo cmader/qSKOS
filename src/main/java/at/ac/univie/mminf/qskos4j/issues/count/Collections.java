@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Statement;
@@ -18,10 +19,10 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 public class Collections extends Issue<NumberResult<Long>> {
 
     public Collections() {
-        super("cc",
+        super(new IssueDescriptor.Builder("cc",
               "Collection Count",
               "Counts the involved Collections",
-              IssueType.STATISTICAL
+              IssueDescriptor.IssueType.STATISTICAL).build()
         );
     }
 
@@ -36,7 +37,7 @@ public class Collections extends Issue<NumberResult<Long>> {
         }
         result.close();
 
-        return new NumberResult<Long>(collectionCount);
+        return new NumberResult<>(collectionCount);
     }
 
 }

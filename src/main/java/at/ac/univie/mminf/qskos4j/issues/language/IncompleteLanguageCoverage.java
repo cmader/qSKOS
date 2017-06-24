@@ -2,9 +2,9 @@ package at.ac.univie.mminf.qskos4j.issues.language;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,19 +15,19 @@ import java.util.*;
  */
 public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
 
-    private final Logger logger = LoggerFactory.getLogger(IncompleteLanguageCoverage.class);
-
 	private Map<Resource, Collection<String>> incompleteLanguageCoverage;
     private LanguageCoverage languageCoverage;
 	private Set<String> distinctLanguages;
 
     public IncompleteLanguageCoverage(LanguageCoverage languageCoverage) {
-        super(languageCoverage,
+        super(new IssueDescriptor.Builder(
             "ilc",
             "Incomplete Language Coverage",
             "Finds concepts lacking description in languages that are present for other concepts",
-            IssueType.ANALYTICAL,
-            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#incomplete-language-coverage")
+            IssueDescriptor.IssueType.ANALYTICAL)
+				.weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#incomplete-language-coverage")
+				.dependentIssue(languageCoverage)
+				.build()
         );
 
         this.languageCoverage = languageCoverage;

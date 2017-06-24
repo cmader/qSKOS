@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.language.util;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.InvolvedConcepts;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
@@ -21,18 +22,20 @@ public class LanguageCoverage extends Issue<LanguageCoverageResult> {
     private InvolvedConcepts involvedConcepts;
 
     public LanguageCoverage(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts,
+        super(new IssueDescriptor.Builder(
               "lc",
               "Language Coverage",
               "Finds all languages used in concept labels",
-              IssueType.STATISTICAL);
+              IssueDescriptor.IssueType.STATISTICAL)
+                .dependentIssue(involvedConcepts)
+                .build());
 
         this.involvedConcepts = involvedConcepts;
     }
 
     @Override
     protected LanguageCoverageResult invoke() throws RDF4JException {
-        languageCoverage = new HashMap<Resource, Collection<String>>();
+        languageCoverage = new HashMap<>();
 
         Iterator<Resource> it = new MonitoredIterator<Resource>(involvedConcepts.getResult().getData(), progressMonitor);
         while (it.hasNext()) {

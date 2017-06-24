@@ -1,6 +1,7 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -10,12 +11,12 @@ public class IssueInvocationTest {
 
     @Test
     public void testAllIssuesInvocation() {
-        for (Issue.IssueType issueType : Issue.IssueType.values()) {
+        for (IssueDescriptor.IssueType issueType : IssueDescriptor.IssueType.values()) {
             invokeOnCmdLine(issueType);
         }
     }
 
-    private void invokeOnCmdLine(Issue.IssueType issueType) {
+    private void invokeOnCmdLine(IssueDescriptor.IssueType issueType) {
         String command = findCommand(issueType);
         String testFileName = getTestFileName();
 
@@ -27,7 +28,7 @@ public class IssueInvocationTest {
         }
     }
 
-    private String findCommand(Issue.IssueType type) {
+    private String findCommand(IssueDescriptor.IssueType type) {
         switch (type)
         {
             case ANALYTICAL:

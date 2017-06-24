@@ -19,7 +19,7 @@ import at.ac.univie.mminf.qskos4j.issues.language.NoCommonLanguages;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
-import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpIRIs;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpUriSchemeViolations;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.issues.relations.ReflexivelyRelatedConcepts;
@@ -64,7 +64,7 @@ public class QSkos {
     private AuthoritativeConcepts authoritativeConcepts;
     private MissingInLinks missingInLinks;
     private ConceptSchemes conceptSchemes;
-    private HttpIRIs httpIRIs;
+    private HttpURIs httpURIs;
 
     private List<Issue> registeredIssues = new ArrayList<Issue>();
 
@@ -88,9 +88,9 @@ public class QSkos {
     private void addStatisticalIssues() {
         involvedConcepts = new InvolvedConcepts();
         authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
-        authoritativeConcepts.setBaseIRI(baseIRI);
+        authoritativeConcepts.setBaseURI(baseIRI);
         conceptSchemes = new ConceptSchemes();
-        httpIRIs = new HttpIRIs();
+        httpURIs = new HttpURIs();
         languageCoverage = new LanguageCoverage(involvedConcepts);
 
         registeredIssues.add(involvedConcepts);
@@ -100,7 +100,7 @@ public class QSkos {
         registeredIssues.add(new AggregationRelations());
         registeredIssues.add(conceptSchemes);
         registeredIssues.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections());
-        registeredIssues.add(httpIRIs);
+        registeredIssues.add(httpURIs);
     }
 
     private void addAnalyticalIssues() {
@@ -142,7 +142,7 @@ public class QSkos {
     }
 
     private void addSlowIssues() {
-        brokenLinks = new BrokenLinks(httpIRIs);
+        brokenLinks = new BrokenLinks(httpURIs);
         brokenLinks.setExtAccessDelayMillis(EXT_ACCESS_MILLIS);
         registeredIssues.add(brokenLinks);
 
@@ -172,7 +172,7 @@ public class QSkos {
 
     private Issue findIssue(String issueId) {
         for (Issue issue : registeredIssues) {
-            if (issue.getId().equalsIgnoreCase(issueId)) {
+            if (issue.getIssueDescriptor().getId().equalsIgnoreCase(issueId)) {
                 return issue;
             }
         }
@@ -184,7 +184,7 @@ public class QSkos {
         String supportedIssueIds = "";
         Iterator<Issue> allIssuesIt = getAllIssues().iterator();
         while (allIssuesIt.hasNext()) {
-            supportedIssueIds += allIssuesIt.next().getId() + (allIssuesIt.hasNext() ? ", " : "");
+            supportedIssueIds += allIssuesIt.next().getIssueDescriptor().getId() + (allIssuesIt.hasNext() ? ", " : "");
         }
         return supportedIssueIds;
     }

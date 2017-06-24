@@ -4,11 +4,11 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.issues.conceptscheme.ConceptSchemes;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
@@ -26,11 +26,12 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
     private ConceptSchemes allConceptSchemes;
 
     public MissingLabels(AuthoritativeConcepts authConcepts, ConceptSchemes conceptSchemes) {
-        super("ml",
+        super(new IssueDescriptor.Builder("ml",
             "Missing Labels",
             "Finds concepts and conceptschemes with missing labels",
-            IssueType.ANALYTICAL,
-            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-labels"));
+            IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-labels")
+                .build());
 
         this.allAuthConcepts = authConcepts;
         this.allConceptSchemes = conceptSchemes;
@@ -38,12 +39,12 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
 
     @Override
     protected CollectionResult<Resource> invoke() throws RDF4JException {
-        unlabeledConceptsAndConceptSchemes = new ArrayList<Resource>();
+        unlabeledConceptsAndConceptSchemes = new ArrayList<>();
 
         unlabeledConceptsAndConceptSchemes.addAll(findUnlabeledConcepts());
         unlabeledConceptsAndConceptSchemes.addAll(findUnlabeledConceptSchemes());
 
-        return new CollectionResult<Resource>(unlabeledConceptsAndConceptSchemes);
+        return new CollectionResult<>(unlabeledConceptsAndConceptSchemes);
     }
 
     private Collection<Resource> findUnlabeledConcepts() throws RDF4JException {

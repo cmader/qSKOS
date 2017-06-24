@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
@@ -21,17 +22,17 @@ public class AggregationRelations extends Issue<NumberResult<Long>> {
         "skos:topConceptOf, skos:hasTopConcept, skos:inScheme, skos:member, skos:memberList";
 
     public AggregationRelations() {
-        super("ar",
+        super(new IssueDescriptor.Builder("ar",
               "Aggregation Relations Count",
               "Counts the statements relating resources to ConceptSchemes or Collections",
-              IssueType.STATISTICAL
+              IssueDescriptor.IssueType.STATISTICAL).build()
         );
     }
 
     @Override
     protected NumberResult<Long> invoke() throws RDF4JException {
         TupleQuery query = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createAggregationRelationsQuery());
-        return new NumberResult<Long>(TupleQueryResultUtil.countResults(query.evaluate()));
+        return new NumberResult<>(TupleQueryResultUtil.countResults(query.evaluate()));
     }
 
     private String createAggregationRelationsQuery() {

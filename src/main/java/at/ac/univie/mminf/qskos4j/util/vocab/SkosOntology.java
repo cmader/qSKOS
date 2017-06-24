@@ -3,7 +3,8 @@ package at.ac.univie.mminf.qskos4j.util.vocab;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
@@ -56,7 +57,8 @@ public class SkosOntology {
     }
 
     public IRI getUri(String element) {
-        return new IRIImpl(SKOS_BASE_IRI +"#"+ element);
+        ValueFactory factory = SimpleValueFactory.getInstance();
+        return factory.createIRI(SKOS_BASE_IRI +"#"+ element);
     }
 
     public Repository getRepository() {
