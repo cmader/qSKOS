@@ -186,4 +186,4 @@ In order to get an impression about the impact of using qSKOS for improving voca
 
 == Copyright
 
-Copyright (c) 2011-2014 Christian Mader. See LICENSE.txt for details
+Copyright (c) 2011-2017 Christian Mader. See LICENSE.txt for details
