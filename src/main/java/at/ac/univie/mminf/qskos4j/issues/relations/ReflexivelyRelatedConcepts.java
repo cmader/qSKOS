@@ -10,7 +10,8 @@ import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.StatementImpl;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement
     private Collection<Statement> findReflexivelyRelatedResources() throws RDF4JException
     {
         Collection<Statement> results = new ArrayList<>();
+        ValueFactory factory = SimpleValueFactory.getInstance();
 
         Iterator<Resource> conceptIt = new MonitoredIterator<>(authoritativeConcepts.getResult().getData(), progressMonitor);
         while (conceptIt.hasNext()) {
@@ -55,7 +57,7 @@ public class ReflexivelyRelatedConcepts extends Issue<CollectionResult<Statement
                 RepositoryResult<Statement> reflexiveProperties = repCon.getStatements(concept, null, concept, false);
 
                 while (reflexiveProperties.hasNext()) {
-                    results.add(new StatementImpl(concept, reflexiveProperties.next().getPredicate(), concept));
+                    results.add(factory.createStatement(concept, reflexiveProperties.next().getPredicate(), concept));
                 }
             }
         }

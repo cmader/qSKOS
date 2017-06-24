@@ -2,11 +2,11 @@ package at.ac.univie.mminf.qskos4j.util.url;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,26 +42,24 @@ public class UrlDereferencer {
 		throws URISyntaxException, IOException
 	{
 		logger.debug("dereferencing: " +url.toString());
-		
-		HttpGet httpGet = new HttpGet(url.toURI());
-        httpGet.setHeader("Accept", "text/html,application/xhtml+xml,application/xml,text/plain,*/*;q=0.5");
 
-        AbstractHttpClient httpClient = createParameterizedHttpClient();
-        HttpResponse response = httpClient.execute(httpGet);
-        httpClient.getConnectionManager().shutdown();
+        HttpUriRequest request = RequestBuilder.get(url.toURI()).setConfig(
+                RequestConfig.custom()
+                    .setConnectionRequestTimeout(HTTP_GET_TIMOUT_MILLIS)
+                    .setConnectTimeout(HTTP_GET_TIMOUT_MILLIS)
+                    .setSocketTimeout(HTTP_GET_TIMOUT_MILLIS)
+                    .build())
+
+            .setHeader("Accept", "text/html,application/xhtml+xml,application/xml,text/plain,*/*;q=0.5")
+            .build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpResponse response = httpClient.execute(request);
+        httpClient.close();
 
         return response;
 	}
-	
-	private AbstractHttpClient createParameterizedHttpClient() {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpParams params = httpClient.getParams();
-		params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, HTTP_GET_TIMOUT_MILLIS);
-		params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, HTTP_GET_TIMOUT_MILLIS);
-		
-		return httpClient;
-	}
-	
+
 	private boolean isValidResponse(HttpResponse response)
 	{
 		int statusCode = response.getStatusLine().getStatusCode();

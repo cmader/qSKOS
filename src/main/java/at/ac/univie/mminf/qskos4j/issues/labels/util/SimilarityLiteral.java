@@ -1,9 +1,9 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.impl.LiteralImpl;
+import org.eclipse.rdf4j.model.impl.SimpleLiteral;
 
-public class SimilarityLiteral extends LiteralImpl{
+public class SimilarityLiteral extends SimpleLiteral {
 
     public SimilarityLiteral(Literal literal) {
         super(literal.getLabel().toUpperCase());

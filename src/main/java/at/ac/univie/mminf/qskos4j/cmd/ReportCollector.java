@@ -3,13 +3,12 @@ package at.ac.univie.mminf.qskos4j.cmd;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.Result;
 import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
-import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.LiteralImpl;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -191,6 +190,7 @@ class ReportCollector {
 	private void writeDQVReport(Issue issue, RepositoryConnection repCon, ValueFactory f, String sdate)
 			throws IOException, RDF4JException
 	{
+		ValueFactory factory = SimpleValueFactory.getInstance();
 
 		String ndqv= "http://www.w3.org/ns/dqv#";
 		String nex="http://w3id.org/quality/qskos/";
@@ -207,11 +207,11 @@ class ReportCollector {
 
 		if (this.computedOn.startsWith("http://"))		repCon.add(measure, pcomputedOn,f.createIRI(this.computedOn));
 		else {
-			Value datasetPath = new LiteralImpl(this.computedOn, XMLSchema.STRING);
+			Value datasetPath = factory.createLiteral(this.computedOn, XMLSchema.STRING);
 			repCon.add(measure, pcomputedOn,datasetPath);
 		}
 
-		Value ldate = new LiteralImpl(sdate, XMLSchema.DATE);
+		Value ldate = factory.createLiteral(sdate, XMLSchema.DATE);
 		repCon.add(measure, pdate, ldate);
 		int i = new Integer(0);
 		String res ;
@@ -222,12 +222,12 @@ class ReportCollector {
 				res = Long.toString(issue.getResult().occurrenceCount());	
 			else
 				res = "0";
-			 lval = new LiteralImpl( res , XMLSchema.INTEGER);
+			 lval = factory.createLiteral( res , XMLSchema.INTEGER);
 		}catch (java.lang.UnsupportedOperationException e) {
 			// in case the issue is not associated with a list of elements having the problem the methods occurenceCount is not defined. That happen with the issue "No Common Languages:"
 			// then we  encode the result as a boolean, plus a annotation explaining .
-			if (issue.getResult().isProblematic()) lval = new LiteralImpl( "true" , XMLSchema.BOOLEAN);
-			else lval = new LiteralImpl( "false" , XMLSchema.BOOLEAN);
+			if (issue.getResult().isProblematic()) lval = factory.createLiteral( "true" , XMLSchema.BOOLEAN);
+			else lval = factory.createLiteral( "false" , XMLSchema.BOOLEAN);
 		} 
 		repCon.add(measure, pvalue, lval);
 
