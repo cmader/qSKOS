@@ -4,11 +4,11 @@ import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.Pair;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
@@ -22,11 +22,12 @@ public class HierarchicalRedundancy extends Issue<CollectionResult<Pair<Resource
     private DirectedGraph<Resource, NamedEdge> hierarchyGraph;
 
     public HierarchicalRedundancy(HierarchyGraphBuilder hierarchyGraphBuilder) {
-        super("hr",
+        super(new IssueDescriptor.Builder("hr",
             "Hierarchical Redundancy",
             "Finds broader/narrower relations over multiple hierarchy levels",
-            IssueType.ANALYTICAL,
-            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#hierarchical-redundancy"));
+            IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#hierarchical-redundancy")
+                .build());
         this.hierarchyGraphBuilder = hierarchyGraphBuilder;
     }
 

@@ -6,11 +6,11 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotation;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotationMultipleResources;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.AmbiguousNotationWithinOneResource;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 
@@ -22,12 +22,15 @@ public class AmbiguousNotationReferences extends Issue<CollectionResult<Ambiguou
     private Map<Literal, Collection<Resource>> multiResourceConflicts;
 
     public AmbiguousNotationReferences(AuthoritativeConcepts authoritativeConcepts) {
-        super(authoritativeConcepts,
+        super(new IssueDescriptor.Builder(
                 "anr",
                 "Ambiguous Notation References",
                 "Finds concepts with multiple or identical notations within the same concept scheme",
-                IssueType.ANALYTICAL,
-                new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#Ambiguous_Notation_References"));
+                IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#Ambiguous_Notation_References")
+                .dependentIssue(authoritativeConcepts)
+                .build());
+
         this.authoritativeConcepts = authoritativeConcepts;
     }
 

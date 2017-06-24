@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.count;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.NumberResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Statement;
@@ -17,10 +18,10 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 public class SemanticRelations extends Issue<NumberResult<Long>> {
 
     public SemanticRelations() {
-        super("sr",
+        super(new IssueDescriptor.Builder("sr",
               "Semantic Relations Count",
               "Counts the number of relations between concepts (skos:semanticRelation and subproperties thereof)",
-              IssueType.STATISTICAL
+              IssueDescriptor.IssueType.STATISTICAL).build()
         );
     }
 

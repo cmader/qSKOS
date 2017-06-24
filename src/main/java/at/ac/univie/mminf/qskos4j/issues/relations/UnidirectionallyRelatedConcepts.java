@@ -2,12 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +36,14 @@ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelat
     private AuthoritativeConcepts authoritativeConcepts;
 
     public UnidirectionallyRelatedConcepts(AuthoritativeConcepts authoritativeConcepts) {
-        super(authoritativeConcepts,
+        super(new IssueDescriptor.Builder(
                 "urc",
                 "Unidirectionally Related Concepts",
                 "Concepts not including reciprocal relations",
-                IssueType.ANALYTICAL,
-                new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#unidirectionally-related-concepts"));
+                IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#unidirectionally-related-concepts")
+                .dependentIssue(authoritativeConcepts)
+                .build());
 
         this.authoritativeConcepts = authoritativeConcepts;
     }

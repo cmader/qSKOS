@@ -2,13 +2,13 @@ package at.ac.univie.mminf.qskos4j.issues.cycles;
 
 import at.ac.univie.mminf.qskos4j.issues.HierarchyGraphBuilder;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.graph.NamedEdge;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +33,12 @@ public class HierarchicalCycles extends Issue<HierarchicalCyclesResult> {
     private HierarchyGraphBuilder hierarchyGraphBuilder;
 
     public HierarchicalCycles(HierarchyGraphBuilder hierarchyGraphBuilder) {
-        super("chr",
+        super(new IssueDescriptor.Builder("chr",
               "Cyclic Hierarchical Relations",
               "Finds concepts that are hierarchically related to each other",
-              IssueType.ANALYTICAL,
-              new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#cyclic-hierarchical-relations")
+              IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#cyclic-hierarchical-relations")
+                .build()
         );
         this.hierarchyGraphBuilder = hierarchyGraphBuilder;
     }

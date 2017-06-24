@@ -3,6 +3,7 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
@@ -26,11 +27,13 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Resource>> {
     private InvolvedConcepts involvedConcepts;
 
     public AuthoritativeConcepts(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts,
+        super(new IssueDescriptor.Builder(
             "ac",
             "Authoritative Concepts",
             "Finds all authoritative concepts in the vocabulary",
-            IssueType.STATISTICAL
+            IssueDescriptor.IssueType.STATISTICAL)
+                .dependentIssue(involvedConcepts)
+                .build()
         );
 
         this.involvedConcepts = involvedConcepts;
@@ -39,7 +42,7 @@ public class AuthoritativeConcepts extends Issue<CollectionResult<Resource>> {
     @Override
     protected CollectionResult<Resource> invoke() throws RDF4JException {
         getAuthResourceIdentifier();
-        return new CollectionResult<Resource>(extractAuthoritativeConceptsFromInvolved());
+        return new CollectionResult<>(extractAuthoritativeConceptsFromInvolved());
     }
 
     private void determineAuthResourceIdentifier() throws RDF4JException {

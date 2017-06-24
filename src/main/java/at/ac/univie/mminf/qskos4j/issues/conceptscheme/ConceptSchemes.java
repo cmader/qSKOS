@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.conceptscheme;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
@@ -27,16 +28,16 @@ public class ConceptSchemes extends Issue<CollectionResult<Resource>> {
     private final Logger logger = LoggerFactory.getLogger(ConceptSchemes.class);
 
     public ConceptSchemes() {
-        super("cs",
+        super(new IssueDescriptor.Builder("cs",
               "Concept Schemes",
               "Finds the involved ConceptSchemes",
-              IssueType.STATISTICAL);
+              IssueDescriptor.IssueType.STATISTICAL).build());
     }
 
     @Override
     protected CollectionResult<Resource> invoke() throws RDF4JException {
         TupleQueryResult result = repCon.prepareTupleQuery(QueryLanguage.SPARQL, createConceptSchemeQuery()).evaluate();
-        return new CollectionResult<Resource>(identifyResources(result));
+        return new CollectionResult<>(identifyResources(result));
     }
 
     private String createConceptSchemeQuery() {

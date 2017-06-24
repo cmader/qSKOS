@@ -2,12 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQuery;
 
@@ -23,12 +23,14 @@ public class OrphanConcepts extends Issue<CollectionResult<Resource>> {
     private InvolvedConcepts involvedConcepts;
 
     public OrphanConcepts(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts,
+        super(new IssueDescriptor.Builder(
             "oc",
             "Orphan Concepts",
             "Finds all orphan concepts, i.e. those not having semantic relationships to other concepts",
-            IssueType.ANALYTICAL,
-            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#orphan-concepts")
+            IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#orphan-concepts")
+                .dependentIssue(involvedConcepts)
+                .build()
         );
 
         this.involvedConcepts = involvedConcepts;

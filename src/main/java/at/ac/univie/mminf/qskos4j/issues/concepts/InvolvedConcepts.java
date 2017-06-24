@@ -2,6 +2,7 @@ package at.ac.univie.mminf.qskos4j.issues.concepts;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
@@ -18,10 +19,10 @@ import java.util.Collection;
 public class InvolvedConcepts extends Issue<CollectionResult<Resource>> {
 
     public InvolvedConcepts() {
-        super("c",
+        super(new IssueDescriptor.Builder("c",
               "All Concepts",
               "Finds all SKOS concepts involved in the vocabulary",
-              IssueType.STATISTICAL
+              IssueDescriptor.IssueType.STATISTICAL).build()
         );
     }
 
@@ -38,7 +39,7 @@ public class InvolvedConcepts extends Issue<CollectionResult<Resource>> {
             involvedConcepts.add(result.next().getSubject());
         }
 
-        return new CollectionResult<Resource>(involvedConcepts);
+        return new CollectionResult<>(involvedConcepts);
     }
 
 }

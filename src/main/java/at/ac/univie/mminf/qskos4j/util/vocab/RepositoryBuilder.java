@@ -1,9 +1,10 @@
 package at.ac.univie.mminf.qskos4j.util.vocab;
 
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.Assert;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -64,11 +65,13 @@ public class RepositoryBuilder {
     }
 
     private void addSkosOntology() throws RDF4JException, IOException {
+        ValueFactory factory = SimpleValueFactory.getInstance();
+
         repository.getConnection().add(
             new URL(SkosOntology.SKOS_ONTO_IRI),
             SkosOntology.SKOS_BASE_IRI,
             RDFFormat.RDFXML,
-            new IRIImpl(SkosOntology.SKOS_ONTO_IRI));
+            factory.createIRI(SkosOntology.SKOS_ONTO_IRI));
     }
 
     private String createDataDirName() {

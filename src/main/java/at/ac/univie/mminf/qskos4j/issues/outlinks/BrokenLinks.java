@@ -3,18 +3,18 @@ package at.ac.univie.mminf.qskos4j.issues.outlinks;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.ExtrapolatedCollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import at.ac.univie.mminf.qskos4j.util.url.NoContentTypeProvidedException;
 import at.ac.univie.mminf.qskos4j.util.url.UrlDereferencer;
 import at.ac.univie.mminf.qskos4j.util.url.UrlNotDereferencableException;
 import org.eclipse.rdf4j.RDF4JException;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
-import java.net.IRI;
 import java.net.URL;
+import java.net.URI;
 import java.util.*;
 
 /**
@@ -31,20 +31,21 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 	
 	private Map<URL, String> urlAvailability = new HashMap<>();
 	private Set<String> invalidResources = new HashSet<>();
-    private HttpIRIs httpIRIs;
+    private HttpURIs httpURIs;
     private Integer extAccessDelayMillis;
     private Float randomSubsetSize_percent;
 
-    public BrokenLinks(HttpIRIs httpIRIs) {
-		super(httpIRIs,
+    public BrokenLinks(HttpURIs httpURIs) {
+		super(new IssueDescriptor.Builder(
               "bl",
               "Broken Links",
               "Checks dereferencability of all links",
-              IssueType.ANALYTICAL,
-              new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#broken-links")
-        );
+              IssueDescriptor.IssueType.ANALYTICAL)
+				.weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#broken-links")
+				.dependentIssue(httpURIs)
+				.build());
 
-        this.httpIRIs = httpIRIs;
+        this.httpURIs = httpURIs;
 	}
 
     @Override
@@ -55,12 +56,12 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 
     private void dereferenceIRIs() throws RDF4JException
 	{
-		Collection<IRI> urisToBeDereferenced = collectUrisToBeDereferenced();
-		Iterator<IRI> it = new MonitoredIterator<>(urisToBeDereferenced, progressMonitor);
+		Collection<URI> urisToBeDereferenced = collectUrisToBeDereferenced();
+		Iterator<URI> it = new MonitoredIterator<>(urisToBeDereferenced, progressMonitor);
 		
 		int i = 1;
 		while (it.hasNext()) {
-			IRI uri = it.next();
+			URI uri = it.next();
 			
 			logger.debug("processing link " +i+ " of "+urisToBeDereferenced.size());
 			i++;
@@ -77,20 +78,20 @@ public class BrokenLinks extends Issue<ExtrapolatedCollectionResult<URL>> {
 		}
 	}
 	
-	private Collection<IRI> collectUrisToBeDereferenced() throws RDF4JException {
+	private Collection<URI> collectUrisToBeDereferenced() throws RDF4JException {
 		if (randomSubsetSize_percent == null) {
-			return httpIRIs.getResult().getData();
+			return httpURIs.getResult().getData();
 		}
 
-        RandomSubSet<IRI> urisToBeDereferenced = new RandomSubSet<>(
-            httpIRIs.getResult().getData(),
+        RandomSubSet<URI> urisToBeDereferenced = new RandomSubSet<>(
+            httpURIs.getResult().getData(),
             randomSubsetSize_percent);
         logger.info("Using subset of " +urisToBeDereferenced.size()+ " IRIs for broken link checking");
 
 		return urisToBeDereferenced;
 	}
 	
-	private void addToResults(IRI uri) {
+	private void addToResults(URI uri) {
 		try {
 			addToAvailabilityMap(uri.toURL());
 		} 

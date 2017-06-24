@@ -8,12 +8,12 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabeledConcept;
 import at.ac.univie.mminf.qskos4j.issues.labels.util.SimilarityLiteral;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +34,13 @@ public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
     private InvolvedConcepts involvedConcepts;
 
     public OverlappingLabels(InvolvedConcepts involvedConcepts) {
-        super(involvedConcepts,
-            "ol",
+        super(new IssueDescriptor.Builder("ol",
             "Overlapping Labels",
             "Finds concepts with similar (identical) labels",
-            IssueType.ANALYTICAL,
-            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#overlapping-labels"));
+            IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#overlapping-labels")
+                .dependentIssue(involvedConcepts)
+                .build());
 
         this.involvedConcepts = involvedConcepts;
     }
