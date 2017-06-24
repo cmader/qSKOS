@@ -35,7 +35,7 @@ public class NoCommonLanguages extends Issue<NoCommonLanguagesResult> {
         commonLanguages = new HashSet<>();
 
         if (!langCovData.isEmpty()) {
-            for (Collection languages : langCovData.values()) {
+            for (Collection<String> languages : langCovData.values()) {
                 commonLanguages.addAll(languages);
             }
 

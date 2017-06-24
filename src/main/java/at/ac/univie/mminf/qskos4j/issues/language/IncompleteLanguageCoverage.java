@@ -35,7 +35,7 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
 
     @Override
     protected IncompleteLangCovResult invoke() throws RDF4JException {
-		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
+		incompleteLanguageCoverage = new HashMap<>();
 
         findDistinctLanguages();
 		generateIncompleteLanguageCoverageMap();
@@ -44,14 +44,14 @@ public class IncompleteLanguageCoverage extends Issue<IncompleteLangCovResult> {
 	}
 
     private void findDistinctLanguages() throws RDF4JException {
-        distinctLanguages = new HashSet<String>();
-        for (Collection languages : languageCoverage.getResult().getData().values()) {
+        distinctLanguages = new HashSet<>();
+        for (Collection<String> languages : languageCoverage.getResult().getData().values()) {
             distinctLanguages.addAll(languages);
         }
     }
 
 	private void generateIncompleteLanguageCoverageMap() throws RDF4JException {
-		incompleteLanguageCoverage = new HashMap<Resource, Collection<String>>();
+		incompleteLanguageCoverage = new HashMap<>();
 
         Map<Resource, Collection<String>> langCovData = languageCoverage.getResult().getData();
 

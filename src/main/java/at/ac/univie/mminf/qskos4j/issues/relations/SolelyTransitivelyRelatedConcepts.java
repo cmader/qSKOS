@@ -53,7 +53,7 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Tu
             relatedConcepts.add(new Tuple<>(statement.getSubject(), (Resource) statement.getObject()));
         }
 
-        return new CollectionResult(relatedConcepts);
+        return new CollectionResult<>(relatedConcepts);
     }
 
 
