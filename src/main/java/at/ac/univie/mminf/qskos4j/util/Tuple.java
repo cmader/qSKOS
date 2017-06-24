@@ -1,17 +1,14 @@
 package at.ac.univie.mminf.qskos4j.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Tuple<T> {
 
     private List<T> elements;
 
-    public Tuple(T ... initElements) {
-        elements = new ArrayList<T>();
-        elements.addAll(Arrays.asList(initElements));
+    public Tuple(List<T> initElements) {
+        elements = new ArrayList<>();
+        elements.addAll(initElements);
     }
 
     @Override

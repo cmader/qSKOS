@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -50,7 +51,7 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Tu
     private CollectionResult<Tuple<Resource>> createReport() {
         Collection<Tuple<Resource>> relatedConcepts = new HashSet<>();
         for (Statement statement : solitaryTransitiveRelations) {
-            relatedConcepts.add(new Tuple<>(statement.getSubject(), (Resource) statement.getObject()));
+            relatedConcepts.add(new Tuple<>(Arrays.asList(statement.getSubject(), (Resource) statement.getObject())));
         }
 
         return new CollectionResult<>(relatedConcepts);

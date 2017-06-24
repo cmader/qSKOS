@@ -14,7 +14,7 @@ public class TupleQueryResultUtil {
     public static Set<Value> getValuesForBindingName(TupleQueryResult result, String bindingName)
         throws QueryEvaluationException
     {
-        Set<Value> ret = new HashSet<Value>();
+        Set<Value> ret = new HashSet<>();
 
         while (result.hasNext()) {
             ret.add(result.next().getValue(bindingName));
@@ -48,14 +48,14 @@ public class TupleQueryResultUtil {
     public static Collection<Tuple<Resource>> createCollectionOfResourcePairs(TupleQueryResult result, String value1, String value2)
         throws RDF4JException
     {
-        Collection<Tuple<Resource>> resultCollection = new ArrayList<Tuple<Resource>>();
+        Collection<Tuple<Resource>> resultCollection = new ArrayList<>();
 
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
             Resource concept1 = (Resource) queryResult.getValue(value1);
             Resource concept2 = (Resource) queryResult.getValue(value2);
 
-            resultCollection.add(new Tuple<Resource>(concept1, concept2));
+            resultCollection.add(new Tuple<>(Arrays.asList(concept1, concept2)));
         }
 
         return resultCollection;

@@ -12,6 +12,7 @@ import org.eclipse.rdf4j.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,10 +92,8 @@ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelat
     }
 
     private boolean bothResourcesAreAuthoritative(Value res1, Value res2, String authResourceIdentifier) {
-        if (authResourceIdentifier.isEmpty()) return true;
-
-        return res1.stringValue().contains(authResourceIdentifier) &&
-                res2.stringValue().contains(authResourceIdentifier);
+        return authResourceIdentifier.isEmpty() || (res1.stringValue().contains(authResourceIdentifier) &&
+                res2.stringValue().contains(authResourceIdentifier));
     }
 
     private void addToMap(Value value1, Value value2, String inverseProperties)
@@ -104,7 +103,7 @@ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelat
             Resource resource2 = (Resource) value2;
 
             omittedInverseRelations.put(
-                    new Tuple<>(resource1, resource2),
+                    new Tuple<>(Arrays.asList(resource1, resource2)),
                     inverseProperties);
         }
         catch (ClassCastException e) {

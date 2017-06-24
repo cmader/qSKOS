@@ -9,6 +9,7 @@ import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.query.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -62,7 +63,7 @@ public class ValuelessAssociativeRelations extends Issue<CollectionResult<Tuple<
             IRI child = (IRI) queryResult.getValue("child");
             IRI otherchild = (IRI) queryResult.getValue("otherchild");
 
-            allResults.add(new Tuple<>(child, otherchild));
+            allResults.add(new Tuple<>(Arrays.asList(child, otherchild)));
         }
     }
 
