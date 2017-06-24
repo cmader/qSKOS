@@ -6,11 +6,8 @@ import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.Value;p
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleIRI;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 
@@ -21,7 +18,7 @@ import java.util.*;
  */
 public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 
-	private Map<Resource, Collection<URI>> extResourcesForConcept;
+	private Map<Resource, Collection<IRI>> extResourcesForConcept;
     private AuthoritativeConcepts authoritativeConcepts;
 	
 	public MissingOutLinks(AuthoritativeConcepts authoritativeConcepts) {
@@ -30,7 +27,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
             "Missing Out-Links",
             "Finds concepts that are not linked to other vocabularies on the Web",
             IssueType.ANALYTICAL,
-            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-out-links")
+			ValueFactory.createIRI("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-out-links")
         );
 
         this.authoritativeConcepts = authoritativeConcepts;
@@ -50,12 +47,12 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 
 		while (conceptIt.hasNext()) {
             Resource concept = conceptIt.next();
-			extResourcesForConcept.put(concept, extractExternalResources(getURIsOfConcept(concept)));
+			extResourcesForConcept.put(concept, extractExternalResources(getIRIsOfConcept(concept)));
         }
 	}
 
-    private Collection<URI> getURIsOfConcept(Resource concept) throws RepositoryException {
-        Collection<URI> urisForConcept = new ArrayList<>();
+    private Collection<IRI> getIRIsOfConcept(Resource concept) throws RepositoryException {
+        Collection<IRI> urisForConcept = new ArrayList<>();
 
         RepositoryResult<Statement> conceptAsSubject = repCon.getStatements(concept, null, null, false);
         while (conceptAsSubject.hasNext()) {
@@ -72,14 +69,14 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
         return urisForConcept;
     }
 
-    private void addToUriCollection(Value value, Collection<URI> uris) {
-        if (value instanceof URI) uris.add((URI) value);
+    private void addToUriCollection(Value value, Collection<IRI> uris) {
+        if (value instanceof IRI) uris.add((IRI) value);
     }
 	
-	private Collection<URI> extractExternalResources(Collection<URI> allResources) throws RDF4JException {
-		Collection<URI> validExternalResources = new HashSet<>();
+	private Collection<IRI> extractExternalResources(Collection<IRI> allResources) throws RDF4JException {
+		Collection<IRI> validExternalResources = new HashSet<>();
 
-		for (URI uri : allResources) {
+		for (IRI uri : allResources) {
 			if (isExternalResource(uri) && isNonSkosURL(uri)) {
 				validExternalResources.add(uri);
 			}
@@ -88,7 +85,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 		return validExternalResources;
 	}
 	
-	private boolean isExternalResource(URI url) throws RDF4JException {
+	private boolean isExternalResource(IRI url) throws RDF4JException {
         String authResourceIdentifier = authoritativeConcepts.getAuthResourceIdentifier();
 
         if (authResourceIdentifier != null && !authResourceIdentifier.isEmpty()) {
@@ -98,7 +95,7 @@ public class MissingOutLinks extends Issue<CollectionResult<Resource>> {
 		throw new IllegalArgumentException("external resource identifier must not be null or empty");
 	}
 	
-	private boolean isNonSkosURL(URI url) {
+	private boolean isNonSkosURL(IRI url) {
 		return !url.toString().contains(SparqlPrefix.SKOS.getNameSpace());
 	}
 	

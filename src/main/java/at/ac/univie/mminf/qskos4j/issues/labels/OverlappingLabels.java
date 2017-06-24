@@ -13,7 +13,7 @@ import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class OverlappingLabels extends Issue<CollectionResult<LabelConflict>> {
             "Overlapping Labels",
             "Finds concepts with similar (identical) labels",
             IssueType.ANALYTICAL,
-            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#overlapping-labels"));
+            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#overlapping-labels"));
 
         this.involvedConcepts = involvedConcepts;
     }

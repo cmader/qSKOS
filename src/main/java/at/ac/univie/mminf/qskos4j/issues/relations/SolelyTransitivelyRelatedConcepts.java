@@ -2,15 +2,12 @@ package at.ac.univie.mminf.qskos4j.issues.relations;
 
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.result.CollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.Tuple;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.StatementImpl;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.*;
 
 import java.util.ArrayList;
@@ -29,11 +26,12 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Tu
     private Collection<Statement> solitaryTransitiveRelations;
 
     public SolelyTransitivelyRelatedConcepts() {
-        super("strc",
+        super(new IssueDescriptor.Builder("strc",
               "Solely Transitively Related Concepts",
               "Concepts only related by skos:broaderTransitive or skos:narrowerTransitive",
-              IssueType.ANALYTICAL,
-              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#solely-transitively-related-concepts")
+              IssueDescriptor.IssueType.ANALYTICAL)
+                .weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#solely-transitively-related-concepts")
+                .build()
         );
     }
 
@@ -73,13 +71,15 @@ public class SolelyTransitivelyRelatedConcepts extends Issue<CollectionResult<Tu
     private void addToResults(TupleQueryResult result, String solitaryRelation)
             throws QueryEvaluationException
     {
+        ValueFactory factory = SimpleValueFactory.getInstance();
+
         while (result.hasNext()) {
             BindingSet queryResult = result.next();
             Resource resource1 = (Resource) queryResult.getValue("resource1");
             Value resource2 = queryResult.getValue("resource2");
-            URI relation = new URIImpl(solitaryRelation.replace("skos:", SparqlPrefix.SKOS.getNameSpace()));
+            IRI relation = factory.createIRI(solitaryRelation.replace("skos:", SparqlPrefix.SKOS.getNameSpace()));
 
-            solitaryTransitiveRelations.add(new StatementImpl(resource1, relation, resource2));
+            solitaryTransitiveRelations.add(factory.createStatement(resource1, relation, resource2));
         }
     }
 

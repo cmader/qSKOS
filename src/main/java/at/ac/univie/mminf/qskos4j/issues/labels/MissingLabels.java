@@ -8,7 +8,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class MissingLabels extends Issue<CollectionResult<Resource>> {
             "Missing Labels",
             "Finds concepts and conceptschemes with missing labels",
             IssueType.ANALYTICAL,
-            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-labels"));
+            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-labels"));
 
         this.allAuthConcepts = authConcepts;
         this.allConceptSchemes = conceptSchemes;

@@ -10,9 +10,9 @@ import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQuery;
@@ -45,7 +45,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
             "Disconnected Concept Clusters",
             "Finds sets of concepts that are isolated from the rest of the vocabulary",
             IssueType.ANALYTICAL,
-            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disconnected-concept-clusters")
+            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#disconnected-concept-clusters")
         );
         this.involvedConcepts = involvedConcepts;
     }
@@ -89,7 +89,7 @@ public class DisconnectedConceptClusters extends Issue<ClustersResult> {
             while (result.hasNext()) {
                 BindingSet bindingSet = result.next();
                 Resource otherConcept = (Resource) bindingSet.getValue("otherConcept");
-                URI semanticRelation = (URI) bindingSet.getValue("semanticRelation");
+                IRI semanticRelation = (IRI) bindingSet.getValue("semanticRelation");
 
                 if (otherConcept != null && semanticRelation != null) {
                     allRelations.add(new Relation(concept, otherConcept, semanticRelation));

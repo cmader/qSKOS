@@ -6,7 +6,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.QueryLanguage;
 
@@ -28,7 +28,7 @@ public class OmittedTopConcepts extends Issue<CollectionResult<Resource>> {
             "Omitted Top Concepts",
             "Finds skos:ConceptSchemes that don't have top concepts defined",
             IssueType.ANALYTICAL,
-            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-top-concepts"));
+            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#omitted-top-concepts"));
 
         this.conceptSchemes = conceptSchemes;
     }

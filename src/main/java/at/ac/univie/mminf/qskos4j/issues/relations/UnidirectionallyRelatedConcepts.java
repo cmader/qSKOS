@@ -7,7 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class UnidirectionallyRelatedConcepts extends Issue<UnidirectionallyRelat
                 "Unidirectionally Related Concepts",
                 "Concepts not including reciprocal relations",
                 IssueType.ANALYTICAL,
-                new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#unidirectionally-related-concepts"));
+                new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#unidirectionally-related-concepts"));
 
         this.authoritativeConcepts = authoritativeConcepts;
     }

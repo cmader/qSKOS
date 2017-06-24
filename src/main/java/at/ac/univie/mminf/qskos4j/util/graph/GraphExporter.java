@@ -43,14 +43,14 @@ public class GraphExporter {
 		
 		new DOTExporter<Resource, NamedEdge>(
 			new IntegerNameProvider<Resource>(),
-			new URIVertexNameProvider(),
+			new IRIVertexNameProvider(),
 			new StringEdgeNameProvider<NamedEdge>()
 		).export(outputWriter, componentGraph);
 		
 		return outputWriter.toString();
 	}
 			
-	private class URIVertexNameProvider implements VertexNameProvider<Resource>
+	private class IRIVertexNameProvider implements VertexNameProvider<Resource>
 	{
 		@Override
 		public String getVertexName(Resource vertex) {

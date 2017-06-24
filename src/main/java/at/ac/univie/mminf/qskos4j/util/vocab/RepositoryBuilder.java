@@ -3,7 +3,7 @@ package at.ac.univie.mminf.qskos4j.util.vocab;
 import org.junit.Assert;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -35,7 +35,7 @@ public class RepositoryBuilder {
         return repository;
     }
 
-    public Repository setUpFromFile(File rdfFile, String baseURI, RDFFormat dataFormat)
+    public Repository setUpFromFile(File rdfFile, String baseIRI, RDFFormat dataFormat)
         throws RDF4JException, IOException
     {
         logger.info("Initializing evaluation repository for " +rdfFile.getName()+ "...");
@@ -45,7 +45,7 @@ public class RepositoryBuilder {
         RepositoryConnection repCon = repository.getConnection();
 
         try {
-            repCon.add(rdfFile, baseURI, dataFormat);
+            repCon.add(rdfFile, baseIRI, dataFormat);
         }
         catch (Exception e) {
             throw new InvalidRdfException("Could not add RDF data from file to temporary repository");
@@ -65,10 +65,10 @@ public class RepositoryBuilder {
 
     private void addSkosOntology() throws RDF4JException, IOException {
         repository.getConnection().add(
-            new URL(SkosOntology.SKOS_ONTO_URI),
-            SkosOntology.SKOS_BASE_URI,
+            new URL(SkosOntology.SKOS_ONTO_IRI),
+            SkosOntology.SKOS_BASE_IRI,
             RDFFormat.RDFXML,
-            new URIImpl(SkosOntology.SKOS_ONTO_URI));
+            new IRIImpl(SkosOntology.SKOS_ONTO_IRI));
     }
 
     private String createDataDirName() {

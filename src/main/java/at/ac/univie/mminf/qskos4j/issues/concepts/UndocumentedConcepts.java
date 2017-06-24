@@ -7,7 +7,7 @@ import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class UndocumentedConcepts extends Issue<CollectionResult<Resource>> {
             "Undocumented Concepts",
             "Finds concepts that don't use any SKOS documentation properties",
             IssueType.ANALYTICAL,
-            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#undocumented-concepts")
+            new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#undocumented-concepts")
         );
 
         this.authoritativeConcepts = authoritativeConcepts;

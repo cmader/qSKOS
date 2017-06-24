@@ -2,8 +2,8 @@ package at.ac.univie.mminf.qskos4j.util.vocab;
 
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
@@ -19,8 +19,8 @@ public class SkosOntology {
 
     private final static Logger logger = LoggerFactory.getLogger(SkosOntology.class);
 
-    public final static String SKOS_BASE_URI = "http://www.w3.org/2004/02/skos/core";
-    public final static String SKOS_ONTO_URI = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
+    public final static String SKOS_BASE_IRI = "http://www.w3.org/2004/02/skos/core";
+    public final static String SKOS_ONTO_IRI = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
 
     private static SkosOntology ourInstance = new SkosOntology();
     private static Repository skosRepo;
@@ -43,8 +43,8 @@ public class SkosOntology {
 
         RepositoryConnection repCon = skosRepo.getConnection();
         try {
-            repCon.add(new URL(SKOS_ONTO_URI),
-                SKOS_BASE_URI,
+            repCon.add(new URL(SKOS_ONTO_IRI),
+                SKOS_BASE_IRI,
                 RDFFormat.RDFXML);
         }
         finally {
@@ -55,8 +55,8 @@ public class SkosOntology {
     private SkosOntology() {
     }
 
-    public URI getUri(String element) {
-        return new URIImpl(SKOS_BASE_URI +"#"+ element);
+    public IRI getUri(String element) {
+        return new IRIImpl(SKOS_BASE_IRI +"#"+ element);
     }
 
     public Repository getRepository() {

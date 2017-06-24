@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues.labels.util;
 
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public enum LabelType {
 		return usualPrefixedDisplayUri;
 	}
 
-	public static LabelType getFromUri(URI uri) {
+	public static LabelType getFromUri(IRI uri) {
         for (LabelType labelType : values()) {
             if (uri.stringValue().contains(labelType.predicate)) return labelType;
         }

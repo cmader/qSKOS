@@ -1,7 +1,7 @@
 package at.ac.univie.mminf.qskos4j.issues;
 
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
-import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpIRIs;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -24,7 +24,7 @@ public class BrokenLinksTest {
 
     @Before
     public void setUp() throws RDF4JException, IOException {
-        brokenLinks = new BrokenLinks(new HttpURIs());
+        brokenLinks = new BrokenLinks(new HttpIRIs());
         brokenLinks.setRepositoryConnection(new RepositoryBuilder().setUpFromTestResource("resources.rdf").getConnection());
         brokenLinks.setExtAccessDelayMillis(0);
     }

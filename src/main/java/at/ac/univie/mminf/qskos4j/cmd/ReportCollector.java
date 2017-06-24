@@ -5,7 +5,7 @@ import at.ac.univie.mminf.qskos4j.result.Result;
 import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.LiteralImpl;
@@ -193,17 +193,17 @@ class ReportCollector {
 		String ndqv= "http://www.w3.org/ns/dqv#";
 		String nex="http://w3id.org/quality/qskos/";
 
-		URI ptype=  f.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		URI pcomputedOn = f.createURI(ndqv+"computedOn");
-		URI pdate = f.createURI("http://purl.org/dc/terms/date");
-		URI pvalue = f.createURI(ndqv+"value");
-		URI pisMeasurementOf = f.createURI(ndqv+"isMeasurementOf");
+		IRI ptype=  f.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		IRI pcomputedOn = f.createIRI(ndqv+"computedOn");
+		IRI pdate = f.createIRI("http://purl.org/dc/terms/date");
+		IRI pvalue = f.createIRI(ndqv+"value");
+		IRI pisMeasurementOf = f.createIRI(ndqv+"isMeasurementOf");
 
 		String datasetName= this.computedOn.substring(this.computedOn.lastIndexOf("/")+1, this.computedOn.length()); 
-		URI measure= f.createURI(nex+datasetName+issue.getName().replace(" ", "")+sdate);
-		repCon.add(measure, ptype, f.createURI(ndqv+"QualityMeasurement"));
+		IRI measure= f.createIRI(nex+datasetName+issue.getName().replace(" ", "")+sdate);
+		repCon.add(measure, ptype, f.createIRI(ndqv+"QualityMeasurement"));
 
-		if (this.computedOn.startsWith("http://"))		repCon.add(measure, pcomputedOn,f.createURI(this.computedOn));
+		if (this.computedOn.startsWith("http://"))		repCon.add(measure, pcomputedOn,f.createIRI(this.computedOn));
 		else {
 			Value datasetPath = new LiteralImpl(this.computedOn, XMLSchema.STRING);
 			repCon.add(measure, pcomputedOn,datasetPath);
@@ -229,14 +229,14 @@ class ReportCollector {
 		} 
 		repCon.add(measure, pvalue, lval);
 
-		URI uriDimension= f.createURI(nex+"numOf"+issue.getName().replace(" ", ""));
+		IRI uriDimension= f.createIRI(nex+"numOf"+issue.getName().replace(" ", ""));
 		repCon.add(measure, pisMeasurementOf, uriDimension); //issue.getWeblink()
 
 	}
 
 	private String createIssueHeader(Issue issue) {
 		String header = "--- " +issue.getName();
-		URI weblink = issue.getWeblink();
+		IRI weblink = issue.getWeblink();
 		header += "\nDescription: " +issue.getDescription();
 
 		if (weblink != null) {

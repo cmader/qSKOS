@@ -6,7 +6,7 @@ import at.ac.univie.mminf.qskos4j.issues.labels.util.LabelType;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -34,7 +34,7 @@ public class EmptyLabeledResources extends Issue<EmptyLabelsResult> {
         while (result.hasNext()) {
             BindingSet bs = result.next();
             Resource resource = (Resource) bs.getBinding("resource").getValue();
-            URI labelType = (URI) bs.getBinding("labelType").getValue();
+            IRI labelType = (IRI) bs.getBinding("labelType").getValue();
             Value literal = bs.getBinding("literal").getValue();
 
             if (literal.stringValue().trim().isEmpty()) {

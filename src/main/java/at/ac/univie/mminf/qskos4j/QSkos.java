@@ -19,7 +19,7 @@ import at.ac.univie.mminf.qskos4j.issues.language.NoCommonLanguages;
 import at.ac.univie.mminf.qskos4j.issues.language.OmittedOrInvalidLanguageTags;
 import at.ac.univie.mminf.qskos4j.issues.language.util.LanguageCoverage;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.BrokenLinks;
-import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpURIs;
+import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpIRIs;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.HttpUriSchemeViolations;
 import at.ac.univie.mminf.qskos4j.issues.outlinks.MissingOutLinks;
 import at.ac.univie.mminf.qskos4j.issues.relations.ReflexivelyRelatedConcepts;
@@ -56,7 +56,7 @@ public class QSkos {
      */
     private final static int EXT_ACCESS_MILLIS = 1500;
 
-	private String baseURI;
+	private String baseIRI;
 
     private LanguageCoverage languageCoverage;
     private BrokenLinks brokenLinks;
@@ -64,7 +64,7 @@ public class QSkos {
     private AuthoritativeConcepts authoritativeConcepts;
     private MissingInLinks missingInLinks;
     private ConceptSchemes conceptSchemes;
-    private HttpURIs httpURIs;
+    private HttpIRIs httpIRIs;
 
     private List<Issue> registeredIssues = new ArrayList<Issue>();
 
@@ -88,9 +88,9 @@ public class QSkos {
     private void addStatisticalIssues() {
         involvedConcepts = new InvolvedConcepts();
         authoritativeConcepts = new AuthoritativeConcepts(involvedConcepts);
-        authoritativeConcepts.setBaseURI(baseURI);
+        authoritativeConcepts.setBaseIRI(baseIRI);
         conceptSchemes = new ConceptSchemes();
-        httpURIs = new HttpURIs();
+        httpIRIs = new HttpIRIs();
         languageCoverage = new LanguageCoverage(involvedConcepts);
 
         registeredIssues.add(involvedConcepts);
@@ -100,7 +100,7 @@ public class QSkos {
         registeredIssues.add(new AggregationRelations());
         registeredIssues.add(conceptSchemes);
         registeredIssues.add(new at.ac.univie.mminf.qskos4j.issues.count.Collections());
-        registeredIssues.add(httpURIs);
+        registeredIssues.add(httpIRIs);
     }
 
     private void addAnalyticalIssues() {
@@ -142,7 +142,7 @@ public class QSkos {
     }
 
     private void addSlowIssues() {
-        brokenLinks = new BrokenLinks(httpURIs);
+        brokenLinks = new BrokenLinks(httpIRIs);
         brokenLinks.setExtAccessDelayMillis(EXT_ACCESS_MILLIS);
         registeredIssues.add(brokenLinks);
 
@@ -229,19 +229,19 @@ public class QSkos {
 	}
 
     /**
-     * Sets a string that is used to identify if an URI is authoritative. This is required to, e.g., find all
-     * out-links to distinguish between URIs in the vocabulary namespace and other resources on the Web.
+     * Sets a string that is used to identify if an IRI is authoritative. This is required to, e.g., find all
+     * out-links to distinguish between IRIs in the vocabulary namespace and other resources on the Web.
      *
-     * @param authResourceIdentifier a string, usually a substring of an URI in the vocabulary's namespace,
-     * that uniquely identifies an authoritative URI.
+     * @param authResourceIdentifier a string, usually a substring of an IRI in the vocabulary's namespace,
+     * that uniquely identifies an authoritative IRI.
      */
     public void setAuthResourceIdentifier(String authResourceIdentifier) {
         authoritativeConcepts.setAuthResourceIdentifier(authResourceIdentifier);
     }
 
     @SuppressWarnings("unused")
-    public void setBaseURI(String baseURI) {
-        this.baseURI = baseURI;
+    public void setBaseIRI(String baseIRI) {
+        this.baseIRI = baseIRI;
     }
 
     public void addSparqlEndPoint(String endpointUrl) throws RDF4JException {

@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.eclipse.rdf4j.RDF4JException;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -24,7 +24,7 @@ public class ValuelessAssociativeRelationsTest {
 
     @Test
     public void testRedundantAssociativeRelationsCount() throws RDF4JException {
-        Collection<Tuple<URI>> redAssRels = valuelessAssociativeRelations.getResult().getData();
+        Collection<Tuple<IRI>> redAssRels = valuelessAssociativeRelations.getResult().getData();
         Assert.assertEquals(6, redAssRels.size());
     }
 }

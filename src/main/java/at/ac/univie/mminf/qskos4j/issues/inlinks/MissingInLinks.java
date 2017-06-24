@@ -4,12 +4,12 @@ import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.issues.concepts.AuthoritativeConcepts;
 import at.ac.univie.mminf.qskos4j.progress.MonitoredIterator;
 import at.ac.univie.mminf.qskos4j.result.ExtrapolatedCollectionResult;
+import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.RandomSubSet;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQueryResult;
@@ -19,6 +19,7 @@ import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -33,17 +34,18 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 
 	private AuthoritativeConcepts authoritativeConcepts;
 	private Collection<RepositoryConnection> connections = new ArrayList<>();
-	private Map<Resource, Set<URI>> conceptReferencingResources = new HashMap<>();
+	private Map<Resource, Set<IRI>> conceptReferencingResources = new HashMap<>();
     private Integer queryDelayMillis = 0;
     private Float randomSubsetSize_percent;
 
     public MissingInLinks(AuthoritativeConcepts authoritativeConcepts) {
-        super(authoritativeConcepts,
-            "mil",
-            "Missing In-Links",
-            "Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
-            IssueType.ANALYTICAL,
-            new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#missing-in-links"));
+		super(new IssueDescriptor.Builder("mil",
+				"Missing In-Links",
+				"Uses the sindice index to find concepts that aren't referenced by other datasets on the Web",
+				IssueDescriptor.IssueType.ANALYTICAL)
+				.weblink("https://github.com/cmader/qSKOS/wiki/Quality-Issues#top-concepts-having-broader-concepts")
+				.dependentIssue(authoritativeConcepts)
+				.build());
 
         this.authoritativeConcepts = authoritativeConcepts;
     }
@@ -116,10 +118,10 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 	private void addToConceptsRankMap(Resource concept, TupleQueryResult result)
 		throws QueryEvaluationException 
 	{
-		Set<URI> referencingResourcesOnOtherHost = 
+		Set<IRI> referencingResourcesOnOtherHost =
 			getReferencingResourcesOnOtherHost(concept, result);
 
-		Set<URI> allReferencingResources = conceptReferencingResources.get(concept);
+		Set<IRI> allReferencingResources = conceptReferencingResources.get(concept);
 		if (allReferencingResources == null) {
 			allReferencingResources = new HashSet<>();
 			conceptReferencingResources.put(concept, allReferencingResources);
@@ -127,21 +129,21 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 		allReferencingResources.addAll(referencingResourcesOnOtherHost);
 	}
 	
-	private Set<URI> getReferencingResourcesOnOtherHost(
+	private Set<IRI> getReferencingResourcesOnOtherHost(
             Value concept,
 		TupleQueryResult result) throws QueryEvaluationException 
 	{
-		Set<URI> referencingResourcesOnOtherHost = new HashSet<>();
+		Set<IRI> referencingResourcesOnOtherHost = new HashSet<>();
 		
 		while (result.hasNext()) {
 			Value referencingResource = result.next().getValue("resource");
 			
 			try {
-				if (referencingResource instanceof URI &&
-                    concept instanceof URI &&
-					isDistinctHost((URI) concept, (URI) referencingResource))
+				if (referencingResource instanceof IRI &&
+                    concept instanceof IRI &&
+					isDistinctHost((IRI) concept, (IRI) referencingResource))
 				{
-					referencingResourcesOnOtherHost.add((URI) referencingResource); 
+					referencingResourcesOnOtherHost.add((IRI) referencingResource);
 				}
 			}
 			catch (URISyntaxException e) {
@@ -152,11 +154,11 @@ public class MissingInLinks extends Issue<ExtrapolatedCollectionResult<Resource>
 		return referencingResourcesOnOtherHost;
 	}
 
-	private boolean isDistinctHost(URI resource, URI otherResource) 
-		throws URISyntaxException 
+	private boolean isDistinctHost(IRI resource, IRI otherResource)
+		throws URISyntaxException
 	{
-		String host = new java.net.URI(resource.toString()).getHost();
-		String otherHost = new java.net.URI(otherResource.toString()).getHost();
+		String host = new URI(resource.toString()).getHost();
+		String otherHost = new URI(otherResource.toString()).getHost();
 		return !host.equalsIgnoreCase(otherHost);		
 	}
 	

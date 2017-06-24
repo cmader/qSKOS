@@ -6,9 +6,9 @@ import at.ac.univie.mminf.qskos4j.util.TupleQueryResultUtil;
 import at.ac.univie.mminf.qskos4j.util.vocab.SkosOntology;
 import at.ac.univie.mminf.qskos4j.util.vocab.SparqlPrefix;
 import org.eclipse.rdf4j.RDF4JException;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.URIImpl;
+import org.eclipse.rdf4j.model.impl.IRIImpl;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
@@ -22,21 +22,21 @@ import java.util.Map;
  * <a href="https://github.com/cmader/qSKOS/wiki/Quality-Issues#wiki-Undefined_SKOS_Resources">Undefined SKOS Resources</a>
  * ).
  */
-public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
+public class UndefinedSkosResources extends Issue<CollectionResult<IRI>> {
 
-	private Map<URI, Collection<URI>> deprecatedProperties, illegalTerms;
+	private Map<IRI, Collection<IRI>> deprecatedProperties, illegalTerms;
 
     public UndefinedSkosResources() {
         super("usr",
               "Undefined SKOS Resources",
               "Finds 'invented' new terms within the SKOS namespace or deprecated properties",
               IssueType.ANALYTICAL,
-              new URIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#undefined-skos-resources")
+              new IRIImpl("https://github.com/cmader/qSKOS/wiki/Quality-Issues#undefined-skos-resources")
         );
     }
 
     @Override
-    protected CollectionResult<URI> invoke() throws RDF4JException {
+    protected CollectionResult<IRI> invoke() throws RDF4JException {
 		findDeprecatedProperties();
 		findIllegalTerms();
 		
@@ -74,10 +74,10 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
-			URI resource = (URI) queryResult.getValue("iri");
-			URI deprProperty = (URI) queryResult.getValue("deprProp");
+			IRI resource = (IRI) queryResult.getValue("iri");
+			IRI deprProperty = (IRI) queryResult.getValue("deprProp");
 			
-			Collection<URI> resources = deprecatedProperties.get(deprProperty);
+			Collection<IRI> resources = deprecatedProperties.get(deprProperty);
 			if (resources == null) {
 				resources = new HashSet<>();
 				deprecatedProperties.put(deprProperty, resources);
@@ -130,8 +130,8 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 		
 		while (result.hasNext()) {
 			BindingSet queryResult = result.next();
-			URI illegalTerm = (URI) queryResult.getValue("illTerm");
-			URI subject = (URI) queryResult.getValue("s");
+			IRI illegalTerm = (IRI) queryResult.getValue("illTerm");
+			IRI subject = (IRI) queryResult.getValue("s");
 			Value object = queryResult.getValue("o");
 
 			if (!illegalTerm.getLocalName().isEmpty()) {
@@ -140,8 +140,8 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 		}
 	}
 	
-	private void addTermToMap(URI term, URI subject, Value object) {
-		Collection<URI> resources = illegalTerms.get(term);
+	private void addTermToMap(IRI term, IRI subject, Value object) {
+		Collection<IRI> resources = illegalTerms.get(term);
 		if (resources == null) {
 			resources = new HashSet<>();
 			illegalTerms.put(term, resources);
@@ -150,13 +150,13 @@ public class UndefinedSkosResources extends Issue<CollectionResult<URI>> {
 		if (subject != null) {
 			resources.add(subject);
 		}
-		else if (object != null && object instanceof URI) {
-			resources.add((URI) object);
+		else if (object != null && object instanceof IRI) {
+			resources.add((IRI) object);
 		}		
 	}
 	
-	private Collection<URI> collectUndefinedResources() {
-		Collection<URI> undefRes = new HashSet<>();
+	private Collection<IRI> collectUndefinedResources() {
+		Collection<IRI> undefRes = new HashSet<>();
 		
 		undefRes.addAll(deprecatedProperties.keySet());
 		undefRes.addAll(illegalTerms.keySet());
