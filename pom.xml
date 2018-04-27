@@ -105,9 +105,22 @@
 		</plugin>
 	</plugins>
   </build>
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>IT.1-release-repository</id>
+            <url>http://nexus.dnb.de/content/repositories/it1-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>IT.1-snapshot-repository</id>
+            <url>http://nexus.dnb.de/content/repositories/it1-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
   <properties>
     <rdf4j.version>2.2.2</rdf4j.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
 </project>
