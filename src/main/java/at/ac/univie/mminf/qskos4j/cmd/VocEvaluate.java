@@ -1,5 +1,15 @@
 package at.ac.univie.mminf.qskos4j.cmd;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.rio.RDFFormat;
+
 import at.ac.univie.mminf.qskos4j.QSkos;
 import at.ac.univie.mminf.qskos4j.issues.Issue;
 import at.ac.univie.mminf.qskos4j.progress.ConsoleProgressMonitor;
@@ -7,290 +17,286 @@ import at.ac.univie.mminf.qskos4j.progress.StreamProgressMonitor;
 import at.ac.univie.mminf.qskos4j.util.IssueDescriptor;
 import at.ac.univie.mminf.qskos4j.util.vocab.InvalidRdfException;
 import at.ac.univie.mminf.qskos4j.util.vocab.RepositoryBuilder;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
-import org.eclipse.rdf4j.RDF4JException;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.rio.RDFFormat;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class VocEvaluate {
-	
+
 	public final static String CMD_NAME_ANALYZE = "analyze";
-    public final static String CMD_NAME_SUMMARIZE = "summarize";
-	
+	public final static String CMD_NAME_SUMMARIZE = "summarize";
+
 	private static JCommander jc;
 	private CommandSummarize parsedCommand;
-    private QSkos qskos;
-    private ReportCollector reportCollector;
-	
-	@Parameter(names = {"-v", "--version"}, description = "Outputs version of the tool")
+	private QSkos qskos;
+	private ReportCollector reportCollector;
+
+	@Parameter(names = { "-v", "--version" }, description = "Outputs version of the tool")
 	private boolean outputVersion = false;
-	
+
 	@Parameters(commandNames = CMD_NAME_SUMMARIZE, commandDescription = "Computes basic statistics of a given vocabulary")
 	private class CommandSummarize {
 
-        @SuppressWarnings("unused")
+		@SuppressWarnings("unused")
 		@Parameter(description = "vocabularyfile")
 		private List<String> vocabFilenames;
 
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-a", "--auth-resource-identifier"}, description = "Authoritative resource identifier")
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-a", "--auth-resource-identifier" }, description = "Authoritative resource identifier")
 		private String authoritativeResourceIdentifier;
 
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-c", "--check"}, description = "Comma-separated list of issue/statistics IDs to check for")
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-c", "--check" }, description = "Comma-separated list of issue/statistics IDs to check for")
 		private String selectedIds;
 
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-dc", "--dont-check"}, description = "Comma-separated list of issue/statistics IDs NOT to check for")
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-dc", "--dont-check" }, description = "Comma-separated list of issue/statistics IDs NOT to check for")
 		private String excludedIds;
 
-        @Parameter(names = {"-xl", "--skosxl"}, description = "Enable SKOSXL support")
+		@Parameter(names = { "-xl", "--skosxl" }, description = "Enable SKOSXL support")
 		private boolean enableSkosXl = false;
 
-        @Parameter(names = {"-np", "--no-progress"}, description = "Suppresses output of a progress indicator")
-        private boolean noProgressBar = false;
+		@Parameter(names = { "-np", "--no-progress" }, description = "Suppresses output of a progress indicator")
+		private boolean noProgressBar = false;
 
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-d", "--debug"}, description = "Enable additional informative/debug output")
-        private boolean debug;
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-d", "--debug" }, description = "Enable additional informative/debug output")
+		private boolean debug;
 
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-o", "--output"}, description = "Name of the file that holds the generated report")
-        private String reportFileName;
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-o", "--output" }, description = "Name of the file that holds the generated report")
+		private String reportFileName;
 
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-sf", "--stream-friendly"}, description = "Print the progress indicator in a stream-friendly format")
-        private boolean streamFriendly;
-        
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-DQV", "--DataQualityVocabulary"}, description = "Print quality results as QualityMeasurement of W3C Data Quality Vocabulary")
-        private boolean inDQV;
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-sf", "--stream-friendly" }, description = "Print the progress indicator in a stream-friendly format")
+		private boolean streamFriendly;
 
-    }
-	
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-DQV", "--DataQualityVocabulary" }, description = "Print quality results as QualityMeasurement of W3C Data Quality Vocabulary")
+		private boolean inDQV;
+
+	}
+
 	@Parameters(commandNames = CMD_NAME_ANALYZE, commandDescription = "Analyzes quality issues of a given vocabulary")
 	private class CommandAnalyze extends CommandSummarize {
 
-        @SuppressWarnings("unused")
-        @Parameter(names = {"-sp", "--use-subset-percentage"}, description = "Use a specified percentage of the vocabulary triples for evaluation")
+		@SuppressWarnings("unused")
+		@Parameter(names = { "-sp", "--use-subset-percentage" }, description = "Use a specified percentage of the vocabulary triples for evaluation")
 		private Float randomSubsetSize_percent;
 
-		@Parameter(names = {"-wg", "--write-graphs"}, description = "Writes graphs as .dot files to current directory")
+		@Parameter(names = { "-wg", "--write-graphs" }, description = "Writes graphs as .dot files to current directory")
 		private boolean writeGraphs = false;
 
 	}
-	
-	public static void main(String[] args) {
+
+	public static void main(final String[] args) {
 		try {
 			new VocEvaluate(args);
-		}
-		catch (ParameterException paramExc) {
-            jc.usage();
-            System.err.println("!! " +paramExc.getMessage());
-		}
-		catch (IOException ioException) {
-			System.err.println("!! Error reading file: " +ioException.getMessage());
-		}
-		catch (RDF4JException rdfException) {
-			System.err.println("!! Error processing vocabulary: " +rdfException.getMessage());
-		} 
-	}
-		
-	public VocEvaluate(String[] args) throws RDF4JException, IOException
-	{
-        qskos = new QSkos();
-        parseCmdParams(args);
-		
-		if (outputVersion) {
-			System.out.println("Version: " +getClass().getPackage().getImplementationVersion());
-		}
-		
-		if (parsedCommand == null) {
+		} catch (final ParameterException paramExc) {
 			jc.usage();
-            return;
+			System.err.println("!! " + paramExc.getMessage());
+		} catch (final IOException ioException) {
+			System.err.println("!! Error reading file: "
+					+ ioException.getMessage());
+		} catch (final RDF4JException rdfException) {
+			System.err.println("!! Error processing vocabulary: "
+					+ rdfException.getMessage());
+		}
+	}
+
+	public VocEvaluate(final String[] args) throws RDF4JException, IOException {
+		this.qskos = new QSkos();
+		parseCmdParams(args);
+
+		if (this.outputVersion) {
+			System.out.println("Version: "
+					+ getClass().getPackage().getImplementationVersion());
+		}
+
+		if (this.parsedCommand == null) {
+			jc.usage();
+			return;
 		}
 		try {
 			listIssuesOrEvaluate();
+		} catch (final InvalidRdfException e) {
+			System.err
+					.println("!! Provided input file does not contain valid RDF data");
+			System.exit(1);
+		} catch (final Exception e) {
+			e.printStackTrace(System.err);
+			System.exit(1);
 		}
-        catch (InvalidRdfException e) {
-            System.err.println("!! Provided input file does not contain valid RDF data");
-            System.exit(1);
-        }
-        catch (Exception e) {
-            e.printStackTrace(System.err);
-            System.exit(1);
-        }
 	}
-	
-	private void parseCmdParams(String[] args) {
+
+	private void parseCmdParams(final String[] args) {
 		jc = new JCommander(this);
-		
-		CommandAnalyze commandAnalyze = new CommandAnalyze();
-		CommandSummarize commandSummarize = new CommandSummarize();
-		
+
+		final CommandAnalyze commandAnalyze = new CommandAnalyze();
+		final CommandSummarize commandSummarize = new CommandSummarize();
+
 		jc.addCommand(commandAnalyze);
-		jc.addCommand(commandSummarize);		
+		jc.addCommand(commandSummarize);
 		jc.parse(args);
-		
-		String command = jc.getParsedCommand();
-		if (command != null) {			
+
+		final String command = jc.getParsedCommand();
+		if (command != null) {
 			if (command.equals(CMD_NAME_ANALYZE)) {
-				parsedCommand = commandAnalyze;
+				this.parsedCommand = commandAnalyze;
 			}
 			if (command.equals(CMD_NAME_SUMMARIZE)) {
-				parsedCommand = commandSummarize;
+				this.parsedCommand = commandSummarize;
 			}
 		}
 	}
-		
-	private void listIssuesOrEvaluate() throws RDF4JException, IOException
-	{
-		if (parsedCommand.vocabFilenames == null) {
-			if (parsedCommand instanceof CommandAnalyze) {
+
+	private void listIssuesOrEvaluate() throws RDF4JException, IOException {
+		if (this.parsedCommand.vocabFilenames == null) {
+			if (this.parsedCommand instanceof CommandAnalyze) {
 				outputIssueDetails(IssueDescriptor.IssueType.ANALYTICAL);
-			}
-			else {
+			} else {
 				outputIssueDetails(IssueDescriptor.IssueType.STATISTICAL);
 			}
-		}
-		else {
+		} else {
 			checkVocabFilenameGiven();
 			evaluate();
 		}
 	}
 
-	private void outputIssueDetails(IssueDescriptor.IssueType constraintType) {
-		for (Issue issue : qskos.getAllIssues()) {
-			IssueDescriptor issueDescriptor = issue.getIssueDescriptor();
+	private void outputIssueDetails(
+			final IssueDescriptor.IssueType constraintType) {
+		for (final Issue issue : this.qskos.getAllIssues()) {
+			final IssueDescriptor issueDescriptor = issue.getIssueDescriptor();
 
 			if (issueDescriptor.getType() == constraintType) {
 				System.out.println("---");
-				System.out.println("ID: " +issueDescriptor.getId());
-				System.out.println("Name: " +issueDescriptor.getName());
-				System.out.println("Description: " +issueDescriptor.getDescription());
-                if (issueDescriptor.getWeblink() != null) {
-                    System.out.println("Further Informaton: <" +issueDescriptor.getWeblink().toString()+ ">");
-                }
+				System.out.println("ID: " + issueDescriptor.getId());
+				System.out.println("Name: " + issueDescriptor.getName());
+				System.out.println("Description: "
+						+ issueDescriptor.getDescription());
+				if (issueDescriptor.getWeblink() != null) {
+					System.out.println("Further Informaton: <"
+							+ issueDescriptor.getWeblink().toString() + ">");
+				}
 			}
 		}
 	}
-	
-	private void checkVocabFilenameGiven() throws ParameterException
-	{
-		if (parsedCommand.vocabFilenames == null) {
+
+	private void checkVocabFilenameGiven() throws ParameterException {
+		if (this.parsedCommand.vocabFilenames == null) {
 			throw new ParameterException("Please provide a vocabulary file");
 		}
-        if (parsedCommand.reportFileName == null) {
-            throw new ParameterException("Please provide a report output file");
-        }
+		if (this.parsedCommand.reportFileName == null) {
+			throw new ParameterException("Please provide a report output file");
+		}
 	}
-	
-	private void evaluate() throws RDF4JException, IOException
-	{
+
+	private void evaluate() throws RDF4JException, IOException {
 		setup();
 
-        String command = jc.getParsedCommand();
-        String datasetAnalized=new String();
-        for (String s : parsedCommand.vocabFilenames) {datasetAnalized+= s;}
-        
-       reportCollector = new ReportCollector(extractMeasures(),
-                parsedCommand.reportFileName,
-                parsedCommand.vocabFilenames,
-                command.equals(CMD_NAME_ANALYZE), parsedCommand.inDQV, datasetAnalized);
-        reportCollector.outputIssuesReport(shouldWriteGraphs());
+		final String command = jc.getParsedCommand();
+		String datasetAnalized = new String();
+		for (final String s : this.parsedCommand.vocabFilenames) {
+			datasetAnalized += s;
+		}
+
+		this.reportCollector = new ReportCollector(extractMeasures(),
+				this.parsedCommand.reportFileName,
+				this.parsedCommand.vocabFilenames,
+				command.equals(CMD_NAME_ANALYZE), this.parsedCommand.inDQV,
+				datasetAnalized);
+		this.reportCollector.outputIssuesReport(shouldWriteGraphs());
 	}
-	
+
 	private void setup() throws RDF4JException, IOException {
-        setupLogging();
+		setupLogging();
 
-        RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
-        File inputFile = new File(parsedCommand.vocabFilenames.get(0));
-        Repository repo = repositoryBuilder.setUpFromFile(inputFile, null, useRdfXmlFormatIfExtensionIsXml(inputFile));
-        qskos.setRepositoryConnection(repo.getConnection());
-		qskos.setAuthResourceIdentifier(parsedCommand.authoritativeResourceIdentifier);
-		qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
-        qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
+		final RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
+		final File inputFile = new File(
+				this.parsedCommand.vocabFilenames.get(0));
+		final Repository repo = repositoryBuilder.setUpFromFile(inputFile,
+				null, useRdfXmlFormatIfExtensionIsXml(inputFile));
+		this.qskos.setRepositoryConnection(repo.getConnection());
+		this.qskos
+				.setAuthResourceIdentifier(this.parsedCommand.authoritativeResourceIdentifier);
+		this.qskos.addSparqlEndPoint("http://sparql.sindice.com/sparql");
+		this.qskos.addSparqlEndPoint("http://semantic.ckan.net/sparql");
 
-        if (parsedCommand instanceof CommandAnalyze) {
-			qskos.setSubsetSize(((CommandAnalyze) parsedCommand).randomSubsetSize_percent);
+		if (this.parsedCommand instanceof CommandAnalyze) {
+			this.qskos
+					.setSubsetSize(((CommandAnalyze) this.parsedCommand).randomSubsetSize_percent);
 		}
-		
-		if (parsedCommand.enableSkosXl) {
-            repositoryBuilder.enableSkosXlSupport();
+
+		if (this.parsedCommand.enableSkosXl) {
+			repositoryBuilder.enableSkosXlSupport();
 		}
 
-        if (!parsedCommand.noProgressBar) {
-            if (parsedCommand.streamFriendly) {
-                qskos.setProgressMonitor(new StreamProgressMonitor());
-            }
-            else {
-                qskos.setProgressMonitor(new ConsoleProgressMonitor());
-            }
-        }
-    }
+		if (!this.parsedCommand.noProgressBar) {
+			if (this.parsedCommand.streamFriendly) {
+				this.qskos.setProgressMonitor(new StreamProgressMonitor());
+			} else {
+				this.qskos.setProgressMonitor(new ConsoleProgressMonitor());
+			}
+		}
+	}
 
-    private RDFFormat useRdfXmlFormatIfExtensionIsXml(File inputFile) {
-        if (inputFile.getName().toLowerCase().endsWith(".xml")) {
-            return RDFFormat.RDFXML;
-        }
-        return null;
-    }
+	private RDFFormat useRdfXmlFormatIfExtensionIsXml(final File inputFile) {
+		if (inputFile.getName().toLowerCase().endsWith(".xml")) {
+			return RDFFormat.RDFXML;
+		}
+		return null;
+	}
 
-    private void setupLogging() {
-        if (parsedCommand.debug) {
-            System.setProperty("root-level", "DEBUG");
-        }
-    }
+	private void setupLogging() {
+		if (this.parsedCommand.debug) {
+			System.setProperty("root-level", "DEBUG");
+		}
+	}
 
 	private boolean shouldWriteGraphs() {
-		return parsedCommand instanceof CommandAnalyze && ((CommandAnalyze) parsedCommand).writeGraphs;
+		return this.parsedCommand instanceof CommandAnalyze
+				&& ((CommandAnalyze) this.parsedCommand).writeGraphs;
 	}
-	
-	private Collection<Issue> extractMeasures()
-	{
+
+	private Collection<Issue> extractMeasures() {
 		Collection<Issue> resultingIssues;
 
-        Collection<Issue> selectedIssues = qskos.getIssues(parsedCommand.selectedIds);
-        Collection<Issue> excludedIssues = qskos.getIssues(parsedCommand.excludedIds);
+		final Collection<Issue> selectedIssues = this.qskos
+				.getIssues(this.parsedCommand.selectedIds);
+		final Collection<Issue> excludedIssues = this.qskos
+				.getIssues(this.parsedCommand.excludedIds);
 
 		if (!selectedIssues.isEmpty()) {
 			resultingIssues = selectedIssues;
-		}
-		else if (!excludedIssues.isEmpty()) {
+		} else if (!excludedIssues.isEmpty()) {
 			resultingIssues = getAllIssuesForCommand();
 			resultingIssues.removeAll(excludedIssues);
-		}
-		else {
+		} else {
 			resultingIssues = getAllIssuesForCommand();
 		}
-		
+
 		return resultingIssues;
 	}
-	
+
 	private Collection<Issue> getAllIssuesForCommand() {
-		List<Issue> issuesForCommand = new ArrayList<>();
-		
-		for (Issue issue : qskos.getAllIssues()) {
-			String command = jc.getParsedCommand();
+		final List<Issue> issuesForCommand = new ArrayList<>();
 
-            IssueDescriptor.IssueType issueType = issue.getIssueDescriptor().getType();
+		for (final Issue issue : this.qskos.getAllIssues()) {
+			final String command = jc.getParsedCommand();
 
-			if ((issueType == IssueDescriptor.IssueType.ANALYTICAL && command.equals(CMD_NAME_ANALYZE)) ||
-				(issueType == IssueDescriptor.IssueType.STATISTICAL && command.equals(CMD_NAME_SUMMARIZE)))
-			{
+			final IssueDescriptor.IssueType issueType = issue
+					.getIssueDescriptor().getType();
+
+			if ((issueType == IssueDescriptor.IssueType.ANALYTICAL && command
+					.equals(CMD_NAME_ANALYZE))
+					|| (issueType == IssueDescriptor.IssueType.STATISTICAL && command
+							.equals(CMD_NAME_SUMMARIZE))) {
 				issuesForCommand.add(issue);
 			}
 		}
-		
+
 		return issuesForCommand;
 	}
 
