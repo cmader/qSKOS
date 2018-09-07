@@ -171,13 +171,14 @@ In order to get an impression about the impact of using qSKOS for improving voca
         abstract = {Constructing controlled Web vocabularies such as thesauri for search and retrieval tasks is a widely intellectual process that relies on human experts. Thus, errors can occur which decrease the overall quality of the vocabulary. qSKOS is a tool that automatically checks Web vocabularies for potential quality problems and generates quality reports. In this paper we present the results of a case study designed to evaluate the impact of integrating qSKOS in the vocabulary creation process. It was carried out among students skilled in construction of controlled vocabularies. We collected in total 13 vocabularies in two versions and detected 15 different kinds of quality problems. For 11 of these problems we observed reduced occurrences after the vocabularies were revised by the participants based on the results of the generated quality report.}
   }
 
-== Contributors
+== Contributors (in alphabetical order)
 
-* Christian Mader ({@cmader}[https://github.com/cmader])
 * Riccardo Albertoni ({@riccardoAlbertoni}[https://github.com/riccardoAlbertoni])
 * Thomas Francart ({@tfrancart}[https://github.com/tfrancart])
 * Bernhard Haslhofer ({@behas}[https://github.com/behas])
 * Antoine Isaac ({@aisaac}[https://github.com/aisaac])
+* Christian Mader (maintainer, {@cmader}[https://github.com/cmader])
+* Lars G. Svensson ({@larsgsvensson}[https://github.com/larsgsvensson])
 
 === How can I contribute?
 
@@ -186,4 +187,4 @@ In order to get an impression about the impact of using qSKOS for improving voca
 
 == Copyright
 
-Copyright (c) 2011-2017 Christian Mader. See LICENSE.txt for details
+Copyright (c) 2011-2018 Christian Mader. See LICENSE.txt for details
