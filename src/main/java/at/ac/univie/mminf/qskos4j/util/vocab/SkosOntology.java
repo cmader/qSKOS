@@ -20,10 +20,10 @@ public class SkosOntology {
 
     private final static Logger logger = LoggerFactory.getLogger(SkosOntology.class);
 
-    public final static String SKOS_BASE_IRI = "http://www.w3.org/2004/02/skos/core";
-    public final static String SKOS_ONTO_IRI = "http://www.w3.org/2009/08/skos-reference/skos.rdf";
+    public final static String SKOS_BASE_IRI = "https://www.w3.org/2004/02/skos/core";
+    public final static String SKOS_ONTO_IRI = "https://www.w3.org/2009/08/skos-reference/skos.rdf";
 
-    private static SkosOntology ourInstance = new SkosOntology();
+    private final static SkosOntology ourInstance = new SkosOntology();
     private static Repository skosRepo;
 
     public static SkosOntology getInstance() {
@@ -42,14 +42,8 @@ public class SkosOntology {
         skosRepo = new SailRepository(new MemoryStore());
         skosRepo.initialize();
 
-        RepositoryConnection repCon = skosRepo.getConnection();
-        try {
-            repCon.add(new URL(SKOS_ONTO_IRI),
-                SKOS_BASE_IRI,
-                RDFFormat.RDFXML);
-        }
-        finally {
-            repCon.close();
+        try (RepositoryConnection repCon = skosRepo.getConnection()) {
+            repCon.add(new URL(SKOS_ONTO_IRI), SKOS_BASE_IRI, RDFFormat.RDFXML);
         }
     }
 
