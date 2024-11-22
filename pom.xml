@@ -27,7 +27,7 @@
   		<groupId>org.apache.httpcomponents</groupId>
   		<artifactId>httpclient</artifactId>
   		<!-- Use the same version as in the RDF4J dependency to avoid conflict in the onejar -->
-  		<version>4.5.2</version>
+  		<version>4.5.13</version>
   		<type>jar</type>
   		<scope>compile</scope>
   		<exclusions>
