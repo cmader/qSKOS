@@ -107,7 +107,7 @@
   </build>
 
   <properties>
-    <rdf4j.version>2.2.2</rdf4j.version>
+    <rdf4j.version>2.4.0</rdf4j.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
